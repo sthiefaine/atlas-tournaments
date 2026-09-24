@@ -236,10 +236,10 @@
     {
       "id": "unite_meridien_bastion_base",
       "fichierActif": "public/assets/modeles/unite_meridien_bastion_base_lod0.glb",
-      "donnees": "../donnees/936487f23c3765d7a9737af33029ac3f31640d4c2a27e69f485e8c976e572efe.glb",
-      "revision": "28128f59adc2928da027646b23a58d9b4bbcbaab39f7883178665fdaea33f79e",
+      "donnees": "../donnees/a20086f818d5880d0bb8a56a7415d6d3c794708facf078f359b6da6d64d841e3.glb",
+      "revision": "2611bf5d532d23b4352a881c88072490bc2419bab3581d2f531c260d226e4973",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_meridien_veilleur_base",
