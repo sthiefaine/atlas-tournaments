@@ -377,7 +377,13 @@ async function main(): Promise<void> {
   }
   rapport.secondes = Math.round((Date.now() - debut) / 100) / 10;
   writeFileSync(join(dossier, 'rapport.json'), `${JSON.stringify(rapport, null, 1)}\n`);
-  console.log(`  rapport : ${join(dossier, 'rapport.json')} — ${echecs === 0 ? 'tout passe' : `${echecs} échec(s)`} (${rapport.secondes} s)`);
+  // Sans cuisson, aucune règle de la charte n'est jugée : « tout passe »
+  // aurait fait croire qu'une palette hors charte y tenait (l'agent du
+  // furtif y a vu 38,7 % de graphite, 24 septembre 2026).
+  const bilan = echecs > 0 ? `${echecs} échec(s)`
+    : o.cuisson ? 'tout passe'
+    : 'contrôle accepté ; la charte ne se juge qu’à la cuisson — l’aperçu de la palette n’est pas un verdict';
+  console.log(`  rapport : ${join(dossier, 'rapport.json')} — ${bilan} (${rapport.secondes} s)`);
   process.exitCode = echecs === 0 ? 0 : 1;
 }
 

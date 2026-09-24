@@ -176,12 +176,14 @@ test('une cuisson qui a perdu des faces fait échouer la fabrication', () => {
 });
 
 test('le genre et la classe se lisent dans le canon', () => {
-  assert.equal(genreDe({ cle: 'infanterie', domaine: 'terre', silhouette: { base: 'pattes' } }), 'fantassin');
-  assert.equal(genreDe({ cle: 'helico', domaine: 'air', silhouette: { base: 'rotor' } }), 'rotor');
-  assert.equal(genreDe({ cle: 'chasseur', domaine: 'air', silhouette: { base: 'ailes' } }), 'avion');
-  assert.equal(genreDe({ cle: 'drone_intercepteur', domaine: 'air', silhouette: { base: 'ailes' } }), 'drone');
-  assert.equal(genreDe({ cle: 'cuirasse', domaine: 'mer', silhouette: { base: 'coque' } }), 'navire');
-  assert.equal(genreDe({ cle: 'char_leger', domaine: 'terre', silhouette: { base: 'chenilles' } }), 'vehicule');
+  assert.equal(genreDe({ domaine: 'terre', silhouette: { base: 'pattes' } }), 'fantassin');
+  assert.equal(genreDe({ domaine: 'air', traits: ['vol'], silhouette: { base: 'rotor' } }), 'rotor');
+  assert.equal(genreDe({ domaine: 'air', traits: ['vol'], silhouette: { base: 'ailes' } }), 'avion');
+  assert.equal(genreDe({ domaine: 'air', traits: ['vol', 'drone', 'anti_air'], silhouette: { base: 'ailes' } }), 'drone');
+  // Le veilleur des Gris : un drone qui ne le dit pas dans sa clé — c'est le trait qui compte.
+  assert.equal(genreDe({ domaine: 'air', traits: ['vol', 'drone', 'brouilleur'], silhouette: { base: 'rotor' } }), 'drone');
+  assert.equal(genreDe({ domaine: 'mer', traits: ['drone'], silhouette: { base: 'coque' } }), 'navire');
+  assert.equal(genreDe({ domaine: 'terre', silhouette: { base: 'chenilles' } }), 'vehicule');
   assert.deepEqual([1, 2, 3].map(classeDe), ['petite', 'moyenne', 'grande']);
 });
 

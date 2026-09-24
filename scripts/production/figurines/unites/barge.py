@@ -66,7 +66,7 @@ def vitre(f, noeud, centre, taille, nom):
     """
     sx, sy, sz = taille
     bm = b.bm_boite((sx, sz, sy))
-    return f._piece(bm, noeud, 'verre', f._placement(centre), (sx, sy, sz), uv='hauteur', nom=nom)
+    return f.piece_sur_mesure(bm, noeud, 'verre', f.placement(centre), (sx, sy, sz), uv='hauteur', nom=nom)
 
 
 def extrusion(f, noeud, bas, haut, y0, y1, teinte, chanfrein=None, nom=None):
@@ -77,7 +77,7 @@ def extrusion(f, noeud, bas, haut, y0, y1, teinte, chanfrein=None, nom=None):
     lumière). Le contour peut être concave (un U).
     """
     bm = b.bmesh.new()
-    b._solide_anneaux(bm, [[b.vb((x, y0, z)) for x, z in bas], [b.vb((x, y1, z)) for x, z in haut]])
+    b.anneaux_en_solide(bm, [[b.vb((x, y0, z)) for x, z in bas], [b.vb((x, y1, z)) for x, z in haut]])
     # Un couvercle concave (le U) est triangulé ici, par la méthode robuste de
     # Blender : sa triangulation paresseuse, sur un maillage fusionné que rien
     # n'a encore évalué, peut jeter un triangle en travers du creux.
@@ -85,7 +85,7 @@ def extrusion(f, noeud, bas, haut, y0, y1, teinte, chanfrein=None, nom=None):
     xs = [x for x, _ in bas]
     zs = [z for _, z in bas]
     dims = (max(xs) - min(xs), y1 - y0, max(zs) - min(zs))
-    return f._piece(bm, noeud, teinte, Matrix.Identity(4), dims, chanfrein=chanfrein, nom=nom)
+    return f.piece_sur_mesure(bm, noeud, teinte, Matrix.Identity(4), dims, chanfrein=chanfrein, nom=nom)
 
 
 def rectangle(cx, cz, lx, lz):

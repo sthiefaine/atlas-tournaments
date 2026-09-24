@@ -96,7 +96,7 @@ def _retirer(f, noeud, noms):
 
 def _teindre(f, noeud, noms, teinte):
     """Change la teinte de pièces déjà posées : la tenue de l'unité."""
-    f._verifier_teinte(teinte)
+    f.verifier_teinte(teinte)
     for p in f.noeuds[noeud].pieces:
         if p.nom in noms:
             p.teinte = teinte
@@ -126,10 +126,10 @@ def _plaque(f, noeud, profil, epaisseur, origine, rotations, teinte, nom):
     C'est `prisme`, qu'on peut tourner.
     """
     bm = b.bm_prisme([(-u, v) for u, v in profil], epaisseur)
-    placement = Matrix.Translation(b.vb(origine)) @ f._rotation_modele(rotations)
+    placement = Matrix.Translation(b.vb(origine)) @ f.rotation_modele(rotations)
     us = [u for u, _ in profil]
     vs = [v for _, v in profil]
-    return f._piece(bm, noeud, teinte, placement, (epaisseur, max(vs) - min(vs), max(us) - min(us)), None, nom=nom)
+    return f.piece_sur_mesure(bm, noeud, teinte, placement, (epaisseur, max(vs) - min(vs), max(us) - min(us)), None, nom=nom)
 
 
 def _profil_cle():
@@ -186,9 +186,9 @@ def _casque_chantier(f, noeud, base, nom='casque'):
         k = math.cos(a)
         anneaux.append(anneau(e + 0.004 + dh * math.sin(a), dx * k, dz * k, 0.0, arete=ARETE * math.sin(a) ** 2))
     bm = b.bmesh.new()
-    b._solide_anneaux(bm, anneaux)
-    placement = Matrix.Translation(b.vb(base)) @ f._rotation_modele([(CASQUE_AXE, -CASQUE_INCLINAISON)])
-    return f._piece(bm, noeud, 'equipe', placement, (2 * bx, e + 0.004 + dh, 2 * bz), None, nom=nom)
+    b.anneaux_en_solide(bm, anneaux)
+    placement = Matrix.Translation(b.vb(base)) @ f.rotation_modele([(CASQUE_AXE, -CASQUE_INCLINAISON)])
+    return f.piece_sur_mesure(bm, noeud, 'equipe', placement, (2 * bx, e + 0.004 + dh, 2 * bz), None, nom=nom)
 
 
 def _depuis(origine, decalage):

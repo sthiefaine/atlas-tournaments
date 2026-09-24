@@ -504,12 +504,16 @@ export interface Regle {
 /** Le genre d'une unité, pour ses seuils : il se lit dans le canon (`content/unites.json`). */
 export type Genre = 'vehicule' | 'fantassin' | 'rotor' | 'avion' | 'drone' | 'navire';
 
-/** Le genre d'une unité du canon : ses pattes, son domaine, son nom. */
-export function genreDe(u: { cle: string; domaine: string; silhouette: { base: string } }): Genre {
+/**
+ * Le genre d'une unité du canon : ses pattes, son domaine, son trait `drone`.
+ * Le trait et jamais le nom : le veilleur des Gris est un drone qui ne le dit
+ * pas dans sa clé, et il se serait mesuré à l'altitude d'un rotor.
+ */
+export function genreDe(u: { domaine: string; traits?: readonly string[]; silhouette: { base: string } }): Genre {
   if (u.silhouette.base === 'pattes') return 'fantassin';
   if (u.domaine === 'mer') return 'navire';
   if (u.domaine === 'air') {
-    if (u.cle.includes('drone')) return 'drone';
+    if (u.traits?.includes('drone')) return 'drone';
     return u.silhouette.base === 'rotor' ? 'rotor' : 'avion';
   }
   return 'vehicule';

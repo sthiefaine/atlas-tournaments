@@ -149,7 +149,15 @@ liste des pièces). Toutes sont chanfreinées (au moins 0,015 m et 3 % de leur
 plus grande dimension ; `chanfrein=` en demande plus) et lissées. Un cercle a
 assez de côtés pour ne jamais se voir en polygone. **Aucun module n'appelle
 une fonction privée** (`_piece`, `_solide_anneaux`, `_placement`…) : si une
-forme manque, `solide` la fait, sinon dites-le.
+forme manque, `solide` la fait, sinon dites-le. Pour une pièce qu'aucune
+primitive ne fait à l'identique, quatre noms publics font ce que faisaient les
+fonctions privées qu'appelaient cinq modules de la première vague :
+`b.anneaux_en_solide(bm, anneaux)` remplit un `bmesh` (points en repère
+Blender, `b.vb`), `f.piece_sur_mesure(bm, noeud, teinte, placement, dims, …)`
+le pose comme une pièce (teinte vérifiée, chanfrein calculé sur `dims`,
+`arrondir=False` pour une pale ou une vitre), `f.placement(centre, rotation)`
+et `f.rotation_modele(rotations)` en font la matrice, `f.verifier_teinte`
+refuse une teinte réservée.
 
 Toutes prennent aussi `uv` : `'hauteur'` range la pièce du haut vers le bas de
 la case de sa teinte, ce qui pose le reflet peint du **verre** sur son tiers
@@ -289,7 +297,7 @@ verdict (`ok`, `ÉCHEC`, `info`) :
 | `controle_fiche` | le lot passe `controlerDepot` (noms, matériaux, clips, échelle, textures) |
 | `equipe_droite`, `equipe_bas`, `equipe_haut` | part des pixels **du modèle** (contour exclu, grâce aux pages de couverture) sous le masque d'équipe : 45–60 % en vue droite (fantassins 40–55), 40 % au moins en bas et en haut |
 | `equipe_connexe` | à 48 px, la plus grande zone d'équipe d'un seul tenant porte 60 % de l'équipe au moins |
-| `equipe_eclairee` | 60 % des pixels d'équipe reçoivent au moins 0,8 de lumière : l'équipe est sur les dessus (seuil proposé, non arrêté ; information pour les fantassins). **La laque plafonne vers 0,9, pas 1,0** : mesuré sur les dix unités cuites, un dessus plat sort à 0,86–0,88 (238–241 sur 255), seules les faces tournées vers le joueur, sous le reflet de la principale, saturent. Le calcul lambertien (`clarteFace`, `scripts/sprites/reglages.ts`) donne 1,0 à un dessus plat et fait passer une pente d'équipe sous 0,8 vers 55° quand elle descend vers le côté ou l'arrière (75° vers le joueur) ; la laque en rend une part en reflet : dans l'image cuite, c'est plus tôt |
+| `equipe_eclairee` | 60 % des pixels d'équipe reçoivent au moins 0,8 de lumière : l'équipe est sur les dessus (seuil proposé, non arrêté ; information pour les fantassins). Le calcul lambertien (`clarteFace`, `scripts/sprites/reglages.ts`) donne 1,0 à un dessus plat et fait passer une pente d'équipe sous 0,8 vers 55° quand elle descend vers le côté ou l'arrière (75° vers le joueur). La note d'avant — « la laque plafonne vers 0,9, un dessus plat sort à 0,86–0,88 » — avait été mesurée le 23 septembre sous la lumière d'avant la charte ; sous la lumière de la charte, l'agent de l'automate a mesuré 1,00 sur une sphère d'équipe cuite, et le seuil de 0,8 sur une facette couchée à 50° de la verticale (40° quand elle regarde la caméra) — non repris par un test |
 | `equipe_coherente` | la part d'équipe des identifiants et celle du masque cuit disent la même chose (vos UV tombent dans les bonnes cases) |
 | `largeur` (et `hauteur` d'un fantassin), `largeur_visee` | la silhouette en vue droite, **contour compris**, en cases de 128 px : petite 0,60–0,68, moyenne 0,76–0,84, grande 0,88–0,94 ; fantassins 0,36–0,50 × 0,68–0,75 |
 | `debord_lateral`, `hauteur_pivot` | dans toutes les images de carte : rien au-delà de ±0,47 case du pivot, rien au-dessus de 0,70 case (0,85 en vol) |
@@ -302,7 +310,8 @@ verdict (`ok`, `ÉCHEC`, `info`) :
 
 La classe de taille est la taille de silhouette du canon (`content/unites.json`,
 `silhouette.taille`) ; le genre (véhicule, fantassin, rotor, avion, drone,
-navire) se déduit du canon, et `GENRE = '…'` le corrige.
+navire) se déduit du canon — les pattes, le milieu, et le **trait** `drone`,
+jamais le nom de la clé —, et `GENRE = '…'` le corrige.
 
 ### Des gabarits qui tiennent les classes
 

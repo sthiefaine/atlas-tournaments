@@ -256,6 +256,17 @@ def _solide_anneaux(bm, anneaux, fermer=True):
         bmesh.ops.triangulate(bm, faces=concaves, quad_method='BEAUTY', ngon_method='BEAUTY')
 
 
+def anneaux_en_solide(bm, anneaux, fermer=True):
+    """
+    Public : un solide d'anneaux dans un `bmesh` que l'on posera soi-même par
+    `Figurine.piece_sur_mesure` — la voie des pièces qu'aucune primitive ne
+    fait et que `solide` ne peut pas faire à l'identique (des dimensions de
+    chanfrein imposées, un dépliage en boîte sur un verre). Les points sont en
+    repère Blender (`vb`). Voir `_solide_anneaux`.
+    """
+    _solide_anneaux(bm, anneaux, fermer)
+
+
 def bm_boite(taille):
     """Une boîte centrée, `taille` en Blender (x, y, z)."""
     bm = bmesh.new()
@@ -609,6 +620,39 @@ class Figurine:
         for axe, degres in rotations or []:
             m = Matrix.Rotation(math.radians(degres), 4, vb(direction(axe))) @ m
         return m
+
+    # --- les pièces sur mesure (publiques) --------------------------------------
+    #
+    # Cinq modules de la première vague (anti-air, barge, char moyen, génie,
+    # hélicoptère) ont eu besoin de poser un `bmesh` construit à la main, avant
+    # que `solide` existe. Ils appelaient les fonctions privées ; ces quatre
+    # noms publics font exactement la même chose, pour que la bibliothèque
+    # puisse changer ses fonctions privées sans casser un module.
+
+    def piece_sur_mesure(self, bm, noeud, teinte, placement, dims, chanfrein=None, fin=False, uv='boite', nom=None, arrondir=True):
+        """
+        Pose un `bmesh` fait à la main (repère Blender, centré) comme une pièce :
+        `placement` est une matrice Blender (`placement`, `rotation_modele`),
+        `dims` les dimensions (m) sur lesquelles se calcule le chanfrein. La
+        teinte est vérifiée comme partout ; `arrondir=False` ne chanfreine pas
+        (une pale, un plan de verre), et la pièce reste jugée par la règle
+        d'épaisseur. Préférez `solide` quand il suffit.
+        """
+        return self._piece(bm, noeud, teinte, placement, dims, chanfrein, fin, uv, nom, arrondir)
+
+    @staticmethod
+    def placement(centre, rotation=None):
+        """La matrice Blender d'une pièce : une rotation (matrice Blender) puis `centre` (modèle)."""
+        return Figurine._placement(centre, rotation)
+
+    @staticmethod
+    def rotation_modele(rotations):
+        """Une suite de rotations (axe du modèle, degrés), composées dans l'ordre, en matrice Blender."""
+        return Figurine._rotation_modele(rotations)
+
+    def verifier_teinte(self, teinte):
+        """La teinte de la charte, refusée si elle est réservée aux bâtiments ou à d'autres unités."""
+        return self._verifier_teinte(teinte)
 
     # --- les primitives de base -------------------------------------------------
     #

@@ -91,8 +91,8 @@ def tourelle_carree(f, noeud, centre, largeur, longueur, hauteur, avant, arriere
     # Repère Blender de la pièce : (x, −z, y) du modèle, base à y = 0.
     anneaux = [[(x, -z, y) for x, z in c] for y, c in anneaux]
     bm = bmesh.new()
-    b._solide_anneaux(bm, anneaux)
-    return f._piece(bm, noeud, teinte, f._placement((cx, cy, cz)), (largeur, hauteur, longueur), chanfrein, nom=nom)
+    b.anneaux_en_solide(bm, anneaux)
+    return f.piece_sur_mesure(bm, noeud, teinte, f.placement((cx, cy, cz)), (largeur, hauteur, longueur), chanfrein, nom=nom)
 
 
 def construire(f):

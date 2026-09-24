@@ -168,16 +168,16 @@ def bac(f, noeud, y_bas, zc, largeur, longueur, hauteur, pente, paroi, fond, ray
     anneaux_modele.append(rectangle_arrondi(lh - 2 * paroi + 2 * r_fond, lzh - 2 * paroi + 2 * r_fond, max(0.01, rh - paroi), y_bas + fond, zc))
     anneaux = [[tuple(b.vb(p)) for p in a] for a in anneaux_modele]
     bm = bmesh.new()
-    b._solide_anneaux(bm, anneaux)
-    return f._piece(bm, noeud, teinte, Matrix.Identity(4), (largeur, hauteur, longueur), nom=nom)
+    b.anneaux_en_solide(bm, anneaux)
+    return f.piece_sur_mesure(bm, noeud, teinte, Matrix.Identity(4), (largeur, hauteur, longueur), nom=nom)
 
 
 def dalle(f, noeud, y_bas, y_haut, zc, largeur, longueur, rayon, teinte, nom='dalle'):
     """Une dalle horizontale aux coins arrondis, vue de dessus : un rectangle arrondi extrudé de `y_bas` à `y_haut`."""
     anneaux = [[tuple(b.vb(p)) for p in rectangle_arrondi(largeur, longueur, rayon, y, zc)] for y in (y_bas, y_haut)]
     bm = bmesh.new()
-    b._solide_anneaux(bm, anneaux)
-    return f._piece(bm, noeud, teinte, Matrix.Identity(4), (largeur, y_haut - y_bas, longueur), nom=nom)
+    b.anneaux_en_solide(bm, anneaux)
+    return f.piece_sur_mesure(bm, noeud, teinte, Matrix.Identity(4), (largeur, y_haut - y_bas, longueur), nom=nom)
 
 
 def profil_parabole():

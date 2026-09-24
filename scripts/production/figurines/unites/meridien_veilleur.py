@@ -21,10 +21,6 @@ import bibliotheque as b
 #: Le milieu de la classe moyenne : nettement plus gros que les drones (0,61 à 0,66).
 LARGEUR_VISEE = (0.78, 0.82)
 
-#: Le canon le dit « rotor » (bas à 0,20 m) ; la charte le fait voler comme
-#: un drone, le bas à 0,25 m.
-GENRE = 'drone'
-
 # ---------------------------------------------------------------------------
 # Les cotes, en mètres
 # ---------------------------------------------------------------------------

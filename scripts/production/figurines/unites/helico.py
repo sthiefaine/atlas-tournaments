@@ -146,7 +146,7 @@ def fuseau(f, noeud, teinte, profil, z0, z1, sections=64, exposants=(2.0, 2.0), 
     bm = b.bm_loft(ss)
     ys = [ym + hh for _, ym, hh, _ in profils] + [ym - hb for _, ym, _, hb in profils]
     dims = (2 * amax, max(ys) - min(ys), z1 - z0)
-    return f._piece(bm, noeud, teinte, Matrix.Identity(4), dims, arrondir=False, nom=nom)
+    return f.piece_sur_mesure(bm, noeud, teinte, Matrix.Identity(4), dims, arrondir=False, nom=nom)
 
 
 def bulle(f, noeud, centre, rayons, teinte='verre', nom='verriere'):
@@ -154,7 +154,7 @@ def bulle(f, noeud, centre, rayons, teinte='verre', nom='verriere'):
     rx, ry, rz = rayons
     r = max(rayons)
     bm = b.bm_boule(r, (rx / r, rz / r, ry / r))
-    return f._piece(bm, noeud, teinte, f._placement(centre), (2 * rx, 2 * ry, 2 * rz), arrondir=False, uv='hauteur', nom=nom)
+    return f.piece_sur_mesure(bm, noeud, teinte, f.placement(centre), (2 * rx, 2 * ry, 2 * rz), arrondir=False, uv='hauteur', nom=nom)
 
 
 def rotor_a_pales(f, noeud, centre, rayon, pales, largeur, epaisseur, angle, plan='y', moyeu=0.045, nom='rotor'):

@@ -62,7 +62,7 @@
     "basEtHautMin": 0.40,
     "connexeMin": 0.60,
     "pixelsParCaseConnexe": 48,
-    "eclairee": { "lumiereMin": 0.80, "partMin": 0.60, "note": "proposée par le panel (avis de l'artiste technique, règle 3) pour « portée par les dessus » ; seuil non arrêté par le coordinateur. La laque plafonne vers 0,9, pas 1,0 : mesuré sur les dix unités cuites le 23 septembre, un dessus plat sort à 0,86–0,88 et seules les faces tournées vers le joueur saturent ; le calcul lambertien (clarteFace) fait passer une pente d'équipe sous 0,8 vers 55° vers le côté ou l'arrière, et l'image cuite plus tôt." }
+    "eclairee": { "lumiereMin": 0.80, "partMin": 0.60, "note": "proposée par le panel (avis de l'artiste technique, règle 3) pour « portée par les dessus » ; seuil non arrêté par le coordinateur. Le calcul lambertien (clarteFace) fait passer une pente d'équipe sous 0,8 vers 55° vers le côté ou l'arrière. Le « dessus plat à 0,86–0,88 » mesuré le 23 septembre l'était sous la lumière d'avant la charte ; sous celle de la charte, l'agent de l'automate mesure 1,00 sur une sphère d'équipe cuite (24 septembre), non repris par un test." }
   },
 
   "tailles": {
