@@ -5,6 +5,7 @@
 // contrôle du dépôt, fenêtres éteintes comprises.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
 import {
   declarationsModule, dossierLot, entreesBatiment, etatEteint, ficheDerivee, fichesCandidates, idFigurineBatiment,
@@ -47,8 +48,9 @@ test('une commande fabrique tous les états et variantes du module, ou ceux qu�
   assert.deepEqual(entreesBatiment('ville', { etats: ['base'], variantes: ['base'] })[0]!.vues, ['fixe']);
 });
 
-test('ce qu’un module déclare se lit dans sa source, et les défauts', () => {
-  assert.deepEqual(declarationsModule("ETATS = ('base', 'desaffecte')\n"), { etats: ['base', 'desaffecte'], variantes: ['base'] });
+test('ce qu’un module déclare se lit dans sa source : celle de la ville pilote, et les défauts', () => {
+  const ville = readFileSync('scripts/production/figurines/batiments/ville.py', 'utf8');
+  assert.deepEqual(declarationsModule(ville), { etats: ['base', 'desaffecte'], variantes: ['base'] });
   assert.deepEqual(declarationsModule('def construire(f, etat, variante):\n    pass\n'), { etats: ['base'], variantes: ['base'] });
   assert.deepEqual(declarationsModule("ETATS = ('base',)\nVARIANTES = ('base', 'fr', 'lu')\n"), { etats: ['base'], variantes: ['base', 'fr', 'lu'] });
   assert.throws(() => declarationsModule("ETATS = ('desaffecte',)\n"), /base/);
