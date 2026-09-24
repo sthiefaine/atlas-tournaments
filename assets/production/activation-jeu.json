@@ -188,10 +188,10 @@
     {
       "id": "unite_furtif_base",
       "fichierActif": "public/assets/modeles/unite_furtif_base_lod0.glb",
-      "donnees": "../donnees/e85a5b25fde204b5f8dd3aa26785c1e24f24f6c3ecdb81c58188ab1bb920f55b.glb",
-      "revision": "c7e94a67aaeef289bf1d1aaa4507e8e60e6a7f87b1e6e5aff213b43367ad78f4",
+      "donnees": "../donnees/9d23d08f0766984409c892ac89bcbb74d696366f14a37e77d4f4319a6c0a7bd8.glb",
+      "revision": "6ca2f105c7cdd270aac5e0b9f8510e20c0a281e8832994cb09c47dfdeeb2a4a2",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_genie_base",

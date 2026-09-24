@@ -906,6 +906,7 @@ const DIMENSIONS_FIGURINES: Partial<Record<string, readonly [number, number, num
   drone_intercepteur: [0.667, 0.314, 0.688],
   drone_marin: [0.242, 0.456, 0.625],
   drone_ravitailleur: [0.597, 0.515, 0.681],
+  furtif: [0.663, 0.136, 0.795],
   genie: [0.569, 0.859, 0.349],
   helico: [0.446, 0.38, 0.818],
   infanterie: [0.48, 0.831, 0.487],
