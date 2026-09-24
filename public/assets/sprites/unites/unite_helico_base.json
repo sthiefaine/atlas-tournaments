@@ -5,7 +5,7 @@
   "cle": "helico",
   "source": {
    "fichier": "public/assets/modeles/unite_helico_base_lod0.glb",
-   "sha256": "bf613b4594793504df9cbb1292274edf7fa3c340c4901d348eb6ef3ab112930b"
+   "sha256": "66fa62baff4f1c64c0b7f21f4d750c5ea05f54b74e48e2bf4d460408715fc20d"
   },
   "pages": [
    {
@@ -907,7 +907,7 @@
      },
      {
       "page": 0,
-      "x": 1574,
+      "x": 1685,
       "y": 442,
       "l": 111,
       "h": 59,
@@ -916,7 +916,7 @@
      },
      {
       "page": 0,
-      "x": 1689,
+      "x": 1800,
       "y": 442,
       "l": 109,
       "h": 59,
@@ -934,7 +934,7 @@
      },
      {
       "page": 0,
-      "x": 1463,
+      "x": 1574,
       "y": 442,
       "l": 107,
       "h": 63,
@@ -970,7 +970,7 @@
      },
      {
       "page": 0,
-      "x": 1019,
+      "x": 1241,
       "y": 442,
       "l": 107,
       "h": 64,
@@ -1014,7 +1014,7 @@
      },
      {
       "page": 0,
-      "x": 1241,
+      "x": 1352,
       "y": 442,
       "l": 107,
       "h": 64,
@@ -1032,7 +1032,7 @@
      },
      {
       "page": 0,
-      "x": 1352,
+      "x": 1463,
       "y": 442,
       "l": 107,
       "h": 64,
@@ -1170,13 +1170,13 @@
  },
  "cuisson": {
   "version": 4,
-  "empreinte": "d36f81d3e40f7d59a242d8f9b75dfc74930914ef36421a56fab6c30e3b1d89b0",
-  "date": "2026-09-24T02:26:08.431Z",
-  "secondes": 212.1,
-  "secondesRendu": 191,
+  "empreinte": "6c6828d83154e5295c89c019aab08c490da0a4c9784670316d38492c1c087c11",
+  "date": "2026-09-24T02:50:11.136Z",
+  "secondes": 80.9,
+  "secondesRendu": 71.8,
   "images": 118,
-  "imagesUniques": 115,
-  "octets": 370677,
+  "imagesUniques": 116,
+  "octets": 365828,
   "canevas": {
    "droite": {
     "x0": -71,

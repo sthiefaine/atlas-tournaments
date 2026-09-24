@@ -84,16 +84,16 @@
     {
       "id": "unite_artillerie_base",
       "fichierActif": "public/assets/modeles/unite_artillerie_base_lod0.glb",
-      "donnees": "../donnees/b86fcde9492890aa44a8980804045ef1cf6dd2e7753538c075b715b99ca15eae.glb",
-      "revision": "2bb73ca413bbc59aa55141e401571b1da458f67a51a2815e6d5d8dc2737a8a0c",
+      "donnees": "../donnees/b2e0fbf4751d24574f1df005be84111e4ef171faca14460a28111ec0b9bd10c1.glb",
+      "revision": "e92993ddbb91ff60d04e59a5b1c494efc6443ca0c12c849a75cdf7b0943acd11",
       "controle": "ok",
       "provenance": "figurine"
     },
     {
       "id": "unite_barge_base",
       "fichierActif": "public/assets/modeles/unite_barge_base_lod0.glb",
-      "donnees": "../donnees/9a36db7cfb073d3cb76e8fd6c40870c7db042863a501d9b86b424c6354803472.glb",
-      "revision": "3356685144fa1aec773d20405ac161b003453233f6fe6889220c08d58ed3f455",
+      "donnees": "../donnees/567b7f5ab50efa175b70bd7fe6ecbfb04665a216b30e9c3fcdc3e403de9f4e23.glb",
+      "revision": "712baef498314b475ae1df59413bba3abd95d73b8d8a22669be8f27484985639",
       "controle": "ok",
       "provenance": "figurine"
     },
@@ -116,8 +116,8 @@
     {
       "id": "unite_char_leger_base",
       "fichierActif": "public/assets/modeles/unite_char_leger_base_lod0.glb",
-      "donnees": "../donnees/22262193a3e3564c006f9be58894b46ce3f9c0451815f4e14190aa1e20905a87.glb",
-      "revision": "7aa68fe8308953744115d4f8385de1f881cab1750cabbbbba28475d99fa6787d",
+      "donnees": "../donnees/505f002ce861f1cbfa8d69593b3119b1b73b501cdd3a35bc52abe5c85249430b.glb",
+      "revision": "3340bcb2c7f2ecbabcf69c0ff7f066d74db1beb39415fd0b2bc71ab0d0b00a7e",
       "controle": "ok",
       "provenance": "figurine"
     },
@@ -132,8 +132,8 @@
     {
       "id": "unite_char_moyen_base",
       "fichierActif": "public/assets/modeles/unite_char_moyen_base_lod0.glb",
-      "donnees": "../donnees/3e8fad77aebc05820b69cbef52bbd812bd6c5adac69c147ff3179ab990f2e9cc.glb",
-      "revision": "3ee0f1d470366037eef5d32322a5abe316375fc4ff93c268032f744ec944f2e1",
+      "donnees": "../donnees/2afc2d7c552a858a6bae8377ae25d8d4d579b9e9c2ed04639becf3b8f18dc7e7.glb",
+      "revision": "b65a71df206ace2c5b571cdae1a5c221b6e6b9db4bce1a25687697ad73ad705f",
       "controle": "ok",
       "provenance": "figurine"
     },
@@ -196,32 +196,32 @@
     {
       "id": "unite_genie_base",
       "fichierActif": "public/assets/modeles/unite_genie_base_lod0.glb",
-      "donnees": "../donnees/a4286e05f91a350547f27f19827a8bb10c7831f16494b3174b569ffe3457ba01.glb",
-      "revision": "8e61646a6729d1a1d01c8900c3578f0c0d7ad9a13c6fcbe5ebc07275f000ffae",
+      "donnees": "../donnees/6a01231a2dd943d0ffc03fe89d19c009473c06bbc55fc7e0934c8bacf87d6bbf.glb",
+      "revision": "b23401615095dc3fc5cffc29c0d2b2f22b51634115dab539721a76d3cd92397a",
       "controle": "ok",
       "provenance": "figurine"
     },
     {
       "id": "unite_helico_base",
       "fichierActif": "public/assets/modeles/unite_helico_base_lod0.glb",
-      "donnees": "../donnees/bf613b4594793504df9cbb1292274edf7fa3c340c4901d348eb6ef3ab112930b.glb",
-      "revision": "7b33bb0f8f4c24101b37f88895648bb972810c1643009f39705739cc0700d50c",
+      "donnees": "../donnees/66fa62baff4f1c64c0b7f21f4d750c5ea05f54b74e48e2bf4d460408715fc20d.glb",
+      "revision": "2821ee12d7609a5ec01650080c49dc371d9b2c97e960982641f304ebed77d1dc",
       "controle": "ok",
       "provenance": "figurine"
     },
     {
       "id": "unite_infanterie_base",
       "fichierActif": "public/assets/modeles/unite_infanterie_base_lod0.glb",
-      "donnees": "../donnees/0afd4d3e4404b3cc40360dc89f19c592df42e2b3652c8c07c8b9b6ef1b98a407.glb",
-      "revision": "05f8ba609b3ea6ec8d9d67b4c629fa7c6c3092aa364455c923441eb577dcd01e",
+      "donnees": "../donnees/c5d7bf47d1a8ef6e542e53e612105b81fe96c9ca644a34b71e32f7a7eb245fcb.glb",
+      "revision": "cd7cb529a9ea61c95f99cd3286456723f4484bdc1ee8e70146cc133e815b3b4a",
       "controle": "ok",
       "provenance": "figurine"
     },
     {
       "id": "unite_meca_base",
       "fichierActif": "public/assets/modeles/unite_meca_base_lod0.glb",
-      "donnees": "../donnees/180bf3f5125722bf54e88406d60a53f617d580c4ec77a4b0fa6063ad86c03835.glb",
-      "revision": "50e7066bb8ba35b4ad9c60df48bc7254e4ad2c255c830efc9e444a6668c1acfa",
+      "donnees": "../donnees/f267ef240b5494f7976f99da35a61c85639326147924f25cc5ef9f10feca5da9.glb",
+      "revision": "e301052b2d0e92db9eae3f6f58f10527dc326f06a73ed51d4c2067062321f04d",
       "controle": "ok",
       "provenance": "figurine"
     },

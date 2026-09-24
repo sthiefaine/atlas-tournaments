@@ -5,7 +5,7 @@
   "cle": "barge",
   "source": {
    "fichier": "public/assets/modeles/unite_barge_base_lod0.glb",
-   "sha256": "9a36db7cfb073d3cb76e8fd6c40870c7db042863a501d9b86b424c6354803472"
+   "sha256": "567b7f5ab50efa175b70bd7fe6ecbfb04665a216b30e9c3fcdc3e403de9f4e23"
   },
   "pages": [
    {
@@ -974,13 +974,13 @@
  },
  "cuisson": {
   "version": 4,
-  "empreinte": "e0bd99f07e83f30a8ee815eff3dc743b365a6dd902c510e888d813d1e5536f42",
-  "date": "2026-09-24T02:09:13.849Z",
-  "secondes": 176.1,
-  "secondesRendu": 144.6,
+  "empreinte": "0be5d7fdb85084f97e561588666efda836646011e1f642f67f32a350515adc95",
+  "date": "2026-09-24T02:43:58.383Z",
+  "secondes": 73.1,
+  "secondesRendu": 61.1,
   "images": 98,
   "imagesUniques": 98,
-  "octets": 370659,
+  "octets": 370789,
   "canevas": {
    "droite": {
     "x0": -58,

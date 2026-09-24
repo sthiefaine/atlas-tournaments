@@ -5,7 +5,7 @@
   "cle": "infanterie",
   "source": {
    "fichier": "public/assets/modeles/unite_infanterie_base_lod0.glb",
-   "sha256": "0afd4d3e4404b3cc40360dc89f19c592df42e2b3652c8c07c8b9b6ef1b98a407"
+   "sha256": "c5d7bf47d1a8ef6e542e53e612105b81fe96c9ca644a34b71e32f7a7eb245fcb"
   },
   "pages": [
    {
@@ -1286,13 +1286,13 @@
  },
  "cuisson": {
   "version": 4,
-  "empreinte": "6c152bc94a51068e907c67ce920b30c07ce18a14c8ee380872dd292b6f4bb24b",
-  "date": "2026-09-24T02:28:13.416Z",
-  "secondes": 218.3,
-  "secondesRendu": 193.6,
+  "empreinte": "46393bdea0462023172518a9a01763775fa1b6d8b5fe6f335f943a473257bd29",
+  "date": "2026-09-24T02:52:17.334Z",
+  "secondes": 119.9,
+  "secondesRendu": 110.9,
   "images": 130,
   "imagesUniques": 130,
-  "octets": 474770,
+  "octets": 474965,
   "canevas": {
    "droite": {
     "x0": -52,
