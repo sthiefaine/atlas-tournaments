@@ -1,12 +1,15 @@
-# Les figurines — mode d'emploi d'un agent d'unité
+# Les figurines — mode d'emploi d'un agent d'unité ou de bâtiment
 
-Le socle commun des trente unités refaites de zéro (23 septembre 2026). Un
-agent d'unité **n'écrit qu'un fichier** : `unites/<cle>.py`. Tout ce qui fait
-la cohésion du lot — la palette, le masque d'équipe, le chanfrein, le lissage,
-les nœuds de la fiche, les clips, l'export, le contrôle, la cuisson d'essai,
-les mesures — est ici et ne se recopie pas.
+Le socle commun des trente unités refaites de zéro (23 septembre 2026), et des
+bâtiments depuis le 24 septembre. Un agent d'unité **n'écrit qu'un fichier** :
+`unites/<cle>.py` ; un agent de bâtiment, `batiments/<cle>.py` (voir « Les
+bâtiments », plus bas). Tout ce qui fait la cohésion du lot — la palette, le
+masque d'équipe, le chanfrein, le lissage, les nœuds de la fiche, les clips,
+l'export, le contrôle, la cuisson d'essai, les mesures — est ici et ne se
+recopie pas.
 
-Le pilote est `unites/char_leger.py` : lisez-le avant d'écrire le vôtre.
+Le pilote est `unites/char_leger.py` : lisez-le avant d'écrire le vôtre. Celui
+des bâtiments est `batiments/ville.py`.
 
 ## La commande
 
@@ -346,6 +349,193 @@ fonction privée de la bibliothèque (celles qui commencent par `_`). Si une
 primitive manque ou qu'une règle vous paraît fausse, dites-le dans votre
 rapport au lieu de la contourner. Ne laissez pas de `.ts` dans `tmp/` :
 `npm run typecheck` les lirait.
+
+## Les bâtiments
+
+La vague des bâtiments (24 septembre 2026) : le plan
+`doc/refonte/plan-batiments.md` **fait foi** (identifiants, états, coin du mât,
+règles) ; la charte (`doc/refonte/charte-figurines.md` §3.12 et §6) dit ce que
+chaque bâtiment montre. La même chaîne que les unités — bibliothèque, atlas,
+lot, contrôle, déterminisme, cuisson d'essai, mesures, planches —, avec ce qui
+change pour un bâtiment : une seule vue, `fixe` (il regarde le joueur et ne se
+retourne pas), son ombre cuite au sol, ses fenêtres dans une page d'émission,
+et ses propres règles. Le pilote est `batiments/ville.py` : lisez-le avant
+d'écrire le vôtre.
+
+### La commande
+
+```
+npm run fabriquer:figurine -- --batiment <cle> [--etat <état>] [--variante <v>]
+```
+
+Sans `--etat` ni `--variante`, **tous** les états et variantes que le module
+déclare sont fabriqués, chacun dans `tmp/figurines/batiments/<cle>/<id>/`
+(`lot/`, `fiche.json`, `sprites/`, `rapport.json`, `planche-clips.png`), puis
+la planche du bâtiment entier : `tmp/figurines/batiments/<cle>/planche.png`.
+`--etat desaffecte` ne refait que lui ; la planche reprend les autres entrées
+cuites la fois d'avant. Les options des unités valent aussi : `--sans-cuisson`
+(Blender, lot, contrôle, coin du mât et aperçu de la palette en deux
+secondes), `--echantillons 8`, `--module`, `--sortie` (elle remplace
+`tmp/figurines/batiments/<cle>/`), `--fiche`, `--determinisme`.
+
+| Module | Entrées (plan §1) |
+|---|---|
+| `batiments/ville.py`, `usine.py`, `aeroport.py`, `port.py`, `radar.py` | `batiment_<cle>_base`, `batiment_<cle>_desaffecte` |
+| `batiments/qg.py` | `batiment_qg_base`, `batiment_qg_fr`, `batiment_qg_lu` (un QG ne se désaffecte pas) |
+| `batiments/superusine.py` | `batiment_superusine_base`, `batiment_superusine_inerte` |
+| `batiments/pont.py` | `terrain_pont` : un **terrain**, cuit en vues `fixe` et `travers`, sans couleur d'équipe, sans mât |
+
+Une entrée dont le catalogue n'a pas encore la fiche (les désaffectés, la
+superusine : `src/assets/catalogue.ts`, que l'agent du catalogue complète) se
+contrôle contre celle de son **type de base** sous son identifiant
+(`batiment_<cle>_base` ; l'usine pour la superusine), écrite dans
+`<id>/fiche-officielle.json` : la console le dit (« dérivée de … »).
+
+L'installation est celle du coordinateur :
+`npm run installer:figurine -- --id <identifiant>` (le lot par défaut est
+celui que la fabrication laisse) ; elle exige la fiche **officielle** du
+catalogue, et la recuisson (`npm run cuire:sprites -- --id <identifiant>`)
+un identifiant que `scripts/sprites/catalogue.ts` (`classer`) reconnaît.
+
+### Ce que vous écrivez
+
+```python
+"""Ce que le bâtiment dit à 48 pixels, en trois lignes."""
+import bibliotheque as b
+
+ETATS = ('base', 'desaffecte')     # ('base', 'inerte') pour la superusine ; ('base',) pour le QG et le pont
+VARIANTES = ('base',)              # le QG : ('base', 'fr', 'lu')
+
+def construire(f, etat, variante):
+    ...   # le même bâtiment pour tous les états : le désaffecté est endormi, jamais un autre dessin
+
+def animer(f, etat, variante):
+    b.fixe(f.clip('repos'), 'corps')   # un bâtiment ne bouge pas au repos
+    ...                                # `capture` est obligatoire ; `touche` facultatif ; le pont n'a aucun clip
+```
+
+`ETATS` et `VARIANTES` s'écrivent en tuple de chaînes, **sur une ligne** :
+`fabriquer.ts` les lit dans la source pour savoir quoi fabriquer, et Blender
+revérifie l'état demandé contre le module chargé.
+
+- **Les nœuds de la fiche** : `racine`, `corps`, `toit`, `enseigne` (le pont :
+  `racine`, `sol`), tous sous la racine au départ ; `f.noeud('toit',
+  parent='corps', pivot=…)` les range. Un nœud peut rester vide (l'enseigne de
+  la ville : aucune enseigne lisible).
+- **Les matériaux** `mat_corps` et `mat_vitrage` : le verre et la fenêtre vont
+  d'eux-mêmes au vitrage, tout le reste au corps. Un désaffecté sans vitre
+  livre quand même le matériau (le lot l'ajoute).
+- **La palette** : celle des unités, plus quatre teintes que seuls les
+  bâtiments (et le pont) portent — `enduit` (murs), `pave` (socles, quais,
+  cheminées), `bois` (portes, planches, pont) et `fenetre`, une vitre qui
+  **s'allume la nuit** : le verre le jour (reflet compris), la lumière des feux
+  dans sa page d'émission. Six teintes au plus. L'orange et l'apprêt des Gris
+  sont réservés à `batiment_superusine` (et aux trois prototypes) : refusés à
+  la construction partout ailleurs, et mesurés (`palette_orange`). Aucune
+  peau.
+- **Le sol** : le rendu peint la case d'un bâtiment (du pavé, `render2d/sol/`)
+  et la planche aussi. Ne modélisez ni cour ni dalle au sol : c'est déjà là,
+  et une dalle plus mince que 5 cm échoue à l'épaisseur.
+- **L'échelle** : les unités installées sont posées sur le plateau de la
+  planche ; un fantassin fait 0,8 m. Le bâtiment tient dans ±0,47 m (x et z),
+  la superusine ±0,6.
+
+Les primitives des bâtiments (en plus de celles des unités) :
+
+| Primitive | Paramètres | Pour |
+|---|---|---|
+| `toit(noeud, centre, largeur, longueur, hauteur, teinte='equipe', faitage='x', debord=0.03, epaisseur=0.045, forme='deux_pans', haut='-z')` | `centre` : le milieu du dessus des murs (l'égout) ; `largeur` × `longueur` : l'emprise des murs (x × z) ; `hauteur` de l'égout au faîtage ; un seul solide épais de `epaisseur` qui déborde de `debord` ; `faitage='z'` : pignon sur rue (les pans regardent les côtés) ; `forme='appentis'` : un seul pan, haut du côté `haut` (`'-z'`, `'z'`, `'-x'`, `'x'`) — des appentis côte à côte font des dents de scie | tous les toits |
+| `pignon(noeud, centre, largeur, longueur, hauteur, teinte='enduit', faitage='x', forme='deux_pans', haut='-z')` | les mêmes mesures que le `toit` qu'il porte | le mur sous un toit : sans lui, le toit flotte |
+| `plaque(noeud, centre, largeur, hauteur, teinte='fenetre', face='z', saillie=0.012, profondeur=0.04, hote=None)` | `centre` : un point du plan de la façade ; `face` : sa normale (`'z'` vers le joueur, `'-z'`, `'x'`, `'-x'`) ; `hote` : le mur qui la porte (même nœud), avec lequel elle est jugée | fenêtres, portes, volets |
+| `croix(noeud, centre, largeur, hauteur, teinte='bois', face='z', section=0.034, saillie=0.04, hote=None)` | deux planches en croix sur une ouverture | le désaffecté |
+| `mat_couche(noeud, vers=(0, 1), longueur=0.5, rayon=0.018)` | le mât couché au sol, depuis le pied du mât vers `vers` (dx, dz), une boule os au bout | le désaffecté |
+| `f.pied_mat()` | (x, z) du pied du mât | tout ce qui doit l'éviter |
+
+### Le coin du mât
+
+Le rendu plante lui-même le mât et le drapeau (`render2d/batiments.ts`,
+`PIED_MAT`) au coin **arrière droit** de la case : `x = +0,36 m`,
+`z = −0,20 m` dans le repère du modèle — à droite de l'écran, un peu derrière
+le centre. Deux contraintes, et la seconde n'est pas mesurée :
+
+1. **Rien au-dessus de 5 cm dans le cercle de 8 cm autour du pied**, dans la
+   pose de repos et dans chaque image que la cuisson photographie. C'est
+   mesuré sur la géométrie, triangle par triangle (`fabriquer.py`,
+   `coin_mat`), et la console le dit dès `--sans-cuisson` (« coin du mât :
+   libre » ou le nœud fautif et sa hauteur). Un toit qui déborde compte.
+2. **Le rendu dessine le mât par-dessus tout.** Ce qui est *devant* lui
+   (`z > −0,20`), dans sa colonne (`x` autour de 0,36), et qui monte à l'écran
+   au-dessus de son pied, se retrouverait derrière le mât : gardez-y une
+   hauteur sous `h ≤ (0,766 z + 0,153) / 0,643` (0,24 m à `z = 0`, 0,48 m à
+   `z = 0,2`). La ville y met sa plus petite maison.
+
+Le désaffecté n'a pas de mât dessiné : le sien est couché dans l'image
+(`mat_couche`), et de biais à l'écran il se lit posé au sol (tout droit, il
+passe pour une étagère).
+
+### Les règles des bâtiments
+
+Mesurées sur la cuisson d'essai, vue `fixe`, première image du repos (le
+modèle seul : la page de couverture exclut l'ombre cuite et le contour), sauf
+ce qui l'est sur le modèle. Les seuils sont dans `charte.json`, `batiments`.
+
+| Règle | Seuil |
+|---|---|
+| `equipe` | 30 à 45 % des pixels du bâtiment sous le masque : le toit entier |
+| `equipe_eclairee` | 60 % de l'équipe reçoit au moins 0,8 de lumière (un pan tourné sur le côté passe jusqu'à 50° de pente, vers le joueur jusqu'à 70°) |
+| `equipe_coherente` | identifiants et masque cuit, à 5 points |
+| `debord_lateral` | ±0,47 case depuis le pivot, contour compris, toutes les images (superusine 0,6) |
+| `emprise_sol` | le modèle au repos tient dans ±0,47 m en x et en z (superusine 0,6) |
+| `hauteur_pivot` | 0,85 case au plus au-dessus du pivot, contour compris |
+| `hauteur_qg` | le QG plus haut que tout bâtiment figurine installé, les autres plus bas que le QG (information tant qu'il n'y a rien à comparer) |
+| `coin_mat` | libre |
+| `emission` | en service : 1 % des pixels ou plus à 128 sur 255 ; désaffecté et superusine prise : aucun pixel au-dessus de 16 |
+| `palette_orange` | 0 hors de la superusine ; présent en service, absent prise |
+| `au_sol`, `teintes` (6), `budget`, `materiaux`, `epaisseur`, `cuisson_entiere`, `controle_fiche` | comme les unités |
+| `repos_immobile`, `repos_agitation` | aucun nœud ne bouge au repos hors d'un nœud `mobile` ou `tournant` (une parabole, une grue lente) ; au plus 1 % des pixels change d'une image à l'autre |
+| `recouvrement` | information : l'ombre chinoise à 48 px (alpha au-dessus de 204, sous lequel reste l'ombre cuite) contre chaque bâtiment installé d'une autre clé |
+
+Le pont n'a que `equipe_absente` (0), `au_sol`, le repos, la palette et ce qui
+est commun : il n'a ni mât ni fenêtre, et il touche les cases voisines.
+
+### Ce que la planche montre
+
+La première rangée : le bâtiment en service dans les quatre camps, **neutre**
+(le gris des bâtiments sans maître, `COULEUR_NEUTRE`, et le **mât nu** que le
+rendu doit poser, plan §4), et de nuit (le voile de la nuit du rendu et
+l'émission pleine) en bleu et en neutre ; puis une rangée par variante ; le
+désaffecté neutre, sans mât dessiné, de jour et de nuit. Le mât et le drapeau
+sont dessinés comme le rendu les dessine (`replis.ts`). Puis les mêmes à
+48 px, vraie taille et agrandies trois fois ; un plateau de cases où le
+bâtiment côtoie des unités installées (infanterie, char léger, char moyen) ;
+et les règles qui échouent, entrée par entrée.
+
+### Ce que la ville a appris
+
+- **L'équipe se gagne par les pignons.** Un pan tourné sur le côté se voit
+  exactement comme son emprise au sol (0,77 de sa surface), quelle que soit sa
+  pente ; un pan tourné vers le joueur, plus (0,77 + 0,64 × la pente) ; un mur
+  qui regarde le joueur, 0,64 de sa surface. La première ville, quatre
+  maisons aux toits tournés vers le joueur, était à 72 % d'équipe : pignons
+  sur rue, murs plus hauts, maisons moins profondes, elle est tombée à 42 %
+  sans rapetisser ses toits. `--sans-cuisson` donne la part des identifiants
+  en deux secondes.
+- **Deux fenêtres seules côte à côte sous un pignon font un visage**, et la
+  nuit deux yeux qui s'allument. Trois, ou deux rangées.
+- **Le repos immobile se cuit quand même en douze images**, que la cuisson ne
+  fusionne pas : Cycles ne rend pas deux fois le même bruit. C'est le poids
+  d'une page, pas une faute du bâtiment ; à régler dans la cuisson s'il le faut.
+
+### Ce que vous ne touchez pas
+
+Votre seul fichier est `batiments/<cle>.py`, et vos essais vont dans
+`tmp/figurines/batiments/<cle>/essais/` (`--module …/essais/<nom>.py
+--sortie …/essais/<nom>`). Tout le reste est comme pour une unité : ni
+`bibliotheque.py`, ni `charte.json`, ni `fabriquer.*`, `batiments.ts`,
+`lot.ts`, `mesures*.ts`, `planche*.ts`, `lecture.ts`, `charte.ts`, ni
+`scripts/sprites/`, `public/`, `src/`, `assets/specs/`, `content/` ; aucune
+opération git ; aucune fonction privée de la bibliothèque. Une primitive qui
+manque, une règle qui vous paraît fausse : dites-le dans votre rapport.
 
 ## Comment c'est fait, en bref
 
