@@ -228,10 +228,10 @@
     {
       "id": "unite_meridien_automate_base",
       "fichierActif": "public/assets/modeles/unite_meridien_automate_base_lod0.glb",
-      "donnees": "../donnees/67ae06df30f78f935ad53d5e14163d6b38fd08537406a4a5692c205ede0200bc.glb",
-      "revision": "020fb995928395d98d6ca344f5c7e73ebb71b0b518994f20ba6c369a54ab4a37",
+      "donnees": "../donnees/6fb9ba13f3245a3300c6d71795ba796e9091e70cd81c19e81787bedf15abdebc.glb",
+      "revision": "885d89b6448e544e5e7be53aa4cc71e388ee2d6a23ddd6553d49a598ec08b183",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_meridien_bastion_base",
