@@ -31,16 +31,16 @@
   "echelle": {
     "caseEnMetres": 1,
     "x": {
-      "cible": 0.7,
-      "tolerance": 0.08
+      "cible": 0.279,
+      "tolerance": 0.05
     },
     "y": {
-      "cible": 0.58,
-      "tolerance": 0.08
+      "cible": 0.562,
+      "tolerance": 0.05
     },
     "z": {
-      "cible": 0.95,
-      "tolerance": 0.08
+      "cible": 0.918,
+      "tolerance": 0.05
     }
   },
   "pivot": {

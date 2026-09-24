@@ -268,10 +268,10 @@
     {
       "id": "unite_porte_avions_base",
       "fichierActif": "public/assets/modeles/unite_porte_avions_base_lod0.glb",
-      "donnees": "../donnees/5d19a909650aed2953ffa0c9a441b36eed989592c3ec42cd576ab395c20a81b9.glb",
-      "revision": "c764d54c17feae08fcd3fd3380ee20074a4b36a8c8861da7fb2389d27e760ea0",
+      "donnees": "../donnees/81e691b3c62902188d96dea4f741f1dfc876436fd86e704ea0487ed9f12ba11b.glb",
+      "revision": "bef6339e07c693da5390f57dd8aa994d242b92b14a03a690f44a76524d7193ca",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_recon_base",
