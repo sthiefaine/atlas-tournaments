@@ -332,10 +332,10 @@
         "nom": "Le Relais sans numéro",
         "silhouette": "Un Veilleur dont l’antenne fait trois fois la taille du catalogue et dont le champ « numéro de dossier » est vide sur la fiche d’engagement — l’impulsion de station sortie de sa station (rotor · capsule · [antenne, antenne] · 2)."
       },
-      "telegraphie": "Jauge visible ; à 9 barres, Bulletin « Relais sans numéro en charge — Retour à zéro possible au prochain tour », gabarit du rayon 2 au survol, et chaque appareil et drone du joueur porte un point d'exclamation orange : ce qui peut tomber le sait. Neuf barres : il part une fois par match.",
+      "telegraphie": "Jauge visible ; à 9 barres, Bulletin « Relais sans numéro en charge — Retour à zéro possible au prochain tour », gabarit du rayon 2 au survol, et chaque appareil et drone du joueur porte un point d'exclamation orange : ce qui peut tomber le sait. Neuf barres : il part une fois par bataille.",
       "contreJeu": "Espacer les appareils de plus de deux cases les uns des autres — il ne peut abattre qu'une zone de treize cases —, poser ce qui peut se poser, et mettre ses Veilleurs hors jeu un par un.",
       "replique": "Retour à zéro sur le secteur. Ce qui volait est au sol ; ce qui roulait attend.",
-      "vantour": "Un appareil qui tombe sur un terrain homologué — je n'ai pas de mot pour ça, et j'ai commenté quatre Rondes.",
+      "vantour": "Un appareil abattu par une arme qui n'a jamais été déclarée — je n'ai pas de mot pour ça, et je commente cette guerre depuis quatorze ans.",
       "premiereFinale": "opus1_finale_06",
       "remplace": "Réseau sans écho",
       "familles": [
