@@ -807,7 +807,7 @@
     },
     {
       "cle": "accueil.campagne_fini",
-      "texte": "Six épreuves remportées",
+      "texte": "Toutes les épreuves remportées",
       "contexte": {
         "ecran": "accueil",
         "note": "Sous-ligne du bouton Campagne, tout gagné."
@@ -816,7 +816,7 @@
     },
     {
       "cle": "accueil.campagne_neuf",
-      "texte": "Six épreuves · commencez ici",
+      "texte": "Dix exercices · commencez ici",
       "contexte": {
         "ecran": "accueil",
         "note": "Sous-ligne du bouton Campagne quand rien n'a été joué. C'est ce que rend le serveur."
@@ -3723,7 +3723,7 @@
     },
     {
       "cle": "reglages.effacer_note",
-      "texte": "Les six épreuves et les parties en cours seront perdues.",
+      "texte": "Vos épreuves remportées et vos parties en cours seront perdues.",
       "contexte": {
         "ecran": "reglages",
         "note": "Aide sous l'effacement."

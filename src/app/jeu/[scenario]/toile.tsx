@@ -19,7 +19,7 @@ import { debloquerCommandants, enregistrerRencontres, enregistrerVictoire, enreg
 import { appliquerConsequences, cleDecision, decisionsDeGraine, graineAube, libelleDecision, optionsDecision, ETAPES_AUBE, estMissionAube, CLES_QUETES_AUBE, queteOuverte, VERSION_CANON_AUBE } from '../../campagne/consequences';
 import { PROPRES_COULEURS, bancChoisi, cleSourceBanc, graineAvecCommandant, optionsBanc } from '../../campagne/bancs';
 import { grilleCommandants } from '../../campagne/roster';
-import { appliquerCommandantDeGraine } from '../../campagne/commandants-jouables';
+import { appliquerCommandantDeGraine, bancsProposes } from '../../campagne/commandants-jouables';
 import { chargerCommandantsJouables } from '@/content/commandants-jouables';
 import { compteRoster, ouvertures } from '@/render/roster-commandants';
 import ChoixCommandant from './choix-commandant';
@@ -195,6 +195,11 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   // Le choix est gardé ici en plus de la progression : si le stockage refuse,
   // la partie se joue quand même sous les couleurs choisies.
   const bancs = useMemo(() => (scenario.bancs?.length ? optionsBanc(scenario.code) : []), [scenario.bancs, scenario.code]);
+  // Ce qu'on **montre** au choix : les mêmes bancs, moins les généraux disparus
+  // (`disparitions.ts`). La logique de la page lit `bancs`, qui ne dépend pas de la
+  // progression : la lire ici relancerait le montage à chaque progression relue.
+  // Jouer ses propres couleurs reste toujours proposé.
+  const bancsAffiches = useMemo(() => (scenario.bancs?.length ? bancsProposes(scenario.code, progression) : []), [scenario.bancs, scenario.code, progression]);
   // Le catalogue du scénario, pour nommer les unités qu'un filtre de pouvoir cite au briefing.
   const catalogueKit = useMemo(() => chargerCatalogue(scenario.catalogueVersion), [scenario.catalogueVersion]);
   // Le commandant du scénario : le défaut de tout choix de banc, et le premier
@@ -563,7 +568,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
         </div>
         <p className="atlas-aide">{t(locale, 'banc.note')}</p>
         <ul className="atlas-bancs">
-          {bancs.map((option) => {
+          {bancsAffiches.map((option) => {
             const general = option.cle === PROPRES_COULEURS ? commandantDefaut : option.cle;
             const kit = chargerCommandantJeu(general, revisionCommandants(scenario));
             const profil = lireProfilCommandant(general);

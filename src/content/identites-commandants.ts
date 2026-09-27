@@ -42,7 +42,7 @@ export const IDENTITES_COMMANDANTS = [
     "style": "Pression mécanisée",
     "capacites": "Pouvoir : attaque ×1,3 pour les chenilles. Super : attaque ×1,45 et mouvement +1 pour les chenilles.",
     "faiblesse": "L’infanterie, les aéronefs et les roues ne bénéficient pas de ces pouvoirs.",
-    "dilemme": "Tenir le calendrier de l’exhibition ou admettre les limites du matériel à l’essai.",
+    "dilemme": "Tenir le calendrier des démonstrations ou admettre les limites du matériel à l’essai.",
     "mission": "aube_essais_drones"
   }
 ];
