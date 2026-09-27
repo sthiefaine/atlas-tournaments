@@ -96,6 +96,13 @@ export const OUVERTURE_LUXEMBOURG: Readonly<Record<string, DurcissementChapitre>
       renforts: [{ journee: 2, unites: [{ camp: 1, type: 'char_leger', x: 14, y: 5 }] }],
     },
   },
+  // La fiche : « crédit adverse de 1 500 fonds maximum », et rien d'autre. Les
+  // fonds viennent des paramètres du mode ; il reste à le dire au briefing.
+  opus1_lu_02: {
+    difficile: {
+      annonce: { locuteur: TOMAS, emotion: 'neutre', texte: 'En difficile, Lise a 1 500 fonds de plus : de quoi renvoyer des fantassins reprendre un aiguillage. Les postes ne changent pas. Le Bulletin ne voit qu’une journée.' },
+    },
+  },
 };
 
 /** Tous les durcissements de chapitre, par épreuve : ce que `scenarioPourMode` lit. */

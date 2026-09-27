@@ -41,6 +41,6 @@ test('les choix, ouvertures et retours pointent vers des épisodes existants', (
   // le chapitre français (23 septembre 2026) et l'ouverture du Luxembourg
   // (27 septembre). Le reste du plan reste un plan.
   const parcours = lire('content/campagne.json').missions as { scenarioCle: string }[];
-  assert.equal(parcours.length, 25, 'ne pas présenter le plan comme des missions intégrées');
+  assert.equal(parcours.length, 26, 'ne pas présenter le plan comme des missions intégrées');
   for (const m of parcours) assert.ok(existsSync(`content/scenarios/${m.scenarioCle}.json`), `${m.scenarioCle} doit être jouable`);
 });

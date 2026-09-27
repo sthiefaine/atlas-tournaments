@@ -1,12 +1,13 @@
 /**
  * L'ouverture du chapitre luxembourgeois — Le relais de Tomas (`opus1_lu_01`)
- * — et la conséquence du choix de FR12, qui l'attendait depuis le 23 septembre.
+ * et Les trois aiguillages (`opus1_lu_02`) — et la conséquence du choix de
+ * FR12, qui attendait LU01 depuis le 23 septembre.
  *
  * Ce qui est tenu ici : chaque option de FR12 n'agit que sur LU01, avec l'effet
- * de sa fiche et une réplique de Tomas ; la graine fige le choix ; la mission
- * reste gagnable sous chaque option et sans choix, dans les deux modes (par un
- * pilote simple, pas par un humain) ; le difficile durcit Lise et jamais le
- * joueur ; le parcours enchaîne le Luxembourg après FR12.
+ * de sa fiche et une réplique de Tomas ; la graine fige le choix ; chaque
+ * mission reste gagnable dans les deux modes, LU01 sous chaque option et sans
+ * choix (par un pilote simple, pas par un humain) ; le difficile durcit Lise et
+ * jamais le joueur ; le parcours enchaîne le Luxembourg après FR12.
  */
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
@@ -166,6 +167,59 @@ test('Le relais de Tomas se gagne sans choix et sous chaque option de FR12, dans
   }
 });
 
+test('Les trois aiguillages se gagnent dans les deux modes', () => {
+  const lu02 = scenario('opus1_lu_02');
+  const m = carte(lu02);
+  for (const mode of ['normal', 'difficile'] as const) {
+    const s = scenarioPourMode(lu02, mode);
+    const fin = jouerAvecPilote(s, m, 'agressive', `${lu02.code}:1`);
+    assert.equal(fin.partie.vainqueur, 0, `${mode} : ${JSON.stringify(fin.partie)} à J${fin.journee}`);
+    assert.equal(fin.partie.motif, 'objectif_capturer');
+    assert.ok(fin.journee <= s.limiteJournees!, `${mode} : J${fin.journee}`);
+  }
+});
+
+test('les trois aiguillages sont à Lise au départ, chacun sous une de ses pièces, et le centre est le plus court', () => {
+  const s = scenario('opus1_lu_02');
+  const m = carte(s);
+  const objectif = s.victoire[0]!;
+  assert.equal(s.victoire.length, 1);
+  assert.equal(objectif.type, 'capturer');
+  if (objectif.type !== 'capturer') return;
+  assert.equal(objectif.combien, 2, 'deux des trois, comme la fiche');
+  assert.equal(objectif.cases.length, 3);
+  const cat = chargerCatalogue(s.catalogueVersion);
+  const pieces = m.unitesDepart.filter((u) => u.camp === 1 && cat.unites[u.type]!.portee[1] > 1);
+  for (const c of objectif.cases) {
+    assert.equal(m.grille[c.y]![c.x], 'C', 'un poste d’aiguillage est un bâtiment qui se capture');
+    assert.equal(m.proprietaires[`${c.x},${c.y}`], 1, 'à reprendre : il est à Lise');
+    const couvrent = pieces.filter((p) => {
+      const d = Math.abs(p.x - c.x) + Math.abs(p.y - c.y);
+      const [min, max] = cat.unites[p.type]!.portee;
+      return d >= min && d <= max;
+    });
+    assert.equal(couvrent.length, 1, `(${c.x},${c.y}) : sous une pièce et une seule`);
+  }
+  // « Le plus court, c'est l'aiguillage du centre » : Tomas dit vrai.
+  const qg = Object.entries(m.proprietaires).find(([k, camp]) => { const [x, y] = k.split(',').map(Number); return camp === 0 && m.grille[y!]![x!] === 'H'; })!;
+  const [qx, qy] = qg[0].split(',').map(Number) as [number, number];
+  const [nord, centre, sud] = objectif.cases.map((c) => Math.abs(c.x - qx) + Math.abs(c.y - qy)) as [number, number, number];
+  assert.ok(centre < nord && centre < sud, `centre ${centre}, nord ${nord}, sud ${sud}`);
+});
+
+test('LU02 : le difficile n’est que le crédit de la fiche, annoncé par Tomas', () => {
+  const base = scenario('opus1_lu_02');
+  const normal = scenarioPourMode(base, 'normal');
+  const dur = scenarioPourMode(base, 'difficile');
+  assert.equal(dur.dialogueOuverture.length, normal.dialogueOuverture.length + 1);
+  assert.deepEqual(dur.dialogueOuverture.at(-1), OUVERTURE_LUXEMBOURG['opus1_lu_02']!.difficile!.annonce);
+  assert.equal((dur.fondsDepartParCamp?.[1] ?? 0) - (normal.fondsDepartParCamp?.[1] ?? 0), 1500);
+  assert.equal(dur.fondsDepartParCamp?.[0], normal.fondsDepartParCamp?.[0], 'le joueur garde ses fonds');
+  assert.deepEqual(dur.renforts ?? [], [], 'aucune unité de plus : la fiche ne donne que du crédit');
+  assert.deepEqual(dur.victoire, base.victoire);
+  assert.equal(dur.previsionJournees, 1);
+});
+
 test('le difficile durcit Lise et l’annonce par Tomas ; le normal ne reçoit rien', () => {
   const base = scenario('opus1_lu_01');
   const normal = scenarioPourMode(base, 'normal');
@@ -188,18 +242,20 @@ test('le difficile durcit Lise et l’annonce par Tomas ; le normal ne reçoit r
 });
 
 test('Tomas commande le camp du joueur, Lise l’adversaire, et personne ne parle de famille', () => {
-  const s = scenario('opus1_lu_01');
-  assert.equal(s.paysCode, 'lu');
-  assert.deepEqual(s.commandants.map((c) => [c.camp, c.commandantCle, c.ia ?? null]),
-    [[0, 'cmd_tomas_reiner', null], [1, 'cmd_lise_orven', 'ponderee']]);
-  // Pas un match d'incarnation (jamais imposé, et il n'écrirait rien de la
-  // trame) ni un vestiaire : c'est la colonne de Tomas, comme celle d'Ariane
-  // en France.
-  assert.equal(s.incarnation, undefined);
-  assert.equal(s.choixCommandant, undefined);
-  assert.deepEqual(s.victoire, [{ type: 'capture_qg' }]);
-  const textes = JSON.stringify([s.dialogueOuverture, s.dialogueVictoire, s.dialogueDefaite, s.scenesDialogue]);
-  assert.ok(!/Lise Orven|\b(frère|sœur|père|fille|fils)\b/i.test(textes));
+  for (const code of ['opus1_lu_01', 'opus1_lu_02']) {
+    const s = scenario(code);
+    assert.equal(s.paysCode, 'lu');
+    assert.deepEqual(s.commandants.map((c) => [c.camp, c.commandantCle, c.ia ?? null]),
+      [[0, 'cmd_tomas_reiner', null], [1, 'cmd_lise_orven', 'ponderee']], code);
+    // Pas un match d'incarnation (jamais imposé, et il n'écrirait rien de la
+    // trame) ni un vestiaire : c'est la colonne de Tomas, comme celle d'Ariane
+    // en France.
+    assert.equal(s.incarnation, undefined, code);
+    assert.equal(s.choixCommandant, undefined, code);
+    const textes = JSON.stringify([s.dialogueOuverture, s.dialogueVictoire, s.dialogueDefaite, s.scenesDialogue]);
+    assert.ok(!/Lise Orven|\b(frère|sœur|père|fille|fils)\b/i.test(textes), code);
+  }
+  assert.deepEqual(scenario('opus1_lu_01').victoire, [{ type: 'capture_qg' }]);
 });
 
 test('la carte du relais : le relais au joueur, le QG de Lise sur l’autre rive, aucun défaut de structure', () => {
@@ -219,9 +275,26 @@ test('la carte du relais : le relais au joueur, le QG de Lise sur l’autre rive
   assert.deepEqual(structurels, [], JSON.stringify(rapport.motifs));
 });
 
+test('la carte des aiguillages : trois routes vers trois postes, le dépôt de Lise au bout, aucun défaut de structure', () => {
+  const s = scenario('opus1_lu_02');
+  const m = carte(s);
+  assert.equal(m.biome, 'plaine', 'la plaine, l’un des trois biomes de la fiche pays : c’est là que passent les voies');
+  const qg = Object.entries(m.proprietaires).filter(([k]) => { const [x, y] = k.split(',').map(Number); return m.grille[y!]![x!] === 'H'; });
+  assert.deepEqual(qg.map(([, camp]) => camp).sort(), [0, 1]);
+  // L'objectif et les dialogues disent « nord, centre ou sud » : les cases
+  // sont rangées dans cet ordre, chacune sur sa route.
+  const objectif = s.victoire[0]!;
+  if (objectif.type !== 'capturer') throw new Error('objectif inattendu');
+  assert.deepEqual(objectif.cases.map((c) => c.y), [...objectif.cases.map((c) => c.y)].sort((a, b) => a - b), 'nord, centre, sud');
+  const rapport = verifierCarte(m);
+  const structurels = rapport.motifs.map((x) => x.code).filter((c) => !['desequilibre_fonds', 'desequilibre_villes'].includes(c));
+  assert.deepEqual(structurels, [], JSON.stringify(rapport.motifs));
+});
+
 test('le parcours enchaîne le Luxembourg après FR12, et chaque épreuve tient ses textes', () => {
   const codes = MISSIONS.map((m) => m.scenarioCle);
   assert.equal(codes.indexOf('opus1_lu_01'), codes.indexOf('opus1_fr_12') + 1);
+  assert.equal(codes.indexOf('opus1_lu_02'), codes.indexOf('opus1_lu_01') + 1);
   assert.ok(POSITIONS_PARCOURS.length >= MISSIONS.length);
   const luxembourgeoises = MISSIONS.filter((m) => m.scenarioCle.startsWith('opus1_lu_'));
   for (const m of luxembourgeoises) {

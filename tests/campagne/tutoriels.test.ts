@@ -12,7 +12,7 @@ test('dix tutoriels distincts précèdent les deux matchs officiels et sont vali
   // l'ordre de ses fiches, FR01 à FR12 (23 septembre 2026), et l'ouverture du
   // Luxembourg (27 septembre) : le parcours ne compte que des épreuves jouables.
   assert.deepEqual(manifeste.missions.slice(10).map(m => m.scenarioCle),
-    ['pacte_du_col', 'couleurs_alliees', ...Array.from({ length: 12 }, (_, i) => `opus1_fr_${String(i + 1).padStart(2, '0')}`), 'opus1_lu_01']);
+    ['pacte_du_col', 'couleurs_alliees', ...Array.from({ length: 12 }, (_, i) => `opus1_fr_${String(i + 1).padStart(2, '0')}`), 'opus1_lu_01', 'opus1_lu_02']);
   const tutoriels = manifeste.missions.filter(m => m.entrainement);
   assert.equal(tutoriels.length, 10);
   assert.deepEqual(manifeste.missions.slice(0, 10), tutoriels);

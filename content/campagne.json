@@ -377,6 +377,22 @@
         "Vous commandez la colonne de Tomas : elle tient mieux sur les bâtiments, et son pouvoir fait rentrer plus d’argent le lendemain. Ses unités à chenilles frappent un peu moins fort.",
         "Mode difficile : Lise a 1 500 fonds de plus, et un char léger couvre ses pièces au-dessus des ponts dès J2. Le Bulletin ne voit qu’une journée."
       ]
+    },
+    {
+      "scenarioCle": "opus1_lu_02",
+      "titre": "Saison 1 · Les trois aiguillages",
+      "biome": "plaine",
+      "objectif": "Tenez en même temps deux des trois aiguillages, marqués en or, avant la fin de J16 : celui du nord, du centre ou du sud.",
+      "conseil": "Le centre est le plus court, mais les roquettes de Lise le couvrent. Chaque flanc n’a qu’une artillerie : prenez-la par le côté.",
+      "recit": "Après le relais, Lise s’est repliée au dépôt, à l’est. Trois aiguillages y mènent. Tomas connaît le chemin le plus court, mais il vous laisse choisir les deux passages à reprendre.",
+      "conclusion": "Deux aiguillages tenus : les convois de la coalition repassent par le dépôt. Tomas a noté le chemin que vous avez choisi. Le transport doit maintenant franchir la vallée avant la fermeture du passage.",
+      "entrainement": false,
+      "tutoriel": [
+        "**Capturer** : il faut deux aiguillages à vous **au même moment**. Un poste repris par Lise ne compte plus.",
+        "Un aiguillage se prend en deux tours d’une infanterie intacte. Délogez d’abord le fantassin qui le garde.",
+        "Les roquettes tirent de trois à cinq cases, l’artillerie de deux à trois : aucune ne répond au contact. Approchez par le côté.",
+        "Mode difficile : Lise a 1 500 fonds de plus pour renvoyer des fantassins reprendre un poste. Le Bulletin ne voit qu’une journée."
+      ]
     }
   ]
 }

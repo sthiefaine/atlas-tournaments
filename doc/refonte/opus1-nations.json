@@ -568,7 +568,7 @@
         "type": "capturer",
         "conditionVictoire": "Capturer deux des trois bâtiments objectifs annoncés.",
         "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
-        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider. Joué le 27 septembre 2026 : trois postes d’aiguillage à Lise Varen, un par route (nord, centre, sud), chacun sous une de ses pièces ; il faut en tenir deux en même temps avant la fin de J16. Le difficile n’est que le crédit adverse de la fiche.",
         "victoireAlternative": false
       },
       "variationNormaleDifficile": {
@@ -585,7 +585,7 @@
       "personnages": [
         "cmd_tomas_reiner"
       ],
-      "statut": "conception"
+      "statut": "integre_parcours_local_simule"
     },
     {
       "id": "opus1_lu_03",
