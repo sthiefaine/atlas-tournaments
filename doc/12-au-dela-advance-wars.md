@@ -50,19 +50,19 @@ Les camps se distinguent aujourd'hui par la couleur d'équipe. Environ un homme 
 
 ### 3.2 Le mode photo — *durée de vie*
 
-Hors partie (à la fin d'un match, ou depuis un rejeu mis en pause), une caméra libre : tangage et lacet quelconques, champ de vision réglable, profondeur de champ, heure du jour et météo forcées, HUD masquable, cadrage 16/9 ou carré, export PNG. C'est le genre de fonction qu'on croit gadget jusqu'à ce qu'on voie ce qu'elle fait au partage.
+Hors partie (à la fin d'une bataille, ou depuis un rejeu mis en pause), une caméra libre : tangage et lacet quelconques, champ de vision réglable, profondeur de champ, heure du jour et météo forcées, HUD masquable, cadrage 16/9 ou carré, export PNG. C'est le genre de fonction qu'on croit gadget jusqu'à ce qu'on voie ce qu'elle fait au partage.
 
 *Moteur* : rien. *Rendu* : une entorse assumée à la règle du lacet fixe (`10-rendu-3d.md` §3.2), acceptable **hors partie** et jamais pendant. *Risque* : une caméra libre montre ce que la caméra de jeu cache — le dos non texturé d'un bâtiment, un placeholder d'unité, une jonction de terrain ratée. Le mode photo est donc aussi un révélateur de défauts, ce qui est plutôt une bonne nouvelle mais coûte des retouches d'assets.
 
-### 3.3 La feuille de match — *profondeur*
+### 3.3 Le rapport de bataille — *profondeur*
 
-À la fin d'un match, une page qui dit ce qui s'est passé : fonds gagnés et dépensés, unités produites et perdues, valeur des échanges, journées passées en tête, journée du basculement, meilleure et pire décision au sens du différentiel de valeur. Tout est déjà dans la file d'`EvenementJeu` ; il n'y a rien à mesurer, seulement à lire.
+À la fin d'une bataille, une page qui dit ce qui s'est passé : fonds gagnés et dépensés, unités produites et perdues, valeur des échanges, journées passées en tête, journée du basculement, meilleure et pire décision au sens du différentiel de valeur. Tout est déjà dans la file d'`EvenementJeu` ; il n'y a rien à mesurer, seulement à lire.
 
 *Moteur* : rien, la file d'événements suffit. *Risque* : dire à un joueur que son meilleur coup était le hasard et son pire coup celui dont il était fier est désagréable. Le ton doit être celui de Vantour — « la journée 7 vous a coûté cher, et vous le saviez » — pas celui d'un tableur.
 
 ### 3.4 Le dossier d'adversaire — *profondeur*
 
-Une fiche par commandant rencontré, qui se remplit toute seule : archétype, pouvoir vu, unités préférées, comportement (agressif tôt, économe, joue les hauteurs), et le score des rencontres passées. C'est le carnet de voyage appliqué aux adversaires, et cela rend la deuxième rencontre avec un rival différente de la première **sans changer une règle**.
+Une fiche par commandant rencontré, qui se remplit toute seule : archétype, pouvoir vu, unités préférées, comportement (agressif tôt, économe, joue les hauteurs), et le bilan des batailles passées. C'est le carnet de voyage appliqué aux adversaires, et cela rend la deuxième bataille contre un rival différente de la première **sans changer une règle**.
 
 *Moteur* : rien ; les statistiques se dérivent des rejeux stockés. *Risque* : la fiche ne doit jamais révéler ce que le joueur n'a pas vu (le brouillard s'applique aussi à la mémoire). Sinon c'est de la triche déguisée.
 
@@ -72,39 +72,39 @@ Une fiche par commandant rencontré, qui se remplit toute seule : archétype, po
 
 ### 4.1 Les objectifs variés — *profondeur*
 
-Advance Wars a deux objectifs : prendre le QG, ou tout mettre hors jeu. C'est peu pour un tournoi qui prétend avoir des disciplines. Cinq formats proposés, tous exprimables comme des conditions de victoire de scénario :
+Advance Wars a deux objectifs : prendre le QG, ou tout mettre hors jeu. C'est peu pour une guerre dont chaque front a son objectif. Cinq formats proposés, tous exprimables comme des conditions de victoire de scénario :
 
 - **Escorte** — amener une unité désignée d'un bord à l'autre, elle ne peut pas être remplacée ;
-- **Relais de l'Atlas d'Or** — un objet porté par une unité, qui change de porteur au contact, à ramener chez soi ; celui qui le porte est visible de tous, même en brouillard ;
+- **Relais des plans** — des plans portés par une unité, qui changent de porteur au contact, à ramener chez soi ; celui qui les porte est visible de tous, même en brouillard ;
 - **Tenir N journées** — défendre un point jusqu'à la journée N, l'adversaire ayant l'avantage matériel ;
 - **Course** — deux camps, un même objectif neutre, le premier arrivé gagne ; on ne peut pas se toucher (terrains séparés, une seule jonction) ;
 - **Points de contrôle** — marquer en tenant des cases à la fin de chaque journée, comme un score qui monte.
 
 *Moteur* : `victoire.ts` évalue déjà des conditions ; il faut les **paramétrer par scénario** au lieu de les câbler, et ajouter la notion d'unité désignée et d'objet porté. Une à deux semaines. La routine map doit apprendre à produire des cartes adaptées à chaque format, et la routine contrôle à les certifier — c'est là qu'est le vrai travail. *Risque* : chaque format nouveau est un format que l'IA doit savoir jouer, faute de quoi le contrôle le certifiera « équilibré » alors qu'il est simplement injouable pour la machine. Il faut une fonction de score par format, pas une seule.
 
-### 4.2 Le draft avant match — *profondeur*
+### 4.2 Le draft avant la bataille — *profondeur*
 
-Avant un match, chaque camp choisit **six unités** parmi le catalogue disponible et **en bannit une** chez l'adversaire ; seules les unités draftées sont productibles. Un match cesse d'être « je produis ce qui me plaît » pour devenir une composition, et deux matchs sur la même carte cessent de se ressembler.
+Avant une bataille, chaque camp **déclare six unités** parmi le catalogue disponible — la déclaration des armes du Pacte, rendue jouable — et **en récuse une** chez l'adversaire ; seules les unités déclarées sont productibles. Une bataille cesse d'être « je produis ce qui me plaît » pour devenir une composition, et deux batailles sur la même carte cessent de se ressembler.
 
 *Moteur* : une contrainte de production, donc presque rien — `production.ts` filtre déjà sur `Terrain.produit`, il filtrera sur une liste de scénario en plus. Le travail est dans l'interface (un écran de draft lisible) et dans l'IA (qui doit drafter, ce qui demande une évaluation de la valeur d'une unité *sur cette carte*, avec ce climat). *Risque* : c'est la porte d'entrée du déséquilibre. Une unité dominante en draft l'est bien plus qu'en jeu libre, parce qu'on peut la prendre à tous les coups ; l'homologation devra simuler avec **et** sans draft, ce qui double le coût de certification d'une unité candidate.
 
 ### 4.3 Le génie et les ponts destructibles — *profondeur*
 
-Une unité **génie** : mouvement modeste, pas de marquage, capable de poser un `pont` sur une rivière et une `route` sur une plaine, et de réparer un pont rompu. Symétriquement, un pont devient **destructible** : une unité de tir indirect peut le rompre, la case redevient `riviere`, et le génie peut le refaire en deux journées.
+Une unité **génie** : mouvement modeste, aucune arme, capable de poser un `pont` sur une rivière et une `route` sur une plaine, et de réparer un pont rompu. Symétriquement, un pont devient **destructible** : une unité de tir indirect peut le rompre, la case redevient `riviere`, et le génie peut le refaire en deux journées.
 
 C'est peut-être la meilleure idée du document, parce que la carte cesse d'être un décor. Un défenseur qui rompt le pont derrière lui achète trois journées ; un attaquant qui prévoit un génie ne les paie pas.
 
-*Moteur* : **déjà là**. L'effet `poser_terrain` existe, ses formes sont bornées (`pont`, `telepherique`, `cable`, `chenal`, `polder`, `ponton`, `banc_de_sable`) et `TABLE_POSER_TERRAIN` dit quelle case peut devenir quoi (`03-schemas.md`). Il faut : une unité qui porte l'effet comme action (et non comme pouvoir de commandant), l'action inverse, une durée de chantier, et le comptage dans la table de dégâts. *Risque* : le blocage. Un joueur qui rompt tous les ponts et se retranche peut rendre un match interminable ; il faut un plafond de reconstructions, ou une fin aux points qui tranche (elle existe déjà, `04-gameplay.md` §9.1). À vérifier en simulation avant, pas après.
+*Moteur* : **déjà là**. L'effet `poser_terrain` existe, ses formes sont bornées (`pont`, `telepherique`, `cable`, `chenal`, `polder`, `ponton`, `banc_de_sable`) et `TABLE_POSER_TERRAIN` dit quelle case peut devenir quoi (`03-schemas.md`). Il faut : une unité qui porte l'effet comme action (et non comme pouvoir de commandant), l'action inverse, une durée de chantier, et le comptage dans la table de dégâts. *Risque* : le blocage. Un joueur qui rompt tous les ponts et se retranche peut rendre une bataille interminable ; il faut un plafond de reconstructions, ou une fin aux points qui tranche (elle existe déjà, `04-gameplay.md` §9.1). À vérifier en simulation avant, pas après.
 
 ### 4.4 Le commentaire en direct de Célestin Vantour — *durée de vie*
 
-Vantour existe déjà : il ouvre le Bulletin d'avant-match, il annonce la météo, il a un surnom pour le joueur et une faveur qui monte et descend (`monde.regie.faveur`). La proposition : **qu'il commente pendant le match**, en réaction aux événements du moteur.
+Vantour existe déjà : il lit le Bulletin d'engagement, il annonce la météo, il a un surnom pour le joueur et une faveur qui monte et descend (`monde.regie.faveur`). La proposition : **qu'il commente pendant la bataille**, en réaction aux événements du moteur.
 
 Le mécanisme est un **catalogue de gabarits de phrases**, indexé par type d'événement et par condition, avec des variables typées : `{unite}`, `{terrain}`, `{camp}`, `{journee}`, `{ecart}`. Un événement « unité mise hors jeu, valeur > 10 000, écart de score qui s'inverse » tire une phrase parmi cinq, en évitant les trois dernières dites. Les gabarits sont écrits par la routine lore, validés par le contrôle, traduits par `atlas_traduction` comme n'importe quelle chaîne.
 
 **Jamais un modèle en direct.** C'est la règle absolue du projet (« aucun appel à un modèle pendant une partie ») et ce n'est pas une contrainte subie : un modèle en direct serait lent, coûteux, non déterministe — donc impossible à rejouer à l'identique — et capable de dire n'importe quoi sur un vrai pays. Des gabarits écrits à l'avance et validés sont plus sûrs, plus rapides et plus drôles, parce qu'on peut les travailler.
 
-*Moteur* : rien ; le commentateur **lit** la file d'événements. Le travail est du contenu (deux à trois cents gabarits pour que ça ne tourne pas en rond) et de l'i18n (chaque gabarit est une chaîne dans neuf langues, avec des pluriels et des accords — le point dur). *Risque* : la répétition. Un commentateur qui redit la même chose au troisième match devient insupportable, et le remède n'est pas technique, il est quantitatif. Second risque : le ton. Vantour peut se moquer d'un commandant, jamais d'un pays (`01-bible.md` §5.1) ; le contrôle doit relire les gabarits comme il relit le lore.
+*Moteur* : rien ; le commentateur **lit** la file d'événements. Le travail est du contenu (deux à trois cents gabarits pour que ça ne tourne pas en rond) et de l'i18n (chaque gabarit est une chaîne dans neuf langues, avec des pluriels et des accords — le point dur). *Risque* : la répétition. Un commentateur qui redit la même chose à la troisième bataille devient insupportable, et le remède n'est pas technique, il est quantitatif. Second risque : le ton. Vantour peut se moquer d'un commandant, jamais d'un pays (`01-bible.md` §5.1) ; le contrôle doit relire les gabarits comme il relit le lore.
 
 ### 4.5 Les rejeux et les défis partageables — *durée de vie*
 
@@ -130,7 +130,7 @@ La routine contrôle simule des milliers de parties IA contre IA pour certifier 
 
 ### 4.8 Le classement mondial des nations — *durée de vie*
 
-Chaque partie terminée remonte un résultat anonyme : nation jouée, nation adverse, format, issue, durée. Le serveur agrège et publie un **tableau de la Ronde** : quelle nation gagne le plus, quelle nation résiste le mieux à quelle autre, quel commandant est le plus joué. C'est le classement d'un tournoi mondial dans un jeu qui parle d'un tournoi mondial : la fiction et la métrique disent la même chose.
+Chaque partie terminée remonte un résultat anonyme : nation jouée, nation adverse, format, issue, durée. Le serveur agrège et publie un **tableau des fronts** : quelle nation gagne le plus, quelle nation résiste le mieux à quelle autre, quel commandant est le plus joué. C'est un Registre tenu par les joueurs dans un jeu qui parle d'un Registre : la fiction et la métrique disent la même chose.
 
 *Moteur* : rien. *Serveur* : une table, un endpoint, une page — et surtout une **agrégation** (jamais les parties individuelles). *Risque* : c'est une donnée personnelle si on n'y prend pas garde, et c'est un aimant à triche si le classement compte. La réponse : agrégation seule, aucun identifiant, aucun classement de joueur — on classe les **nations**, pas les gens. Cela retire l'intérêt de tricher et la moitié du risque juridique d'un coup.
 
@@ -157,7 +157,7 @@ Pas de temps réel, pas de serveur de partie, pas de lobby : **un échange d'act
 
 Le déterminisme rend le tout possible : la partie n'est jamais transmise, seulement les actions ; l'état est recalculé de part et d'autre et doit être identique au bit près. Le brouillard demande une précaution : le serveur envoie l'état **filtré par camp** (`brouillard.ts` sait déjà le faire), sinon un client curieux voit tout.
 
-*Moteur* : **déjà là**, c'est l'usage pour lequel il a été écrit. *Serveur* : des tables de parties, des notifications, une reprise après abandon, un délai de forfait. *Risque* : le rythme. Un match de 40 journées à un tour par jour dure trois semaines, et la plupart des parties seront abandonnées à la journée 6. La réponse n'est pas technique : ce sont des **formats courts** (les objectifs du §4.1, 10 à 15 journées) et une horloge généreuse mais réelle. Second risque : la triche par manipulation du client. Elle est contrée par le rejeu côté serveur, à condition que ce soit une **règle** et pas une option — le serveur recalcule toujours.
+*Moteur* : **déjà là**, c'est l'usage pour lequel il a été écrit. *Serveur* : des tables de parties, des notifications, une reprise après abandon, un délai de forfait. *Risque* : le rythme. Une bataille de 40 journées à un tour par jour dure trois semaines, et la plupart des parties seront abandonnées à la journée 6. La réponse n'est pas technique : ce sont des **formats courts** (les objectifs du §4.1, 10 à 15 journées) et une horloge généreuse mais réelle. Second risque : la triche par manipulation du client. Elle est contrée par le rejeu côté serveur, à condition que ce soit une **règle** et pas une option — le serveur recalcule toujours.
 
 ### 5.3 L'éditeur de cartes avec certification — *durée de vie*
 
@@ -173,13 +173,13 @@ Combinaison des §4.5 et §4.8 : les meilleurs rejeux de la Dépêche du jour so
 
 *Moteur* : rien. *Serveur* : le classement du §4.8, plus un stockage de rejeux et une sélection (les cinq meilleurs scores, plus trois rejeux au hasard parmi les parties gagnées — pour ne pas ne montrer que des experts). *Risque* : la Dépêche est déjà le maillon le plus tendu du projet (une échéance quotidienne, une validation humaine, la règle « le vide vaut mieux qu'une erreur »). Y accrocher un classement, c'est y accrocher une attente : un jour sans Dépêche devient un jour où le classement s'arrête. À ne faire qu'une fois la Dépêche stable pendant un mois.
 
-### 5.5 Le banc de touche — *profondeur*
+### 5.5 L'effectif qui dure — *profondeur*
 
-La bible le dit déjà, et personne ne l'a encore joué : « une unité hors jeu revient au match suivant ». Et si c'était vrai **mécaniquement** ? Le joueur garde un effectif entre les étapes d'une qualification : les unités survivantes reviennent avec leur expérience, les unités mises hors jeu reviennent au match d'après mais **fatiguées** (une journée d'indisponibilité), et le budget d'une étape sert à compléter, pas à tout racheter.
+La bible le dit déjà, et personne ne l'a encore joué : une pièce perdue coûte — un blindé détruit ne revient pas, un appareil abattu emporte son équipage (`01-bible.md` §5.3). Et si c'était vrai **mécaniquement** ? Le joueur garde un effectif entre les étapes de la campagne de France : les unités survivantes reviennent avec leur expérience, les unités mises hors jeu sont perdues et se remplacent, et le budget d'une étape sert à compléter, pas à tout racheter.
 
-Cela transformerait le tour de France de dix-huit matchs indépendants en **une saison**. C'est aussi ce qui rend une victoire coûteuse différente d'une victoire propre, ce que le jeu raconte déjà dans son lore sans le simuler.
+Cela transformerait la campagne de France de dix-huit batailles indépendantes en **une campagne**. C'est aussi ce qui rend une victoire coûteuse différente d'une victoire propre, ce que le jeu raconte déjà dans son lore sans le simuler.
 
-*Moteur* : un état de campagne persistant entre matchs, une notion de vétérance des unités, et un budget d'étape. Ce n'est pas énorme en soi ; le coût est en **équilibrage**, parce que l'effectif conservé se cumule d'étape en étape et qu'une avance devient exponentielle. *Risque* : la spirale. Un joueur qui perd une étape perd des unités, donc perd la suivante plus facilement. Il faut un plancher (un effectif minimal garanti) et probablement un plafond (on ne conserve que N unités), ce qui est exactement le genre de règle qui s'ajuste par simulation — et la routine contrôle sait faire ça.
+*Moteur* : un état de campagne persistant entre missions, une notion de vétérance des unités, et un budget d'étape. Ce n'est pas énorme en soi ; le coût est en **équilibrage**, parce que l'effectif conservé se cumule d'étape en étape et qu'une avance devient exponentielle. *Risque* : la spirale. Un joueur qui perd une étape perd des unités, donc perd la suivante plus facilement. Il faut un plancher (un effectif minimal garanti) et probablement un plafond (on ne conserve que N unités), ce qui est exactement le genre de règle qui s'ajuste par simulation — et la routine contrôle sait faire ça.
 
 ---
 
@@ -189,10 +189,10 @@ Cela transformerait le tour de France de dix-huit matchs indépendants en **une 
 |---|---|---|---|---|---|
 | 3.1 | Motifs pour les daltoniens | faible | accès | rien | esthétique |
 | 3.2 | Mode photo | faible | durée de vie | rien | révèle les défauts d'assets |
-| 3.3 | Feuille de match | faible | profondeur | rien | ton |
+| 3.3 | Rapport de bataille | faible | profondeur | rien | ton |
 | 3.4 | Dossier d'adversaire | faible | profondeur | rien | révéler ce qu'on n'a pas vu |
 | 4.1 | Objectifs variés | moyen | profondeur | victoire paramétrée | l'IA doit savoir jouer chaque format |
-| 4.2 | Draft avant match | moyen | profondeur | filtre de production | déséquilibre amplifié |
+| 4.2 | Draft avant la bataille | moyen | profondeur | filtre de production | déséquilibre amplifié |
 | 4.3 | Génie, ponts destructibles | moyen | profondeur | `poser_terrain` **déjà là** | blocage de partie |
 | 4.4 | Commentaire de Vantour | moyen | durée de vie | rien (lit les événements) | répétition, ton |
 | 4.5 | Rejeux et défis partageables | moyen | durée de vie | `rejouer()` **déjà là** | lien falsifié |
@@ -203,7 +203,7 @@ Cela transformerait le tour de France de dix-huit matchs indépendants en **une 
 | 5.2 | Multijoueur asynchrone | élevé | durée de vie | **déjà là** ; le coût est serveur | abandon, rythme |
 | 5.3 | Éditeur de cartes certifié | élevé | durée de vie | mapgen à exposer | modération des textes, quotas |
 | 5.4 | Spectateur, Ligue de la Dépêche | élevé | durée de vie | rien | fragilise la Dépêche |
-| 5.5 | Banc de touche | élevé | profondeur | état de campagne | spirale de défaite |
+| 5.5 | Effectif qui dure | élevé | profondeur | état de campagne | spirale de défaite |
 
 ---
 
@@ -219,7 +219,7 @@ Enfin, parce que c'est **la première chose du projet qui sorte du navigateur d'
 
 ### Deuxième — **le génie et les ponts destructibles** (§4.3)
 
-Parce que **le moteur l'attend**. `poser_terrain` a été arbitré le 5 septembre, ses formes sont bornées, `TABLE_POSER_TERRAIN` existe, et il n'est aujourd'hui utilisé que par des pouvoirs de commandant — c'est-à-dire deux fois par match, dans les mains d'un seul camp. En donner l'usage à une **unité** en fait un outil tactique permanent pour les deux camps, ce qui est un bien meilleur rendement pour du code déjà écrit.
+Parce que **le moteur l'attend**. `poser_terrain` a été arbitré le 5 septembre, ses formes sont bornées, `TABLE_POSER_TERRAIN` existe, et il n'est aujourd'hui utilisé que par des pouvoirs de commandant — c'est-à-dire deux fois par mission, dans les mains d'un seul camp. En donner l'usage à une **unité** en fait un outil tactique permanent pour les deux camps, ce qui est un bien meilleur rendement pour du code déjà écrit.
 
 Parce que c'est la manière la moins chère de rendre la **carte** intéressante. Advance Wars a des cartes fixes ; une carte qu'on modifie en jouant est un genre de profondeur que le relief jouable (§5.1) apporterait aussi, mais pour cinq fois le prix. Le pont rompu derrière soi est une décision, avec un coût, une durée et un contre — c'est la définition d'une bonne règle.
 
