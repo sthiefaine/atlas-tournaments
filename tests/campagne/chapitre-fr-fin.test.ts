@@ -223,7 +223,11 @@ test('le parcours range le chapitre français dans l’ordre de ses fiches, et c
     const s = scenario(code);
     assert.equal(m.titre, s.nom);
     assert.equal(m.biome, carte(s).biome);
-    assert.equal(s.version, 1);
+    // FR10 et FR12 portent une décision, enregistrée avec la version de leur
+    // épreuve : une version relevée la reposerait au joueur qui rejoue. FR11 n'en
+    // porte aucune, et passe en version 2 le 27 septembre (« une manche » devenue
+    // « une bataille », avec le lore v2).
+    assert.equal(s.version, code === 'opus1_fr_11' ? 2 : 1);
     assert.ok(m.tutoriel.length >= 3);
     const textes = [...s.dialogueOuverture, ...s.dialogueVictoire, ...s.dialogueDefaite, ...(s.scenesDialogue ?? []).flatMap((x) => x.repliques)].map((r) => r.texte);
     const rappels = textes.filter((t) => t.includes('Vous vous souvenez')).length;
