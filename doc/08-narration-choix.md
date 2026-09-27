@@ -12,7 +12,7 @@ Les enjeux se découvrent par les personnes et les situations : objectifs concre
 
 Trois promesses, dans cet ordre :
 
-1. **Le joueur se souvient de ce qu'il a fait.** Le carnet de voyage le lui relit ; Célestin Vantour le lui rappelle à voix haute avant les matchs.
+1. **Le joueur se souvient de ce qu'il a fait.** Le carnet de voyage le lui relit ; Célestin Vantour le lui rappelle à voix haute avant chaque engagement.
 2. **Le monde s'en souvient aussi.** Les commandants reviennent en alliés ou en rivaux, les cartes gardent leurs cicatrices, Atlas se méfie ou s'ouvre.
 3. **La fin est une addition, pas un embranchement.** Aucun choix final ne rattrape un voyage ; le dernier acte ne fait que lire ce qui a été écrit.
 
@@ -37,7 +37,7 @@ Un flag est un couple `nom → valeur` dans l'état de sauvegarde. Nom : `<port�
 | Portée | Ce qu'elle décrit | Durée de vie | Lu par |
 |---|---|---|---|
 | `pays.<iso2>.*` | Ce qui s'est passé dans un pays et l'état de sa délégation | Toute la partie | Générateur de cartes, scènes du pays, acte III |
-| `monde.<domaine>.*` | L'état global : Atlas, la faction, la Régie, le public, le tournoi | Toute la partie | Trame de fond, conditions de fin, ton des dialogues |
+| `monde.<domaine>.*` | L'état global : Atlas, la faction, la Régie, le public, les engagements du joueur (le domaine de clé `tournoi` garde son nom) | Toute la partie | Trame de fond, conditions de fin, ton des dialogues |
 | `cmd.<id>.*` **[Proposition]** | Le rapport personnel avec un commandant nommé | Toute la partie | Recrutement, rivalités, dialogues de revanche |
 
 **Pourquoi trois portées et pas une.** Un pays survit à ses commandants (on peut être bien vu en Suisse et détesté par la commandante suisse) ; un commandant voyage (il peut réapparaître dans un autre pays) ; le monde arbitre les fins. Fusionner les trois obligerait à faire porter une réputation collective par un individu, ce qui est exactement ce que la charte de sensibilité interdit.
@@ -46,13 +46,13 @@ Un flag est un couple `nom → valeur` dans l'état de sauvegarde. Nom : `<port�
 
 | Écrivain | Nature | Ce qu'il peut écrire |
 |---|---|---|
-| **Le moteur** | Code déterministe, en fin de match | Résultats : `pays.<xx>.qualifie`, `pays.<xx>.terrain_altere`, `monde.public.ferveur`, `monde.tournoi.serie_propre`, `cmd.<id>.respect`/`grief` issus du style de victoire |
+| **Le moteur** | Code déterministe, en fin d'engagement | Résultats : `pays.<xx>.qualifie`, `pays.<xx>.terrain_altere`, `monde.public.ferveur`, `monde.tournoi.serie_propre`, `cmd.<id>.respect`/`grief` issus du style de victoire |
 | **Une scène de choix** | Donnée JSON validée, jouée par le moteur | Tout flag déclaré dans son bloc `ecrit` |
 | **La trame de fond** | Machine d'états scriptée, entre les étapes | Flags de progression : `monde.cinquieme.*`, `monde.atlas.arbitre_alliee`, `cmd.<id>.rival_jure` |
 | **Le voyage** | Carte du monde | `pays.<xx>.visite` |
 | **Les routines IA** | **Rien, jamais, à l'exécution** | Elles *déclarent* dans leur JSON les flags qu'une scène lit et écrit ; le moteur applique. Une routine ne touche jamais une sauvegarde. |
 | **La routine contrôle** | Gardien | N'écrit aucun flag. Rejette toute production référençant un flag inconnu de `01-bible.md` § 8. |
-| **La Dépêche du jour** | Manche d'exhibition, hors campagne | **Aucun flag de campagne**, jamais : ni `pays.*`, ni `monde.*` hors `monde.depeche.*`, ni `cmd.*`. Voir §4.4. |
+| **La Dépêche du jour** | Exercice à blanc, hors campagne | **Aucun flag de campagne**, jamais : ni `pays.*`, ni `monde.*` hors `monde.depeche.*`, ni `cmd.*`. Voir §4.4. |
 
 ### 2.4 Forme JSON d'une scène **[Proposition]**
 
@@ -89,15 +89,15 @@ Règles de forme : une scène déclare tout ce qu'elle lit (`litFlags`) et tout 
 
 ## 3. Le carnet de voyage
 
-Le carnet est le **miroir lisible des flags**, et la seule interface où le joueur les voit. Il est diégétique : c'est l'Intendance d'Atlas qui le remet à chaque commandant en début de Ronde, pour le rapport de fin de tournoi.
+Le carnet est le **miroir lisible des flags**, et la seule interface où le joueur les voit. Il est diégétique : c'est l'Intendance d'Atlas qui le remet à chaque commandant en début de campagne, pour le rapport qu'il rendra au Registre.
 
 **Une entrée contient :**
 
 | Champ | Exemple |
 |---|---|
-| Repère temporel | *Ronde XIV — troisième étape* |
+| Repère temporel | *An 14, au printemps — troisième front* |
 | Lieu | *Vallée du canal, Occitanie, France* |
-| Décision, écrite à la première personne | *« J'ai ouvert les vannes. On a gagné en une manche. La vallée est encore sous l'eau. »* |
+| Décision, écrite à la première personne | *« J'ai ouvert les vannes. On a gagné en deux journées. La vallée est encore sous l'eau. »* |
 | Témoin | *Mireille Bousquet, éclusière et commandante de l'étape* |
 | Conséquence connue | *Le barrage reste ouvert.* |
 
@@ -116,7 +116,7 @@ Chaque commandant nommé porte `cmd.<id>.respect` et `cmd.<id>.grief`, tous deux
 | Écrit par | Respect | Grief |
 |---|---|---|
 | Style de victoire (moteur) | Victoire serrée, ou obtenue sans exploiter une faute : `+1` | Victoire par mise hors jeu totale alors que le QG était capturable : `+1` |
-| Après-match | Refuser le protêt facile, saluer, rendre le matériel : `+1` | Réclamer une sanction maximale : `+1` |
+| Après l'engagement | Refuser le protêt facile, saluer, rendre le matériel pris au-delà de la concession : `+1` | Réclamer une sanction maximale : `+1` |
 | Scène de choix | Aider contre un tricheur, couvrir une erreur : `+1` à `+2` | Profiter de l'erreur, humilier en direct : `+1` à `+2` |
 | Trame | Prendre son parti à l'acte III : `+2` | Le dénoncer publiquement : `+2` |
 
@@ -126,41 +126,43 @@ Chaque commandant nommé porte `cmd.<id>.respect` et `cmd.<id>.grief`, tous deux
 |---|---|
 | `respect ≥ 3` et `grief ≤ 1` | Le commandant devient **recrutable comme co-commandant** (`cmd.<id>.co_commandant`). Ce qu'il apporte est tranché (`BRIEF.md`, arbitrage n° 2) et chiffré par `04-gameplay.md` §7.5, qui fait foi : **son passif seul, plus une barre de jauge de départ**. Un **commandant régional français** apporte en plus sa **carte de terrain à usage unique**, qui **est l'une des trois** cartes de la sacoche et jamais une quatrième (`BRIEF.md`, seconde relecture, point 7 ; `04-gameplay.md` §7.5, `07-france-regions.md` §2.4). **Pas de demi-pouvoir** : ce document n'en propose plus. |
 | `respect ≥ 2` | Il rend un service unique (`cmd.<id>.dette`) : un renseignement, un accès, un témoignage pour le dossier. |
-| `grief ≥ 3` | Il devient **rival juré** (`cmd.<id>.rival_jure`) : il revient plus tard avec une équipe renforcée, un pouvoir amélioré et un objectif de match personnel contre vous. |
+| `grief ≥ 3` | Il devient **rival juré** (`cmd.<id>.rival_jure`) : il revient plus tard avec une armée renforcée, un pouvoir amélioré et un objectif d'engagement personnel contre vous. |
 | `grief ≥ 4` et `respect ≤ 1` | Il est **recrutable par la Cinquième Manche** à l'acte III : son pays bascule beaucoup plus facilement. |
 | `respect ≥ 4` et `grief ≥ 3` | **Rival d'estime** : il reste adversaire, mais refuse de rejoindre la faction quoi qu'il arrive. La meilleure relation du jeu. **[Proposition]** |
 
 ### 4.3 Nombre de co-commandants
 
-**Trois co-commandants recrutés au maximum, un seul actif par match**, changeable entre les étapes (`BRIEF.md`, arbitrage n° 2). C'est la règle générale, et `07-france-regions.md` §2.4 en est une conséquence, pas une règle concurrente : le commandant régional que le joueur emmène au mondial est simplement l'un de ces trois — celui qui ajoute sa carte de terrain à usage unique, **prise sur les trois emplacements de la sacoche et non en plus** (`BRIEF.md`, seconde relecture, point 7 ; `04-gameplay.md` §7.5). Un joueur n'arrive donc jamais au mondial avec quatre cartes. Sans plafond, la mécanique récompenserait la collection exhaustive plutôt que le choix ; avec plafond, refuser un allié devient une décision.
+**Trois co-commandants recrutés au maximum, un seul actif par engagement**, changeable entre les étapes (`BRIEF.md`, arbitrage n° 2). C'est la règle générale, et `07-france-regions.md` §2.4 en est une conséquence, pas une règle concurrente : le commandant régional que le joueur emmène au mondial est simplement l'un de ces trois — celui qui ajoute sa carte de terrain à usage unique, **prise sur les trois emplacements de la sacoche et non en plus** (`BRIEF.md`, seconde relecture, point 7 ; `04-gameplay.md` §7.5). Un joueur n'arrive donc jamais au mondial avec quatre cartes. Sans plafond, la mécanique récompenserait la collection exhaustive plutôt que le choix ; avec plafond, refuser un allié devient une décision.
 
-Diégétiquement, le plafond n'est pas arbitraire : la feuille de match d'Atlas ne comporte qu'une ligne d'**assistance déclarée** (`01-bible.md` §6). On la remplit avant le coup de sifflet, et on ne la rature pas.
+Diégétiquement, le plafond n'est pas arbitraire : le Bulletin d'engagement ne comporte qu'une ligne d'**assistance déclarée** (`01-bible.md` §6). On la remplit avant la première journée, et on ne la rature pas.
 
 ### 4.4 La Dépêche du jour et la narration
 
-La **Dépêche du jour** (`01-bible.md` §4.7, `BRIEF.md`) est une manche d'exhibition quotidienne, inspirée d'un événement réel du registre autorisé. Elle touche à ce document par une seule règle, et cette règle est dure :
+La **Dépêche du jour** (`01-bible.md` §4.7, `BRIEF.md`) est un exercice à blanc quotidien, hors de la guerre, inspiré d'un événement réel du registre autorisé. Elle touche à ce document par une seule règle, et cette règle est dure :
 
 1. **Une mission du jour n'écrit aucun flag de campagne.** Ni `pays.*`, ni `monde.*` (à l'exception de `monde.depeche.*`), ni `cmd.*`. Elle ne pose pas `visite`, elle n'incrémente pas `terrain_altere`, elle ne fait monter aucun respect ni aucun grief, elle n'ouvre aucune bascule de trame et elle n'entre dans le calcul d'aucune fin (§6, §7). Une scène de Dépêche qui déclare un tel flag en écriture est rejetée d'office par la routine contrôle (`01-bible.md` §8.6, règle 7).
 2. **Ses récompenses sont cosmétiques, ou une carte de terrain au plus.** Un surnom de Vantour, une bannière, une teinte d'équipe, une page d'archives à lire — ou, au maximum, **une** carte de terrain à usage unique, la même monnaie que les commandants régionaux français (§4.2). Jamais un co-commandant, jamais une trace persistante, jamais un accès à une destination.
 3. **Elle peut lire, elle ne peut pas écrire.** Rien n'interdit à une Dépêche de saluer ce que le joueur a déjà fait — Vantour reconnaît un habitué —, à condition que ce soit du commentaire et pas une conséquence.
-4. **Le carnet de voyage l'ignore.** Le carnet est le miroir des décisions de la Ronde (§3) ; une exhibition n'y entre pas. Les Dépêches ont leur propre étagère, les archives de la Régie, et un compteur qui ne vit pas dans la sauvegarde de campagne : `monde.depeche.serie`.
+4. **Le carnet de voyage l'ignore.** Le carnet est le miroir des décisions de la campagne (§3) ; un exercice n'y entre pas. Les Dépêches ont leur propre étagère, les archives de la Régie, et un compteur qui ne vit pas dans la sauvegarde de campagne : `monde.depeche.serie`.
 
 **Ce que ça garantit :** la campagne reste complète sans jamais jouer une seule Dépêche, et deux joueurs qui ont fait exactement les mêmes choix de voyage obtiennent exactement la même fin, qu'ils aient joué zéro ou soixante missions du jour. C'est la condition pour qu'un contenu quotidien ne devienne pas un contenu obligatoire.
 
-**Ce que le joueur peut quand même y gagner narrativement.** **[Proposition]** Deux flags de campagne existent *autour* de la Dépêche sans être écrits par elle : `monde.atlas.essai_soutenu` et `monde.atlas.homologation_contestee` (§9.4). Ils se posent dans une **scène de campagne** — un couloir de Port-Méridien, une conférence de presse d'après-match — où le joueur prend position sur une pièce de matériel à l'essai qu'il a croisée ailleurs. C'est la campagne qui écrit, jamais l'exhibition.
+**Ce que le joueur peut quand même y gagner narrativement.** **[Proposition]** Deux flags de campagne existent *autour* de la Dépêche sans être écrits par elle : `monde.atlas.essai_soutenu` et `monde.atlas.homologation_contestee` (§9.4). Ils se posent dans une **scène de campagne** — un couloir de Port-Méridien, une conférence de presse après un engagement — où le joueur prend position sur un prototype à l'essai qu'il a croisé ailleurs. C'est la campagne qui écrit, jamais l'exercice.
 
-### 4.5 Des flags à la relation de nation
+### 4.5 Des flags à la relation de nation : des alliances de guerre
 
 *Ce paragraphe est le plus important du document depuis la révision du brief du 5 septembre au soir : c'est là que les flags cessent d'être une comptabilité et deviennent une carte du monde qui change de couleur.*
+
+**Des alliances de guerre** (registre du 26 septembre 2026). Les nations sont des belligérants avec des intérêts — qui a le soleil, qui a les barrages, qui a les ateliers, qui dépend de qui. Les états de relation ne changent ni dans le code ni dans les flags ; ils se lisent comme des alliances de guerre : `alliee`, une nation de la coalition, qui se bat à vos côtés ; `rivale`, un belligérant qui a un compte à régler ; `retiree`, une nation sortie de la guerre par une paix séparée, ou passée à la Cinquième Manche — une délégation sous contrat, jamais un peuple. Le Tableau des belligérants les annonce (`01-bible.md` §4.6).
 
 **Tout le monde part de France.** Les vingt-trois autres nations ne se choisissent pas : elles se **gagnent ou se perdent** en route. Chacune porte un état, `RelationNation` (`03-schemas.md` §15.3 bis), rangé dans `ProfilCampagne.relations` :
 
 | État | Comment on y arrive | Ce que ça donne au joueur |
 |---|---|---|
-| `neutre` | L'état par défaut. Une nation absente de `relations` est neutre : ne l'avoir jamais croisée et n'avoir rien décidé chez elle sont la même chose | Rien. Elle reçoit, elle joue, elle salue |
-| `alliee` | `pays.<xx>.allie_recrute`, ou `pays.<xx>.rival_respecte`, ou `pays.<xx>.dette_envers_joueur ≥ 2` — c'est-à-dire exactement la première ligne de la règle de ralliement du §6 | Son commandant recrutable en **co-commandant** ; son **catalogue commun et soutien tactique disponibles** dans les matchs du joueur, en quantité bornée par match ; sa **carte de terrain** ; son **soutien à l'acte III** ; et son **déblocage comme pays de départ** de la prochaine Ronde |
-| `rivale` | Un commandant du pays à `grief ≥ 3`, ou `pays.<xx>.rival_humilie` sans respect en face | Le grief : IA plus dure, dialogue de revanche, objectif de match personnel — et sa destination **peut se fermer** sur la carte du monde |
-| `retiree` | Le cumul, et lui seul : `pays.<xx>.rival_humilie` **et** `pays.<xx>.terrain_altere ≥ 2`, ou un commandant du pays à `grief ≥ 4` **et** `respect ≤ 1` | La nation quitte la Ronde à cause du joueur : **destination fermée**, territoire grisé, et à l'acte III elle est **absente** ou **passée à la Cinquième Manche** |
+| `neutre` | L'état par défaut. Une nation absente de `relations` est neutre : ne l'avoir jamais croisée et n'avoir rien décidé chez elle sont la même chose | Rien. Elle se bat pour elle-même, elle vous croise, elle salue |
+| `alliee` | `pays.<xx>.allie_recrute`, ou `pays.<xx>.rival_respecte`, ou `pays.<xx>.dette_envers_joueur ≥ 2` — c'est-à-dire exactement la première ligne de la règle de ralliement du §6 | Son commandant recrutable en **co-commandant** ; son **catalogue commun et soutien tactique disponibles** dans les engagements du joueur, en quantité bornée par engagement ; sa **carte de terrain** ; son **soutien à l'acte III** ; et son **déblocage comme pays de départ** de la partie suivante (une Nouvelle Ronde) |
+| `rivale` | Un commandant du pays à `grief ≥ 3`, ou `pays.<xx>.rival_humilie` sans respect en face | Un compte à régler : IA plus dure, dialogue de revanche, objectif d'engagement personnel — et sa destination **peut se fermer** sur la carte du monde |
+| `retiree` | Le cumul, et lui seul : `pays.<xx>.rival_humilie` **et** `pays.<xx>.terrain_altere ≥ 2`, ou un commandant du pays à `grief ≥ 4` **et** `respect ≤ 1` | La nation sort de la guerre à cause du joueur — une paix séparée — ou passe à la Cinquième Manche : **destination fermée**, territoire grisé, et à l'acte III elle est **absente** ou **dans le camp de la faction** |
 
 **Trois règles dures.**
 
@@ -174,13 +176,13 @@ La **Dépêche du jour** (`01-bible.md` §4.7, `BRIEF.md`) est une manche d'exhi
 |---|---|---|
 | Nations retirées par partie | **5 au plus** | Le **schéma** : `validerProfilCampagne` refuse un profil à six `retiree` (`BORNES_RELATIONS.retireesMax`). Au sixième retrait, la scène qui l'aurait provoqué se joue en version « il reste, mais il ne vous parle plus » — une nation `rivale` de plus, pas une de moins |
 | Nations alliées avant l'acte III | **2 au moins** | Le **contenu** : la colonne vertébrale (`13-campagne.md` §3.4) place deux occasions de ralliement que le joueur ne peut pas manquer toutes les deux, parce qu'elles ne dépendent pas du même registre de choix (l'une se gagne par le fair-play, l'autre par un service rendu) |
-| Fins accessibles | **les quatre, toujours** | Le **contenu** aussi : une nation retirée change la **couleur** d'une fin — qui est là au coup de sifflet, qui manque, ce que Vantour raconte —, jamais son accessibilité (§7) |
+| Fins accessibles | **les quatre, toujours** | Le **contenu** aussi : une nation retirée change la **couleur** d'une fin — qui est là à la dernière bataille, qui manque, ce que Vantour raconte —, jamais son accessibilité (§7) |
 
-**Incarner : jouer la relation au lieu de la lire.** Une nation `alliee` ne se contente pas de prêter son banc — le joueur peut **la jouer entièrement**, le temps d'un match d'incarnation (`Scenario.incarnation`, `03-schemas.md` §15.2 bis) : ses propres matchs de la Ronde, les missions de son fil secondaire, et à l'acte III le choix, à chaque bataille, de la nation qu'il commande. Il joue alors avec le général de cette nation, son catalogue, sa spécialité et son style ; son commandant d'origine reste au banc en **co-commandant passif** (`04-gameplay.md` §7.5). Narrativement, c'est le seul moment où le joueur voit la Ronde depuis l'autre côté du terrain — et c'est ce qui rend une alliée autre chose qu'une ligne de bonus.
+**Incarner : jouer la relation au lieu de la lire.** Une nation `alliee` ne se contente pas de prêter son banc — le joueur peut **la jouer entièrement**, le temps d'un match d'incarnation (`Scenario.incarnation`, `03-schemas.md` §15.2 bis ; le nom de la mécanique, pas un mot du monde) : ses propres engagements, les missions de son fil secondaire, et à l'acte III le choix, à chaque bataille, de la nation qu'il commande. Il joue alors avec le général de cette nation, son catalogue, sa spécialité et son style ; son commandant d'origine reste au banc en **co-commandant passif** (`04-gameplay.md` §7.5). Narrativement, c'est le seul moment où le joueur voit la guerre depuis l'autre côté du front — et c'est ce qui rend une alliée autre chose qu'une ligne de bonus.
 
-**La confiance, c'est-à-dire la relation vue par le général.** Incarner fait monter `ProfilCampagne.confiance[commandantCle]`, de 0 à 3. Une relation appartient à une **nation**, une confiance à un **général** : les deux montent par des gestes différents — l'une par les choix qu'on fait *chez* la nation, l'autre par les matchs qu'on joue *pour* elle — et elles se lisent séparément (`Condition` `relation` et `confiance`). À **3**, le général devient co-commandant à jauge entière et sa nation s'ouvre comme départ de Nouvelle Ronde : rallier et incarner sont deux chemins vers la même porte (`13-campagne.md` §3.5).
+**La confiance, c'est-à-dire la relation vue par le général.** Incarner fait monter `ProfilCampagne.confiance[commandantCle]`, de 0 à 3. Une relation appartient à une **nation**, une confiance à un **général** : les deux montent par des gestes différents — l'une par les choix qu'on fait *chez* la nation, l'autre par les engagements qu'on livre *pour* elle — et elles se lisent séparément (`Condition` `relation` et `confiance`). À **3**, le général devient co-commandant à jauge entière et sa nation s'ouvre comme départ de Nouvelle Ronde : rallier et incarner sont deux chemins vers la même porte (`13-campagne.md` §3.5).
 
-**La borne des flags, et pourquoi elle est absolue.** *Un match d'incarnation n'écrit jamais un flag de la trame principale du joueur.* Il n'écrit que `pays.<nation incarnée>.*` et `cmd.*` — jamais `monde.*` —, en récompense comme dans une option de choix, et `validerScenario` le refuse mécaniquement. La raison est celle du §4.4 pour la Dépêche, un cran plus haut : le joueur qui prête ses mains à une autre délégation ne décide pas, pendant ce match, de sa propre histoire. Trois conséquences directes :
+**La borne des flags, et pourquoi elle est absolue.** *Un match d'incarnation n'écrit jamais un flag de la trame principale du joueur.* Il n'écrit que `pays.<nation incarnée>.*` et `cmd.*` — jamais `monde.*` —, en récompense comme dans une option de choix, et `validerScenario` le refuse mécaniquement. La raison est celle du §4.4 pour la Dépêche, un cran plus haut : le joueur qui prête ses mains à une autre nation ne décide pas, pendant cet engagement, de sa propre histoire. Trois conséquences directes :
 
 1. **Aucune bascule** (§6) ni condition de fin (§7) ne peut être franchie dans un match d'incarnation — elles se lisent toutes sur des flags de monde.
 2. **La nation incarnée ne peut pas se retirer pendant qu'on la joue** : un retrait demande deux griefs qui se rencontrent, et un match d'incarnation n'en écrit aucun.
@@ -214,7 +216,7 @@ Un **fil** est une suite ordonnée de 3 à 8 missions avec un arc propre : un ri
 
 ## 5. Traces persistantes sur les cartes
 
-Un flag de trace modifie la carte d'un pays lors des **revisites** (finale continentale, retour d'acte III, match d'exhibition).
+Un flag de trace modifie la carte d'un pays lors des **revisites** (un front de retour, l'acte III).
 
 **Fonctionnement.** Chaque fiche pays déclare des **calques de trace** : `flag → transformation de tuiles`. La routine map lit les flags à la génération, applique les calques, et la routine contrôle revalide **la jouabilité après application** — QG accessibles, aucune zone morte, équilibre des chemins. Une trace qui casserait la carte est refusée : la conséquence narrative ne prime jamais sur la validité du terrain.
 
@@ -230,23 +232,25 @@ Un flag de trace modifie la carte d'un pays lors des **revisites** (finale conti
 
 ---
 
-## 6. La trame énergétique en trois actes — canon du 9 septembre 2026
+## 6. La trame de guerre en trois actes — canon du 9 septembre 2026, registre de guerre du 26 septembre
 
-Les actes sont des progressions dramatiques, pas des continents obligatoires. Le voyage reste mondial, avec deux ou trois destinations proposées et des identités régionales fondées sur paysages, météo et traits. Le détail des douze étapes cibles figure dans `17-aube.md`. Elles ne sont pas douze missions terminées : quatre entraînements sont conservés et cinq essais tactiques Aube servent actuellement à éprouver les configurations.
+Les actes sont des progressions dramatiques, pas des continents obligatoires. Le voyage reste mondial, avec deux ou trois destinations proposées et des identités régionales fondées sur paysages, météo et traits. Les trois actes recouvrent les sept saisons du plan de 172 épisodes (`refonte/opus1-fil.md`, détail dans `17-aube.md`) : **acte I**, le prologue et la saison nationale 1 ; **acte II**, les saisons nationales 2 et 3 ; **acte III**, les saisons globales 4 à 6, soit les dix-huit finales. Les 28 hors-série se glissent après l’épisode qui les ouvre, hors du compte. Le plan n’est pas une campagne terminée : le parcours local joue les dix exercices, deux épreuves de sortie d’école et le chapitre français de la saison 1 ; les essais Aube servent à éprouver les configurations.
 
 ### Acte I — Les droits du vainqueur
 
-Ariane et Tomas enseignent la bataille de tournoi et les concessions. Gagner attribue des droits temporaires d’exploitation, de stockage et de distribution, sans transférer une population. Les contrats méridiens semblent faciliter le voyage. Les premiers choix portent sur le partage des relevés et la maintenance, avec un retour concret sur une route ou un dépôt. Ost est accessible ; Sélène apparaît comme négociatrice, sans révélation prématurée de son rôle.
+Ariane et Tomas forment le joueur à l’école du front, à charges à blanc ; le premier engagement réel est « Premier courant » (`opus1_fr_01`). Une victoire prend des sites et des savoirs, jamais des habitants, et ce qu’elle prend s’inscrit au Registre. Les contrats méridiens semblent faciliter la guerre : transports, crédit, matériel prêté. Les premiers choix portent sur le partage des relevés et la maintenance, avec un retour concret sur une route ou un dépôt. Les Gris sont un adversaire reconnaissable, Ost un visage accessible ; Sélène apparaît comme négociatrice, sans révélation prématurée de son rôle.
 
 ### Acte II — Qui possède le lendemain ?
 
-Les fronts convergent : des équipes différentes ont le même bénéficiaire. Les archives de Nera, les convois de Solveig et les contrôles de Wren permettent de recouper les contrats. La Cinquième Manche devient identifiable et son projet vise désormais Aube, programme de fusion entièrement fictif. Sélène Veyr en est toujours la dirigeante ; seuls le moment et la solidité de sa découverte varient. Le fil d’Ost montre une disqualification justifiée, pas une excuse annulant ses choix.
+Les fronts convergent : des concessions concurrentes ont le même bénéficiaire. Les archives de Nera, les convois de Solveig et les contrôles de Wren permettent de recouper les contrats. La Cinquième Manche devient identifiable, et son but est Aube, programme de fusion entièrement fictif, qui devient un objectif matériel à la troisième mission de l’Inde, avec l’escorte de ses convertisseurs. Sélène Veyr en est toujours la dirigeante ; seuls le moment et la solidité de sa découverte varient. Le fil d’Ost montre une disqualification justifiée, pas une excuse annulant ses choix. Des délégations signent avec le Consortium pour pouvoir continuer à se battre ; aucune nation n’est mauvaise pour autant.
 
 ### Acte III — La cinquième manche
 
+La Cinquième Manche se bat à visage découvert. Six armes sans dossier changent les batailles des premières finales ; Nera dépose un protêt par arme, le Bureau les classe, et le dossier suit les victoires sans les remplacer. Sélène propose la sécurité énergétique contre le pouvoir de décider. À la finale 10, Edran rejoint Maël en révélant sa paternité : la perte du front est imposée, et la réussite jouable est d’extraire le commandement — ce qu’on sauve est un choix. La coalition revient avec ses pertes et ses désaccords jusqu’au campus d’Aube, sur son plateau neutre rattaché à Port-Méridien, où Sélène commande en personne (finale 18).
+
 La coalition protège les accès d’Aube et les garanties du réseau. Une mission de survie annonce précisément ses journées et ses renforts ; le canon cible distingue tenir jusqu’à la fin de J40 et l’arrivée au début de J41. Les essais actuellement livrés doivent être lus selon leur briefing et leurs événements réels : aucun dialogue n’est une preuve de renfort moteur.
 
-La conclusion est une vraie bataille de tournoi. Par défaut, capture du QG ou mise hors jeu totale ; une mission d’anéantissement exclusif ne donne pas une victoire alternative par QG. Chaque coalition et chaque camp sont explicites. Une équipe éliminée n’implique pas automatiquement la défaite de ses alliées.
+La conclusion est une vraie bataille. Par défaut, capture du QG ou mise hors jeu totale ; une mission d’anéantissement exclusif ne donne pas une victoire alternative par QG. Chaque coalition et chaque camp sont explicites. Une armée éliminée n’implique pas automatiquement la défaite de ses alliées.
 
 ### Relations et conséquences
 
@@ -256,46 +260,56 @@ Une conséquence doit nommer son choix source, sa destination et son effet born�
 
 ### Les quatre disparitions — décision du 9 septembre 2026
 
-Quatre chefs de nations alliées meurent au cours de l’opus, hors de tout terrain, hors de tout matériel de tournoi, sans qu’une personne identifiée en soit l’auteur : Nikos Delis (`opus1_hs_gr_3`), Mira Karki (`opus1_hs_np_3`), Tomas Reiner (`opus1_finale_12`) et Samir El Hadi (`opus1_au_01` ou `opus1_finale_14`). La borne et la règle dure — aucune routine ne peut jamais écrire une mort — sont dans `BRIEF.md` (« Quatre disparitions ») ; les scènes, les causes et ce que les décisions de la Cinquième Manche y ont indirectement apporté sont dans `doc/refonte/opus1-hors-serie.md` §3, qui en est la seule source. Le joueur ne voit jamais l’instant, toujours l’annonce, et une disparition ne se joue **pas** comme un retrait au Tableau des délégations.
+Quatre chefs de nations alliées meurent au cours de l’opus, hors du front, jamais par une arme, sans qu’une personne identifiée en soit l’auteur : Nikos Delis (`opus1_hs_gr_3`), Mira Karki (`opus1_hs_np_3`), Tomas Reiner (`opus1_finale_12`) et Samir El Hadi (`opus1_au_01` ou `opus1_finale_14`). La borne et la règle dure — aucune routine ne peut jamais écrire une mort — sont dans `BRIEF.md` (« Quatre disparitions ») ; les scènes, les causes et ce que les décisions de la Cinquième Manche y ont indirectement apporté sont dans `doc/refonte/opus1-hors-serie.md` §3, qui en est la seule source. Le joueur ne voit jamais l’instant, toujours l’annonce, et une disparition ne se joue **pas** comme une paix séparée : au Tableau des belligérants, la plaque est posée à plat et la nation reste engagée (`01-bible.md` §4.6).
 
-Ce qu’elles écrivent est borné, dans le vocabulaire de ce document. **Un co-commandant est perdu** : le commandant n’est plus recrutable à partir de l’annonce, et s’il l’était, l’emplacement se libère — retirer un co-commandant n’est dans aucune liste de `13-campagne.md` §5.2, et c’est volontaire (voir `opus1-hors-serie.md` §5, point 2). **La nation reste engagée** et sa relation ne bouge pas ; une conséquence `allie_acte_iii` déjà acquise tient, parce que c’est la délégation qui reste, pas l’homme ; le banc est repris par une adjointe **[Proposition]** qui joue les couleurs et le catalogue sans pouvoir de commandant. **Une entrée de carnet** (`carnet_hs_gr_nikos`, `carnet_hs_np_mira`, `carnet_tomas_desserte`, `carnet_samir_caravane`) et **des variantes de dialogue** aux finales concernées (18 pour les quatre ; 12 pour Mira et Tomas ; 15 pour Tomas ; 17 pour Samir), plus une absence à l’épilogue. Ce que le joueur change est le **moment** et ce qui reste (Nikos par `opus1_hs_gr_2_decision`, Samir par `opus1_ma_08_decision`), qui voyage avec lui (Tomas, par le choix de `opus1_finale_09`, les passagers indemnes) ou la page du carnet (Mira) — jamais le fait, jamais la cause, et le carnet ne dit jamais « vous l’avez envoyé là ». **Aucune fin ne lit une disparition** : deux joueurs aux mêmes choix de trame ont la même fin. — destinations narratives, implémentation à terminer
+Ce qu’elles écrivent est borné, dans le vocabulaire de ce document. **Un co-commandant est perdu** : le commandant n’est plus recrutable à partir de l’annonce, et s’il l’était, l’emplacement se libère — retirer un co-commandant n’est dans aucune liste de `13-campagne.md` §5.2, et c’est volontaire (voir `opus1-hors-serie.md` §5, point 2). **La nation reste engagée** et sa relation ne bouge pas ; une conséquence `allie_acte_iii` déjà acquise tient, parce que c’est la délégation qui reste, pas l’homme ; le banc est repris par une adjointe **[Proposition]** qui joue les couleurs et le catalogue sans pouvoir de commandant. **Une entrée de carnet** (`carnet_hs_gr_nikos`, `carnet_hs_np_mira`, `carnet_tomas_desserte`, `carnet_samir_caravane`) et **des variantes de dialogue** aux finales concernées (18 pour les quatre ; 12 pour Mira et Tomas ; 15 pour Tomas ; 17 pour Samir), plus une absence à l’épilogue. Ce que le joueur change est le **moment** et ce qui reste (Nikos par `opus1_hs_gr_2_decision`, Samir par `opus1_ma_08_decision`), qui voyage avec lui (Tomas, par le choix de `opus1_finale_09`, les passagers indemnes) ou la page du carnet (Mira) — jamais le fait, jamais la cause, et le carnet ne dit jamais « vous l’avez envoyé là ». **Aucune fin ne lit une disparition** : deux joueurs aux mêmes choix de trame ont la même fin.
 
-Les quatre destinations remplacent la conclusion ancienne limitée à une suspension de tournoi. Elles nécessitent une victoire tactique et une lecture traçable des choix. **Leur résolution complète n’est pas déclarée livrée.** Aucun seuil numérique nouveau n’est inventé ici pour simuler un moteur de fins absent.
+---
 
-- **Le réseau partagé :** preuves suffisantes et garanties communes ; Aube reste coopératif, les concessions distribuées, les responsabilités publiques.
-- **La couronne électrique :** victoire du joueur sans garanties suffisantes ; Aube échappe à la prise immédiate, mais la dépendance économique n’est pas résolue.
-- **La coalition sous tension :** la faction perd, certaines concessions sont concentrées chez les alliés ; le carnet explique les choix qui ont créé ces tensions.
-- **La relève :** le joueur gagne puis confie l’enregistrement de la victoire à un collège indépendant, au lieu d’en conserver seul le contrôle.
+## 7. Les quatre fins — destinations narratives, implémentation à terminer
 
-L’épilogue cite des événements du carnet et des biographies versionnées, pas un commentaire improvisé par un modèle. Une défaite tactique appelle une reprise ou un repli explicitement scénarisé ; elle ne se transforme pas artificiellement en victoire. L’accès à une fin ne dépend pas du nombre d’unités régionales possédées.
+Les quatre destinations remplacent la conclusion ancienne limitée à une suspension de tournoi. Elles nécessitent une victoire tactique à la finale 18 et une lecture traçable des choix. **Leur résolution complète n’est pas déclarée livrée.** Aucun seuil numérique nouveau n’est inventé ici pour simuler un moteur de fins absent.
+
+**Les conditions reposent sur les décisions seules** (décision du 26 septembre 2026, `BRIEF.md`, « Le lore v2 validé », question 7). Le dossier des protêts — le compteur proposé `monde.atlas.dossier_pieces` (`refonte/supers-vilains.md` §4.3), pas encore au registre des flags — **colore une fin, il ne la conditionne jamais** : ce que le Bureau juge à l’épilogue, qui témoigne, ce que Vantour lit à l’antenne. C’est la doctrine « jamais indispensable » : à décisions égales, un joueur qui n’a vu partir aucun super des Gris obtient la même fin qu’un autre. Le texte de référence des quatre fins est `refonte/lore-v2.json` (`fins[]`) :
+
+- **Le réseau partagé** — signer le réseau partagé à la finale 18, avec l’accès partagé de la finale 17, l’offre de Sélène rendue publique (finale 8), la déposition d’Edran acceptée (finale 15) et au moins deux nations alliées présentes au campus. Aube passe sous un collège des nations de la coalition, les plans des huit armes deviennent publics, et l’arbitre retrouve ses dents.
+- **La couronne électrique** — gagner la finale 18 en refusant un traité insuffisant, ou en signant sans les garanties d’aucune autre fin. Aube échappe à la prise méridienne parce que vos colonnes tiennent le campus ; la dépendance du monde n’est pas résolue, et c’est vous, maintenant, que l’on regarde tenir le courant.
+- **La coalition sous tension** — signer un accord de transition à la finale 18, ou signer le réseau partagé après avoir exigé un contrôle de coalition temporaire à la finale 17 ; concessions majoritairement versées à la caisse commune aux finales nationales. La faction perd, ce qu’elle tenait se concentre chez quelques alliés, et le carnet explique les choix qui ont créé ces tensions.
+- **La relève** — signer le réseau partagé à la finale 18 en ayant isolé le dernier relais (finale 16), refusé la participation opérationnelle d’Edran (finale 15) et garanti les équipes qui refusent la prise méridienne (finale 12). Le joueur gagne et ne garde rien : l’enregistrement de la victoire est confié à un collège indépendant présidé par Nera, et l’avance technique cesse d’être un butin de guerre.
+
+**Ce qui reste à fixer avec le moteur de fins.** Lues ainsi, deux conditions peuvent être remplies à la fois — la relève et la coalition sous tension, par un réseau partagé signé après un contrôle de coalition exigé à la finale 17 —, et la clause des concessions versées n’est pas encore une mesure. L’ordre de lecture sera fixé quand le moteur de fins existera ; il lira les décisions, jamais le dossier.
+
+L’épilogue cite des événements du carnet et des biographies versionnées, pas un commentaire improvisé par un modèle. Une défaite tactique appelle une reprise ou un repli explicitement scénarisé ; elle ne se transforme pas artificiellement en victoire. L’accès à une fin ne dépend ni du nombre d’unités régionales possédées, ni du nombre de protêts au dossier.
 
 ---
 
 ## 8. Exemples concrets de choix
 
+*Repris le 26 septembre 2026 dans le registre de la guerre : les décisions et les flags n'ont pas bougé. Quand une décision touche un lieu habité, le front est évacué ou désert : le nécessaire civil n'est jamais frappé en jeu (`01-bible.md` §2.3).*
+
 ### 8.1 France — la vallée du barrage
 
-*Étape de qualification française, Occitanie — le canal et les cols (`07-france-regions.md` §4.9).* Le match se joue dans une vallée dominée par un barrage. Ouvrir les vannes met hors jeu la moitié de l'équipe adverse en une manche. C'est légal : le barrage figure sur le relevé homologué. C'est aussi la vallée d'entraînement de l'éclusière Mireille Bousquet, la commandante régionale, qui vous a hébergé la veille.
+*Front de France, Occitanie — le canal et les cols (`07-france-regions.md` §4.9).* L'engagement se livre dans une vallée dominée par un barrage. Ouvrir les vannes met hors jeu la moitié de l'armée adverse en deux journées. C'est légal : le barrage figure sur le relevé homologué, et la vallée n'est plus habitée depuis longtemps. C'est aussi la vallée d'entraînement de l'éclusière Mireille Bousquet, la commandante régionale, qui vous a hébergé la veille.
 
 | Option | Écrit | Retour de conséquence |
 |---|---|---|
-| **Ouvrir les vannes** | `pays.fr.barrage_rompu`, `pays.fr.terrain_altere +1`, `cmd.mireille_bousquet.grief +2`, `monde.regie.faveur +1` | La vallée est encore sous l'eau à la finale continentale ; Bousquet revient comme rivale jurée ; Vantour adore et vous surnomme « l'Écluse ». |
+| **Ouvrir les vannes** | `pays.fr.barrage_rompu`, `pays.fr.terrain_altere +1`, `cmd.mireille_bousquet.grief +2`, `monde.regie.faveur +1` | La vallée est encore sous l'eau quand vous revenez sur ce front ; Bousquet revient comme rivale jurée ; Vantour adore et vous surnomme « l'Écluse ». |
 | **Gagner à la loyale** | `cmd.mireille_bousquet.respect +2`, `monde.atlas.credibilite +1` | Bousquet devient recrutable ; elle témoignera pour vous à l'acte II. |
 | **Prévenir l'adversaire du piège** | `cmd.mireille_bousquet.respect +2`, `cmd.mireille_bousquet.dette`, `monde.regie.faveur −1` | Vantour vous trouve mou ; Bousquet vous ouvre un accès à l'acte II. |
 
 ### 8.2 Luxembourg — le contrat
 
-*Étape européenne.* Le Consortium Méridien vous propose un contrat de sponsoring : matériel neuf, logistique payée, et une clause qui vous oblige à jouer les matchs qu'on vous désigne. Dans le même bâtiment dorment les archives de protêts de six Rondes.
+*Front européen.* Le Consortium Méridien vous propose un contrat : matériel neuf, transports payés, et une clause qui vous oblige à livrer les engagements qu'on vous désigne. Dans le même bâtiment dorment des archives de protêts plus anciennes que la guerre.
 
 | Option | Écrit | Retour de conséquence |
 |---|---|---|
-| **Signer** | `pays.lu.sponsor_accepte`, `monde.atlas.sponsor_meridien +2`, `monde.atlas.credibilite −1` | Bonus de matériel toute la partie ; à l'acte II, une étape vous est imposée, et Aldouin refuse de vous parler. |
+| **Signer** | `pays.lu.sponsor_accepte`, `monde.atlas.sponsor_meridien +2`, `monde.atlas.credibilite −1` | Bonus de matériel toute la partie ; à l'acte II, un front vous est imposé, et Aldouin refuse de vous parler. |
 | **Refuser poliment** | `monde.atlas.sponsor_meridien −1`, `cmd.<local>.respect +1` | Voyage plus rude (moins de fonds), réputation d'incorruptible ; ouvre la bascule II.a. |
 | **Refuser et demander les archives** | `pays.lu.archives_ouvertes`, `monde.atlas.dossier_truquage +1`, `monde.atlas.sponsor_meridien −2` | Une preuve au dossier ; le Consortium bloque une destination à l'acte II. |
 
-### 8.3 Japon — le duel de fin de match
+### 8.3 Japon — le duel d'honneur
 
-*Étape asiatique.* Vous gagnez. La forme locale veut qu'on propose au perdant un duel d'honneur d'une manche, sans enjeu de classement — un rituel de respect, très suivi par le public. Le commandant local vient de perdre chez lui, devant les siens.
+*Front asiatique.* Vous gagnez. La coutume locale veut qu'on propose au vaincu un duel d'honneur, à charges à blanc et sans enjeu de concession — un rituel de respect entre deux armées qui viennent de se battre pour de bon, très suivi à l'antenne. Le commandant local vient de perdre chez lui, devant les siens.
 
 | Option | Écrit | Retour de conséquence |
 |---|---|---|
@@ -303,19 +317,19 @@ L’épilogue cite des événements du carnet et des biographies versionnées, p
 | **Accepter et laisser gagner** | `cmd.<local>.respect +1`, `cmd.<local>.grief +1`, `monde.regie.faveur −1` | Il comprend. Il vous respecte moins qu'il ne vous en veut d'avoir été gentil. Rival d'estime possible. |
 | **Refuser, le calendrier est serré** | `cmd.<local>.grief +2`, `monde.public.ferveur −1` | Public asiatique hostile ; à l'acte III, le pays bascule facilement. |
 
-### 8.4 Brésil — le match arrangé
+### 8.4 Brésil — l'engagement arrangé
 
-*Étape sud-américaine.* Avant le match, un technicien de la Cartographie vous montre un relevé modifié : le terrain a été retouché en faveur de l'équipe locale. Le public est immense, la fête a commencé depuis trois jours, et un protêt annulerait tout.
+*Front sud-américain.* Avant l'engagement, un technicien de la Cartographie vous montre un relevé modifié : le front a été retouché en faveur de l'armée locale. Tout le pays suit l'engagement à l'antenne depuis trois jours, et un protêt ferait tout reprendre à zéro.
 
 | Option | Écrit | Retour de conséquence |
 |---|---|---|
 | **Déposer le protêt** | `monde.atlas.dossier_truquage +1`, `monde.atlas.credibilite +1`, `monde.public.ferveur −2` | Une preuve solide ; un pays entier vous en veut ; le Bureau vous surveille. |
-| **Jouer quand même, et gagner sur le terrain truqué** | `pays.br.foule_conquise`, `monde.public.ferveur +2`, `monde.atlas.soupcon +1`, `cmd.<local>.respect +2` | La foule est à vous partout dans le monde ; vous savez, et vous n'avez rien dit — Ost s'en souviendra et vous approchera. |
+| **Se battre quand même, et gagner sur le front truqué** | `pays.br.foule_conquise`, `monde.public.ferveur +2`, `monde.atlas.soupcon +1`, `cmd.<local>.respect +2` | La foule est à vous partout dans le monde ; vous savez, et vous n'avez rien dit — Ost s'en souviendra et vous approchera. |
 | **Prévenir le commandant local en privé** | `cmd.<local>.dette`, `pays.br.dette_envers_joueur +2`, `monde.atlas.dossier_truquage +1` | Il fait retirer le trucage lui-même ; à l'acte III, le pays reste avec vous quoi qu'il arrive. |
 
 ### 8.5 Pays-Bas — les vannes
 
-*Étape européenne, finale continentale.* Le terrain est un polder sous le niveau de la mer. Votre pouvoir peut l'inonder ; l'écluse est l'objectif spécial de la carte. Inonder gagne le match tout de suite, mais le polder ne se vide pas entre deux Rondes.
+*Front européen, finale nationale.* Le front est un polder sous le niveau de la mer, évacué pour l'engagement. Votre pouvoir peut l'inonder ; l'écluse est l'objectif spécial de la carte. Inonder gagne l'engagement tout de suite, mais le polder ne se vide pas avant des années.
 
 | Option | Écrit | Retour de conséquence |
 |---|---|---|
@@ -325,13 +339,13 @@ L’épilogue cite des événements du carnet et des biographies versionnées, p
 
 ### 8.6 Maroc — le point d'eau
 
-*Étape africaine.* La carte comporte une oasis : la seule source de ravitaillement des deux équipes. La bloquer gagne le match par épuisement en trois manches. Le village qui accueille le match s'y approvisionne aussi ; il n'y a aucune règle qui l'interdit.
+*Front africain.* La carte comporte une oasis : la seule source de ravitaillement des deux armées. La bloquer gagne l'engagement par épuisement en trois journées. Le village voisin s'y approvisionne aussi : le Pacte protège le nécessaire civil, mais aucun article ne dit si une oasis de front en fait partie — c'est la zone grise où l'on juge un commandant.
 
 | Option | Écrit | Retour de conséquence |
 |---|---|---|
-| **Bloquer le point d'eau** | `pays.ma.terrain_altere +1`, `cmd.<local>.grief +2`, `monde.atlas.credibilite −1` | Victoire nette, arrière-goût ; l'hôte refuse de vous recevoir à la finale continentale. |
+| **Bloquer le point d'eau** | `pays.ma.terrain_altere +1`, `cmd.<local>.grief +2`, `monde.atlas.credibilite −1` | Victoire nette, arrière-goût ; vos hôtes refusent de vous recevoir à la finale nationale. |
 | **Préserver l'oasis et jouer plus long** | `pays.ma.oasis_preservee`, `cmd.<local>.respect +2`, `monde.public.ferveur +1` | Une des scènes de recrutement les plus faciles du jeu ; l'hôte témoigne pour vous à l'acte II. |
-| **Proposer une trêve d'eau à l'adversaire** | `pays.ma.oasis_preservee`, `cmd.<local>.respect +1`, `monde.atlas.reforme_deposee` | Votre accord informel devient un article proposé au règlement — un pas concret vers la fin A. |
+| **Proposer une trêve d'eau à l'adversaire** | `pays.ma.oasis_preservee`, `cmd.<local>.respect +1`, `monde.atlas.reforme_deposee` | Votre accord informel devient un article proposé au règlement du Pacte — une pièce de plus pour l'épilogue. |
 
 ---
 
@@ -420,7 +434,7 @@ Exemples : `pays.fr.rival_respecte`, `monde.atlas.soupcon`, `cmd.mireille_bousqu
 6. Toute scène déclare ses flags en lecture et en écriture ; la routine contrôle rejette une scène référençant un flag inconnu.
 7. Une scène de **Dépêche du jour** n'écrit aucun flag de campagne (§4.4) ; seule `monde.depeche.*` lui est ouverte.
 8. Aucun contenu ne pose un flag `monde.secret.*` : les easter eggs sont codés à la main, et le schéma refuse une production qui en déclare un en écriture.
-9. Un **fil** écrit des flags de campagne (§4.6), et ses conséquences sont prises dans une liste fermée et bornée. C'est ce qui le distingue d'une exhibition.
+9. Un **fil** écrit des flags de campagne (§4.6), et ses conséquences sont prises dans une liste fermée et bornée. C'est ce qui le distingue d'un exercice de la Dépêche.
 10. La **relation d'une nation** (`neutre`, `alliee`, `rivale`, `retiree`) est **dérivée** des flags par le moteur ou le serveur, jamais posée par une scène ni calculée par le rendu (§4.5). Un fil peut la faire monter à `alliee` ou `rivale`, jamais à `retiree` : le retrait appartient à la campagne principale.
 
 ---
@@ -430,14 +444,14 @@ Exemples : `pays.fr.rival_respecte`, `monde.atlas.soupcon`, `cmd.mireille_bousqu
 1. **Format JSON des scènes de choix** (`lit` / `options[].ecrit`, littéraux et deltas, aucune expression) — condition pour que la routine contrôle puisse vérifier les conséquences.
 2. **Trois portées de flags** dont la portée commandant `cmd.<id>.*`, avec deux jauges indépendantes respect / grief.
 3. **Rival d'estime** (`respect ≥ 4` et `grief ≥ 3`) : reste adversaire, ne rejoint jamais la faction.
-4. *(Le plafond de trois co-commandants recrutés et d'un seul actif par match n'est plus une proposition : `BRIEF.md`, arbitrage n° 2. Reste une proposition de ce document : la **ligne d'assistance déclarée** sur la feuille de match, qui lui donne sa justification diégétique.)*
+4. *(Le plafond de trois co-commandants recrutés et d'un seul actif par engagement n'est plus une proposition : `BRIEF.md`, arbitrage n° 2. Reste une proposition de ce document : la **ligne d'assistance déclarée** sur la feuille de match, qui lui donne sa justification diégétique.)*
 5. **Pages scellées du carnet** : transformer un souvenir en preuve, avec un coût.
 6. **Calques de trace** déclarés par fiche pays, revalidés par la routine contrôle après application ; plafond de trois traces persistantes par pays.
 7. **Ralliement calculé** à l'acte III depuis les flags de pays, plutôt qu'écrit à la main.
-8. **Quatre fins énergétiques** (§7) ; leurs conditions complètes doivent être implémentées et testées avant publication. L’ancien ordre D → A → C → B est retiré.
+8. **Quatre fins** (§7), lues sur les décisions seules — le dossier des protêts les colore, il ne les conditionne pas ; leurs conditions complètes doivent être implémentées et testées avant publication. L’ancien ordre D → A → C → B est retiré.
 9. **Carnet de voyage au générique** comme écran d'explication de la fin.
 10. **Étanchéité de la Dépêche du jour** (§4.4) : le carnet l'ignore, `monde.depeche.serie` vit hors de la sauvegarde de campagne, et les deux flags `monde.atlas.essai_soutenu` / `monde.atlas.homologation_contestee` se posent en scène de campagne, jamais en exhibition.
-11. **Les fils secondaires** (§4.6) : ils écrivent des flags de campagne — c'est ce qui les distingue d'une exhibition —, leurs conséquences sont une liste fermée et bornée, et ils ne touchent ni les bascules ni les conditions de fin. À choix de voyage identiques, deux joueurs obtiennent la même fin, qu'ils aient joué zéro ou neuf fils.
+11. **Les fils secondaires** (§4.6) : ils écrivent des flags de campagne — c'est ce qui les distingue d'un exercice de la Dépêche —, leurs conséquences sont une liste fermée et bornée, et ils ne touchent ni les bascules ni les conditions de fin. À choix de voyage identiques, deux joueurs obtiennent la même fin, qu'ils aient joué zéro ou neuf fils.
 12. **Aucun contenu ne pose un flag `monde.secret.*`** (§9.4, §9.6 règle 8) : un fil peut lire un easter egg comme condition d'ouverture, jamais en poser un.
 13. **L'incarnation** (§4.5) : une alliée se joue au lieu de se lire, la **confiance** d'un général monte séparément de la relation de sa nation, et un match d'incarnation n'écrit **jamais** un flag de la trame principale — d'où l'impossibilité d'y franchir une bascule ou d'y provoquer un retrait.
 14. **La relation de nation** (§4.5) : les seuils exacts qui font passer une nation de `neutre` à `alliee`, `rivale` ou `retiree` ; la règle du **double grief** pour un retrait (jamais un seul geste) ; le partage des deux bornes — cinq retirées tenues par le schéma, deux alliées tenues par la colonne vertébrale ; et la règle de rattrapage : un fil remonte `rivale` → `alliee`, **aucun fil ne fait revenir une `retiree`**.

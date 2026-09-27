@@ -1,14 +1,32 @@
 # 17 — Aube : canon énergétique et campagne à produire
 
-Décision du propriétaire, 9 septembre 2026. `BRIEF.md` reste supérieur ; `01-bible.md` possède le monde, `08-narration-choix.md` les conséquences, `content/personnages.json` les biographies structurées. Ce document rassemble le nouveau parcours et distingue sa cible de sa réalisation.
+Décision du propriétaire, 9 septembre 2026 ; registre de guerre du lore v2, validé le 26 septembre 2026. `BRIEF.md` reste supérieur ; `01-bible.md` possède le monde, `08-narration-choix.md` les conséquences, `content/personnages.json` les biographies structurées, `refonte/lore-v2.json` les résumés, les technologies et le sort des personnages. Ce document rassemble le parcours et distingue sa cible de sa réalisation.
 
 ## Ce qui est fixé
 
-Atlas organise une guerre stratégique fictive sous forme de tournois, avec des affrontements non sanglants. Les victoires attribuent temporairement des droits d’exploitation, de stockage et de distribution de l’énergie. Le socle des services essentiels est garanti par le Pacte ; la faction cherche à lever cette protection. Une concession ne donne aucun droit sur une population.
+*Registre de guerre depuis la validation du lore v2, le 26 septembre 2026 (`BRIEF.md`, « Le lore v2 validé » ; `refonte/lore-v2.md` et `.json`).*
 
-La Cinquième Manche veut concentrer le solaire, ses réserves et les interconnexions, puis contrôler **Aube**, programme de fusion fictif. **Sélène Veyr** dirige ce réseau ; Hadran Ost en est le visage et commande la Sélection Méridienne. Cette identité est stable dans le canon et révélée progressivement au joueur. La faction ne prend ni le Soleil ni un réacteur transformé en arme. On dispute des accès, une coordination et des contrats.
+Le monde est en guerre depuis quatorze ans — la guerre de l’énergie — pour l’énergie sous toutes ses formes et pour l’avance technique. Atlas arbitre cette guerre par le Pacte du Terrain : fronts déclarés, armes déclarées, concessions inscrites au Registre de Port-Méridien. Une victoire prend les sites, les richesses, les savoirs et le terrain tant qu’on le tient ; entre les vingt-quatre nations, jamais les habitants. Le nécessaire civil est garanti par le Pacte ; la faction cherche à lever cette protection. La guerre tue, sans gore : un appareil abattu emporte son équipage, et l’écran ne montre ni sang ni corps. Sur le front, le Registre dit « hors jeu ».
+
+La Cinquième Manche refuse le Pacte de l’intérieur et ne rend rien de ce qu’elle prend. Elle veut **Aube**, programme de fusion fictif, pour elle seule : c’est la prise finale de cet opus. **Sélène Veyr** dirige ce réseau ; Hadran Ost commande la Sélection Méridienne, les Gris, son armée sur le terrain. Cette identité est stable dans le canon et révélée progressivement au joueur. Aube est installé sur un plateau neutre rattaché à Port-Méridien, fictif, dans aucune nation réelle : un réacteur d’essai, un campus de coordination, des convertisseurs et une réserve de batteries de relève. Aube ne produit encore rien : gagner ne rend pas la fusion disponible, gagner décide à qui elle reviendra. La faction ne prend ni le Soleil ni un réacteur transformé en arme ; on dispute des accès, des plans, des équipes et des contrats.
 
 Aube est inspiré de la recherche sur la fusion, notamment ITER, mais ne représente pas ITER. Aucun personnage réel, incident réel ou complot réel ne lui est attribué. L’information scientifique vérifiée se présente séparément du récit. Gagner la finale ne rend pas soudain la fusion commerciale ou illimitée.
+
+### La course aux technologies
+
+La guerre se joue deux fois : une fois pour le courant, une fois pour ce qu’il y a dans les hangars d’en face. Un laboratoire pris, un lot de plans saisi, une télémétrie récupérée changent les moyens du front suivant, et un savoir pris ne se rend pas. Les vingt technologies de `refonte/lore-v2.json` (`technologies[]`) sont des butins : chacune apparaît à un épisode, s’explique par une famille du moteur qui existe déjà et, quand elle se capture, change les moyens du front suivant à l’épisode où on la prend. Ce que le joueur fait de ce qu’il prend passe par les décisions existantes, jamais par une mission de plus.
+
+| Technologies | Camp | Vues | Prises |
+|---|---|---|---|
+| Aube, le programme de fusion | commun | Inde 3 | finale 18 : la prise finale, aucune arme |
+| Réserves de stockage solaire, postes de distribution, convertisseurs d’interconnexion, télémétrie de réseau, station radar | commun | du tutoriel 6 à l’Inde 3 | du tutoriel 6 (la station radar) au Japon 9 (la télémétrie) |
+| Drones intercepteur et ravitailleur | commun | tutoriel 6 | ne se prennent pas : déclarés, donc à tout le monde — la première technologie que la Cinquième Manche n’a pas su garder |
+| Station à impulsion (IEM), drone marin | Gris | tutoriels 6 et 7 | Pays-Bas 9 et Indonésie 5 : la seule station capturable en saison nationale est la station à impulsion |
+| Station de forçage météo | Gris | tutoriel 9 | finale 17, la première capture d’une station météo |
+| Veilleur et Bastion méridiens | Gris | Sénégal 5, Suisse 5 | ne se prennent pas : matériels exclusifs |
+| Les huit armes sans dossier des supers | Gris | finales 1 à 10 | finales 7 à 18 ; la dernière, le Coupleur de Sélène, à la finale 18 |
+
+Le Convoi sans manifeste d’Edran porte les batteries de relève d’Aube, sorties d’un dépôt méridien sans un papier : c’est Aube déjà volé, et le joueur le saisit à la finale 15, trois batailles avant le campus.
 
 ## Vingt-quatre nations, douze au premier plan, une faction supplémentaire
 
@@ -18,36 +36,27 @@ Plan de production proposé parmi les fiches déjà présentes : France (`fr`), 
 
 La région apporte paysages, relief, météo, bâtiments et traits tactiques, avec les géométries partagées du catalogue. Elle n’exige pas une unité spéciale. Les kits partagent le squelette, la géométrie et les UV ; les textures externes sont communes entre LOD. Un poids croissant sans rôle tactique nouveau est un motif de refus de production.
 
-## Trois actes, douze étapes cibles
+## Trois actes, sept saisons, 172 épisodes
 
-Les quatre entraînements existants précèdent le parcours. Ils continuent d’enseigner déplacement/combat, économie, portée et QG. Les étapes ci-dessous sont un **plan de campagne**, pas douze scénarios déclarés prêts.
+Le plan de campagne est celui des registres de `refonte/` : **10 tutoriels, 144 missions nationales (12 pour chacune des 12 nations au premier plan) et 18 finales**, soit 172 épisodes numérotés, plus 28 hors-série hors du compte. Le fil complet est généré par `npm run fil:opus1` (`refonte/opus1-fil.md`) ; les résumés, les décisions et le sort des personnages sont dans `refonte/lore-v2.json`. C’est un **plan**, pas 172 scénarios prêts : le parcours local joue les dix exercices, les deux épreuves de sortie d’école et les douze missions françaises de la saison nationale 1.
 
-### Acte I — Les droits du vainqueur
+| Acte | Saison | Épisodes | Ce qui s’y joue |
+|---|---|---|---|
+| I | Prologue — l’école du front | les dix tutoriels, à charges à blanc ; le parcours local y ajoute deux épreuves de sortie d’école, le col et les couleurs alliées, à blanc aussi | apprendre à commander ; les stations montrées inactives ; le premier choix |
+| I | Saison nationale 1 — les droits du vainqueur | 48 : France, Luxembourg, Suisse, Pays-Bas (+ 8 hors-série) | le premier engagement réel (`opus1_fr_01`) ; ce qu’une victoire prend ; les Gris, puis Ost, puis le Consortium qui les finance |
+| II | Saison nationale 2 — qui possède le lendemain | 48 : Maroc, Sénégal, Brésil, Mexique (+ 9) | la même clause dans des contrats concurrents ; le retard comme arme ; des délégations qui signent pour continuer |
+| II | Saison nationale 3 — les accès d’Aube | 48 : Inde, Japon, Australie, Indonésie (+ 9) | Aube devient un objectif matériel (Inde 3, les convertisseurs escortés) ; une coalition qui peut rester incomplète |
+| III | Saison globale 4 — la Cinquième Manche à visage découvert | finales 1 à 6 (+ 1) | six armes sans dossier, six protêts classés ; Nikos meurt hors du front, après la finale 2 ou la finale 7 selon un choix |
+| III | Saison globale 5 — la défaite écrite | finales 7 à 12 (+ 1) | le Coupleur et la contre-offre ; le père qui rejoint le fils à la finale 10 ; extraire le commandement ; Mira et Tomas meurent hors du front |
+| III | Saison globale 6 — la dernière concession | finales 13 à 18 | Lise, Maël, Edran battu loyalement, Relais Zéro muet, Ost sans terrain, Sélène en personne au campus d’Aube — et le traité |
 
-1. **Premier courant**, 1v1 : comprendre les concessions après une victoire classique.
-2. **Le bocage partagé**, 1v1 : choisir entre fonds immédiats et maintenance durable d’un dépôt.
-3. **Le pacte du col**, 2v1 : coopérer avec Tomas sur deux fronts et partager les relevés.
-4. **La finale des réserves**, 1v2 : deux adversaires déclarés, un même bénéficiaire de contrat ; offre du Consortium.
+Les quatre fins sont **Le réseau partagé**, **La couronne électrique**, **La coalition sous tension** et **La relève** ; leurs conditions se lisent sur les décisions seules (`08-narration-choix.md` §7). Leur résolution complète reste à implémenter ; elle ne doit pas être annoncée comme jouable parce que ses titres existent.
 
-### Acte II — Qui possède le lendemain ?
-
-5. **Les archives du contrat**, 1v1 : protéger des preuves sans remplacer la bataille par une collecte de cases.
-6. **Trois fronts au soleil**, 1v3 : trois camps aux moyens bornés et fronts séparés ; comprendre les concessions croisées.
-7. **La ligne de nuit**, 2v2 : préserver une voie commune avec une alliée choisie selon les engagements antérieurs.
-8. **Le relevé manquant**, 1v1 : rejouer la disqualification justifiée d’Ost, recouper les signatures et découvrir la cible Aube.
-
-### Acte III — La cinquième manche
-
-9. **Quarante journées**, survie : tenir jusqu’à la fin de J40, voir le renfort annoncé à J41 ; contre-offensive éventuelle dans une mission suivante. Les étapes 10, 20 et 30 changent les fronts avec des vagues finies.
-10. **Les routes d’Aube**, 3v1 : deux alliés et le joueur contre une défense concentrée ; routes issues des décisions antérieures.
-11. **Le partage du réseau**, 2v2 : agir sur deux fronts dont la logistique reflète les concessions du premier acte.
-12. **La dernière concession**, coalition : capture des QG nécessaires ou élimination totale selon le contrat annoncé ; préserver l’indépendance d’Aube avant l’épilogue.
-
-Les quatre fins cibles sont **Le réseau partagé**, **La couronne électrique**, **La coalition sous tension** et **La relève**. Les choix expliquent les garanties obtenues et le partage des concessions. La résolution complète des fins reste à implémenter ; elle ne doit pas être annoncée comme jouable parce que ses titres existent.
+**Les douze étapes cibles du 9 septembre sont retirées.** Elles décrivaient une campagne de douze missions en trois actes, écrite avant que la cible de 172 épisodes (`BRIEF.md`, « Refonte Aube » ; `refonte/opus1-*.json`) ne la remplace ; les garder faisait coexister deux plans. Sept d’entre elles ont un héritier, jouable ou à l’essai : « Premier courant » est `opus1_fr_01`, le premier engagement réel ; « Le pacte du col » est l’épreuve `pacte_du_col` ; « La finale des réserves », « La ligne de nuit », « Quarante journées » et « Les routes d’Aube » sont les essais `aube_reserves_1v2`, `aube_nuit_2v2`, `aube_releve_1v3` et `aube_routes_3v1` ; « La dernière concession » est `opus1_finale_18`. Les cinq autres — le bocage partagé, les archives du contrat, trois fronts au soleil, le relevé manquant, le partage du réseau — n’étaient que des thèmes : les arcs nationaux et les finales les portent.
 
 ## Ce qui existe dans ce chantier
 
-Cinq scénarios d’essai sont présents dans `content/scenarios/`, distincts de la campagne principale et sans écriture de ses conséquences :
+Depuis le 23 septembre 2026, le parcours local joue les dix exercices, les deux épreuves de sortie d’école et le chapitre français de la saison nationale 1 (`opus1_fr_01` à `opus1_fr_12`). Les essais ci-dessous restent à part. Cinq scénarios d’essai sont présents dans `content/scenarios/`, distincts de la campagne principale et sans écriture de ses conséquences :
 
 - `aube_batteries_2v1` — Le détour des batteries, coopération 2v1.
 - `aube_reserves_1v2` — conflit sur deux réserves, 1v2.
@@ -112,8 +121,8 @@ Réception technique de cette extension : 1 348 tests réussis, un test Postgres
 
 La [fiche officielle de Tiny Metal 2](https://store.steampowered.com/app/3003430/TINY_METAL_2/?l=french), consultée ce jour, annonce le soutien entre alliés (ravitaillement, tirs coordonnés, revenus partagés) et des histoires secondaires de commandants. Le jeu est annoncé sans date de sortie : ces propositions inspirent la conception, sans constituer une validation de leur équilibre. Pour Atlas, le soutien logistique et les histoires de personnages sont les pistes prioritaires. Le partage des revenus et les tirs coordonnés restent des pistes, **pas des fonctionnalités livrées**.
 
-Les effets de combat sont maintenant raccordés avant les GLB définitifs : projectiles de simulation, rafales de marqueurs, trajectoires courbes, traînées et impacts constituent une bibliothèque commune aux nations dans `src/render3d/effets.ts`. Les clips du modèle portent les mouvements mécaniques (recul, orientation, suspension, mise hors service). Les effets sont déclenchés par la présentation des événements du moteur et ne déterminent ni les dégâts ni le résultat d’un duel. L’atelier permet de rejouer les trois familles ; l’annulation et la réduction des animations ne laissent aucun effet résiduel.
+Les effets de combat sont maintenant raccordés avant les GLB définitifs : projectiles, rafales, trajectoires courbes, traînées et impacts constituent une bibliothèque commune aux nations dans `src/render3d/effets.ts` (historique : `src/render3d/` est retiré depuis le 23 septembre 2026, les effets vivent dans `src/render2d/`). Les clips du modèle portent les mouvements mécaniques (recul, orientation, suspension, mise hors service). Les effets sont déclenchés par la présentation des événements du moteur et ne déterminent ni les dégâts ni le résultat d’un duel. L’atelier permet de rejouer les trois familles ; l’annulation et la réduction des animations ne laissent aucun effet résiduel.
 
-Avant la production en série, un modèle représentatif par famille doit permettre d’affiner le point de départ, actuellement estimé à partir du volume. Ces repères devront respecter le contrat de nœuds exact existant, par des coordonnées locales associées à un nœud autorisé plutôt que par l’ajout improvisé de nœuds. Les autres modèles réutiliseront le même système avec leurs réglages. Les impacts restent non sanglants ; une mise hors jeu conserve son affaissement et son extinction, sans explosion du véhicule. La synchronisation de l’impact après le trajet est effective, y compris dans l’atelier.
+Avant la production en série, un modèle représentatif par famille doit permettre d’affiner le point de départ, actuellement estimé à partir du volume. Ces repères devront respecter le contrat de nœuds exact existant, par des coordonnées locales associées à un nœud autorisé plutôt que par l’ajout improvisé de nœuds. Les autres modèles réutiliseront le même système avec leurs réglages. Les impacts restent sans gore ; une mise hors jeu conserve son affaissement et son extinction (le rendu 2D y ajoute depuis une explosion à fumée grise), jamais de sang ni de corps. La synchronisation de l’impact après le trajet est effective, y compris dans l’atelier.
 
 Le soutien logistique entre camps alliés est également livré : un ravitailleur adjacent peut compléter les réserves d’une unité d’un autre camp de son équipe. Le menu propose cette action et l’IA peut la choisir. La propriété des unités et les caisses restent individuelles ; le ravitaillement d’un adversaire est refusé. Les tirs coordonnés et le partage des revenus restent des pistes distinctes.
