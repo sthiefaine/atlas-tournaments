@@ -1,10 +1,10 @@
 {
   "cle": "pays_mn",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-05",
+  "majLe": "2026-09-27",
   "code": "mn",
   "nom": "Mongolie",
   "nomCourt": "Mongolie",
@@ -72,7 +72,7 @@
     "pays.mn.respect_du_cavalier"
   ],
   "phare": false,
-  "accroche": "Les plus grandes cartes du tournoi, presque sans obstacle : un espace vide est fait pour être traversé le plus vite possible.",
+  "accroche": "Des cartes immenses, presque sans obstacle : un espace vide est fait pour être traversé le plus vite possible.",
   "interdits": [
     "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
     "Aucune référence aux empires ni aux conquêtes : la Mongolie du jeu est celle du cheval, du feutre et de l’horizon.",

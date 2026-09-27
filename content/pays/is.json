@@ -1,10 +1,10 @@
 {
   "cle": "pays_is",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-05",
+  "majLe": "2026-09-27",
   "code": "is",
   "nom": "Islande",
   "nomCourt": "Islande",
@@ -85,7 +85,7 @@
     "pays.is.silence_de_hrefna"
   ],
   "phare": false,
-  "accroche": "Une île de roche noire où l’on regarde le ciel avant de jouer, et où l’hiver joue de nuit.",
+  "accroche": "Une île de roche noire où l’on regarde le ciel avant de partir, et où l’hiver se bat de nuit.",
   "interdits": [
     "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
     "Le volcan s’allume pour le spectacle : jamais d’éruption traitée en catastrophe.",

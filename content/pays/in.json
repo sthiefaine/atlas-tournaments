@@ -1,10 +1,10 @@
 {
   "cle": "pays_in",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-05",
+  "majLe": "2026-09-27",
   "code": "in",
   "nom": "Inde",
   "nomCourt": "Inde",
@@ -42,7 +42,7 @@
         }
       ]
     },
-    "description": "Le quartier général produit deux unités par journée et le public paie la tournée ; les unités sorties de ces journées-là restent à peine entraînées."
+    "description": "Le quartier général produit deux unités par journée et les ateliers remplissent la caisse ; les unités sorties de ces journées-là restent à peine entraînées."
   },
   "archetypeCommandant": "showman",
   "rivalNaturel": "au",
@@ -76,7 +76,7 @@
     "pays.in.charriage_avec_marlee"
   ],
   "phare": false,
-  "accroche": "Le plus gros volume d’unités du tournoi, un commentateur qui commente ses propres coups, et des gradins pleins à toute heure.",
+  "accroche": "Le plus gros volume d’unités de la guerre, une commandante qui commente ses propres coups, et des ateliers pleins à toute heure.",
   "interdits": [
     "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
     "Aucune référence religieuse ni à une fête religieuse : les couleurs du camion peint sont décoratives.",

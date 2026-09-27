@@ -1,10 +1,10 @@
 {
   "cle": "pays_na",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-05",
+  "majLe": "2026-09-27",
   "code": "na",
   "nom": "Namibie",
   "nomCourt": "Namibie",
@@ -83,7 +83,7 @@
     "pays.na.silence_impose"
   ],
   "phare": false,
-  "accroche": "Le seul terrain totalement découvert du tournoi, plus une brume côtière qui tombe tous les matins et efface tout.",
+  "accroche": "Le seul front totalement découvert de la guerre, plus une brume côtière qui tombe tous les matins et efface tout.",
   "interdits": [
     "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
     "Le désert n’affame ni ne tue : il se traverse ou l’on y disparaît, ce qui est une manière de jouer.",

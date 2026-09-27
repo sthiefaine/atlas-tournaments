@@ -1,10 +1,10 @@
 {
   "cle": "pays_nz",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-05",
+  "majLe": "2026-09-27",
   "code": "nz",
   "nom": "Nouvelle-Zélande",
   "nomCourt": "N.-Zélande",
@@ -84,7 +84,7 @@
     "pays.nz.mur_de_brume_leve"
   ],
   "phare": false,
-  "accroche": "Deux îles étroites, une montagne au milieu, de la brume de vallée : la carte la plus défensive du tournoi.",
+  "accroche": "Deux îles étroites, une montagne au milieu, de la brume de vallée : la carte la plus défensive du jeu.",
   "interdits": [
     "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
     "Aucune référence à la culture maorie : le haka n’apparaît jamais, la fougère est un terrain.",

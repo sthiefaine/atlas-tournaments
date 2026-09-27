@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 6,
   "programme": "Aube",
   "calendrier": "Repères inventés, comptés en années de guerre (an 11, an 12, an 14) ; aucune date réelle, aucun calendrier réel.",
   "personnages": [
@@ -61,7 +61,7 @@
           "cle": "cmd_tomas_reiner_1",
           "repere": "An 13",
           "acteRevelation": 1,
-          "fait": "Il partage ses transports pour maintenir une délégation dans la guerre. Son aide est omise du classement.",
+          "fait": "Il partage ses transports pour maintenir une délégation dans la guerre. Son aide n’est inscrite nulle part.",
           "source": "canon_aube_v2"
         },
         {
@@ -420,7 +420,7 @@
       "nom": "Elsbeth Vonlanthen",
       "paysCode": "ch",
       "premierPlan": true,
-      "fonction": "Commandante de la délégation suisse, responsable de relais alpins",
+      "fonction": "Commandante de la Suisse, responsable des relais alpins",
       "motivation": "Garder chaque vallée ravitaillée, même quand les voisins ferment leurs routes.",
       "croyance": "Elle croit que prévoir le pire protège les autres ; elle risque de refuser une aide dont elle a besoin.",
       "liens": [
@@ -469,7 +469,7 @@
       "nom": "Lotte Vermeer",
       "paysCode": "nl",
       "premierPlan": true,
-      "fonction": "Commandante de la délégation néerlandaise, ingénieure des ouvrages de passage",
+      "fonction": "Commandante des Pays-Bas, ingénieure des ouvrages de passage",
       "motivation": "Garder les pompes et les digues en marche sans demander la permission à un fournisseur.",
       "croyance": "Elle croit qu’un système doit pouvoir être réparé par ceux qui vivent avec ses pannes.",
       "liens": [
@@ -518,7 +518,7 @@
       "nom": "Samir El Hadi",
       "paysCode": "ma",
       "premierPlan": true,
-      "fonction": "Commandant de la délégation marocaine, coordinateur des étapes de convoi",
+      "fonction": "Commandant du Maroc, coordinateur des étapes de convoi",
       "motivation": "Empêcher qu’un convoi en retard condamne les équipes qui l’attendent.",
       "croyance": "Il croit devoir tenir jusqu’à la relève ; reconnaître ses propres limites lui coûte.",
       "liens": [
@@ -568,7 +568,7 @@
       "nom": "Awa Diagne",
       "paysCode": "sn",
       "premierPlan": true,
-      "fonction": "Commandante de la délégation sénégalaise, capitaine des équipes du fleuve",
+      "fonction": "Commandante du Sénégal, capitaine des équipes de l’estuaire",
       "motivation": "Construire une alliance où les petites équipes sont aidées autant qu’elles aident.",
       "croyance": "Elle croit aux actes réciproques ; elle ne confond pas pardonner et oublier une promesse rompue.",
       "liens": [
@@ -579,7 +579,7 @@
           "cle": "cmd_awa_diagne_origine",
           "repere": "Avant l’an 14",
           "acteRevelation": 1,
-          "fait": "Elle a gagné sa sélection en organisant une relève entre deux clubs qui refusaient jusque-là de partager leurs entraînements.",
+          "fait": "Elle a gagné son commandement en organisant une relève entre deux clubs qui refusaient jusque-là de partager leurs entraînements.",
           "source": "canon_aube_v4"
         },
         {
@@ -593,7 +593,7 @@
           "cle": "cmd_awa_diagne_3",
           "repere": "An 14, la route de l’estuaire",
           "acteRevelation": 1,
-          "fait": "Elle reçoit le joueur à sa table avant de le jouer sur la route de l’estuaire, et fait avancer ses équipes groupées entre les bras d’eau. Elle croit qu’une promesse faite à un partenaire engage toute la coalition.",
+          "fait": "Elle reçoit le joueur à sa table avant de l’affronter sur la route de l’estuaire, et fait avancer ses équipes groupées entre les bras d’eau. Elle croit qu’une promesse faite à un partenaire engage toute la coalition.",
           "source": "canon_aube_v2"
         },
         {
@@ -617,7 +617,7 @@
       "nom": "Lívia Moura",
       "paysCode": "br",
       "premierPlan": true,
-      "fonction": "Commandante de la délégation brésilienne, organisatrice de rencontres fluviales",
+      "fonction": "Commandante du Brésil, organisatrice des fronts du fleuve",
       "motivation": "Faire revenir aux ateliers locaux une part de ce qu’ils ont aidé à gagner.",
       "croyance": "Elle croit qu’une victoire n’a de sens que si ceux qui réparent peuvent continuer à travailler.",
       "liens": [
@@ -628,7 +628,7 @@
           "cle": "cmd_livia_moura_origine",
           "repere": "Avant l’an 14",
           "acteRevelation": 1,
-          "fait": "Elle a transformé une exhibition mal préparée en série de rencontres accessibles en faisant tourner les équipements entre les clubs.",
+          "fait": "Elle a sauvé une offensive mal préparée sur le fleuve en faisant tourner les équipements entre les clubs.",
           "source": "canon_aube_v4"
         },
         {
@@ -642,7 +642,7 @@
           "cle": "cmd_livia_moura_3",
           "repere": "An 14, les pistes jumelles",
           "acteRevelation": 1,
-          "fait": "Elle fait entrer ses équipes sur les pistes jumelles avec les tambours du public derrière elle et joue le pont du milieu parce que le stade l’attend là. Elle croit que le bruit des gradins dit ce que veut son équipe.",
+          "fait": "Elle fait entrer ses équipes sur les pistes jumelles avec les tambours derrière elle et prend le pont du milieu parce que le public l’attend là. Elle croit que le bruit du public dit ce que veut son équipe.",
           "source": "canon_aube_v2"
         },
         {
@@ -666,7 +666,7 @@
       "nom": "Inés Valdés",
       "paysCode": "mx",
       "premierPlan": true,
-      "fonction": "Commandante de la délégation mexicaine, responsable des qualifications de plateau",
+      "fonction": "Commandante du Mexique, responsable des fronts de plateau",
       "motivation": "Obtenir que ceux qui tiennent le terrain aient leur mot à dire après la victoire.",
       "croyance": "Elle croit aux solutions trouvées sur place ; elle se méfie parfois trop vite des conseils venus d’ailleurs.",
       "liens": [
@@ -677,7 +677,7 @@
           "cle": "cmd_ines_valdes_origine",
           "repere": "Avant l’an 14",
           "acteRevelation": 1,
-          "fait": "Elle a perdu une finale après avoir pris un poste prestigieux en laissant sans couverture les deux passages qui l’alimentaient.",
+          "fait": "Elle a perdu une bataille décisive après avoir pris un poste prestigieux en laissant sans couverture les deux passages qui l’alimentaient.",
           "source": "canon_aube_v4"
         },
         {
@@ -715,7 +715,7 @@
       "nom": "Devika Rao",
       "paysCode": "in",
       "premierPlan": true,
-      "fonction": "Commandante de la délégation indienne, coordinatrice d’ateliers de compétition",
+      "fonction": "Commandante de l’Inde, coordinatrice des ateliers d’interconnexion",
       "motivation": "Garder des ateliers capables de produire même si un grand fournisseur coupe ses livraisons.",
       "croyance": "Elle croit qu’il faut toujours une autre solution ; elle peut disperser ses moyens à trop en préparer.",
       "liens": [
@@ -726,7 +726,7 @@
           "cle": "cmd_devika_rao_origine",
           "repere": "Avant l’an 14",
           "acteRevelation": 1,
-          "fait": "Elle a regroupé plusieurs petits ateliers dans une réserve commune après qu’un fournisseur eut modifié ses délais en pleine qualification.",
+          "fait": "Elle a regroupé plusieurs petits ateliers dans une réserve commune après qu’un fournisseur eut modifié ses délais en pleine offensive.",
           "source": "canon_aube_v4"
         },
         {
@@ -764,7 +764,7 @@
       "nom": "Ren Mizuno",
       "paysCode": "jp",
       "premierPlan": true,
-      "fonction": "Commandant de la délégation japonaise, planificateur des correspondances",
+      "fonction": "Commandant du Japon, planificateur des correspondances",
       "motivation": "Partager les plans utiles sans laisser un seul groupe décider qui peut les utiliser.",
       "croyance": "Il croit au travail précis et partagé ; il doit accepter qu’un allié puisse faire autrement.",
       "liens": [
@@ -813,7 +813,7 @@
       "nom": "Hazel Quinn",
       "paysCode": "au",
       "premierPlan": true,
-      "fonction": "Commandante de la délégation australienne, responsable des réserves côtières",
+      "fonction": "Commandante de l’Australie, responsable des réserves côtières",
       "motivation": "Ne laisser aucun poste lointain attendre un ravitaillement qui ne viendra pas.",
       "croyance": "Elle croit qu’on doit pouvoir tenir seul ; elle apprend à compter sur des alliés aussi éloignés qu’elle.",
       "liens": [
@@ -824,7 +824,7 @@
           "cle": "cmd_hazel_quinn_origine",
           "repere": "Avant l’an 14",
           "acteRevelation": 1,
-          "fait": "Elle a refusé d’engager toutes ses batteries dans une finale et assuré ainsi les étapes suivantes lorsque le fournisseur commun a retardé ses livraisons.",
+          "fait": "Elle a refusé d’engager toutes ses batteries dans une seule bataille et assuré ainsi les étapes suivantes lorsque le fournisseur commun a retardé ses livraisons.",
           "source": "canon_aube_v4"
         },
         {
@@ -862,7 +862,7 @@
       "nom": "Ayu Pranata",
       "paysCode": "id",
       "premierPlan": true,
-      "fonction": "Commandante de la délégation indonésienne, déléguée d’un collectif de clubs insulaires",
+      "fonction": "Commandante de l’Indonésie, déléguée d’un groupement de clubs des îles",
       "motivation": "Faire entendre les petites îles lorsque les grandes puissances décident où vont les réserves.",
       "croyance": "Elle croit qu’une alliance doit écouter ceux qui ont le moins de moyens, pas seulement ceux qui parlent fort.",
       "liens": [
@@ -911,7 +911,7 @@
       "nom": "Leandro Paz",
       "paysCode": "ar",
       "premierPlan": false,
-      "fonction": "Commandant de la délégation argentine, ancien régisseur de pistes",
+      "fonction": "Commandant de l’Argentine, ancien chef de piste",
       "motivation": "Garder une seconde route ouverte quand un ennemi bloque la première.",
       "croyance": "Il croit qu’on reste libre tant qu’on peut changer de chemin.",
       "liens": [
@@ -922,14 +922,14 @@
           "cle": "cmd_leandro_paz_origine",
           "repere": "Avant l’an 14",
           "acteRevelation": 1,
-          "fait": "Il a tracé des itinéraires alternatifs pour des rencontres sur de grandes plaines avant de gagner sa place au banc de commandement.",
+          "fait": "Il a tracé des itinéraires alternatifs pour des convois sur de grandes plaines avant de gagner sa place au poste de commandement.",
           "source": "canon_aube_v4"
         },
         {
           "cle": "cmd_leandro_paz_aube",
           "repere": "An 14, examen des concessions",
           "acteRevelation": 2,
-          "fait": "La révision des accès aux réserves confronte cette délégation à une décision : ouvrir un corridor commun ou concentrer les moyens sur sa qualification. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
+          "fait": "La révision des accès aux réserves confronte cette délégation à une décision : ouvrir un corridor commun ou concentrer les moyens sur sa propre offensive. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
         },
         {
@@ -950,7 +950,7 @@
       "identiteTactique": {
         "style": "La plaine",
         "faiblesse": "Il élargit son front jusqu’à rendre sa propre réserve trop lointaine.",
-        "dilemme": "Ouvrir un corridor commun ou concentrer les moyens sur sa qualification.",
+        "dilemme": "Ouvrir un corridor commun ou concentrer les moyens sur sa propre offensive.",
         "mission": "opus1_hs_ar_1"
       },
       "role": "commandant"
@@ -960,7 +960,7 @@
       "nom": "Noémie Leduc",
       "paysCode": "ca",
       "premierPlan": false,
-      "fonction": "Commandante de la délégation canadienne, technicienne des essais saisonniers",
+      "fonction": "Commandante du Canada, technicienne des essais saisonniers",
       "motivation": "Permettre aux nouvelles équipes de préparer leurs machines aussi bien que les plus riches.",
       "croyance": "Elle croit qu’un essai honnête doit pouvoir être refait par quelqu’un d’autre.",
       "liens": [
@@ -1009,7 +1009,7 @@
       "nom": "Jone Vakalau",
       "paysCode": "fj",
       "premierPlan": false,
-      "fonction": "Commandant de la délégation fidjienne, jeune capitaine des entraînements de lagon",
+      "fonction": "Commandant des Fidji, jeune capitaine des entraînements de lagon",
       "motivation": "Donner aux petites équipes une vraie chance de tenir face aux grands budgets.",
       "croyance": "Il croit que connaître ses partenaires compte autant que posséder le meilleur matériel.",
       "liens": [
@@ -1034,7 +1034,7 @@
           "cle": "cmd_jone_vakalau_3",
           "repere": "An 14, le lagon sans transport",
           "acteRevelation": 1,
-          "fait": "Le transport d’un club est retenu pour une facture ; il prête le sien au joueur pour ramener l’équipement, contre Yuna Serrat et une délégation sous contrat, et garde une petite équipe dans la compétition.",
+          "fait": "Le transport d’un club est retenu pour une facture ; il prête le sien au joueur pour ramener l’équipement, contre Yuna Serrat et une délégation sous contrat, et garde une petite équipe dans la guerre.",
           "source": "canon_aube_v2"
         },
         {
@@ -1058,7 +1058,7 @@
       "nom": "Nikos Delis",
       "paysCode": "gr",
       "premierPlan": false,
-      "fonction": "Commandant de la délégation grecque, vétéran des relais côtiers",
+      "fonction": "Commandant de la Grèce, vétéran des relais côtiers",
       "motivation": "Transmettre ce qu’il sait à ceux qui devront continuer sans lui.",
       "croyance": "Il croit qu’un bon chef prépare quelqu’un à prendre sa place.",
       "liens": [
@@ -1069,7 +1069,7 @@
           "cle": "cmd_nikos_delis_origine",
           "repere": "Avant l’an 14",
           "acteRevelation": 1,
-          "fait": "Il a quitté un banc prestigieux pour reformer une équipe dont les moyens avaient été dispersés après une saison sans finale.",
+          "fait": "Il a quitté un commandement prestigieux pour reformer une équipe dont les moyens avaient été dispersés après une saison sans victoire.",
           "source": "canon_aube_v4"
         },
         {
@@ -1090,7 +1090,7 @@
           "cle": "cmd_nikos_delis_4",
           "repere": "An 14, la recrue sur la jetée",
           "acteRevelation": 2,
-          "fait": "Basile Kelm verrouille la réserve du port. Pour la première fois, il demande son avis au joueur — confier le passage des îles à la recrue, ou reprendre lui-même toute la préparation — et parle de « quand il ne sera plus sur le circuit ».",
+          "fait": "Basile Kelm verrouille la réserve du port. Pour la première fois, il demande son avis au joueur — confier le passage des îles à la recrue, ou reprendre lui-même toute la préparation — et parle de « quand il ne sera plus sur le front ».",
           "source": "canon_aube_v2"
         },
         {
@@ -1115,7 +1115,7 @@
       "nom": "Elín Arnardóttir",
       "paysCode": "is",
       "premierPlan": false,
-      "fonction": "Commandante de la délégation islandaise, observatrice des sites d’essai",
+      "fonction": "Commandante de l’Islande, observatrice des sites d’essai",
       "motivation": "Vérifier les promesses des fournisseurs avant que des équipes en dépendent.",
       "croyance": "Elle croit davantage à une mesure refaite qu’à une annonce brillante.",
       "liens": [
@@ -1140,7 +1140,7 @@
           "cle": "cmd_elin_arnardottir_3",
           "repere": "An 14, la nuit islandaise",
           "acteRevelation": 1,
-          "fait": "De nuit, sur la roche noire, elle joue contre Yuna Serrat, qui gère les deux contrats vendant la même réserve à deux délégations ; elle n’accuse pas encore, elle recoupe.",
+          "fait": "De nuit, sur la roche noire, elle se bat contre Yuna Serrat, qui gère les deux contrats vendant la même réserve à deux délégations ; elle n’accuse pas encore, elle recoupe.",
           "source": "canon_aube_v2"
         },
         {
@@ -1164,7 +1164,7 @@
       "nom": "Kito Njoroge",
       "paysCode": "ke",
       "premierPlan": false,
-      "fonction": "Commandant de la délégation kényane, entraîneur des rencontres longues",
+      "fonction": "Commandant du Kenya, entraîneur des engagements longs",
       "motivation": "Éviter qu’un équipement bon marché aujourd’hui devienne impossible à entretenir demain.",
       "croyance": "Il croit qu’on doit regarder ce qui reste après la première victoire.",
       "liens": [
@@ -1189,7 +1189,7 @@
           "cle": "cmd_kito_njoroge_3",
           "repere": "An 14, la bataille de trois heures",
           "acteRevelation": 1,
-          "fait": "Sur les hauts plateaux, il ne gagne jamais avant la dixième journée : il laisse le joueur s’épuiser, et prouve que la durée compte autant que le classement initial.",
+          "fait": "Sur les hauts plateaux, il ne gagne jamais avant la dixième journée : il laisse le joueur s’épuiser, et prouve que la durée compte autant que l’avance initiale.",
           "source": "canon_aube_v2"
         },
         {
@@ -1213,7 +1213,7 @@
       "nom": "Tiana Ravel",
       "paysCode": "mg",
       "premierPlan": false,
-      "fonction": "Commandante de la délégation malgache, cartographe des pistes d’entraînement",
+      "fonction": "Commandante de Madagascar, cartographe des pistes",
       "motivation": "Partager les observations du terrain avec les équipes qui y risquent leurs véhicules.",
       "croyance": "Elle croit qu’une découverte utile ne doit pas être cachée à ceux qui en ont besoin.",
       "liens": [
@@ -1238,7 +1238,7 @@
           "cle": "cmd_tiana_ravel_3",
           "repere": "An 14, l’inventaire des pistes",
           "acteRevelation": 1,
-          "fait": "Sous couvert et sous brouillard, elle nomme chaque espèce en pleine partie et gagne par les pistes rouges qu’elle a relevées elle-même.",
+          "fait": "Sous couvert et sous brouillard, elle nomme chaque espèce en pleine bataille et gagne par les pistes rouges qu’elle a relevées elle-même.",
           "source": "canon_aube_v2"
         },
         {
@@ -1262,7 +1262,7 @@
       "nom": "Saran Bat",
       "paysCode": "mn",
       "premierPlan": false,
-      "fonction": "Commandante de la délégation mongole, capitaine des parcours mobiles",
+      "fonction": "Commandante de la Mongolie, capitaine des parcours mobiles",
       "motivation": "Pouvoir changer de fournisseur sans perdre son matériel ni abandonner son équipe.",
       "croyance": "Il croit qu’une aide qui interdit de partir est déjà un piège.",
       "liens": [
@@ -1273,7 +1273,7 @@
           "cle": "cmd_saran_bat_origine",
           "repere": "Avant l’an 14",
           "acteRevelation": 1,
-          "fait": "Elle a gagné une qualification en changeant de point de ravitaillement à mi-parcours après avoir annoncé le déplacement à tous ses partenaires.",
+          "fait": "Elle a gagné une offensive en changeant de point de ravitaillement à mi-parcours après avoir annoncé le déplacement à tous ses partenaires.",
           "source": "canon_aube_v4"
         },
         {
@@ -1311,7 +1311,7 @@
       "nom": "Amalie Haoses",
       "paysCode": "na",
       "premierPlan": false,
-      "fonction": "Commandante de la délégation namibienne, responsable des relevés côtiers",
+      "fonction": "Commandante de la Namibie, responsable des relevés côtiers",
       "motivation": "Rendre aux équipes les informations qu’elles ont collectées ensemble.",
       "croyance": "Elle croit qu’on ne devrait pas payer deux fois pour son propre travail.",
       "liens": [
@@ -1336,14 +1336,14 @@
           "cle": "cmd_amalie_haoses_3",
           "repere": "An 14, la brume du matin",
           "acteRevelation": 1,
-          "fait": "Sur le seul front totalement découvert de la guerre, la brume côtière tombe chaque matin et aveugle l’adversaire ; elle joue contre le joueur avec ses drones, et lui laisse comprendre ce que la brume efface.",
+          "fait": "Sur le seul front totalement découvert de la guerre, la brume côtière tombe chaque matin et aveugle l’adversaire ; elle affronte le joueur avec ses drones, et lui laisse comprendre ce que la brume efface.",
           "source": "canon_aube_v2"
         },
         {
           "cle": "cmd_amalie_haoses_4",
           "repere": "An 14, le passage révélé",
           "acteRevelation": 2,
-          "fait": "Avant le coup d’envoi, contre trois camps aux fronts séparés, elle doit révéler le passage à tous ou protéger la seule fenêtre de son équipe ; ses observateurs relèvent les couloirs du réseau muet.",
+          "fait": "Avant la bataille, contre trois camps aux fronts séparés, elle doit révéler le passage à tous ou protéger la seule fenêtre de son équipe ; ses observateurs relèvent les couloirs du réseau muet.",
           "source": "canon_aube_v2"
         }
       ],
@@ -1360,7 +1360,7 @@
       "nom": "Mira Karki",
       "paysCode": "np",
       "premierPlan": false,
-      "fonction": "Commandante de la délégation népalaise, coordinatrice des ateliers d’altitude",
+      "fonction": "Commandante du Népal, coordinatrice des ateliers d’altitude",
       "motivation": "Faire livrer les postes isolés avant qu’il ne soit trop tard pour leurs équipes.",
       "croyance": "Elle croit que personne ne doit disparaître d’une carte parce qu’il vit trop loin.",
       "liens": [
@@ -1385,7 +1385,7 @@
           "cle": "cmd_mira_karki_3",
           "repere": "An 14, les ateliers d’altitude",
           "acteRevelation": 1,
-          "fait": "Du subtropical au glacier, elle joue depuis la montagne contre le joueur ; ses fanions de balisage sont sans signe, et le sommet n’est qu’une étape.",
+          "fait": "Du subtropical au glacier, elle affronte le joueur depuis la montagne ; ses fanions de balisage sont sans signe, et le sommet n’est qu’une étape.",
           "source": "canon_aube_v2"
         },
         {
@@ -1417,7 +1417,7 @@
       "nom": "Tess Roa",
       "paysCode": "nz",
       "premierPlan": false,
-      "fonction": "Commandante de la délégation néo-zélandaise, responsable des remises en service",
+      "fonction": "Commandante de la Nouvelle-Zélande, responsable des remises en service",
       "motivation": "Obtenir du temps et des pièces pour réparer, pas seulement de l’argent pour remplacer.",
       "croyance": "Elle croit qu’une machine sauvée peut encore ramener quelqu’un.",
       "liens": [
@@ -1435,7 +1435,7 @@
           "cle": "cmd_tess_roa_aube",
           "repere": "An 14, examen des concessions",
           "acteRevelation": 2,
-          "fait": "La révision des accès aux réserves confronte cette délégation à une décision : réparer un dépôt utile à tous ou réserver le matériel à la prochaine manche. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
+          "fait": "La révision des accès aux réserves confronte cette délégation à une décision : réparer un dépôt utile à tous ou réserver le matériel à la prochaine bataille. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
         },
         {
@@ -1449,14 +1449,14 @@
           "cle": "cmd_tess_roa_4",
           "repere": "An 14, la ligne de fougère",
           "acteRevelation": 2,
-          "fait": "Pendant que son équipe répare, elle prête son banc au joueur contre Ost et Yuna Serrat. Réparer pour tous ou réserver le matériel à la prochaine manche : sa réponse décide de ce qu’elle offre au génie du joueur.",
+          "fait": "Pendant que son équipe répare, elle prête son banc au joueur contre Ost et Yuna Serrat. Réparer pour tous ou réserver le matériel à la prochaine bataille : sa réponse décide de ce qu’elle offre au génie du joueur.",
           "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
         "style": "La fougère répare",
         "faiblesse": "Elle s’attache à remettre chaque poste en service même quand il faut changer d’axe.",
-        "dilemme": "Réparer un dépôt utile à tous ou réserver le matériel à la prochaine manche.",
+        "dilemme": "Réparer un dépôt utile à tous ou réserver le matériel à la prochaine bataille.",
         "mission": "opus1_hs_nz_1"
       },
       "role": "commandant"
@@ -1466,7 +1466,7 @@
       "nom": "Luz Quispe",
       "paysCode": "pe",
       "premierPlan": false,
-      "fonction": "Commandante de la délégation péruvienne, conductrice des chantiers de parcours",
+      "fonction": "Commandante du Pérou, conductrice des chantiers de passage",
       "motivation": "Garder les passages ouverts aux petits ateliers aussi bien qu’aux grandes armées.",
       "croyance": "Elle croit qu’une règle doit protéger les gens, pas réserver la route aux plus riches.",
       "liens": [
@@ -1524,7 +1524,7 @@
           "cle": "cmd_mael_orven_opus1_parcours",
           "repere": "Avant l’an 14",
           "acteRevelation": 1,
-          "fait": "Avant l’an 14 : pilote de reconnaissance de circuits sportifs, il doit abandonner un programme indépendant faute d’accès aux batteries. An 14 : accepte les moyens méridiens et transforme cette dépendance en loyauté choisie.",
+          "fait": "Avant l’an 14 : pilote de reconnaissance indépendant, il doit abandonner son programme faute d’accès aux batteries. An 14 : accepte les moyens méridiens et transforme cette dépendance en loyauté choisie.",
           "source": "canon_aube_opus1_v1"
         },
         {
@@ -1586,7 +1586,7 @@
           "cle": "cmd_lise_orven_opus1_parcours",
           "repere": "Avant l’an 14",
           "acteRevelation": 1,
-          "fait": "Ancienne organisatrice de parcours, Lise conçoit des zones de sécurité pour les pièces d’artillerie lourdes. Elle rejoint les Gris avec une clause protégeant ses techniciens, puis découvre que leur approvisionnement dépend d’un fournisseur unique.",
+          "fait": "Ancienne ingénieure des champs de tir, Lise conçoit des zones de sécurité pour les pièces d’artillerie lourdes. Elle rejoint les Gris avec une clause protégeant ses techniciens, puis découvre que leur approvisionnement dépend d’un fournisseur unique.",
           "source": "canon_aube_opus1_v1"
         },
         {
