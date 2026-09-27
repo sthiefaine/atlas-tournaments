@@ -24,7 +24,7 @@
  * Ce qui n'est **pas** réutilisé : la table `BANCS_PRETES` et ses clés i18n de
  * conséquence. Un choix ouvert n'a pas de conséquence à annoncer.
  */
-import type { CodePays, Scenario } from '../../schemas/index';
+import type { CampId, CodePays, Scenario } from '../../schemas/index';
 import { chargerCommandantJeu, revisionCommandants, type CommandantJeu } from '../../content/commandants-jeu';
 import { chargerCommandantsJouables, type RosterJouables } from '../../content/commandants-jouables';
 import { lireProfilCommandant } from '../../content/profils-commandants';
@@ -59,6 +59,25 @@ export interface OptionCommandant {
 /** La délégation d'un commandant, `atl` pour qui n'en a pas. */
 export function paysDuCommandant(cle: string): CodePays {
   return (lireProfilCommandant(cle)?.paysCode as CodePays | undefined) ?? CODE_SANS_NATION;
+}
+
+/**
+ * La nation de chaque camp, qui donne ses couleurs et ses bâtiments nationaux à
+ * la peau : le joueur garde la sienne (`paysJoueur` — celle du scénario, ou de
+ * l'incarnation), et **chaque autre camp prend celle de son commandant**.
+ *
+ * La page écrivait `{ 0: paysJoueur, 1: paysJoueur === 'lu' ? 'fr' : 'lu' }` :
+ * l'adversaire était luxembourgeois par défaut, ce qui valait pour Tomas aux
+ * exercices et faussait tout le reste — les Gris d'Ost et d'Edran portaient les
+ * couleurs et le QG du Luxembourg dans le chapitre français, et Lise, au
+ * Luxembourg, le QG de la France. Un commandant sans nation (`atl` : les Gris,
+ * l'Intendance) n'a pas de style : son camp garde sa couleur et le bâtiment
+ * commun. Le choix du joueur ne change jamais les couleurs d'en face.
+ */
+export function paysDesCamps(scenario: Scenario, paysJoueur: CodePays): Partial<Record<CampId, CodePays>> {
+  const pays: Partial<Record<CampId, CodePays>> = { 0: paysJoueur };
+  for (const c of scenario.commandants) if (c.camp !== 0) pays[c.camp] = paysDuCommandant(c.commandantCle);
+  return pays;
 }
 
 /** Le commandant que le scénario met au camp du joueur. */

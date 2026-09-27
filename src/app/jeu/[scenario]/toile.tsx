@@ -19,7 +19,7 @@ import { debloquerCommandants, enregistrerRencontres, enregistrerVictoire, enreg
 import { appliquerConsequences, cleDecision, decisionsDeGraine, graineAube, libelleDecision, optionsDecision, ETAPES_AUBE, estMissionAube, CLES_QUETES_AUBE, queteOuverte, VERSION_CANON_AUBE } from '../../campagne/consequences';
 import { PROPRES_COULEURS, bancChoisi, cleSourceBanc, graineAvecCommandant, optionsBanc } from '../../campagne/bancs';
 import { grilleCommandants } from '../../campagne/roster';
-import { appliquerCommandantDeGraine, bancsProposes } from '../../campagne/commandants-jouables';
+import { appliquerCommandantDeGraine, bancsProposes, paysDesCamps } from '../../campagne/commandants-jouables';
 import { chargerCommandantsJouables } from '@/content/commandants-jouables';
 import { compteRoster, ouvertures } from '@/render/roster-commandants';
 import ChoixCommandant from './choix-commandant';
@@ -351,13 +351,11 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
           const commun = {
             audio,
             biome: carte.biome,
-            // La nation d'en face ne suit **pas** celle du joueur : elle le
-            // faisait — `incarnation ? 'fr' : 'lu'` — parce que l'incarnation
-            // était rare et toujours luxembourgeoise ; avec le vestiaire elle
-            // devient l'ordinaire, et l'adversaire changeait de couleurs chaque
-            // fois qu'on changeait d'entraîneur. Il garde le Luxembourg, sauf
-            // quand le joueur le lui prend.
-            paysParCamp: { 0: paysJoueur, 1: paysJoueur === 'lu' ? 'fr' : 'lu' },
+            // La nation d'en face ne suit **pas** celle du joueur : chaque camp
+            // prend celle de son propre commandant (`paysDesCamps`), dans le
+            // scénario **effectif** — un banc prêté a pu échanger deux généraux.
+            // Changer d'entraîneur ne repeint donc jamais l'adversaire.
+            paysParCamp: paysDesCamps(joue, paysJoueur),
             animationsReduites: preferences.animationsReduites,
             // Une peau qui cesse de pouvoir dessiner une fois montée — un
             // contexte WebGL perdu qu'on ne sait pas rebâtir — tombe sur le même
