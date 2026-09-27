@@ -1,8 +1,9 @@
 import type { CampId, Dialogue, Mode, RenfortScenario, Scenario } from '../schemas/index';
 
 /**
- * La fin du chapitre français (FR07 à FR12) : ce que chaque mode ajoute
- * par-dessus ses paramètres (`Scenario.modes`), et rien qui ne soit annoncé.
+ * La fin du chapitre français (FR07 à FR12), puis l'ouverture du Luxembourg
+ * (LU01, LU02) : ce que chaque mode ajoute par-dessus ses paramètres
+ * (`Scenario.modes`), et rien qui ne soit annoncé.
  *
  * - `alliesPropres` : les colonnes alliées pilotées par l'IA gardent les fonds,
  *   les revenus et la stratégie que le scénario leur donne. Les paramètres de
@@ -79,6 +80,30 @@ export const FIN_CHAPITRE_FR: Readonly<Record<string, DurcissementChapitre>> = {
   },
 };
 
+/**
+ * L'ouverture du chapitre luxembourgeois (27 septembre 2026), sur le même
+ * contrat. C'est Tomas qui annonce : le joueur commande sa colonne, et Ariane
+ * n'est pas de la distribution — une réplique d'absente serait refusée
+ * (`tests/schemas/contenu.test.ts`).
+ */
+const TOMAS = 'cmd_tomas_reiner';
+export const OUVERTURE_LUXEMBOURG: Readonly<Record<string, DurcissementChapitre>> = {
+  // La fiche : « une unité de couverture supplémentaire protège les indirects ».
+  // Les 1 500 fonds viennent des paramètres du mode, comme de FR03 à FR12.
+  opus1_lu_01: {
+    difficile: {
+      annonce: { locuteur: TOMAS, emotion: 'neutre', texte: 'En difficile, Lise a 1 500 fonds de plus, et un char léger rejoint ses pièces au-dessus des ponts du relais à J2 pour les couvrir. Le Bulletin ne voit qu’une journée.' },
+      renforts: [{ journee: 2, unites: [{ camp: 1, type: 'char_leger', x: 14, y: 5 }] }],
+    },
+  },
+};
+
+/** Tous les durcissements de chapitre, par épreuve : ce que `scenarioPourMode` lit. */
+export const DURCISSEMENTS_CHAPITRE: Readonly<Record<string, DurcissementChapitre>> = {
+  ...FIN_CHAPITRE_FR,
+  ...OUVERTURE_LUXEMBOURG,
+};
+
 /** Réglages assumés des essais Aube : aucun multiplicateur caché de dégâts. */
 export const DIFFICULTES_AUBE: Readonly<Record<string, { fondsAdverses: number; brouillard?: boolean }>> = {
   aube_batteries_2v1: { fondsAdverses: 2000 },
@@ -106,7 +131,7 @@ export function scenarioPourMode(base: Scenario, mode: Mode): Scenario {
     if (/^opus1_fr_0[3-6]$/.test(base.code) && mode === 'difficile') {
       scenario.dialogueOuverture.push({locuteur:'cmd_ariane_belloc',emotion:'neutre',texte:'En difficile, chaque équipe adverse dispose de 1 500 fonds supplémentaires. Leurs dégâts restent identiques et le Bulletin montre une seule journée à l’avance.'});
     }
-    const chapitre = FIN_CHAPITRE_FR[base.code];
+    const chapitre = DURCISSEMENTS_CHAPITRE[base.code];
     if (chapitre?.alliesPropres) {
       const allies = base.equipes?.find((e) => e.includes(0)) ?? [0];
       const fonds = { ...scenario.fondsDepartParCamp };

@@ -1,0 +1,121 @@
+{
+  "cle": "carte_opus1_lu_01",
+  "code": "carte_opus1_lu_01",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_map",
+  "creeLe": "2026-09-27",
+  "majLe": "2026-09-27",
+  "nom": "Le relais de Tomas",
+  "largeur": 20,
+  "hauteur": 14,
+  "camps": 2,
+  "biome": "foret",
+  "grille": [
+    "FFPPPPPPFMVMFPPPPFFF",
+    "FPCRRRRPPPVPPPCRRPPF",
+    "PPPPPPRPPMVMMPPPRPUP",
+    "PGPPPPRTPMVMMMPPRPPP",
+    "PGGPRRRRRRNRRRRRHPPP",
+    "PPPPRPPPPRNRMPPPPPFP",
+    "PCPPRPGGPMVMMPPGGPFF",
+    "PPPPRPGPFMVMFPPPPPPP",
+    "PPPPRPPPPMVMMPFFPPCP",
+    "PPPRRRRRRRNRRRRRRRRP",
+    "PHRRPPFFPMVMPPFPPPPP",
+    "PPUPPPFFFMVMFPPPCPPP",
+    "FPPPPPPPPMVMMPPPPPFF",
+    "FFPPPPPPFMVMFPPPPFFF"
+  ],
+  "proprietaires": {
+    "1,10": 0,
+    "2,11": 0,
+    "7,3": 0,
+    "1,6": 0,
+    "16,4": 1,
+    "18,2": 1,
+    "14,1": 1,
+    "18,8": 1,
+    "16,11": 1
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 7,
+      "y": 3
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 5,
+      "y": 5
+    },
+    {
+      "camp": 0,
+      "type": "meca",
+      "x": 3,
+      "y": 9
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 4,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "artillerie",
+      "x": 2,
+      "y": 8
+    },
+    {
+      "camp": 0,
+      "type": "recon",
+      "x": 3,
+      "y": 10
+    },
+    {
+      "camp": 1,
+      "type": "artillerie",
+      "x": 13,
+      "y": 5
+    },
+    {
+      "camp": 1,
+      "type": "roquettes",
+      "x": 15,
+      "y": 5
+    },
+    {
+      "camp": 1,
+      "type": "artillerie",
+      "x": 17,
+      "y": 3
+    },
+    {
+      "camp": 1,
+      "type": "char_leger",
+      "x": 13,
+      "y": 4
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 15,
+      "y": 3
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 14,
+      "y": 6
+    },
+    {
+      "camp": 1,
+      "type": "transport",
+      "x": 14,
+      "y": 4
+    }
+  ]
+}

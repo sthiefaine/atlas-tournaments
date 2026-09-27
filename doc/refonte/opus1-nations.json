@@ -536,7 +536,7 @@
         "type": "capture_qg",
         "conditionVictoire": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
         "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
-        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider. Joué le 27 septembre 2026 : le joueur commande la colonne de Tomas (camp 0, son kit, comme celui d’Ariane en France) ; l’adversaire est Lise Varen et ses pièces lourdes, sur les hauteurs d’en face.",
         "victoireAlternative": false
       },
       "variationNormaleDifficile": {
@@ -553,7 +553,7 @@
       "personnages": [
         "cmd_tomas_reiner"
       ],
-      "statut": "conception"
+      "statut": "integre_parcours_local_simule"
     },
     {
       "id": "opus1_lu_02",

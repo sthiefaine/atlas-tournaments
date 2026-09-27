@@ -353,13 +353,29 @@
       "objectif": "Prenez le QG d’Edran, sur le plateau, avant la fin de J22. Un QG pris par Tomas ou par Solveig compte pour vous.",
       "conseil": "Trois portes mènent au plateau : la vôtre à l’ouest, celle de Tomas au nord, celle de Solveig au sud. Les véhicules n’entrent que par les portes ; l’infanterie passe la montagne, plus lentement.",
       "recit": "Il reste à Méridien un dernier QG en France, tenu par Edran derrière trois portes. Trois colonnes montent ensemble : la vôtre, celle de Tomas et l’escorte de Solveig. Ariane vous laisse mener l’assaut.",
-      "conclusion": "Le QG tombe, et c’est vous qui annoncez la victoire aux équipages. La concession française est inscrite à votre nom : versez la réserve à la coalition, ou financez le prochain front. Tomas repart vers le Luxembourg avec les batteries.",
+      "conclusion": "Le QG tombe, et c’est vous qui annoncez la victoire aux équipages. La concession française est inscrite à votre nom : versez la réserve à la coalition, ou financez le prochain front. Tomas repart vers le Luxembourg avec les batteries. Votre choix comptera dans « Le relais de Tomas ».",
       "entrainement": false,
       "tutoriel": [
         "**Trois contre un** : les fonds restent séparés, la victoire est commune. Un QG se prend en quatre tours d’une infanterie intacte, couverte tout du long.",
         "Brouillard de guerre : ce que voit une colonne, les deux autres le voient aussi. Une porte qui cède ouvre le plateau à tout le monde.",
         "Edran n’a plus de revenu : ses routes sont coupées, et chaque pièce qu’il perd ne revient pas.",
         "Mode difficile : Edran a 1 500 fonds de plus et tient ses portes ; sa réserve entre par la porte sud à J4. Le Bulletin ne voit qu’une journée."
+      ]
+    },
+    {
+      "scenarioCle": "opus1_lu_01",
+      "titre": "Saison 1 · Le relais de Tomas",
+      "biome": "foret",
+      "objectif": "Prenez le QG de Lise Varen, sur les hauteurs de l’est, avant la fin de J22.",
+      "conseil": "Gardez le relais : il voit venir le convoi, même dans le brouillard. Les pièces de Lise couvrent les deux ponts du relais ; passez par le gué du nord ou par le pont du sud.",
+      "recit": "Tomas a ramené les batteries françaises au Luxembourg. Pendant qu’il vérifie la dernière caisse, un convoi des Gris descend vers son relais, la station qui guide tous les convois de la vallée. Lise Varen tient les hauteurs d’en face.",
+      "conclusion": "Le relais guide de nouveau les convois de la vallée. Tomas a tout noté : ce qui avait été promis, et ce qui a été livré. Demain, le dépôt s’ouvre sur trois aiguillages.",
+      "entrainement": false,
+      "tutoriel": [
+        "**Prendre le QG** : une infanterie intacte le prend en quatre tours. Couvrez-la tout du long : une infanterie touchée capture moins vite.",
+        "Le **relais** est une station radar : il voit à cinq cases, même dans le brouillard. Le perdre, c’est laisser le convoi de Lise arriver sans être vu.",
+        "Vous commandez la colonne de Tomas : elle tient mieux sur les bâtiments, et son pouvoir fait rentrer plus d’argent le lendemain. Ses unités à chenilles frappent un peu moins fort.",
+        "Mode difficile : Lise a 1 500 fonds de plus, et un char léger couvre ses pièces au-dessus des ponts dès J2. Le Bulletin ne voit qu’une journée."
       ]
     }
   ]

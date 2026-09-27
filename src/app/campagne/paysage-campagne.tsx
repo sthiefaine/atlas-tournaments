@@ -8,6 +8,9 @@
  * journée sans crédit, à l'ouest : les clairières, la ligne de partage, la
  * réserve commune, puis la côte du fournisseur, les Haies et le plateau du
  * dernier QG, vers le nord-est — du côté où l'on part pour le Luxembourg.
+ * Le chapitre luxembourgeois (27 septembre 2026) repart du plateau vers
+ * l'ouest, le long de la côte nord : le relais de Tomas au bord de la
+ * rivière, puis le dépôt aux trois aiguillages.
  * Géographie illustrative, aucune frontière réelle. Aucune ne descend sous
  * y = 747, la plus basse d'avant : la carte garde sa hauteur.
  */
@@ -16,6 +19,8 @@ export const POSITIONS_PARCOURS: readonly (readonly [number, number])[] = [
   [1050, 340], [1054, 460], [945, 565], [813, 636], [1000, 690], [710, 747], [552, 671], [403, 735], [251, 641],
   // FR07 à FR12.
   [455, 560], [660, 590], [880, 740], [1130, 730], [1150, 440], [1130, 200],
+  // LU01, LU02.
+  [1015, 145], [880, 150],
 ];
 
 /** Carte originale, géographie illustrative du parcours et non frontières réelles. */
@@ -51,6 +56,9 @@ export function PaysageCampagne({ prefixe }: { prefixe: string }): React.ReactEl
       {/* La fin du chapitre français : les haies autour de l'étape des Haies, et le plateau du dernier QG au nord-est. */}
       <path d="M1098 404h38M1104 416v30M1166 402h30M1188 408v34M1100 474h40M1170 476h32" fill="none" stroke="#3f5e48" strokeWidth="4" strokeLinecap="round" opacity=".7"/>
       {[[1086,170],[1176,168],[1132,142]].map(([x,y],i)=><use key={`plateau${i}`} href={`#${prefixe}-sommet`} transform={`translate(${x} ${y}) scale(${i===2?.75:.85})`}/>)}
+      {/* Le Luxembourg : le mât du relais de Tomas au bord de la rivière, et les trois aiguillages du dépôt. */}
+      <g transform="translate(1050 116)" fill="none" stroke="#3f5e48" strokeWidth="3" strokeLinecap="round"><path d="M0 24V-4M-7 24 0-4 7 24"/><path d="M-9-10a13 13 0 0 1 18 0M-15-16a21 21 0 0 1 30 0" stroke="#e6ca83" strokeWidth="2" opacity=".75"/></g>
+      <path d="M812 186 850 168M850 168 884 124M850 168 900 132M850 168 912 152" fill="none" stroke="#beb899" strokeWidth="3" strokeLinecap="round" opacity=".8"/>
     </g>
     <rect width="1200" height="880" fill={`url(#${prefixe}-grille)`}/>
     <g fill="#d2ded7" fontFamily="system-ui, sans-serif" fontSize="12" letterSpacing="5" opacity=".65"><text x="370" y="97">HAUTS PLATEAUX</text><text x="665" y="760">VALLÉE CENTRALE</text><text x="72" y="510" transform="rotate(-25 72 510)">CÔTE OCCIDENTALE</text></g>

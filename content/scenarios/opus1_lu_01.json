@@ -1,0 +1,243 @@
+{
+  "cle": "opus1_lu_01",
+  "code": "opus1_lu_01",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-27",
+  "majLe": "2026-09-27",
+  "nom": "Saison 1 · Le relais de Tomas",
+  "acte": 1,
+  "paysCode": "lu",
+  "carteCle": "carte_opus1_lu_01",
+  "date": "2026-09-27",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 1,
+    "nuit": 0
+  },
+  "catalogueVersion": 0,
+  "commandantsVersion": 4,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_tomas_reiner"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_lise_orven",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 3000,
+  "fondsDepartParCamp": {
+    "0": 3000,
+    "1": 1500
+  },
+  "revenusParBatiment": 500,
+  "revenusParBatimentParCamp": {
+    "0": 500,
+    "1": 0
+  },
+  "brouillard": true,
+  "limiteJournees": 22,
+  "victoire": [
+    {
+      "type": "capture_qg"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 22
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Bienvenue au Luxembourg. Les batteries françaises sont au dépôt, et j’ai vérifié la dernière caisse moi-même : tout ce qui avait été promis est là.",
+      "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Mais un convoi des Gris descend vers mon **relais**, là-haut. C’est lui qui dit à chaque convoi de la vallée où livrer : sans lui, plus personne ne sait où aller.",
+      "emotion": "doute"
+    },
+    {
+      "locuteur": "cmd_lise_orven",
+      "texte": "Lise Varen. Mes pièces tiennent les hauteurs de l’autre rive, au-dessus des deux ponts. Le relais est dans ma zone : mon convoi vient le prendre.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "**Prenez le QG de Lise**, sur les hauteurs de l’est, avant la fin de J22. Aujourd’hui, c’est ma colonne que vous commandez : je reste à la radio.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Ses pièces couvrent les deux ponts du relais. Au nord, un gué, où l’infanterie traverse à pied ; au sud, un pont qu’elle ne surveille pas.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Vous vous souvenez de Lise aux Haies ? Ses pièces tirent de loin mais ne répondent pas au contact. Allez les chercher par le côté.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Le QG est à nous, et le relais parle de nouveau : chaque convoi de la vallée sait où il va.",
+      "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_lise_orven",
+      "texte": "Le poste est à vous. Mes équipes redescendent entières : c’est tout ce que je demande, chaque fois.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Je note tout, vous verrez : ce qu’on me promet, ce qu’on me livre, et l’écart entre les deux. Aujourd’hui, il n’y en a pas.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Demain, le dépôt s’ouvre sur **trois aiguillages**. Je connais le chemin le plus court ; c’est vous qui choisirez.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Son QG tient encore, et le relais ne guide plus personne. Reprenons : gardez le relais d’abord, puis passez par le côté, là où ses pièces ne regardent pas.",
+      "emotion": "neutre"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "lu01_radar",
+      "declencheur": {
+        "type": "journee",
+        "journee": 2
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Le relais voit à cinq cases, même dans le brouillard. Tant qu’il est à nous, le convoi de Lise ne nous surprendra pas au pont.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "lu01_premier_tir",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_lise_orven",
+          "texte": "Premier tir. Les ponts sont dans ma zone : ce qui s’y engage est marqué avant d’avoir vu qui tire.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "lu01_caisse",
+      "declencheur": {
+        "type": "perte",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Une unité de Lise hors jeu. Sa caisse est presque vide : ce qu’elle perd ici ne revient pas.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "lu01_angle",
+      "declencheur": {
+        "type": "pouvoir",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Ses pièces portent une case plus loin jusqu’à son prochain tour. Reculez d’une case, ou allez les chercher au contact.",
+          "emotion": "doute"
+        }
+      ]
+    },
+    {
+      "cle": "lu01_marche",
+      "declencheur": {
+        "type": "capture",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Bien pris. Un bâtiment de plus, c’est de l’argent demain matin : c’est comme ça que ma colonne tient.",
+          "emotion": "joie"
+        }
+      ]
+    },
+    {
+      "cle": "lu01_detour",
+      "declencheur": {
+        "type": "journee",
+        "journee": 6
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Ses pièces se déplacent lentement. Par le gué ou par le pont du sud, vous arrivez sur son QG par le côté, là où elles ne regardent pas.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "modes": {
+    "normal": {
+      "fondsDepart": 3000,
+      "fondsDepartIa": 1500,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 0,
+      "brouillard": true,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 22,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 30
+    },
+    "difficile": {
+      "fondsDepart": 3000,
+      "fondsDepartIa": 3000,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 0,
+      "brouillard": true,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 22,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 30
+    }
+  }
+}
