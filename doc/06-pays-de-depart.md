@@ -395,7 +395,7 @@ Le nom du commandant donne son identifiant : **Ariane Belloc** → `Commander.co
 - **Spécialité de jeu** — **Bonus : le fond.** Toute l'infanterie gagne `mouvement +2` et ne subit aucun malus en montée. **Malus : peu de mécanique.** Le Kenya ne peut pas avoir plus de **3** unités blindées en jeu en même temps, et son revenu est court (`fonds ×0,9`) : le blindé se paie ici plus cher qu'ailleurs.
 - **Archétype** — La fonceuse.
 - **Commandant** — **Kito Njoroge** (`cmd_kito_njoroge`), commandant du Kenya, entraîneur des engagements longs ; style « Le fond ». Biographie : `content/personnages.json` ; passif, pouvoir, super-pouvoir et faiblesse : `content/commandants-capacites.json`, révision 4.
-- **Unité spéciale** — **Le Messager du Rift.** Coureur en tenue légère vert et rouge, sac au dos, dessin propre. Mouvement 10, ignore tous les coûts de terrain sauf l'eau, ne combat pas mais **révèle** un rayon de 3 cases autour de lui en permanence, et transporte un ordre (déplace une unité amie de 2 cases supplémentaires).
+- **Unité spéciale** — **Le Messager du Rift.** Coureur en maillot vert et rouge, sac léger, dessin propre. Mouvement 10, ignore tous les coûts de terrain sauf l'eau, ne combat pas mais **révèle** un rayon de 3 cases autour de lui en permanence, et transporte un ordre (déplace une unité amie de 2 cases supplémentaires).
 - **Rival naturel** — **Sénégal.** Voir plus haut. Kito prétend qu'aucune bataille ne se gagne avant le tour 12 ; Awa en gagne régulièrement au tour 8, juste pour l'embêter.
 - **Flags** — `pays.ke.rythme_trouve`, `pays.ke.messager_arrive`, `pays.ke.match_de_trois_heures`
 
