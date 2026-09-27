@@ -491,7 +491,7 @@
    "personnages": [
     "Nikos Delis"
    ],
-   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_lu_08_decision\",\"option\":\"a\"},{\"type\":\"compteur\",\"cle\":\"monde.atlas.credibilite\",\"min\":3}]}",
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_lu_08_decision\",\"option\":\"garantir_livraison\"},{\"type\":\"compteur\",\"cle\":\"monde.atlas.credibilite\",\"min\":3}]}",
    "disparition": null,
    "statut": "conception",
    "numero": null
@@ -667,7 +667,7 @@
     "Elín Arnardóttir",
     "Yuna Serrat"
    ],
-   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_ch_04_decision\",\"option\":\"a\"},{\"type\":\"compteur\",\"cle\":\"monde.atlas.soupcon\",\"min\":3}]}",
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_ch_04_decision\",\"option\":\"partager_releves\"},{\"type\":\"compteur\",\"cle\":\"monde.atlas.soupcon\",\"min\":3}]}",
    "disparition": null,
    "statut": "conception",
    "numero": null
@@ -827,7 +827,7 @@
     "Mira Karki",
     "Elsbeth Vonlanthen"
    ],
-   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_ch_10_decision\",\"option\":\"a\"},{\"type\":\"flag\",\"cle\":\"pays.ch.rival_respecte\"}]}",
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_ch_10_decision\",\"option\":\"retour_sous_audit\"},{\"type\":\"flag\",\"cle\":\"pays.ch.rival_respecte\"}]}",
    "disparition": null,
    "statut": "conception",
    "numero": null
@@ -1496,7 +1496,7 @@
     "Kito Njoroge",
     "Awa Diagne"
    ],
-   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_sn_08_decision\",\"option\":\"a\"},{\"type\":\"flag\",\"cle\":\"pays.sn.rival_respecte\"}]}",
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_sn_08_decision\",\"option\":\"garantir_livraison\"},{\"type\":\"flag\",\"cle\":\"pays.sn.rival_respecte\"}]}",
    "disparition": null,
    "statut": "conception",
    "numero": null
@@ -1672,7 +1672,7 @@
     "Leandro Paz",
     "Lívia Moura"
    ],
-   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_br_04_decision\",\"option\":\"a\"},{\"type\":\"flag\",\"cle\":\"pays.br.rival_respecte\"}]}",
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_br_04_decision\",\"option\":\"partager_releves\"},{\"type\":\"flag\",\"cle\":\"pays.br.rival_respecte\"}]}",
    "disparition": null,
    "statut": "conception",
    "numero": null
@@ -1918,7 +1918,7 @@
     "Luz Quispe",
     "Inés Valdés"
    ],
-   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_mx_04_decision\",\"option\":\"a\"},{\"type\":\"flag\",\"cle\":\"monde.atlas.homologation_contestee\"}]}",
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_mx_04_decision\",\"option\":\"partager_releves\"},{\"type\":\"flag\",\"cle\":\"monde.atlas.homologation_contestee\"}]}",
    "disparition": null,
    "statut": "conception",
    "numero": null
@@ -2058,7 +2058,7 @@
     "Saran Bat",
     "Inés Valdés"
    ],
-   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_mx_10_decision\",\"option\":\"b\"},{\"type\":\"decision\",\"cle\":\"opus1_mx_08_decision\",\"option\":\"b\"}]}",
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_mx_10_decision\",\"option\":\"fin_du_mandat\"},{\"type\":\"decision\",\"cle\":\"opus1_mx_08_decision\",\"option\":\"refuser_garantie\"}]}",
    "disparition": null,
    "statut": "conception",
    "numero": null
@@ -2641,7 +2641,7 @@
     "Amalie Haoses",
     "Hazel Quinn"
    ],
-   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_au_04_decision\",\"option\":\"a\"},{\"type\":\"flag\",\"cle\":\"pays.mn.rival_respecte\"}]}",
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_au_04_decision\",\"option\":\"partager_releves\"},{\"type\":\"flag\",\"cle\":\"pays.mn.rival_respecte\"}]}",
    "disparition": null,
    "statut": "conception",
    "numero": null
@@ -2782,7 +2782,7 @@
     "Tess Roa",
     "Hazel Quinn"
    ],
-   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_au_10_decision\",\"option\":\"a\"},{\"type\":\"flag\",\"cle\":\"pays.fj.rival_respecte\"}]}",
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_au_10_decision\",\"option\":\"retour_sous_audit\"},{\"type\":\"flag\",\"cle\":\"pays.fj.rival_respecte\"}]}",
    "disparition": null,
    "statut": "conception",
    "numero": null
@@ -2925,7 +2925,7 @@
     "Jone Vakalau",
     "Yuna Serrat"
    ],
-   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_id_04_decision\",\"option\":\"a\"},{\"type\":\"flag\",\"cle\":\"pays.nz.rival_respecte\"}]}",
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_id_04_decision\",\"option\":\"partager_releves\"},{\"type\":\"flag\",\"cle\":\"pays.nz.rival_respecte\"}]}",
    "disparition": null,
    "statut": "conception",
    "numero": null
@@ -3031,7 +3031,7 @@
     "Tiana Ravel",
     "Ayu Pranata"
    ],
-   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_id_04_decision\",\"option\":\"a\"},{\"type\":\"compteur\",\"cle\":\"monde.atlas.credibilite\",\"min\":4}]}",
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_id_04_decision\",\"option\":\"partager_releves\"},{\"type\":\"compteur\",\"cle\":\"monde.atlas.credibilite\",\"min\":4}]}",
    "disparition": null,
    "statut": "conception",
    "numero": null
@@ -3174,7 +3174,8 @@
     "Nikos Delis",
     "Basile Kelm",
     "Célestin Vantour",
-    "Solveig Tamm"
+    "Solveig Tamm",
+    "Dafni Rallis"
    ],
    "ouverture": "{\"type\":\"flag\",\"cle\":\"pays.gr.qualifie\"}",
    "disparition": "Nikos Delis",
@@ -3279,7 +3280,8 @@
     "Mira Karki",
     "Basile Kelm",
     "Célestin Vantour",
-    "Solveig Tamm"
+    "Solveig Tamm",
+    "Anju Basnet"
    ],
    "ouverture": "{\"type\":\"flag\",\"cle\":\"pays.np.qualifie\"}",
    "disparition": "Mira Karki",

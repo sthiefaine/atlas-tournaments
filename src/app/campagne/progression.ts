@@ -1,9 +1,11 @@
 /** Progression de la qualification locale : aucune autorité sur un classement en ligne. */
-import { REGEX_CODE_COMMANDANT, type Cle, type DateIso, type Mode, type ProfilCampagne } from '../../schemas/types';
+import { REGEX_CODE_COMMANDANT, type Cle, type DateIso, type EtatFlags, type Mode, type ProfilCampagne } from '../../schemas/types';
 import { evaluerCondition } from '../../engine/deblocages';
 import type { RosterJouables } from '../../content/commandants-jouables';
 import { VERSION_CANON_AUBE, cleDecision, optionsDecision } from './consequences';
-import { cleSourceBanc, cleSourceCommandant, estSourceCommandant } from './bancs';
+import { cleSourceBanc, cleSourceCommandant, estSourceCommandant, scenarioDeSource } from './bancs';
+import { choixDeSource } from './decisions';
+import { commandantsDisparus } from './disparitions';
 import { cleProgression, profilActif, type Profil } from '../preferences';
 
 export interface DecisionLocale {
@@ -218,14 +220,35 @@ export const PREFIXE_FLAG_TOURNOI = 'monde.tournoi.';
 export const JOUR_SANS_HORLOGE: DateIso = '1970-01-01';
 
 /**
+ * Le journal des décisions d'une progression locale, dans l'ordre où elles ont
+ * été prises, sous le nom que leur donne une `Condition` de type `decision`
+ * (`decisions.ts`).
+ *
+ * L'ordre est celui de `journal`, qui garde la première place d'une clé ; une
+ * décision qu'il ne cite pas (une progression d'avant le journal) vient après.
+ * La progression ne sait ni la journée d'un choix ni les flags qu'il écrirait :
+ * c'est zéro et rien — ce que lit une condition, c'est l'option.
+ */
+export function journalDeProgression(p: Progression): EtatFlags['journal'] {
+  const decisions = p.decisions ?? {};
+  const cles = [...new Set([...(p.journal ?? []), ...Object.keys(decisions)])];
+  return cles.flatMap((cle) => {
+    const d = decisions[cle];
+    return d ? [{ journee: 0, scenarioCle: scenarioDeSource(d.scenario), choixCle: choixDeSource(d.scenario), optionCle: d.choix, flagsEcrits: [] }] : [];
+  });
+}
+
+/**
  * Un `ProfilCampagne` construit depuis la progression locale, pour que
  * `evaluerCondition` puisse être appelé sans dupliquer une ligne de sa logique.
  *
  * La traduction est volontairement pauvre et **écrite ici une fois** : un titre
  * pose `monde.tournoi.<code>` (et `<code>_difficile` s'il a été gagné en
  * difficile), les compteurs comptent les titres et les décisions, `scenariosFinis`
- * reprend les victoires. Tout le reste — pays visités, relations, confiance,
- * modes finis — n'existe pas localement : c'est zéro, sauf si `etat` le donne.
+ * reprend les victoires, et le journal reprend les décisions
+ * (`journalDeProgression`) — c'est lui que lit une condition `decision`. Tout le
+ * reste — pays visités, relations, confiance, modes finis — n'existe pas
+ * localement : c'est zéro, sauf si `etat` le donne.
  */
 export function profilDepuisProgression(p: Progression, etat: EtatCampagne = {}): ProfilCampagne {
   const difficiles = p.victoiresParMode?.difficile ?? [];
@@ -260,7 +283,7 @@ export function profilDepuisProgression(p: Progression, etat: EtatCampagne = {})
     flags: {
       booleens: { ...booleens, ...etat.flags?.booleens },
       compteurs: { ...compteurs, ...etat.flags?.compteurs },
-      journal: etat.flags?.journal ?? [],
+      journal: etat.flags?.journal ?? journalDeProgression(p),
     },
   };
 }
@@ -301,9 +324,25 @@ export function secretsAcquis(p: Progression, roster: RosterJouables, etat: Etat
 /**
  * Tout le vestiaire ouvert : les victoires d'abord, les secrets ensuite, sans
  * doublon et dans l'ordre du roster. C'est la liste que le briefing propose.
+ *
+ * **Moins les généraux disparus** (`disparitions.ts`) : à partir de l'annonce, un
+ * des quatre n'est plus proposé, où qu'il ait été gagné. Le filtre est posé ici,
+ * et nulle part ailleurs, parce que c'est d'ici que le briefing, le carnet et
+ * `optionsCommandant` tiennent leur liste : une règle écrite deux fois dériverait.
  */
 export function vestiaire(p: Progression, roster: RosterJouables, etat: EtatCampagne = {}): string[] {
-  return [...new Set([...commandantsDebloques(p, roster), ...secretsAcquis(p, roster, etat)])];
+  const disparus = new Set(disparusDeProgression(p, etat));
+  return [...new Set([...commandantsDebloques(p, roster), ...secretsAcquis(p, roster, etat)])]
+    .filter((cle) => !disparus.has(cle));
+}
+
+/**
+ * Les généraux disparus pour cette progression (`disparitions.ts`), lus sur le
+ * même profil que les secrets : c'est `profilDepuisProgression` qui dit quelles
+ * épreuves sont remportées et quelles décisions sont retenues.
+ */
+export function disparusDeProgression(p: Progression, etat: EtatCampagne = {}): string[] {
+  return commandantsDisparus(profilDepuisProgression(p, etat), { aujourdhui: etat.aujourdhui ?? JOUR_SANS_HORLOGE });
 }
 
 /**

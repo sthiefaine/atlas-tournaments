@@ -2752,6 +2752,18 @@ function condition(ctx: Contexte, v: unknown, chemin: string, profondeur = 1): C
       entier(ctx, o['min'], sous(chemin, 'min'), { min: 1, max: CONFIANCE_MAX });
       return o as unknown as Condition;
     }
+    case 'decision': {
+      // L'option retenue d'une décision passée, lue au journal (`13-campagne.md`
+      // §8.2). Les deux champs sont des clés, et c'est ce qui refuse la lettre
+      // d'une fiche de conception : `a` n'est pas une option enregistrée, c'est
+      // une position — la décision de `opus1_fr_04` s'enregistre
+      // `partager_releves`, et c'est cela qu'une condition doit nommer.
+      const o = objet(ctx, v, chemin, ['type', 'cle', 'option']);
+      if (!o || !requis(ctx, o, chemin, ['cle', 'option'])) return undefined;
+      cle(ctx, o['cle'], sous(chemin, 'cle'));
+      cle(ctx, o['option'], sous(chemin, 'option'));
+      return o as unknown as Condition;
+    }
     case 'et':
     case 'ou': {
       const o = objet(ctx, v, chemin, ['type', 'conditions']);

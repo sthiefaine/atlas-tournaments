@@ -1817,6 +1817,119 @@
       "role": "commandant",
       "premierPlan": true,
       "paysCode": "atl"
+    },
+    {
+      "cle": "dafni_rallis",
+      "nom": "Dafni Rallis",
+      "paysCode": "gr",
+      "fonction": "Recrue de la délégation grecque, pilote du passage des îles",
+      "motivation": "Tenir le passage des îles aussi sûrement que celui qui le lui a appris.",
+      "croyance": "Elle croit qu’une méthode se prouve en la refaisant ; elle doute encore d’avoir le droit de la changer.",
+      "liens": [
+        "cmd_nikos_delis"
+      ],
+      "historique": [
+        {
+          "cle": "dafni_rallis_1",
+          "repere": "Avant l’an 14",
+          "acteRevelation": 1,
+          "fait": "Elle entre à la délégation grecque pour les passages entre les îlots, et apprend auprès de Nikos Delis à tenir une jetée sans attendre un nouvel outil.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "dafni_rallis_2",
+          "repere": "An 14, la recrue sur la jetée",
+          "acteRevelation": 2,
+          "fait": "Nikos Delis lui fait refaire le passage des îles jusqu’à n’avoir plus rien à corriger ; c’est d’elle qu’il parle quand il demande au joueur si la recrue peut tenir le passage.",
+          "source": "canon_aube_v2"
+        }
+      ],
+      "role": "adjointe"
+    },
+    {
+      "cle": "anju_basnet",
+      "nom": "Anju Basnet",
+      "paysCode": "np",
+      "fonction": "Adjointe de la délégation népalaise, coordinatrice de l’atelier isolé",
+      "motivation": "Que l’atelier du haut garde sa réserve et sa voix, même quand les transports ne montent plus.",
+      "croyance": "Elle croit qu’un site isolé se défend en restant relié, relais après relais ; elle compte mal ce que coûte la marche à ceux qui la font.",
+      "liens": [
+        "cmd_mira_karki"
+      ],
+      "historique": [
+        {
+          "cle": "anju_basnet_1",
+          "repere": "Avant l’an 14",
+          "acteRevelation": 1,
+          "fait": "Elle tient l’atelier d’altitude le plus isolé de la délégation népalaise et le relie à la vallée par trois relais tenus à pied.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "anju_basnet_2",
+          "repere": "An 14, le pont de corde",
+          "acteRevelation": 2,
+          "fait": "Quand la rotation des transports ne monte plus, c’est elle qui compte les pièces qui manquent à l’atelier du haut et qui en donne la liste à Mira Karki.",
+          "source": "canon_aube_v2"
+        }
+      ],
+      "role": "adjointe"
+    },
+    {
+      "cle": "lea_wagener",
+      "nom": "Léa Wagener",
+      "paysCode": "lu",
+      "fonction": "Adjointe aux convois de la délégation luxembourgeoise",
+      "motivation": "Qu’aucun convoi ne parte sur une liste incomplète.",
+      "croyance": "Elle croit qu’une liste exacte protège mieux qu’une promesse ; elle hésite encore à en faire elle-même.",
+      "liens": [
+        "cmd_tomas_reiner",
+        "cmd_solveig_tamm"
+      ],
+      "historique": [
+        {
+          "cle": "lea_wagener_1",
+          "repere": "An 13",
+          "acteRevelation": 1,
+          "fait": "Elle tient pour Tomas Reiner les listes des convois de la délégation, dans un carnet à couverture d’acier, et vérifie chaque départ avant qu’il le signe.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "lea_wagener_2",
+          "repere": "An 14, le pacte des relais",
+          "acteRevelation": 2,
+          "fait": "Elle inscrit les promesses faites en route et garde, à côté de chacune, une colonne pour noter plus tard comment elle a été tenue.",
+          "source": "canon_aube_v2"
+        }
+      ],
+      "role": "adjointe"
+    },
+    {
+      "cle": "nadia_berrada",
+      "nom": "Nadia Berrada",
+      "paysCode": "ma",
+      "fonction": "Adjointe de la délégation marocaine, coordinatrice des étapes du sud",
+      "motivation": "Que la caravane parte à l’heure, avec une liste vérifiée deux fois.",
+      "croyance": "Elle croit qu’une étape se prépare la veille ; elle supporte mal qu’on garde une réserve sans dire pour quoi.",
+      "liens": [
+        "cmd_samir_el_hadi"
+      ],
+      "historique": [
+        {
+          "cle": "nadia_berrada_1",
+          "repere": "Avant l’an 14",
+          "acteRevelation": 1,
+          "fait": "Elle coordonne les étapes du sud de la délégation marocaine et tient les listes de chargement que Samir El Hadi relit deux fois.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "nadia_berrada_2",
+          "repere": "An 14, trois stations au soleil",
+          "acteRevelation": 2,
+          "fait": "Aux trois stations du parc solaire, elle recoupe les reçus des convois avec ceux de Samir El Hadi et retrouve, ligne pour ligne, la même clause de retour.",
+          "source": "canon_aube_v2"
+        }
+      ],
+      "role": "adjointe"
     }
   ]
 }

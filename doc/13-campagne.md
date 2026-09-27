@@ -365,6 +365,8 @@ Le brief fixe **dix** conséquences possibles. Elles sont petites — c'est dél
 
 **Un à quatre conséquences par fil**, sans doublon. Un fil sans conséquence est refusé : ce serait une suite de matchs, pas un fil.
 
+**Retirer un commandant n'est pas une conséquence — tranché le 26 septembre 2026, par délégation du propriétaire.** Quatre chefs de nations alliées meurent au cours de l'opus 1 (`BRIEF.md`, « Quatre disparitions » ; `doc/refonte/opus1-hors-serie.md` §3), et à partir de l'annonce leur général n'est plus recrutable. La liste ci-dessus sait rendre un commandant recrutable (`co_commandant`), pas l'inverse, **et elle reste à dix** : il n'y a pas de onzième conséquence `co_commandant_retire`. Les quatre disparitions sont un **calendrier écrit en dur dans le code de campagne** (`src/app/campagne/disparitions.ts`) : les quatre clés, l'épisode après lequel chacun disparaît, l'épisode qui l'annonce, la décision qui choisit la branche quand il y en a deux, et l'adjointe qui reprend le banc. La raison tient en une phrase : **une routine ne peut jamais écrire une mort**, et la seule façon de le garantir est qu'aucun schéma de contenu — `Consequence`, `Condition`, `Deblocage`, `Scenario`, `Fil` — n'ait de mot pour la dire. Une conséquence bornée « aux quatre clés nommées » aurait mis la borne dans une liste de valeurs, qu'un jour quelqu'un allonge ; le code se relit en revue, un contenu généré non. Le calendrier est branché là où un général est **proposé** — le vestiaire (`vestiaire`, donc `optionsCommandant` et la grille du briefing) et les bancs prêtés (`bancsProposes`) — et le sera là où la mécanique des co-commandants lira une conséquence `co_commandant` : un général annoncé disparu ne s'y recrute plus. Ce qui a déjà été joué ne change pas : une partie jouée sous ses couleurs se reprend et se rejoue à l'identique (la graine lit `optionsBanc`, jamais filtré). Tant qu'aucun épisode d'ancrage (finales, `opus1_jp_12`) n'existe, le calendrier est inerte ; ses tests le font tourner sur des progressions fictives, et un test tombe le jour où une ancre entre au canon, pour rappeler que la grille du vestiaire doit alors montrer la plaque posée à plat plutôt qu'une case « verrouillée ».
+
 ### 5.3 Les neuf fils écrits en exemple
 
 Tous sont dans `content/fils/`, tous passent `validerFil`, et toutes leurs durées tiennent dans les fenêtres de leurs gabarits.
@@ -457,7 +459,7 @@ Un fil produit par `atlas_lore` **[Proposition]** :
 - choisit un gabarit par mission dans la liste fermée, jamais `exhibition` ;
 - déclare 1 à 4 conséquences prises dans l'union fermée, avec des paramètres dans les bornes ;
 - n'écrit que des flags connus de `01-bible.md` §8 (aucun flag `monde.secret.*`, aucun flag `monde.depeche.*`) ;
-- déclare sa condition de déblocage avec les huit types de `Condition`, sur trois niveaux d'imbrication au plus ;
+- déclare sa condition de déblocage avec les types de `Condition` du §8.2, sur trois niveaux d'imbrication au plus ;
 - fournit pour chaque mission une `dureeVisee` que la routine contrôle **vérifiera par simulation**, dans les deux modes.
 
 La routine contrôle rejette un fil dont une conséquence sort de la liste ou des bornes, dont une durée sort de la fenêtre du gabarit, ou dont un flag est inconnu.
@@ -578,7 +580,7 @@ interface Deblocage {
 
 Un système unique pour tout ce qui s'ouvre : `general_secret`, `carte`, `carte_terrain`, `skin_style`, `fil`, `mode`, `entree_carnet`, **`depart_nation`**. Un seul mécanisme, donc un seul endroit à tester, un seul endroit à équilibrer, et aucune tentation d'en inventer un second — la **Nouvelle Ronde** (§3.5) passe par là comme le reste, et sa `ref` est un `CodePays` au lieu d'une `Cle`.
 
-### 8.2 Les dix conditions
+### 8.2 Les onze conditions
 
 | Type | Forme | Ce que ça lit dans le profil |
 |---|---|---|
@@ -590,10 +592,18 @@ Un système unique pour tout ce qui s'ouvre : `general_secret`, `carte`, `carte_
 | `secret` | `{ cle }` | `secretsTrouves` — un easter egg de `doc/14-secrets.md` |
 | `relation` | `{ pays[], relation, combien }` | Au moins `combien` des nations listées sont dans cet état dans `relations` ; une nation absente est `neutre` |
 | `confiance` | `{ commandantCle, min }` | `confiance[commandantCle] ≥ min`, de 1 à 3 ; un général jamais incarné est à zéro |
+| `decision` | `{ cle, option }` | L'option **retenue** d'une décision passée : la dernière entrée de `flags.journal` dont `choixCle` vaut `cle` a pour `optionCle` `option` ; une décision jamais prise est fausse, pour toutes ses options |
 | `et` | `{ conditions[] }` | 2 à 4 sous-conditions, toutes vraies |
 | `ou` | `{ conditions[] }` | 2 à 4 sous-conditions, au moins une vraie |
 
 **Trois niveaux d'imbrication au plus** (`PROFONDEUR_CONDITION_MAX`). Au-delà, personne ne sait plus lire la condition, et surtout personne ne sait plus dire au joueur ce qu'il lui manque.
+
+**`decision`, le onzième type — tranché le 26 septembre 2026, par délégation du propriétaire.** Les hors-série de l'opus 1 s'ouvrent sur l'option qu'une décision de la trame a retenue (`doc/refonte/opus1-hors-serie.md` §1 et §5). Deux voies étaient ouvertes : ce type, ou traduire chaque décision en un flag de pays (`pays.<xx>.releves_partages`, `…credit_garanti`, `…retour_sous_audit`, `…reserve_versee`), quatre par nation, quarante-huit en tout. **Le type l'emporte**, pour trois raisons. Le journal des décisions existe déjà et c'est lui que le carnet lit (§9) : quarante-huit flags le recopieraient, et deux sources pour un même fait finissent par diverger. Un flag est écrit par un auteur qui peut l'oublier ; une décision est enregistrée par la campagne au moment où le joueur la prend. Et la liste canon des flags reste ce qu'elle est — un vocabulaire du monde, pas un miroir de l'interface. Quatre règles tiennent le type :
+
+1. **Le moteur reste pur.** `evaluerCondition` lit `profil.flags.journal`, que l'appelant lui donne dans le profil — le serveur depuis sa base, la page depuis la progression locale (`profilDepuisProgression`, qui traduit ses décisions par `journalDeProgression`). Il ne sait pas d'où vient une décision ; il la lit.
+2. **La dernière entrée est la retenue.** Une épreuve révisée repose sa question, et le journal garde les deux réponses : c'est la plus récente qui compte, comme pour la graine. Deux options d'une même décision ne sont donc jamais vraies ensemble, et deux branches qui s'excluent ne s'ouvrent jamais à la fois.
+3. **Le nom d'une décision est celui de sa fiche** : `opus1_fr_04_decision` pour le choix de fin de match de `opus1_fr_04`, exactement la `cle` de `choixConsequence` dans `opus1-nations.json`. La progression locale range une décision sous sa source (`opus1_fr_04`, `pacte_du_col:banc`, `aube_routes_3v1:commandant`) ; `choixDeSource` (`src/app/campagne/decisions.ts`) la nomme au journal (`opus1_fr_04_decision`, `pacte_du_col_banc`, `aube_routes_3v1_commandant`).
+4. **L'option est l'identifiant enregistré, jamais la lettre d'une fiche.** Les fiches disent `a` et `b` ; la campagne enregistre `partager_releves` et `garder_reserve`. La lettre n'est qu'une position — celle qui fait aussi le chiffre de la graine. Le validateur refuse `a` (une option est une clé), et la correspondance des lettres aux identifiants est écrite **une fois**, dans `OPTIONS_DECISIONS_NATIONALES` : les quarante-huit décisions nationales suivent quatre familles, une par numéro d'épisode, aux mêmes deux options pour les douze nations — **04** `partager_releves` / `garder_reserve`, **08** `garantir_livraison` / `refuser_garantie`, **10** `retour_sous_audit` / `fin_du_mandat`, **12** `verser_reserve` / `preparation_locale`. Ce sont les clés que la France enregistre depuis le 14 et le 23 septembre ; un test vérifie que toute nation codée ensuite les reprend, faute de quoi une condition de hors-série écrite contre la fiche ne s'ouvrirait jamais, en silence.
 
 ### 8.3 Qui évalue
 
@@ -673,7 +683,7 @@ interface ProfilCampagne {
 7. Les **neuf fils** de `content/fils/`, leurs arcs, leurs déblocages et leurs conséquences.
 8. La **table des paramètres de mode** (§6.2) et les invariants de validation qui interdisent un `difficile` plus facile.
 9. Les **dix généraux secrets**, et le traitement de Barnab Estève qui touche aux Vieilles Manières sans jamais les illustrer.
-10. Le système **`Deblocage`** à dix conditions — `confiance` comprise depuis l'incarnation —, sa profondeur bornée à trois, et l'évaluation pure sans horloge.
+10. Le système **`Deblocage`** à onze conditions — `confiance` comprise depuis l'incarnation, `decision` depuis les hors-série (26 septembre 2026) —, sa profondeur bornée à trois, et l'évaluation pure sans horloge.
 11. `ProfilCampagne`, et la règle de ce qui se transmet d'un profil à l'autre (§9).
 12. Les **relations dans le budget** (§3.4) : deux ralliements garantis placés sur des registres de choix différents, cinq scènes de retrait qui préviennent, et le constat que les relations ne coûtent aucune mission neuve mais une passe de simulation de plus (unités spéciales alliées).
 13. Les **matchs d'incarnation** (§3.4 bis) : leurs trois places dans la colonne, leurs trois bornes — aucun flag de trame principale, pas de retrait pendant qu'on joue la nation, jamais imposés hors acte III —, la confiance à un seul palier, et leur coût de ≈ 4 h ajouté au budget (§2.2).

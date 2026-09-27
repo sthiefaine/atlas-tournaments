@@ -17,6 +17,9 @@ const nationaux = personnages.filter((p) => p.role === 'commandant' && p.paysCod
 const faction = personnages.filter((p) => p.paysCode === 'atl');
 const atlas = personnages.filter((p) => p.role === 'commandant' && !p.paysCode);
 const civils = personnages.filter((p) => p.role === 'civil');
+// Les adjointes qui reprennent le banc d'une délégation (26 septembre 2026) : ni
+// commandantes ni civiles d'Atlas, elles jouent les couleurs de leur nation sans pouvoir.
+const adjointes = personnages.filter((p) => p.role === 'adjointe');
 
 const ordre = ['fr','lu','ch','nl','ma','sn','br','mx','in','jp','au','id','ar','ca','fj','gr','is','ke','mg','mn','na','np','nz','pe'];
 nationaux.sort((a, b) => ordre.indexOf(a.paysCode) - ordre.indexOf(b.paysCode));
@@ -26,7 +29,7 @@ md.push('# Le roster des héros — nations, Atlas, civils, faction');
 md.push('');
 md.push('Généré par `node scripts/roster-heros.mjs` depuis `content/personnages.json` (révision ' + lire('content/personnages.json').version + ') et `content/commandants-capacites.json`. **Document auteur** : il liste aussi la faction, dont la fonction et les liens ne sont jamais publics. Ne pas éditer à la main.');
 md.push('');
-md.push(`Personnages : **${personnages.length}** — ${nationaux.length} commandants nationaux (${nationaux.filter((p) => p.premierPlan).length} au premier plan), ${faction.length} de la faction, ${atlas.length} d'Atlas, ${civils.length} civils.`);
+md.push(`Personnages : **${personnages.length}** — ${nationaux.length} commandants nationaux (${nationaux.filter((p) => p.premierPlan).length} au premier plan), ${faction.length} de la faction, ${atlas.length} d'Atlas, ${civils.length} civils, ${adjointes.length} adjointes.`);
 md.push('');
 md.push('## Les 24 commandants nationaux');
 md.push('');
@@ -75,6 +78,16 @@ md.push('## Les civils (3)');
 md.push('');
 for (const p of civils) {
   md.push(`**${p.nom}** — ${nettoyer(p.fonction)}. *Motivation :* ${nettoyer(p.motivation)} *Croyance :* ${nettoyer(p.croyance)}`);
+  for (const h of p.historique ?? []) md.push(`- ${h.repere} (acte ${h.acteRevelation}) : ${nettoyer(h.fait)}`);
+  md.push('');
+}
+md.push(`## Les adjointes (${adjointes.length})`);
+md.push('');
+md.push('*Sans pouvoir de commandant : elles reprennent le banc de leur délégation et en jouent les couleurs et le catalogue (`doc/refonte/opus1-hors-serie.md` §3, `src/app/campagne/disparitions.ts`).*');
+md.push('');
+const nomDe = (cle) => personnages.find((x) => x.cle === cle)?.nom ?? cle;
+for (const p of adjointes) {
+  md.push(`**${p.nom}** — ${pays(p.paysCode)?.nom ?? p.paysCode}. ${nettoyer(p.fonction)}. *Motivation :* ${nettoyer(p.motivation)} *Croyance :* ${nettoyer(p.croyance)} *Liée à :* ${(p.liens ?? []).map(nomDe).join(', ')}.`);
   for (const h of p.historique ?? []) md.push(`- ${h.repere} (acte ${h.acteRevelation}) : ${nettoyer(h.fait)}`);
   md.push('');
 }

@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "statut": "conception",
   "nature": "Registre éditorial des épisodes hors-série et des quatre disparitions ; aucune fiche n’est une carte jouable. Le document de référence est doc/refonte/opus1-hors-serie.md.",
   "reglesDures": [
@@ -9,8 +9,13 @@
     "Deux joueurs aux mêmes choix de trame ont la même fin, hors-série joués ou non : les conséquences sont prises dans la liste fermée de doc/13 §5.2 et ne touchent ni les bascules ni les conditions de fin.",
     "Une disparition n’a jamais lieu sur un terrain homologué, jamais par du matériel de tournoi, et n’est jamais un homicide commis par une personne identifiée. Elle est écrite à la main ; aucune routine ne peut en produire une."
   ],
-  "conditionsProposees": {
-    "decision": "[Proposition] Onzième type de Condition, { type: \"decision\", cle, option } : lit l’option retenue d’un choixConsequence national (opus1-nations.json). À trancher : type nouveau, ou traduction de chaque décision en flag pays.<xx>.* canon."
+  "tranche": {
+    "date": "2026-09-26",
+    "par": "délégation du propriétaire",
+    "reference": "doc/refonte/opus1-hors-serie.md §5",
+    "decision": "Onzième type de Condition, { type: \"decision\", cle, option } (13-campagne.md §8.2) : cle est le nom de la décision au journal (opus1_<nation>_<nn>_decision, opus1_hs_<nation>_<n>_decision), option l’identifiant enregistré de l’option — jamais la lettre a/b d’une fiche. Les quatre familles nationales sont fixées dans src/app/campagne/decisions.ts.",
+    "retrait": "Aucune conséquence ne retire un commandant : le calendrier des quatre disparitions est écrit en dur dans src/app/campagne/disparitions.ts, hors de tout schéma de contenu (13-campagne.md §5.2).",
+    "adjointes": "Dafni Rallis, Anju Basnet, Léa Wagener et Nadia Berrada sont au registre (content/personnages.json), rôle « adjointe », sans pouvoir de commandant."
   },
   "totalEpisodes": 28,
   "parNation": {
@@ -49,7 +54,7 @@
           {
             "type": "decision",
             "cle": "opus1_br_04_decision",
-            "option": "a"
+            "option": "partager_releves"
           },
           {
             "type": "flag",
@@ -94,7 +99,7 @@
         "question": "Le chenal peut être ouvert pour raccourcir la traversée. Il ne se refermera pas.",
         "options": [
           {
-            "id": "a",
+            "id": "ouvrir_chenal",
             "texte": "Ouvrir le chenal",
             "ecritFlags": [
               "pays.ar.chenal_ouvert",
@@ -102,7 +107,7 @@
             ]
           },
           {
-            "id": "b",
+            "id": "contourner_plaine",
             "texte": "Contourner par la plaine",
             "ecritFlags": [
               "pays.ar.dette_envers_joueur"
@@ -120,7 +125,7 @@
           "type": "trace_carte",
           "paysCode": "ar",
           "flagTrace": "pays.ar.chenal_ouvert",
-          "condition": "option a"
+          "condition": "option ouvrir_chenal"
         },
         {
           "type": "variante_dialogue",
@@ -204,7 +209,7 @@
         "question": "La tempête bloque aussi la délégation adverse. Ses provisions ne passeront pas.",
         "options": [
           {
-            "id": "a",
+            "id": "partager_provisions",
             "texte": "Partager les provisions",
             "ecritFlags": [
               "pays.ca.provisions_partagees",
@@ -212,7 +217,7 @@
             ]
           },
           {
-            "id": "b",
+            "id": "garder_provisions",
             "texte": "Garder la réserve pour la manche",
             "ecritFlags": [
               "pays.ca.dette_envers_joueur"
@@ -265,7 +270,7 @@
           {
             "type": "decision",
             "cle": "opus1_id_04_decision",
-            "option": "a"
+            "option": "partager_releves"
           },
           {
             "type": "flag",
@@ -310,14 +315,14 @@
         "question": "Le récif raccourcit la chaîne d’une journée, mais rien ne garantit le retour du matériel prêté.",
         "options": [
           {
-            "id": "a",
+            "id": "tenter_raccourci",
             "texte": "Tenter le raccourci",
             "ecritFlags": [
               "pays.fj.chaine_de_passes"
             ]
           },
           {
-            "id": "b",
+            "id": "retour_complet",
             "texte": "Garantir le retour de tout l’équipement",
             "ecritFlags": [
               "pays.fj.salut_rendu",
@@ -370,7 +375,7 @@
           {
             "type": "decision",
             "cle": "opus1_lu_08_decision",
-            "option": "a"
+            "option": "garantir_livraison"
           },
           {
             "type": "compteur",
@@ -415,7 +420,7 @@
         "question": "Nikos demande votre avis, ce qu’il ne fait jamais. La recrue peut tenir le passage des îles cet hiver.",
         "options": [
           {
-            "id": "a",
+            "id": "confier_recrue",
             "texte": "Confier le passage à la recrue",
             "ecritFlags": [
               "pays.gr.rival_respecte",
@@ -423,7 +428,7 @@
             ]
           },
           {
-            "id": "b",
+            "id": "garder_la_main",
             "texte": "Qu’il reprenne lui-même toute la préparation",
             "ecritFlags": [
               "pays.gr.dette_envers_joueur"
@@ -488,7 +493,8 @@
         "cmd_nikos_delis",
         "cmd_basile_kelm",
         "celestin_vantour",
-        "cmd_solveig_tamm"
+        "cmd_solveig_tamm",
+        "dafni_rallis"
       ],
       "statut": "conception"
     },
@@ -513,7 +519,7 @@
           {
             "type": "decision",
             "cle": "opus1_ch_04_decision",
-            "option": "a"
+            "option": "partager_releves"
           },
           {
             "type": "compteur",
@@ -590,7 +596,7 @@
         "question": "Deux contrats, une réserve. Elín a de quoi le dire, pas encore de quoi le prouver deux fois.",
         "options": [
           {
-            "id": "a",
+            "id": "signaler_maintenant",
             "texte": "Signaler l’anomalie maintenant",
             "ecritFlags": [
               "monde.atlas.soupcon",
@@ -598,7 +604,7 @@
             ]
           },
           {
-            "id": "b",
+            "id": "attendre_preuve",
             "texte": "Attendre la preuve recoupée",
             "ecritFlags": [
               "pays.is.source_chaude_partagee",
@@ -652,7 +658,7 @@
           {
             "type": "decision",
             "cle": "opus1_sn_08_decision",
-            "option": "a"
+            "option": "garantir_livraison"
           },
           {
             "type": "flag",
@@ -697,14 +703,14 @@
         "question": "Le partenaire appelle maintenant. La relève n’est pas prête.",
         "options": [
           {
-            "id": "a",
+            "id": "garder_releve",
             "texte": "Céder l’avance pour garder une relève",
             "ecritFlags": [
               "pays.ke.rythme_trouve"
             ]
           },
           {
-            "id": "b",
+            "id": "soutenir_partenaire",
             "texte": "Soutenir immédiatement le partenaire",
             "ecritFlags": [
               "pays.ke.messager_arrive",
@@ -757,7 +763,7 @@
           {
             "type": "decision",
             "cle": "opus1_id_04_decision",
-            "option": "a"
+            "option": "partager_releves"
           },
           {
             "type": "compteur",
@@ -803,7 +809,7 @@
         "question": "Les cartes de l’atelier montrent où passent les relais. Un rival les demande.",
         "options": [
           {
-            "id": "a",
+            "id": "ouvrir_cartes",
             "texte": "Ouvrir les cartes",
             "ecritFlags": [
               "pays.mg.inventaire_complete",
@@ -811,7 +817,7 @@
             ]
           },
           {
-            "id": "b",
+            "id": "proteger_atelier",
             "texte": "Protéger le travail de l’atelier",
             "ecritFlags": [
               "pays.mg.dette_envers_joueur"
@@ -864,12 +870,12 @@
           {
             "type": "decision",
             "cle": "opus1_mx_10_decision",
-            "option": "b"
+            "option": "fin_du_mandat"
           },
           {
             "type": "decision",
             "cle": "opus1_mx_08_decision",
-            "option": "b"
+            "option": "refuser_garantie"
           }
         ]
       },
@@ -910,14 +916,14 @@
         "question": "L’ouverture est devant, la réserve commune est derrière, et Saran ne peut pas être aux deux.",
         "options": [
           {
-            "id": "a",
+            "id": "poursuivre_ouverture",
             "texte": "Poursuivre l’ouverture",
             "ecritFlags": [
               "pays.mn.grand_galop_lance"
             ]
           },
           {
-            "id": "b",
+            "id": "couvrir_reserve",
             "texte": "Revenir couvrir la réserve commune",
             "ecritFlags": [
               "pays.mn.respect_du_cavalier",
@@ -976,7 +982,7 @@
           {
             "type": "decision",
             "cle": "opus1_au_04_decision",
-            "option": "a"
+            "option": "partager_releves"
           },
           {
             "type": "flag",
@@ -1021,7 +1027,7 @@
         "question": "La fenêtre est connue d’une seule équipe. Amalie peut la publier avant le coup d’envoi.",
         "options": [
           {
-            "id": "a",
+            "id": "reveler_passage",
             "texte": "Révéler le passage à tous",
             "ecritFlags": [
               "pays.na.brume_etendue",
@@ -1029,7 +1035,7 @@
             ]
           },
           {
-            "id": "b",
+            "id": "proteger_fenetre",
             "texte": "Protéger la fenêtre de son équipe",
             "ecritFlags": [
               "pays.na.silence_impose",
@@ -1083,7 +1089,7 @@
           {
             "type": "decision",
             "cle": "opus1_ch_10_decision",
-            "option": "a"
+            "option": "retour_sous_audit"
           },
           {
             "type": "flag",
@@ -1128,7 +1134,7 @@
         "question": "Le pont de corde tient une saison et raccourcit la montée. Le col est plus sûr, et plus long d’une journée.",
         "options": [
           {
-            "id": "a",
+            "id": "poser_pont",
             "texte": "Poser le pont de corde",
             "ecritFlags": [
               "pays.np.pont_pose",
@@ -1136,7 +1142,7 @@
             ]
           },
           {
-            "id": "b",
+            "id": "passer_col",
             "texte": "Passer par le col",
             "ecritFlags": [
               "pays.np.dette_envers_joueur"
@@ -1155,7 +1161,7 @@
           "type": "trace_carte",
           "paysCode": "np",
           "flagTrace": "pays.np.pont_pose",
-          "condition": "option a"
+          "condition": "option poser_pont"
         },
         {
           "type": "entree_carnet",
@@ -1207,7 +1213,8 @@
         "cmd_mira_karki",
         "cmd_basile_kelm",
         "celestin_vantour",
-        "cmd_solveig_tamm"
+        "cmd_solveig_tamm",
+        "anju_basnet"
       ],
       "statut": "conception"
     },
@@ -1232,7 +1239,7 @@
           {
             "type": "decision",
             "cle": "opus1_au_10_decision",
-            "option": "a"
+            "option": "retour_sous_audit"
           },
           {
             "type": "flag",
@@ -1277,7 +1284,7 @@
         "question": "Le dépôt est réparé. Les pièces peuvent servir à tous, ou attendre la prochaine manche de Tess.",
         "options": [
           {
-            "id": "a",
+            "id": "reparer_pour_tous",
             "texte": "Réparer pour tous",
             "ecritFlags": [
               "pays.nz.ligne_tenue",
@@ -1285,7 +1292,7 @@
             ]
           },
           {
-            "id": "b",
+            "id": "reserver_materiel",
             "texte": "Réserver le matériel à la prochaine manche",
             "ecritFlags": [
               "pays.nz.dette_envers_joueur"
@@ -1338,7 +1345,7 @@
           {
             "type": "decision",
             "cle": "opus1_mx_04_decision",
-            "option": "a"
+            "option": "partager_releves"
           },
           {
             "type": "flag",
@@ -1413,7 +1420,7 @@
         "question": "La réserve suffit pour un seul chantier : le passage commun, ou l’équipement de la délégation.",
         "options": [
           {
-            "id": "a",
+            "id": "passage_commun",
             "texte": "Consacrer la réserve au passage commun",
             "ecritFlags": [
               "pays.pe.reseau_relie",
@@ -1422,7 +1429,7 @@
             ]
           },
           {
-            "id": "b",
+            "id": "propre_equipement",
             "texte": "Terminer son propre équipement",
             "ecritFlags": [
               "pays.pe.querelle_daltitude",
@@ -1441,7 +1448,7 @@
           "type": "trace_carte",
           "paysCode": "pe",
           "flagTrace": "pays.pe.reseau_relie",
-          "condition": "option a"
+          "condition": "option passage_commun"
         },
         {
           "type": "co_commandant",
@@ -1472,14 +1479,42 @@
       "dependDeChoix": {
         "valeur": true,
         "decision": "opus1_hs_gr_2_decision",
-        "description": "Branche b (défaut, hors-série 2 non joué compris) : il prend seul son bateau chaque matin pour porter les pièces aux îles quand la ligne du bac est suspendue ; disparition après la finale 2. Branche a : la recrue tient le passage, il reste au quai ; disparition après la finale 7, au café du port, la méthode transmise. La disparition a lieu dans les deux branches."
+        "description": "Branche b (`garder_la_main`, défaut, hors-série 2 non joué compris) : il prend seul son bateau chaque matin pour porter les pièces aux îles quand la ligne du bac est suspendue ; disparition après la finale 2. Branche a (`confier_recrue`) : la recrue tient le passage, il reste au quai ; disparition après la finale 7, au café du port, la méthode transmise. La disparition a lieu dans les deux branches."
       },
       "cause": "Le cœur, à son âge, un matin d’hiver — au môle après sa dernière traversée (b) ou au café du port (a). Jamais sur un terrain homologué, jamais par du matériel de tournoi, aucune personne identifiée n’en est l’auteur.",
       "contributionCinquieme": "Le contrat de priorité de Basile Kelm (finale 2) coupe les petites délégations : la ligne du bac vers les îles, alimentée par la réserve du port, est suspendue pour l’hiver. Sans bac, quelqu’un prend le bateau.",
       "contributionJoueur": "Branche b : le joueur lui a conseillé de reprendre lui-même toute la préparation. Ce n’est pas une faute, c’est un poids, et Vantour le dit ainsi.",
+      "calendrier": "src/app/campagne/disparitions.ts",
+      "banc": [
+        {
+          "branche": "confier_recrue",
+          "cle": "dafni_rallis"
+        },
+        {
+          "branche": "garder_la_main",
+          "cle": null,
+          "note": "intérim de la fédération grecque, sans nom"
+        }
+      ],
+      "rappelTrame": [
+        {
+          "branche": "garder_la_main",
+          "scenario": "opus1_finale_03",
+          "locuteur": "celestin_vantour",
+          "siNonJoue": "opus1_hs_gr_3",
+          "statut": "a_ecrire"
+        },
+        {
+          "branche": "confier_recrue",
+          "scenario": "opus1_finale_08",
+          "locuteur": "celestin_vantour",
+          "siNonJoue": "opus1_hs_gr_3",
+          "statut": "a_ecrire"
+        }
+      ],
       "consequences": [
         "Co-commandant perdu : `cmd_nikos_delis` n’est plus recrutable à partir de l’annonce ; s’il l’était, l’emplacement se libère.",
-        "La Grèce reste engagée ; sa relation ne change pas. Branche a : la recrue [Proposition] Dafni Rallis reprend le banc avec la méthode de Nikos ; branche b : intérim de la fédération grecque, sans commandant nommé jusqu’à la fin de la Ronde.",
+        "La Grèce reste engagée ; sa relation ne change pas. Branche a : la recrue Dafni Rallis (`dafni_rallis`, au registre depuis le 26 septembre 2026) reprend le banc avec la méthode de Nikos ; branche b : intérim de la fédération grecque, sans commandant nommé jusqu’à la fin de la Ronde.",
         "entree_carnet `carnet_hs_gr_nikos` ; variante_dialogue `banc_grec` à la finale 18 (la recrue est présente à l’épilogue en branche a, le banc grec est vide en branche b)."
       ]
     },
@@ -1498,9 +1533,25 @@
       "cause": "La montagne et l’épuisement : montée à pied avec deux porteurs vers l’atelier isolé quand la rotation des transports a été suspendue ; la fenêtre météo s’est refermée ; redescendue trop tard. Jamais sur un terrain homologué, jamais par du matériel de tournoi, aucune personne identifiée n’en est l’auteur.",
       "contributionCinquieme": "Les réserves rendues exclusives par Basile Kelm (finale 7) alimentaient la rotation des transports vers les sites d’altitude ; la rotation est suspendue « jusqu’à régularisation ». Elle est montée elle-même.",
       "contributionJoueur": "Aucune. Le joueur a vu le signe à l’épisode 2, et c’est tout ce qu’on lui laisse : Mira demandait de l’aide tard, et personne n’était à portée.",
+      "calendrier": "src/app/campagne/disparitions.ts",
+      "banc": [
+        {
+          "branche": null,
+          "cle": "anju_basnet"
+        }
+      ],
+      "rappelTrame": [
+        {
+          "branche": null,
+          "scenario": "opus1_finale_08",
+          "locuteur": "celestin_vantour",
+          "siNonJoue": "opus1_hs_np_3",
+          "statut": "a_ecrire"
+        }
+      ],
       "consequences": [
         "Co-commandant perdu : `cmd_mira_karki` n’est plus recrutable à partir de l’annonce.",
-        "Le Népal reste engagé ; le banc est repris par son adjointe [Proposition] Anju Basnet, coordinatrice de l’atelier isolé, qui joue « Le relais sans réponse » aux côtés du joueur.",
+        "Le Népal reste engagé ; le banc est repris par son adjointe Anju Basnet (`anju_basnet`, au registre depuis le 26 septembre 2026), coordinatrice de l’atelier isolé, qui joue « Le relais sans réponse » aux côtés du joueur.",
         "entree_carnet `carnet_hs_np_mira` ; variante_dialogue `banc_nepalais` à la finale 12 (Basile « Les lignes qui restent » : l’adjointe refuse la tutelle, et le dit)."
       ]
     },
@@ -1519,9 +1570,16 @@
       "cause": "La route : sortie de desserte de nuit, chaussée verglacée, un seul véhicule. Jamais sur un terrain homologué, jamais par du matériel de tournoi, aucune personne identifiée n’en est l’auteur.",
       "contributionCinquieme": "Depuis le repli de la finale 10, la route principale du bassin est sous autorisation méridienne (clause de dépendance d’Edran Sorel sur les dépôts et les routes). Tomas refuse de demander l’autorisation à ceux qui viennent de fermer le terrain, et prend la desserte.",
       "contributionJoueur": "Indirecte et jamais accusatrice : le repli de la finale 10 est imposé à tous les joueurs. Le carnet dit « la route était fermée », pas « vous l’avez envoyé là ».",
+      "calendrier": "src/app/campagne/disparitions.ts",
+      "banc": [
+        {
+          "branche": null,
+          "cle": "lea_wagener"
+        }
+      ],
       "consequences": [
         "Co-commandant perdu : `cmd_tomas_reiner` n’est plus recrutable à partir de l’annonce ; s’il l’était, l’emplacement se libère. La conséquence `allie_acte_iii` du fil `fil_cars_intendance` tient : c’est la délégation qui reste, pas l’homme.",
-        "Le Luxembourg reste engagé ; le banc est repris par [Proposition] Léa Wagener, son adjointe aux convois — clé de flags `cmd.lea_wagener.*` déjà présente dans `content/flags.json`. Solveig Tamm reprend le registre des convois.",
+        "Le Luxembourg reste engagé ; le banc est repris par Léa Wagener (`lea_wagener`, au registre depuis le 26 septembre 2026), son adjointe aux convois. Les flags `cmd.lea_wagener.*` de l’ancienne distribution portent désormais le nom du commandant luxembourgeois (`cmd.tomas_reiner.*`) : une adjointe sans pouvoir n’est ni recrutable ni rivale jurée. Solveig Tamm reprend le registre des convois.",
         "entree_carnet `carnet_tomas_desserte` ; variante_dialogue à la finale 12 (Ariane), à la finale 15 (Edran répond de la route sans être accusé d’autre chose) et à la finale 18 (banc luxembourgeois à l’épilogue) ; absent de l’épilogue, sa plaque est remise à l’endroit au générique — la seule fois où l’on remet une plaque qui n’a pas été retournée."
       ]
     },
@@ -1536,14 +1594,21 @@
       "dependDeChoix": {
         "valeur": true,
         "decision": "opus1_ma_08_decision",
-        "description": "Branche b (refuser de garantir le crédit du signataire) : la délégation marocaine, sans garantie, ne peut pas payer un coordinateur de remplacement — la clause de dépendance du fournisseur interdit d’employer hors de son personnel — et Samir tient les étapes de convoi une saison de plus au lieu de se soigner ; disparition après le Japon 12, annoncée à l’Australie 1. Branche a : la garantie libère un remplaçant, il se soigne ; disparition après la finale 13, annoncée à la finale 14. La maladie est la sienne dans les deux branches ; ce qui change est le moment."
+        "description": "Branche b (`refuser_garantie`, défaut : refuser de garantir le crédit du signataire) : la délégation marocaine, sans garantie, ne peut pas payer un coordinateur de remplacement — la clause de dépendance du fournisseur interdit d’employer hors de son personnel — et Samir tient les étapes de convoi une saison de plus au lieu de se soigner ; disparition après le Japon 12, annoncée à l’Australie 1. Branche a (`garantir_livraison`) : la garantie libère un remplaçant, il se soigne ; disparition après la finale 13, annoncée à la finale 14. La maladie est la sienne dans les deux branches ; ce qui change est le moment."
       },
       "cause": "Une maladie longue, la sienne, nommée nulle part. Jamais sur un terrain homologué, jamais par du matériel de tournoi, aucune personne identifiée n’en est l’auteur.",
       "contributionCinquieme": "La clause de dépendance du contrat de transport (Maroc 6 « Les crédits de midi », Maroc 8 « Le bail trop long ») interdit à la délégation d’employer un coordinateur hors du personnel du fournisseur ; sans garantie extérieure, personne ne peut le remplacer aux étapes.",
       "contributionJoueur": "Branche b : le joueur n’a pas garanti le crédit. Vantour le dit sans l’accuser : « on ne remplace pas quelqu’un qu’un contrat interdit de remplacer ».",
+      "calendrier": "src/app/campagne/disparitions.ts",
+      "banc": [
+        {
+          "branche": null,
+          "cle": "nadia_berrada"
+        }
+      ],
       "consequences": [
         "Co-commandant perdu : `cmd_samir_el_hadi` n’est plus recrutable à partir de l’annonce.",
-        "Le Maroc reste engagé ; le banc est repris par son adjointe [Proposition] Nadia Berrada, coordinatrice des étapes du sud.",
+        "Le Maroc reste engagé ; le banc est repris par son adjointe Nadia Berrada (`nadia_berrada`, au registre depuis le 26 septembre 2026), coordinatrice des étapes du sud.",
         "entree_carnet `carnet_samir_caravane` ; variante_dialogue à la finale 17 (Ost, qui lui prêtait du matériel à conditions opaques au Maroc 11, ne prononce pas son nom) et à la finale 18 (banc marocain à l’épilogue)."
       ]
     }

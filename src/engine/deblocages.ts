@@ -84,13 +84,35 @@ function modeFini(profil: ProfilCampagne, mode: Mode): boolean {
 }
 
 /**
+ * L'option **retenue** d'une décision : celle de sa dernière entrée au journal,
+ * ou `null` si la décision n'a jamais été prise.
+ *
+ * Le journal est chronologique et une même décision peut y paraître deux fois
+ * — une épreuve révisée repose sa question. C'est la dernière réponse qui
+ * compte, comme partout ailleurs dans la campagne (la graine lit la dernière
+ * décision d'une source) : sinon deux options d'une même décision pourraient
+ * être vraies ensemble, et deux branches qui s'excluent s'ouvriraient à la fois.
+ *
+ * Le journal est **donné par l'appelant**, dans le profil : le moteur ne sait pas
+ * d'où vient une décision, il la lit. Un profil sans journal n'a rien décidé.
+ */
+function optionRetenue(profil: ProfilCampagne, choixCle: Cle): Cle | null {
+  const journal = profil.flags.journal ?? [];
+  for (let i = journal.length - 1; i >= 0; i -= 1) {
+    const entree = journal[i];
+    if (entree?.choixCle === choixCle) return entree.optionCle;
+  }
+  return null;
+}
+
+/**
  * Évalue une condition composable contre un profil de campagne.
  *
- * Les dix types sont ceux du brief : `flag`, `compteur`, `mode_fini`, `date`,
- * `pays_visite`, `secret`, `relation`, `confiance`, `et`, `ou`. Un `et` vide est vrai (toutes ses conditions
- * sont satisfaites, il n'y en a aucune) ; un `ou` vide est faux (aucune ne l'est).
- * C'est la convention usuelle, et `validerCondition` interdit de toute façon les
- * listes de moins de deux entrées.
+ * Les onze types : `flag`, `compteur`, `mode_fini`, `date`, `pays_visite`,
+ * `secret`, `relation`, `confiance`, `decision`, `et`, `ou`. Un `et` vide est vrai
+ * (toutes ses conditions sont satisfaites, il n'y en a aucune) ; un `ou` vide est
+ * faux (aucune ne l'est). C'est la convention usuelle, et `validerCondition`
+ * interdit de toute façon les listes de moins de deux entrées.
  */
 export function evaluerCondition(
   condition: Condition,
@@ -138,6 +160,11 @@ export function evaluerCondition(
       // `CONFIANCE_MAX`, elle ouvre le co-commandant à jauge entière et le départ de
       // Nouvelle Ronde, exactement par où passe une relation `alliee`.
       return confiance(profil, condition.commandantCle) >= condition.min;
+    case 'decision':
+      // Une décision jamais prise est fausse pour toutes ses options : on n'ouvre
+      // pas une porte sur un choix que le joueur n'a pas fait. C'est ainsi qu'un
+      // hors-série ne s'ouvre que sur la trame qu'on a réellement jouée.
+      return optionRetenue(profil, condition.cle) === condition.option;
     case 'et':
       return condition.conditions.every((c) => evaluerCondition(c, profil, contexte));
     case 'ou':
