@@ -1,9 +1,12 @@
 /**
- * Les chaînes des kits de révision 4 (`doc/refonte/pouvoirs-v4.json`, forme
- * exacte des kits en attendant `content/commandants-capacites.json`) : chaque
- * commandant a ses huit clés, au texte près, et chaque clé que `lignesPouvoir`,
- * le HUD et le splash peuvent demander existe. Une clé absente rendrait vide —
- * `t()` ne montre jamais une clé brute — et personne ne le verrait.
+ * Les chaînes des kits de révision 4 : chaque commandant a ses huit clés, au
+ * texte près de `content/commandants-capacites.json` — le contenu que le moteur
+ * charge, et non plus le document de conception (`doc/refonte/pouvoirs-v4.json`),
+ * qui le précédait et que `tests/engine/commandants-v4.test.ts` compare au
+ * contenu de son côté. La chaîne se réaligne sur le contenu, jamais l'inverse.
+ * Chaque clé que `lignesPouvoir`, le HUD et le splash peuvent demander existe :
+ * une clé absente rendrait vide — `t()` ne montre jamais une clé brute — et
+ * personne ne le verrait.
  */
 
 import { test } from 'node:test';
@@ -25,7 +28,7 @@ interface KitV4 {
   replique: { pouvoir: string; super: string };
 }
 
-const kits = (JSON.parse(readFileSync(path.resolve(import.meta.dirname, '..', '..', 'doc', 'refonte', 'pouvoirs-v4.json'), 'utf8')) as { commandants: KitV4[] }).commandants;
+const kits = (JSON.parse(readFileSync(path.resolve(import.meta.dirname, '..', '..', 'content', 'commandants-capacites.json'), 'utf8')) as { commandants: KitV4[] }).commandants;
 
 test('les 34 kits de révision 4 ont leurs huit chaînes, au texte près', () => {
   assert.equal(kits.length, 34);
