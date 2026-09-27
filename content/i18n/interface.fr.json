@@ -725,6 +725,42 @@
       "longueurMax": 40
     },
     {
+      "cle": "aube.mission_objectif",
+      "texte": "Prendre tous les QG adverses ou mettre toutes les unités adverses hors jeu.",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Objectif du briefing d’un essai Aube hors campagne, quand le scénario ne l’écrit pas lui-même. « Hors jeu » : le mot du HUD."
+      },
+      "longueurMax": null
+    },
+    {
+      "cle": "aube.mission_objectif_releve",
+      "texte": "Survivre quarante journées complètes jusqu’à la relève.",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Objectif du briefing de l’essai « La quarantième relève » : tenir jusqu’au début de la journée 41."
+      },
+      "longueurMax": null
+    },
+    {
+      "cle": "aube.mission_tutoriel",
+      "texte": "Les armées alliées jouent leur propre tour. Consultez leurs unités sans leur donner d’ordres.",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Seule étape d’aide d’un essai Aube hors campagne."
+      },
+      "longueurMax": null
+    },
+    {
+      "cle": "aube.mission_conseil",
+      "texte": "Ces essais Aube sont indépendants des entraînements. Les décisions de fin de mission modifient uniquement les nouvelles parties annoncées.",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Conseil du briefing d’un essai Aube hors campagne."
+      },
+      "longueurMax": null
+    },
+    {
       "cle": "hud.tour_allie",
       "texte": "Tour allié",
       "contexte": {
