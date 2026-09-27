@@ -1,5 +1,7 @@
 # Refonte narrative — proposition du scénariste principal
 
+*Écrit avant la validation du lore v2 (26 septembre 2026) : le registre de guerre de `BRIEF.md` fait foi.*
+
 Date : 9 septembre 2026. Document de conception, pas contenu déjà jouable. La demande de refonte du propriétaire remplace le principe ancien « le tournoi n'a aucun enjeu de guerre ». Les autres choix nouveaux ci-dessous sont proposés pour la synthèse des agents ; ce fichier ne remplace pas à lui seul `BRIEF.md`.
 
 ## Le moteur dramatique

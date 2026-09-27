@@ -1,5 +1,7 @@
 # Relecture de joueur d’Advance Wars — campagne Aube
 
+*Écrit avant la validation du lore v2 (26 septembre 2026) : le registre de guerre de `BRIEF.md` fait foi.*
+
 Perspective simulée du 9 septembre 2026. Aucun joueur humain n’a testé ces propositions. Les trois cartes livrées sont des brouillons validés structurellement, pas un équilibrage certifié. Le programme de fusion fictif s’appelle **Aube** ; les affrontements sérieux restent non sanglants.
 
 ## Ce qui donnerait envie de jouer

@@ -1,5 +1,7 @@
 # Les dix tutoriels jouables — 9 septembre 2026
 
+*Écrit avant la validation du lore v2 (26 septembre 2026) : le registre de guerre de `BRIEF.md` fait foi.*
+
 Le parcours local `content/campagne.json` comprend dix entraînements puis les deux matchs officiels existants, Le pacte du col et Sous les couleurs alliées. Les 144 missions nationales et les 18 finales restent des fiches éditoriales : cette livraison ne les transforme pas en cartes jouables.
 
 ## Progression pédagogique
