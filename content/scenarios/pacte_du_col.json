@@ -1,12 +1,12 @@
 {
   "cle": "pacte_du_col",
-  "version": 6,
+  "version": 7,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-12",
+  "majLe": "2026-09-27",
   "code": "pacte_du_col",
-  "nom": "Qualification · Le pacte du col",
+  "nom": "Épreuve officielle · Le pacte du col",
   "acte": 0,
   "paysCode": "fr",
   "carteCle": "carte_pacte_du_col",
@@ -67,7 +67,7 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Premier **match officiel**. Tomas garde le passage ; vous devez amener **le char désigné jusqu’à la case en or**. S’il est mis hors jeu, le match est perdu.",
+      "texte": "Première **épreuve officielle**, sous l’œil d’Atlas et toujours à blanc. Tomas garde le passage ; vous devez amener **le char désigné jusqu’à la case en or**. S’il est mis hors jeu, l’épreuve est perdue.",
       "emotion": "neutre"
     },
     {
@@ -84,12 +84,12 @@
   "dialogueVictoire": [
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Engagement remporté, et proprement. Vous m’avez remis vos relevés du col : le Luxembourg s’engage aux côtés de la France, la **coalition** commence à deux. Solveig accroche les deux plaques ce soir.",
+      "texte": "Épreuve remportée, et proprement. Vous m’avez remis vos relevés du col : le Luxembourg s’engage aux côtés de la France, la **coalition** commence à deux. Solveig accroche les deux plaques ce soir.",
       "emotion": "joie"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Et je vous prête mon banc pour un front d’essai sous mes couleurs. Vous verrez ce que disent mes relevés ; ils ne me plaisent pas.",
+      "texte": "Et je vous confie mon groupe pour un front d’essai sous mes couleurs. Vous verrez ce que disent mes relevés ; ils ne me plaisent pas.",
       "emotion": "neutre"
     }
   ],
@@ -119,7 +119,7 @@
         },
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Choisissez **Ouvrir un passage** près de l’éboulement. Cela coûte 1 500 fonds et son action ; la route restera ouverte pendant le match.",
+          "texte": "Choisissez **Ouvrir un passage** près de l’éboulement. Cela coûte 1 500 fonds et son action ; la route restera ouverte jusqu’à la fin de l’épreuve.",
           "emotion": "neutre"
         }
       ]
@@ -132,7 +132,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "L’ennemi vise le char, pas vous. **Perdre le char termine l’engagement** : mettez du blindage entre lui et leurs canons.",
+          "texte": "L’ennemi vise le char, pas vous. **Perdre le char termine l’épreuve** : mettez du blindage entre lui et leurs canons.",
           "emotion": "colere"
         },
         {

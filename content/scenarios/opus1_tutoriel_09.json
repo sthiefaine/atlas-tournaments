@@ -1,11 +1,11 @@
 {
   "cle": "opus1_tutoriel_09",
   "code": "opus1_tutoriel_09",
-  "version": 6,
+  "version": 7,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-12",
+  "majLe": "2026-09-27",
   "nom": "Entraînement 9 · Le prix du courant",
   "acte": 0,
   "paysCode": "fr",
@@ -93,7 +93,7 @@
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Ces postes distribuent l’énergie de la vallée. Dans un match officiel, les tenir donne le droit d’exploiter ces installations pour une durée fixée. Les maisons des habitants restent alimentées. Aujourd’hui, nous nous entraînons.",
+      "texte": "Ces postes distribuent l’énergie de la vallée. Au front, qui les prend garde leur courant et leurs réserves tant qu’il les tient. Les maisons des habitants restent alimentées : ça, personne ne le prend. Aujourd’hui, on s’entraîne.",
       "emotion": "neutre"
     }
   ],
@@ -167,7 +167,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Un poste pour moi. À la fin de l’engagement, c’est le compte qui parle, pas la carte : deux à la fois, ou rien.",
+          "texte": "Un poste pour moi. À la fin de l’exercice, c’est le compte qui parle, pas la carte : deux à la fois, ou rien.",
           "emotion": "joie"
         }
       ]

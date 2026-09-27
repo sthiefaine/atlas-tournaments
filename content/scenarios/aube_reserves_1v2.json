@@ -1,10 +1,10 @@
 {
   "cle": "aube_reserves_1v2",
-  "version": 6,
+  "version": 7,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-12",
+  "majLe": "2026-09-27",
   "code": "aube_reserves_1v2",
   "nom": "Aube · Les réserves contestées · 1 contre 2",
   "acte": 0,
@@ -74,7 +74,7 @@
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Une **concession**, c’est un droit de quatre ans sur le courant d’un lieu, inscrit au Registre de Port-Méridien — jamais un territoire, jamais des gens. Deux concessions sur la même réserve, c’est une guerre.",
+      "texte": "Une **concession**, c’est ce qu’une victoire inscrit au Registre de Port-Méridien : un site, son courant et ses ateliers, tant qu’on le tient — jamais les gens qui y vivent. Deux concessions sur la même réserve, c’est une guerre.",
       "emotion": "neutre"
     },
     {
