@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "statut": "conception",
   "nature": "Registre éditorial des épisodes hors-série et des quatre disparitions ; aucune fiche n’est une carte jouable. Le document de référence est doc/refonte/opus1-hors-serie.md.",
   "reglesDures": [
@@ -7,7 +7,7 @@
     "Un hors-série n’écrit jamais monde.secret.*.",
     "Aucun hors-série ne révèle la fratrie Maël/Lise ni la paternité d’Edran avant opus1_finale_10 ; Edran y est « prestataire de réserve ».",
     "Deux joueurs aux mêmes choix de trame ont la même fin, hors-série joués ou non : les conséquences sont prises dans la liste fermée de doc/13 §5.2 et ne touchent ni les bascules ni les conditions de fin.",
-    "Une disparition n’a jamais lieu sur un terrain homologué, jamais par du matériel de tournoi, et n’est jamais un homicide commis par une personne identifiée. Elle est écrite à la main ; aucune routine ne peut en produire une."
+    "Une disparition n’a jamais lieu sur un front, jamais par une arme, et n’est jamais un homicide commis par une personne identifiée. Elle est écrite à la main ; aucune routine ne peut en produire une."
   ],
   "tranche": {
     "date": "2026-09-26",
@@ -77,9 +77,9 @@
       "id": "opus1_hs_ar_2",
       "nation": "ar",
       "numero": 2,
-      "titre": "Le chenal du delta",
-      "situation": "Un club du delta a perdu son accès aux batteries quand la route unique est passée sous licence. Leandro et le joueur escortent le transport par les bras d’eau, face à Yuna Serrat qui gère la concession au nom d’un mandat provisoire.",
-      "justificationNation": "Delta et plaine ; le transport suit les bras d’eau à découvert, la spécialité de plaine rend la couverture mobile. Terrain de match, jamais une allusion territoriale (interdits de la fiche).",
+      "titre": "Le canal de l’estuaire",
+      "situation": "Une équipe de l’estuaire a perdu son accès aux batteries quand la route unique est passée sous licence. Leandro et le joueur escortent le transport par les bras d’eau, face à Yuna Serrat qui gère la concession au nom d’un mandat provisoire.",
+      "justificationNation": "Estuaire et plaine ; le transport suit les bras d’eau à découvert, la spécialité de plaine rend la couverture mobile. Un front, jamais une allusion territoriale (interdits de la fiche).",
       "objectifGameplay": {
         "format": "2v1",
         "type": "escorte",
@@ -96,11 +96,11 @@
       "ancrageNote": null,
       "choix": {
         "cle": "opus1_hs_ar_2_decision",
-        "question": "Le chenal peut être ouvert pour raccourcir la traversée. Il ne se refermera pas.",
+        "question": "Le canal peut être ouvert pour raccourcir la traversée. Il ne se refermera pas.",
         "options": [
           {
             "id": "ouvrir_chenal",
-            "texte": "Ouvrir le chenal",
+            "texte": "Ouvrir le canal",
             "ecritFlags": [
               "pays.ar.chenal_ouvert",
               "pays.ar.terrain_altere"
@@ -149,7 +149,7 @@
       "nation": "ca",
       "numero": 1,
       "titre": "Le grand gel",
-      "situation": "Une pièce à badge orange est à l’essai, jouée par la Sélection Méridienne. Noémie Leduc exige que l’essai se joue sous les mêmes conditions pour les deux camps, et confie au joueur le banc de l’équipe témoin sur la carte gelée.",
+      "situation": "Une pièce à badge orange est à l’essai, jouée par la Sélection Méridienne. Noémie Leduc exige que l’essai se joue sous les mêmes conditions pour les deux camps, et confie au joueur le commandement de l’armée témoin sur le front gelé.",
       "justificationNation": "Forêt boréale, neige, rivières gelées franchissables ; spécialité « L’hiver ne compte pas » (surcoût de neige annulé, forêt qui soigne) ; passif de Noémie : vision +1 en forêt. Sa motivation canon : rendre les essais comparables. Le froid est un terrain, jamais une épreuve de survie (interdits de la fiche).",
       "objectifGameplay": {
         "format": "1v1",
@@ -173,7 +173,7 @@
         ]
       },
       "ancrage": "opus1_ch_08",
-      "ancrageNote": "Après « L’arbitre et le fournisseur », où une équipe suspend sa neutralité sportive : Noémie cherche qui a pris position sur l’homologation.",
+      "ancrageNote": "Après « L’arbitre et le fournisseur », où une armée locale accepte l’aide du fournisseur : Noémie cherche qui a pris position sur l’homologation.",
       "choix": null,
       "consequences": [],
       "disparition": null,
@@ -189,7 +189,7 @@
       "numero": 2,
       "titre": "Les provisions de la tempête",
       "situation": "Une tempête est annoncée à deux journées. Noémie et le joueur tiennent deux ateliers d’essai contre Ost et Basile Kelm, qui veut faire compter la réserve de batteries comme une avance méridienne.",
-      "justificationNation": "Tempête annoncée par le Bulletin (mécanique de météo existante), grandes distances, peu de villes. Le dilemme canon de Noémie : publier des relevés incomplets ou différer une manche aux dépens d’un partenaire.",
+      "justificationNation": "Tempête annoncée par le Bulletin (mécanique de météo existante), grandes distances, peu de villes. Le dilemme canon de Noémie : publier des relevés incomplets ou retarder une bataille aux dépens d’un partenaire.",
       "objectifGameplay": {
         "format": "2v2",
         "type": "survie",
@@ -218,7 +218,7 @@
           },
           {
             "id": "garder_provisions",
-            "texte": "Garder la réserve pour la manche",
+            "texte": "Garder la réserve pour la bataille",
             "ecritFlags": [
               "pays.ca.dette_envers_joueur"
             ]
@@ -254,8 +254,8 @@
       "nation": "fj",
       "numero": 1,
       "titre": "Le lagon sans transport",
-      "situation": "Le transport d’un club du lagon a été retenu par un fournisseur pour une facture contestée. Jone Vakalau prête le sien au joueur, qui doit ramener l’équipement du club à travers les eaux peu profondes, contre Yuna Serrat et une délégation sous mandat.",
-      "justificationNation": "Micro-archipel de lagon, plage et rivière traversées comme de la plaine (« Le lagon est un terrain »), budget le plus petit du tournoi ; passif de Jone : attaque ×1,08 pour les coques et amphibies. Sa motivation canon : garder les petites équipes dans une compétition dominée par les grands budgets. Le cyclone reste une tempête annoncée (interdits de la fiche).",
+      "situation": "Le transport d’une équipe du lagon a été retenu par un fournisseur pour une facture contestée. Jone Vakalau prête le sien au joueur, qui doit ramener l’équipement de l’équipe à travers les eaux peu profondes, contre Yuna Serrat et une délégation sous mandat.",
+      "justificationNation": "Micro-archipel de lagon, plage et rivière traversées comme de la plaine (« Le lagon est un terrain »), le plus petit budget des vingt-quatre nations ; passif de Jone : attaque ×1,08 pour les coques et amphibies. Sa motivation canon : donner aux petites équipes une vraie chance de tenir face aux grands budgets. Le cyclone reste une tempête annoncée (interdits de la fiche).",
       "objectifGameplay": {
         "format": "1v2",
         "type": "escorte",
@@ -293,9 +293,9 @@
       "id": "opus1_hs_fj_2",
       "nation": "fj",
       "numero": 2,
-      "titre": "La chaîne de passes",
+      "titre": "La chaîne des passages",
       "situation": "Trois relais d’un bout à l’autre du lagon, sous des drones que Relais Zéro fait tourner. Jone propose un raccourci par le récif ; le joueur décide s’il le tente ou s’il garantit le retour de tout l’équipement.",
-      "justificationNation": "Îlots reliés par des passes, visibilité brouillée par les drones ; le dilemme canon de Jone : tenter un raccourci pour un allié ou garantir le retour de tous les équipements.",
+      "justificationNation": "Îlots reliés par des passages entre les récifs, visibilité brouillée par les drones ; le dilemme canon de Jone : tenter un raccourci pour un allié ou garantir le retour de tous les équipements.",
       "objectifGameplay": {
         "format": "2v1",
         "type": "relais",
@@ -358,9 +358,9 @@
       "id": "opus1_hs_gr_1",
       "nation": "gr",
       "numero": 1,
-      "titre": "Le café avant le coup d’envoi",
-      "situation": "Nikos Delis ne joue jamais avant son café. Il reçoit le joueur sur un archipel relié par des môles, où les blindés restent au port, et lui montre qu’une méthode vaut mieux qu’un nouvel outil.",
-      "justificationNation": "Centaines d’îlots reliés par passerelles, cabotage à pied (`pied_marin`), blindés au port ; passif de Nikos : défense ×1,15 sur plage et port. Sa motivation canon : transmettre une méthode qui survive à son départ du circuit. Aucune Antiquité militaire, la mer est une manœuvre et jamais un naufrage (interdits de la fiche).",
+      "titre": "Le café avant l’engagement",
+      "situation": "Nikos Delis ne commence jamais avant son café. Il reçoit le joueur sur un archipel relié par des jetées, où les blindés restent au port, et lui montre qu’une méthode vaut mieux qu’un nouvel outil.",
+      "justificationNation": "Centaines d’îlots reliés par passerelles, cabotage à pied (`pied_marin`), blindés au port ; passif de Nikos : défense ×1,15 sur plage et port. Sa motivation canon : transmettre ce qu’il sait à ceux qui devront continuer sans lui. Aucune Antiquité militaire, la mer est une manœuvre et jamais un naufrage (interdits de la fiche).",
       "objectifGameplay": {
         "format": "1v1",
         "type": "capture_qg",
@@ -398,8 +398,8 @@
       "id": "opus1_hs_gr_2",
       "nation": "gr",
       "numero": 2,
-      "titre": "La recrue au môle",
-      "situation": "Basile Kelm verrouille la réserve du port principal. Nikos et le joueur tiennent deux môles pendant trois journées, et Nikos doit décider s’il confie le passage des îles à sa recrue ou s’il reprend lui-même toute la préparation.",
+      "titre": "La recrue sur la jetée",
+      "situation": "Basile Kelm verrouille la réserve du port principal. Nikos et le joueur tiennent deux jetées pendant trois journées, et Nikos doit décider s’il confie le passage des îles à sa recrue ou s’il reprend lui-même toute la préparation.",
       "justificationNation": "Défense littorale de plage et de port face à une ligne fixe autour de dépôts (contre-jeu canon de Basile). Le dilemme canon de Nikos, tranché ici par le joueur qu’il consulte.",
       "objectifGameplay": {
         "format": "2v1",
@@ -460,7 +460,7 @@
       "nation": "gr",
       "numero": 3,
       "titre": "Le banc du port",
-      "situation": "La plaque de la Grèce est posée à plat sur la tablette du Tableau. Le banc grec joue quand même sa rencontre contre Basile Kelm : avec la recrue de Nikos et sa méthode, ou avec un intérim de la fédération qui ne connaît pas les môles.",
+      "situation": "La plaque de la Grèce est posée à plat sur la tablette du Tableau. L’armée grecque se bat quand même contre Basile Kelm : avec la recrue de Nikos et sa méthode, ou avec un intérim de l’état-major qui ne connaît pas les jetées.",
       "justificationNation": "Même archipel que l’épisode 1, en hiver, ligne du bac suspendue. Ce que l’épisode montre dépend de `opus1_hs_gr_2_decision` : la méthode a survécu (a) ou personne ne l’a apprise (b).",
       "objectifGameplay": {
         "format": "2v1",
@@ -641,9 +641,9 @@
       "id": "opus1_hs_ke_1",
       "nation": "ke",
       "numero": 1,
-      "titre": "Le match de trois heures",
-      "situation": "Kito Njoroge ne gagne jamais avant la dixième journée. Sur les hauts plateaux, le joueur doit tenir quatorze journées face à une équipe qui court plus loin que la sienne et attend qu’il s’épuise.",
-      "justificationNation": "Hauts plateaux frais, grande vallée ; spécialité « Le fond » (infanterie mouvement +2, budget 0,9) ; passif de Kito : défense ×1,08 pour l’infanterie. Sa motivation canon : prouver que la durée d’un contrat compte autant que son classement. La savane est un terrain de course, pas un décor animalier (interdits de la fiche).",
+      "titre": "La bataille de trois heures",
+      "situation": "Kito Njoroge ne gagne jamais avant la dixième journée. Sur les hauts plateaux, le joueur doit tenir quatorze journées face à une armée qui marche plus loin que la sienne et attend qu’il s’épuise.",
+      "justificationNation": "Hauts plateaux frais, grande vallée ; spécialité « Le fond » (infanterie mouvement +2, budget 0,9) ; passif de Kito : défense ×1,08 pour l’infanterie. Sa motivation canon : qu’un équipement bon marché aujourd’hui ne devienne pas impossible à entretenir demain. La savane est un terrain de course, pas un décor animalier (interdits de la fiche).",
       "objectifGameplay": {
         "format": "1v1",
         "type": "survie",
@@ -747,7 +747,7 @@
       "nation": "mg",
       "numero": 1,
       "titre": "L’inventaire des pistes",
-      "situation": "Tiana Ravel a cartographié chaque piste rouge de l’île et nomme les espèces en pleine partie. Elle met le joueur à l’épreuve sur une carte qu’elle connaît par cœur, sous couvert et sous brouillard.",
+      "situation": "Tiana Ravel a cartographié chaque piste rouge de l’île et nomme les espèces en pleine bataille. Elle met le joueur à l’épreuve sur une carte qu’elle connaît par cœur, sous couvert et sous brouillard.",
       "justificationNation": "Jungle, montagne, pistes rouges, deux climats séparés par une arête ; spécialité « La connaissance des pistes » (forêt et route au même prix) ; passif de Tiana : défense ×1,1 en forêt. Sa motivation canon : faire des relevés de terrain un bien partagé. La forêt est un terrain vivant, jamais un sujet de déforestation (interdits de la fiche).",
       "objectifGameplay": {
         "format": "1v1",
@@ -854,7 +854,7 @@
       "nation": "mn",
       "numero": 1,
       "titre": "Le grand galop",
-      "situation": "La plus grande carte de l’opus, presque sans obstacle. Saran Bat propose une course d’avant-match, puis un match où seule la reconnaissance décide de qui frappe le premier.",
+      "situation": "La plus grande carte de l’opus, presque sans obstacle. Saran Bat propose une course avant l’engagement, puis une bataille où seule la reconnaissance décide de qui frappe le premier.",
       "justificationNation": "Steppe et neige sans ralentissement (« La steppe », mouvement +2 roues et chenilles), aucun embarquement sur transport allié ; passif de Saran : attaque ×1,1 pour les reconnaissances. Sa motivation canon : préserver le droit de changer de fournisseur. Ni empire ni conquête : le cheval, le feutre et l’horizon (interdits de la fiche).",
       "objectifGameplay": {
         "format": "1v1",
@@ -1024,7 +1024,7 @@
       "ancrageNote": null,
       "choix": {
         "cle": "opus1_hs_na_2_decision",
-        "question": "La fenêtre est connue d’une seule équipe. Amalie peut la publier avant le coup d’envoi.",
+        "question": "La fenêtre est connue d’une seule équipe. Amalie peut la publier avant la première journée.",
         "options": [
           {
             "id": "reveler_passage",
@@ -1074,7 +1074,7 @@
       "numero": 1,
       "titre": "Les ateliers d’altitude",
       "situation": "Rien de lourd ne monte ici. Mira Karki dispute au joueur deux des trois ateliers d’altitude, et montre ce qu’une équipe légère fait d’une pente quand elle voit loin depuis un point haut.",
-      "justificationNation": "Carte la plus verticale du tournoi, du subtropical au glacier ; spécialité « L’altitude » (infanterie sans malus de pente, ni char léger ni char lourd) ; passif de Mira : attaque ×1,1 pour l’infanterie sur montagne. Sa motivation canon : donner aux sites isolés une voix dans les engagements de distribution. Les fanions de balisage sont sans signe ; le sommet est une étape, jamais une conquête (interdits de la fiche).",
+      "justificationNation": "Le front le plus vertical de la guerre, du subtropical au glacier ; spécialité « L’altitude » (infanterie sans malus de pente, ni char léger ni char lourd) ; passif de Mira : attaque ×1,1 pour l’infanterie sur montagne. Sa motivation canon : donner aux sites isolés une voix dans les engagements de distribution. Les fanions de balisage sont sans signe ; le sommet est une étape, jamais une conquête (interdits de la fiche).",
       "objectifGameplay": {
         "format": "1v1",
         "type": "capture_partielle",
@@ -1224,7 +1224,7 @@
       "numero": 1,
       "titre": "Le dépôt rendu",
       "situation": "Un dépôt rendu à la fin d’un contrat est revenu désaffecté. Tess Roa dispute au joueur la remise en service de deux des trois postes de la vallée, dans la brume, avec le génie pour seule pièce qui compte.",
-      "justificationNation": "Deux îles étroites, montagne au milieu, brume de vallée, carte la plus défensive du tournoi ; spécialité « La fougère répare » (soin dans la fougère, pas de reconnaissance) ; passif de Tess : défense ×1,12 en forêt. Sa motivation canon : faire compter la réparation dans le partage des moyens. Aucune référence culturelle : la fougère est un terrain (interdits de la fiche).",
+      "justificationNation": "Deux îles étroites, montagne au milieu, brume de vallée, le front le plus défensif de la guerre ; spécialité « La fougère répare » (soin dans la fougère, pas de reconnaissance) ; passif de Tess : défense ×1,12 en forêt. Sa motivation canon : faire compter la réparation dans le partage des moyens. Aucune référence culturelle : la fougère est un terrain (interdits de la fiche).",
       "objectifGameplay": {
         "format": "1v1",
         "type": "capture_partielle",
@@ -1263,7 +1263,7 @@
       "nation": "nz",
       "numero": 2,
       "titre": "La ligne de fougère",
-      "situation": "Tess prête son terrain et sa ligne au joueur, seul face à Ost et Yuna Serrat, pendant que son équipe répare. Le joueur tranche si le dépôt réparé sert à tous ou si le matériel est réservé à la prochaine manche.",
+      "situation": "Tess prête son terrain et sa ligne au joueur, seul face à Ost et Yuna Serrat, pendant que son équipe répare. Le joueur tranche si le dépôt réparé sert à tous ou si le matériel est réservé à la prochaine bataille.",
       "justificationNation": "Défense de vallée dans les couverts (pouvoir « Abri des fougères »), banc prêté au sens de la bible §4.6. Le dilemme canon de Tess.",
       "objectifGameplay": {
         "format": "1v2",
@@ -1281,7 +1281,7 @@
       "ancrageNote": null,
       "choix": {
         "cle": "opus1_hs_nz_2_decision",
-        "question": "Le dépôt est réparé. Les pièces peuvent servir à tous, ou attendre la prochaine manche de Tess.",
+        "question": "Le dépôt est réparé. Les pièces peuvent servir à tous, ou attendre la prochaine bataille de Tess.",
         "options": [
           {
             "id": "reparer_pour_tous",
@@ -1293,7 +1293,7 @@
           },
           {
             "id": "reserver_materiel",
-            "texte": "Réserver le matériel à la prochaine manche",
+            "texte": "Réserver le matériel à la prochaine bataille",
             "ecritFlags": [
               "pays.nz.dette_envers_joueur"
             ]
@@ -1330,7 +1330,7 @@
       "numero": 1,
       "titre": "Le passage commun",
       "situation": "Trois étages en une carte, et pas de route entre eux tant qu’on ne l’a pas bâtie. Luz Quispe dispute au joueur le QG de l’altiplano : le premier génie qui relie ses étages gagne le tempo.",
-      "justificationNation": "Côte sèche, altiplano, versant amazonien reliés par des routes et des ponts à construire ; spécialité « Bâtisseur » ; passif de Luz : défense ×1,2 pour le génie. Sa motivation canon : empêcher qu’une homologation serve à fermer un passage aux petits ateliers. Aucun site archéologique nommé ; l’altitude est une contrainte sportive (interdits de la fiche).",
+      "justificationNation": "Côte sèche, altiplano, versant amazonien reliés par des routes et des ponts à construire ; spécialité « Bâtisseur » ; passif de Luz : défense ×1,2 pour le génie. Sa motivation canon : empêcher qu’une homologation serve à fermer un passage aux petits ateliers. Aucun site archéologique nommé ; l’altitude est une contrainte de terrain (interdits de la fiche).",
       "objectifGameplay": {
         "format": "1v1",
         "type": "capture_qg",
@@ -1399,7 +1399,7 @@
       "nation": "pe",
       "numero": 3,
       "titre": "La querelle d’altitude",
-      "situation": "Basile Kelm et Yuna Serrat tiennent deux des trois postes du col, dont l’altitude réelle est contestée depuis une Ronde. Luz et le joueur les disputent, et Luz doit décider si sa réserve va au passage commun ou à son propre équipement.",
+      "situation": "Basile Kelm et Yuna Serrat tiennent deux des trois postes du col, dont l’altitude réelle est contestée depuis la dernière réouverture. Luz et le joueur les disputent, et Luz doit décider si sa réserve va au passage commun ou à son propre équipement.",
       "justificationNation": "Col à trois postes, chantier sous pression (contre-jeu canon de Luz : forcer ses équipes à se séparer entre chantier et front). Le dilemme canon de Luz. Le Népal, rival naturel, est cité en dialogue si `pays.np.visite` est posé.",
       "objectifGameplay": {
         "format": "2v2",
@@ -1475,13 +1475,13 @@
       "horsSerie": true,
       "ou": "opus1_hs_gr_3",
       "annonce": "À l’ouverture de « Le banc du port » : la plaque de la Grèce est décrochée et posée à plat sur la tablette du Tableau ; Vantour ouvre son Bulletin sur la météo et ne dit son nom qu’à la dernière phrase.",
-      "signe": "opus1_hs_gr_2 : Nikos consulte le joueur, ce qu’il ne fait jamais, et parle de « quand il ne sera plus sur le circuit ».",
+      "signe": "opus1_hs_gr_2 : Nikos consulte le joueur, ce qu’il ne fait jamais, et parle de « quand il ne sera plus sur le front ».",
       "dependDeChoix": {
         "valeur": true,
         "decision": "opus1_hs_gr_2_decision",
         "description": "Branche b (`garder_la_main`, défaut, hors-série 2 non joué compris) : il prend seul son bateau chaque matin pour porter les pièces aux îles quand la ligne du bac est suspendue ; disparition après la finale 2. Branche a (`confier_recrue`) : la recrue tient le passage, il reste au quai ; disparition après la finale 7, au café du port, la méthode transmise. La disparition a lieu dans les deux branches."
       },
-      "cause": "Le cœur, à son âge, un matin d’hiver — au môle après sa dernière traversée (b) ou au café du port (a). Jamais sur un terrain homologué, jamais par du matériel de tournoi, aucune personne identifiée n’en est l’auteur.",
+      "cause": "Le cœur, à son âge, un matin d’hiver — sur la jetée après sa dernière traversée (b) ou au café du port (a). Jamais sur un front, jamais par une arme, aucune personne identifiée n’en est l’auteur.",
       "contributionCinquieme": "Le contrat de priorité de Basile Kelm (finale 2) coupe les petites délégations : la ligne du bac vers les îles, alimentée par la réserve du port, est suspendue pour l’hiver. Sans bac, quelqu’un prend le bateau.",
       "contributionJoueur": "Branche b : le joueur lui a conseillé de reprendre lui-même toute la préparation. Ce n’est pas une faute, c’est un poids, et Vantour le dit ainsi.",
       "calendrier": "src/app/campagne/disparitions.ts",
@@ -1493,7 +1493,7 @@
         {
           "branche": "garder_la_main",
           "cle": null,
-          "note": "intérim de la fédération grecque, sans nom"
+          "note": "intérim de l’état-major grec, sans nom"
         }
       ],
       "rappelTrame": [
@@ -1514,7 +1514,7 @@
       ],
       "consequences": [
         "Co-commandant perdu : `cmd_nikos_delis` n’est plus recrutable à partir de l’annonce ; s’il l’était, l’emplacement se libère.",
-        "La Grèce reste engagée ; sa relation ne change pas. Branche a : la recrue Dafni Rallis (`dafni_rallis`, au registre depuis le 26 septembre 2026) reprend le banc avec la méthode de Nikos ; branche b : intérim de la fédération grecque, sans commandant nommé jusqu’à la fin de la Ronde.",
+        "La Grèce reste engagée ; sa relation ne change pas. Branche a : la recrue Dafni Rallis (`dafni_rallis`, au registre depuis le 26 septembre 2026) reprend le banc avec la méthode de Nikos ; branche b : intérim de l’état-major grec, sans commandant nommé jusqu’à la fin de l’opus.",
         "entree_carnet `carnet_hs_gr_nikos` ; variante_dialogue `banc_grec` à la finale 18 (la recrue est présente à l’épilogue en branche a, le banc grec est vide en branche b)."
       ]
     },
@@ -1530,7 +1530,7 @@
         "decision": "opus1_hs_np_2_decision",
         "description": "Le choix du pont de corde change ce que l’atelier isolé a reçu et la page du carnet, jamais le moment ni la cause."
       },
-      "cause": "La montagne et l’épuisement : montée à pied avec deux porteurs vers l’atelier isolé quand la rotation des transports a été suspendue ; la fenêtre météo s’est refermée ; redescendue trop tard. Jamais sur un terrain homologué, jamais par du matériel de tournoi, aucune personne identifiée n’en est l’auteur.",
+      "cause": "La montagne et l’épuisement : montée à pied avec deux porteurs vers l’atelier isolé quand la rotation des transports a été suspendue ; la fenêtre météo s’est refermée ; redescendue trop tard. Jamais sur un front, jamais par une arme, aucune personne identifiée n’en est l’auteur.",
       "contributionCinquieme": "Les réserves rendues exclusives par Basile Kelm (finale 7) alimentaient la rotation des transports vers les sites d’altitude ; la rotation est suspendue « jusqu’à régularisation ». Elle est montée elle-même.",
       "contributionJoueur": "Aucune. Le joueur a vu le signe à l’épisode 2, et c’est tout ce qu’on lui laisse : Mira demandait de l’aide tard, et personne n’était à portée.",
       "calendrier": "src/app/campagne/disparitions.ts",
@@ -1567,7 +1567,7 @@
         "decision": "opus1_finale_09",
         "description": "Le choix de la finale 9 (évacuer les techniciens ou sécuriser les archives) change qui voyage avec lui : les techniciens déjà évacués, il conduit seul et de jour ; sinon il conduit le dernier car de nuit, et le car est vide de blessés — les passagers sont indemnes, c’est dit en toutes lettres. Ni le moment ni la cause ne changent."
       },
-      "cause": "La route : sortie de desserte de nuit, chaussée verglacée, un seul véhicule. Jamais sur un terrain homologué, jamais par du matériel de tournoi, aucune personne identifiée n’en est l’auteur.",
+      "cause": "La route : sortie de desserte de nuit, chaussée verglacée, un seul véhicule. Jamais sur un front, jamais par une arme, aucune personne identifiée n’en est l’auteur.",
       "contributionCinquieme": "Depuis le repli de la finale 10, la route principale du bassin est sous autorisation méridienne (clause de dépendance d’Edran Sorel sur les dépôts et les routes). Tomas refuse de demander l’autorisation à ceux qui viennent de fermer le terrain, et prend la desserte.",
       "contributionJoueur": "Indirecte et jamais accusatrice : le repli de la finale 10 est imposé à tous les joueurs. Le carnet dit « la route était fermée », pas « vous l’avez envoyé là ».",
       "calendrier": "src/app/campagne/disparitions.ts",
@@ -1590,13 +1590,13 @@
       "ou": "opus1_au_01",
       "ouAlternatif": "opus1_finale_14",
       "annonce": "Branche b : au briefing de « La route longue » (Australie 1) ; branche a : au briefing de « Le fils au premier rang » (finale 14). Plaque posée à plat ; Vantour ouvre sur la météo.",
-      "signe": "opus1_ma_09 « La réserve retenue » : Samir laisse coordonner l’étape à son adjointe et regarde le match depuis le dépôt ; opus1_ma_11 : il dit qu’il « se soigne entre deux étapes ».",
+      "signe": "opus1_ma_09 « La réserve retenue » : Samir laisse coordonner l’étape à son adjointe et suit la bataille depuis le dépôt ; opus1_ma_11 : il dit qu’il « se soigne entre deux étapes ».",
       "dependDeChoix": {
         "valeur": true,
         "decision": "opus1_ma_08_decision",
         "description": "Branche b (`refuser_garantie`, défaut : refuser de garantir le crédit du signataire) : la délégation marocaine, sans garantie, ne peut pas payer un coordinateur de remplacement — la clause de dépendance du fournisseur interdit d’employer hors de son personnel — et Samir tient les étapes de convoi une saison de plus au lieu de se soigner ; disparition après le Japon 12, annoncée à l’Australie 1. Branche a (`garantir_livraison`) : la garantie libère un remplaçant, il se soigne ; disparition après la finale 13, annoncée à la finale 14. La maladie est la sienne dans les deux branches ; ce qui change est le moment."
       },
-      "cause": "Une maladie longue, la sienne, nommée nulle part. Jamais sur un terrain homologué, jamais par du matériel de tournoi, aucune personne identifiée n’en est l’auteur.",
+      "cause": "Une maladie longue, la sienne, nommée nulle part. Jamais sur un front, jamais par une arme, aucune personne identifiée n’en est l’auteur.",
       "contributionCinquieme": "La clause de dépendance du contrat de transport (Maroc 6 « Les crédits de midi », Maroc 8 « Le bail trop long ») interdit à la délégation d’employer un coordinateur hors du personnel du fournisseur ; sans garantie extérieure, personne ne peut le remplacer aux étapes.",
       "contributionJoueur": "Branche b : le joueur n’a pas garanti le crédit. Vantour le dit sans l’accuser : « on ne remplace pas quelqu’un qu’un contrat interdit de remplacer ».",
       "calendrier": "src/app/campagne/disparitions.ts",

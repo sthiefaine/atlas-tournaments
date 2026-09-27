@@ -1,7 +1,7 @@
 {
-  "version": 1,
+  "version": 2,
   "statut": "proposition",
-  "source": "doc/refonte/direction-artistique-opus1.md — bible visuelle de l’opus 1, 9 septembre 2026. Les clés sont celles de content/personnages.json ; palette = [dominante, ombre, accent], tirée de content/pays/<code>.json (ou proposée pour Atlas et les Gris, faute de content/styles/atl.json).",
+  "source": "doc/refonte/direction-artistique-opus1.md — bible visuelle de l’opus 1, 9 septembre 2026, reprise le 27 septembre dans le registre de la guerre avec les quatre adjointes. Les clés sont celles de content/personnages.json ; palette = [dominante, ombre, accent], tirée de content/pays/<code>.json (ou proposée pour Atlas et les Gris, faute de content/styles/atl.json).",
   "commandeImageSuffixe": "Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia.",
   "personnages": [
     {
@@ -12,12 +12,12 @@
       "silhouette": "Moyenne, épaules carrées d’ancienne mécanicienne, se tient droite sans raideur ; lisible en vignette par la ligne d’épaules et le col relevé.",
       "visage": "Une ride verticale entre les sourcils, qu’elle garde même en souriant ; une bouche large qui parle peu.",
       "coiffure": "Châtain, attaché bas en queue courte, deux mèches échappées sur les tempes.",
-      "tenue": "Survêtement de sélection bleu mat à liseré rouge et blanc, col relevé, damier d’arrivée à quatre carrés sur l’épaule gauche (la décalcomanie du style fr).",
+      "tenue": "Veste de travail bleu mat à liseré rouge et blanc, col relevé, damier d’arrivée à quatre carrés sur l’épaule gauche (la décalcomanie du style fr).",
       "objetFetiche": "Une clé plate de maintenance, chromée et usée, glissée dans la poche poitrine — sa vie d’avant, jamais rangée.",
       "palette": ["#2f5fd0", "#1b3a86", "#c8324a"],
       "posture": "De trois quarts, une main posée sur la hanche, le menton légèrement baissé vers l’élève : elle enseigne, elle ne commande pas.",
       "jamais": "Jamais de galon, de casquette ni de geste martial ; jamais irréprochable au point d’être lisse — la ride reste.",
-      "commandeImage": "A woman in her early forties with square shoulders, brown hair tied low with loose strands at the temples, a deep vertical line between her brows and a wide calm mouth, wearing a matte blue sports-team tracksuit with red and white piping and a small four-square checker patch on the left shoulder, a worn chrome spanner tucked in the chest pocket, one hand on her hip, chin slightly lowered. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "commandeImage": "A woman in her early forties with square shoulders, brown hair tied low with loose strands at the temples, a deep vertical line between her brows and a wide calm mouth, wearing a matte blue zip-up work jacket with red and white piping and a small four-square checker patch on the left shoulder, a worn chrome spanner tucked in the chest pocket, one hand on her hip, chin slightly lowered. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_tomas_reiner",
@@ -27,12 +27,12 @@
       "silhouette": "Trapu, cou court, ventre tenu ; on le reconnaît à sa carrure basse et à ses lunettes.",
       "visage": "Lunettes rondes à monture d’écaille ; barbe courte poivre et sel taillée net, qui dessine un sourire même quand il ne sourit pas.",
       "coiffure": "Cheveux bruns clairsemés, coupés très court, raie invisible.",
-      "tenue": "Veste de sélection bleu clair à bandes rouge et blanche sur les manches, brassard d’organisateur au bras gauche, chemise de flanelle dessous.",
+      "tenue": "Veste de convoi bleu clair à bandes rouge et blanche sur les manches, brassard d’organisateur au bras gauche, chemise de flanelle dessous.",
       "objetFetiche": "Un carnet de convoi à deux colonnes — « promis / tenu » —, relié de toile bleue, un crayon passé dans l’élastique.",
       "palette": ["#3aa0c8", "#1d5f7c", "#d4534f"],
       "posture": "Face caméra, le carnet ouvert contre la poitrine, l’autre main qui pointe une ligne : un homme qui vérifie.",
       "jamais": "Jamais de plaisanterie visuelle sur la petite taille (règle de la fiche lu) ; jamais de costume-cravate — c’est un organisateur de quai, pas un banquier.",
-      "commandeImage": "A stocky man in his late forties with a short neck, round tortoiseshell glasses, a neatly trimmed salt-and-pepper short beard and very short thinning brown hair, wearing a light-blue sports-team jacket with red and white sleeve bands over a flannel shirt and an organiser armband, holding an open blue cloth notebook against his chest and pointing at a line. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "commandeImage": "A stocky man in his late forties with a short neck, round tortoiseshell glasses, a neatly trimmed salt-and-pepper short beard and very short thinning brown hair, wearing a light-blue convoy jacket with red and white sleeve bands over a flannel shirt and an organiser armband, holding an open blue cloth notebook against his chest and pointing at a line. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "nera_aldouin",
@@ -87,12 +87,12 @@
       "silhouette": "Large, athlétique encore, cou épais ; il remplit le cadre du buste d’épaule à épaule.",
       "visage": "Rides du sourire profondes autour des yeux ; nez droit, mâchoire pleine, teint hâlé de terrain.",
       "coiffure": "Argent, épais, peigné en arrière, une mèche qui retombe quand il rit.",
-      "tenue": "Veston d’équipe gris moyen à col officier, badge orange du matériel à l’essai cousu sur la poitrine gauche, cordon à badge orange autour du cou.",
-      "objetFetiche": "Le cordon orange et son passe plastifié, vierge de tout texte — l’insigne d’une équipe qui n’a pas de drapeau.",
+      "tenue": "Veston de la Sélection gris moyen à col officier, badge orange du matériel à l’essai cousu sur la poitrine gauche, cordon à badge orange autour du cou.",
+      "objetFetiche": "Le cordon orange et son passe plastifié, vierge de tout texte — l’insigne d’une armée qui n’a pas de drapeau.",
       "palette": ["#8c9097", "#4b5058", "#f0761e"],
       "posture": "Face caméra, les deux mains ouvertes vers le joueur, tête un peu inclinée : il donne raison avant d’avoir parlé.",
-      "jamais": "Jamais sombre au premier regard — pas d’ombre sur le visage, pas de sourire en coin, pas de lunettes noires ; jamais de cape, de gant ni d’insigne de grade. Il a l’air d’un champion qu’on aime.",
-      "commandeImage": "A broad still-athletic man in his mid-fifties with a thick neck, deep laugh lines around the eyes, a straight nose and a tanned face, thick silver hair combed back with one strand falling forward, wearing a mid-grey team jacket with a mandarin collar, a small plain orange badge sewn on the left chest and an orange lanyard with a blank laminated pass, both hands open toward the viewer, head slightly tilted, warm. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "jamais": "Jamais sombre au premier regard — pas d’ombre sur le visage, pas de sourire en coin, pas de lunettes noires ; jamais de cape, de gant ni d’insigne de grade. Il a l’air d’un vainqueur qu’on aime.",
+      "commandeImage": "A broad still-athletic man in his mid-fifties with a thick neck, deep laugh lines around the eyes, a straight nose and a tanned face, thick silver hair combed back with one strand falling forward, wearing a mid-grey jacket with a mandarin collar, a small plain orange badge sewn on the left chest and an orange lanyard with a blank laminated pass, both hands open toward the viewer, head slightly tilted, warm. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_solveig_tamm",
@@ -147,12 +147,12 @@
       "silhouette": "Solide et courte, mollets de marcheuse, une stature de porte de refuge.",
       "visage": "Joues rouges de froid ; petits yeux plissés de qui regarde loin dans la neige.",
       "coiffure": "Gris acier, longue tresse enroulée en couronne autour de la tête.",
-      "tenue": "Veste softshell rouge à empiècements blancs, col polaire, manches remontées ; écusson d’équipe vierge, jamais de croix.",
+      "tenue": "Veste softshell rouge à empiècements blancs, col polaire, manches remontées ; écusson vierge, jamais de croix.",
       "objetFetiche": "Une bouteille thermos cabossée en acier rouge — le café offert avant de rendre la montagne impossible.",
       "palette": ["#c0392f", "#7d2019", "#f0d2cd"],
       "posture": "De trois quarts, la thermos tendue vers le joueur, sourire franc : l’hospitalité d’abord.",
       "jamais": "Jamais la croix du drapeau ni aucune allusion à la neutralité ou à la banque ; jamais de piolet ni de corde (Mira Karki a la corde).",
-      "commandeImage": "A short solid woman in her mid-fifties with a walker's build, cold-reddened cheeks and small eyes narrowed as if looking far across snow, steel-grey hair in a long braid coiled as a crown around her head, wearing a red softshell team jacket with white panels and a fleece collar, sleeves pushed up, holding out a dented red steel thermos toward the viewer with a frank smile. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "commandeImage": "A short solid woman in her mid-fifties with a walker's build, cold-reddened cheeks and small eyes narrowed as if looking far across snow, steel-grey hair in a long braid coiled as a crown around her head, wearing a red softshell jacket with white panels and a fleece collar, sleeves pushed up, holding out a dented red steel thermos toward the viewer with a frank smile. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_lotte_vermeer",
@@ -177,7 +177,7 @@
       "silhouette": "Sec et nerveux, épaules tombantes de marcheur, tête souvent tournée vers l’arrière du convoi.",
       "visage": "Moustache grise fournie ; pattes-d’oie profondes, teint cuivré par la route.",
       "coiffure": "Cheveux gris coupés court, tempes blanches.",
-      "tenue": "Veste de route rouge brique à col droit, écharpe de coton sable enroulée contre la poussière, gilet à poches ; écusson d’équipe vierge.",
+      "tenue": "Veste de route rouge brique à col droit, écharpe de coton sable enroulée contre la poussière, gilet à poches ; écusson vierge.",
       "objetFetiche": "Une petite théière de voyage en laiton accrochée à la bretelle du sac — le service à thé qui suit partout.",
       "palette": ["#b0402f", "#6b2117", "#2f7d4f"],
       "posture": "De trois quarts, une main en visière au-dessus des yeux, l’autre sur la bretelle : il compte les étapes.",
@@ -192,12 +192,12 @@
       "silhouette": "Grande, athlétique, épaules larges de pagayeuse, se tient en appui sur une jambe comme au bord d’une pirogue.",
       "visage": "Sourire très large, dents en avant ; front haut et rond.",
       "coiffure": "Tresses fines relevées en couronne haute, attachées d’un ruban jaune.",
-      "tenue": "Maillot de capitaine vert à parements jaunes et rouges, brassard de capitaine, manchettes de coton ; écusson vierge.",
+      "tenue": "Chasuble de pagayeuse verte à parements jaunes et rouges, brassard de capitaine, manchettes de coton ; écusson vierge.",
       "objetFetiche": "Une pagaie courte du delta, manche verni, pale peinte en jaune, tenue à la verticale.",
       "palette": ["#2f8f57", "#155c33", "#e2c341"],
       "posture": "Face caméra, un bras tendu vers le joueur comme pour l’inviter à monter, la pagaie dans l’autre : la teranga.",
       "jamais": "Jamais de baobab-totem ni de folklore de tribune ; jamais de sifflet (Nera) ni de mégaphone — elle entraîne à la voix.",
-      "commandeImage": "A tall athletic woman in her early thirties with broad paddler's shoulders, a very wide smile and a high round forehead, fine braids gathered up into a high crown tied with a yellow ribbon, wearing a green captain's team jersey with yellow and red trim, a captain's armband and cotton wristbands, one arm extended in welcome toward the viewer, the other holding a short varnished delta paddle with a yellow blade upright. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "commandeImage": "A tall athletic woman in her early thirties with broad paddler's shoulders, a very wide smile and a high round forehead, fine braids gathered up into a high crown tied with a yellow ribbon, wearing a green paddler's tabard with yellow and red trim, a captain's armband and cotton wristbands, one arm extended in welcome toward the viewer, the other holding a short varnished delta paddle with a yellow blade upright. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_livia_moura",
@@ -207,12 +207,12 @@
       "silhouette": "Moyenne, hanches et gestes amples, toujours un pied en avant ; on la reconnaît au volume de la chevelure.",
       "visage": "Fossettes profondes ; sourcils arqués très noirs.",
       "coiffure": "Boucles noires volumineuses lâchées, retenues d’un foulard jaune noué au sommet.",
-      "tenue": "Veste de sélection verte à col jaune, t-shirt bleu, grandes créoles de laiton ; écusson vierge.",
+      "tenue": "Veste de terrain verte à col jaune, t-shirt bleu, grandes créoles de laiton ; écusson vierge.",
       "objetFetiche": "Un tambourin de carnaval au cadre peint, accroché à la ceinture, la peau tournée vers l’avant.",
       "palette": ["#2f9d5b", "#146336", "#e2c341"],
       "posture": "De trois quarts, penchée vers le public, une main sur le tambourin, l’autre qui appelle le bruit.",
       "jamais": "Jamais de plumes de défilé ni de maillot de football ; jamais un décor de misère urbaine ni de forêt en péril — le fleuve et le public suffisent.",
-      "commandeImage": "A woman in her mid-thirties with generous gestures, deep dimples and strongly arched black eyebrows, voluminous loose black curls held back by a yellow scarf knotted on top, wearing a green sports-team jacket with a yellow collar over a blue t-shirt and large brass hoop earrings, leaning toward an audience, one hand on a painted-frame carnival tambourine hanging at her belt, the other beckoning. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "commandeImage": "A woman in her mid-thirties with generous gestures, deep dimples and strongly arched black eyebrows, voluminous loose black curls held back by a yellow scarf knotted on top, wearing a green work jacket with a yellow collar over a blue t-shirt and large brass hoop earrings, leaning toward an audience, one hand on a painted-frame carnival tambourine hanging at her belt, the other beckoning. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_ines_valdes",
@@ -222,12 +222,12 @@
       "silhouette": "Compacte, épaules rondes de lutteuse, plantée sur ses appuis ; un buste qui ne recule pas.",
       "visage": "Sourcils épais presque joints ; cicatrice claire sur l’arcade gauche, ancienne, dont elle est fière.",
       "coiffure": "Noir long tressé en une natte épaisse ramenée sur l’épaule droite.",
-      "tenue": "Veste de sélection verte à parements blancs et rouges, col ouvert, cape courte de spectacle jetée sur une épaule.",
+      "tenue": "Veste de terrain verte à parements blancs et rouges, col ouvert, cape courte de spectacle jetée sur une épaule.",
       "objetFetiche": "Un masque de lutteuse brodé vert et argent, accroché à la ceinture — un costume de spectacle, jamais porté au visage à l’écran.",
       "palette": ["#2f8f5f", "#155c39", "#c0392f"],
       "posture": "Face caméra, poings sur les hanches, menton relevé : la prise annoncée à l’avance.",
       "jamais": "Jamais le masque sur le visage (règle de la fiche mx : un costume, pas une identité cachée) ; jamais de sombrero ni de motif de crâne ; jamais d’allusion à une frontière.",
-      "commandeImage": "A compact woman in her early forties with round wrestler's shoulders planted firmly, thick nearly joined eyebrows and an old pale scar on the left brow, long black hair in one thick braid pulled over the right shoulder, wearing a green sports-team jacket with white and red trim and an open collar, a short show cape thrown over one shoulder, an embroidered green-and-silver wrestling mask hanging at her belt, fists on hips, chin raised. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "commandeImage": "A compact woman in her early forties with round wrestler's shoulders planted firmly, thick nearly joined eyebrows and an old pale scar on the left brow, long black hair in one thick braid pulled over the right shoulder, wearing a green work jacket with white and red trim and an open collar, a short show cape thrown over one shoulder, an embroidered green-and-silver wrestling mask hanging at her belt, fists on hips, chin raised. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_devika_rao",
@@ -252,12 +252,12 @@
       "silhouette": "Mince, très droit, épaules étroites ; en vignette, c’est la ligne nette de la coupe et des lunettes.",
       "visage": "Lunettes rectangulaires fines ; expression contenue, un pli au coin de la bouche quand un horaire glisse.",
       "coiffure": "Noir, coupe nette dégradée, raie latérale au millimètre.",
-      "tenue": "Veste de sélection rose-rouge à col blanc, chemise blanche boutonnée, brassard de planificateur ; écusson vierge.",
+      "tenue": "Veste de service rose-rouge à col blanc, chemise blanche boutonnée, brassard de planificateur ; écusson vierge.",
       "objetFetiche": "Une montre de gare à gousset en acier, chaîne courte, qu’il consulte sans la sortir entièrement.",
       "palette": ["#d05a6e", "#7d2b3c", "#f7dbe1"],
       "posture": "De trois quarts, la montre dans la main gauche, la droite qui dessine une correspondance dans l’air.",
       "jamais": "Jamais de sabre, de code d’honneur ni de bandeau ; jamais de bento sur le buste — il est dans le texte, pas dans la main.",
-      "commandeImage": "A slim very upright man in his late thirties with narrow shoulders, thin rectangular glasses and a contained expression with a small crease at the corner of the mouth, black hair in a precise tapered cut with a razor-straight side parting, wearing a rose-red sports-team jacket with a white collar over a buttoned white shirt and a planner's armband, a steel pocket watch on a short chain half-drawn in his left hand, right hand tracing a connection in the air. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "commandeImage": "A slim very upright man in his late thirties with narrow shoulders, thin rectangular glasses and a contained expression with a small crease at the corner of the mouth, black hair in a precise tapered cut with a razor-straight side parting, wearing a rose-red service jacket with a white collar over a buttoned white shirt and a planner's armband, a steel pocket watch on a short chain half-drawn in his left hand, right hand tracing a connection in the air. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_hazel_quinn",
@@ -267,12 +267,12 @@
       "silhouette": "Grande, sèche, tannée, les épaules relâchées de qui ne se presse jamais ; le chapeau à large bord fait la silhouette.",
       "visage": "Rides claires en éventail sur les tempes ; regard mi-clos contre la lumière.",
       "coiffure": "Blond-gris coupé court, écrasé par le chapeau de brousse en feutre orange.",
-      "tenue": "Chemise de sélection orange à empiècements bleu nuit, manches roulées, bandana blanc ; écusson vierge.",
+      "tenue": "Chemise de terrain orange à empiècements bleu nuit, manches roulées, bandana blanc ; écusson vierge.",
       "objetFetiche": "Un bidon de réserve en tôle cabossée, bouchon retenu par une chaînette, posé sur la hanche.",
       "palette": ["#d4762a", "#864111", "#2c3a4a"],
       "posture": "De trois quarts, une hanche relâchée, le bidon contre elle, l’autre main dans la poche : rien ne la décontenance.",
       "jamais": "Jamais de référence aux cultures aborigènes (règle de la fiche au) ; jamais de flamme ni de fumée de brousse ; jamais de sourire large — un demi-sourire.",
-      "commandeImage": "A tall lean sun-weathered woman of fifty with relaxed shoulders, pale fan-shaped lines at the temples and eyes half-closed against light, short blond-grey hair flattened under an orange felt wide-brimmed bush hat, wearing an orange team shirt with midnight-blue panels, sleeves rolled, a white bandana, a dented tin reserve canister with a chained cap resting on her hip, other hand in a pocket, half-smile. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "commandeImage": "A tall lean sun-weathered woman of fifty with relaxed shoulders, pale fan-shaped lines at the temples and eyes half-closed against light, short blond-grey hair flattened under an orange felt wide-brimmed bush hat, wearing an orange field shirt with midnight-blue panels, sleeves rolled, a white bandana, a dented tin reserve canister with a chained cap resting on her hip, other hand in a pocket, half-smile. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_ayu_pranata",
@@ -282,12 +282,12 @@
       "silhouette": "Petite, ronde d’épaules, mains toujours ouvertes ; en vignette, la cloche de laiton devant elle.",
       "visage": "Sourire calme à lèvres fermées ; sourcils fins et hauts qui écoutent.",
       "coiffure": "Noir, chignon bas lisse, un peigne de bois clair planté dessus.",
-      "tenue": "Veste de sélection rouge à col blanc, écharpe de tissu tissé uni rouge et crème sur les épaules ; écusson vierge.",
+      "tenue": "Veste de terrain rouge à col blanc, écharpe de tissu tissé uni rouge et crème sur les épaules ; écusson vierge.",
       "objetFetiche": "Une petite cloche de club en laiton à poignée de bois, tenue par la poignée : celle qui donne le tour de parole.",
       "palette": ["#c8443c", "#7a221d", "#f6d3d0"],
       "posture": "Face caméra, la cloche à hauteur de poitrine tenue à deux mains, tête inclinée vers l’interlocuteur : elle attend la fin de la phrase.",
       "jamais": "Jamais de motif sacré ni de figure d’ombre sur elle (le jeu d’ombres explique un plan, dans le décor) ; jamais de volcan ni de fleur dans les cheveux.",
-      "commandeImage": "A small woman in her mid-forties with rounded shoulders and open hands, a calm closed-lip smile and fine high listening eyebrows, black hair in a smooth low bun with a pale wooden comb, wearing a red sports-team jacket with a white collar and a plain woven red-and-cream scarf on her shoulders, holding a small brass club bell with a wooden handle in both hands at chest height, head tilted toward the listener. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "commandeImage": "A small woman in her mid-forties with rounded shoulders and open hands, a calm closed-lip smile and fine high listening eyebrows, black hair in a smooth low bun with a pale wooden comb, wearing a red work jacket with a white collar and a plain woven red-and-cream scarf on her shoulders, holding a small brass club bell with a wooden handle in both hands at chest height, head tilted toward the listener. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_leandro_paz",
@@ -297,12 +297,12 @@
       "silhouette": "Grand, longiligne, un peu voûté de qui regarde loin devant ; mains de régisseur, larges et calmes.",
       "visage": "Nez busqué prononcé ; rides horizontales sur le front d’un homme qui plisse les yeux à l’horizon.",
       "coiffure": "Brun bouclé grisonnant, coupé court, une boucle sur le front.",
-      "tenue": "Veste de sélection bleu ciel à bandes blanches, écharpe de laine grise nouée lâche, chemise à col ouvert.",
+      "tenue": "Veste de terrain bleu ciel à bandes blanches, écharpe de laine grise nouée lâche, chemise à col ouvert.",
       "objetFetiche": "Une petite ardoise noire à cadre de bois avec un morceau de craie — le tableau que personne n’a le droit de voir, tourné contre lui.",
       "palette": ["#5fa8d8", "#28607f", "#e2c341"],
       "posture": "De trois quarts, l’ardoise contre la poitrine, face cachée, l’autre main qui montre l’horizon.",
-      "jamais": "Jamais de ballon, de tango ni d’asado sur le buste (rituels d’après-match, dans le texte) ; jamais l’ardoise visible.",
-      "commandeImage": "A tall long-limbed man in his mid-forties, slightly stooped as if looking far ahead, with a pronounced hooked nose and horizontal forehead lines, short greying brown curls with one curl on the brow, wearing a sky-blue sports-team jacket with white bands, a loosely knotted grey wool scarf and an open-collar shirt, holding a small wooden-framed black slate face-down against his chest, the other hand pointing toward the horizon. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "jamais": "Jamais de ballon, de tango ni d’asado sur le buste (rituels d’après-bataille, dans le texte) ; jamais l’ardoise visible.",
+      "commandeImage": "A tall long-limbed man in his mid-forties, slightly stooped as if looking far ahead, with a pronounced hooked nose and horizontal forehead lines, short greying brown curls with one curl on the brow, wearing a sky-blue work jacket with white bands, a loosely knotted grey wool scarf and an open-collar shirt, holding a small wooden-framed black slate face-down against his chest, the other hand pointing toward the horizon. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_noemie_leduc",
@@ -312,12 +312,12 @@
       "silhouette": "Moyenne, emmitouflée, épaules rondes sous la parka ; la tuque rouge fait la vignette.",
       "visage": "Taches de rousseur denses ; nez rougi par le froid, sourire de côté.",
       "coiffure": "Roux vif en deux tresses sous une tuque rouge à pompon blanc.",
-      "tenue": "Parka de sélection rouge à bandes blanches, col de polaire, mitaines pendues au cou par un cordon.",
+      "tenue": "Parka de terrain rouge à bandes blanches, col de polaire, mitaines pendues au cou par un cordon.",
       "objetFetiche": "Un anémomètre de poche à coupelles, tenu levé : elle lit le ciel avant de jouer.",
       "palette": ["#c0392f", "#742019", "#f4d2ce"],
       "posture": "De trois quarts, l’anémomètre levé au-dessus de l’épaule, le regard qui suit les coupelles.",
       "jamais": "Jamais de trappeur, de chemise à carreaux de bûcheron ni de feuille d’érable ; le froid est un terrain, jamais une souffrance sur son visage.",
-      "commandeImage": "A bundled-up woman in her mid-thirties with rounded shoulders under a parka, dense freckles, a cold-reddened nose and a sideways smile, bright red hair in two braids under a red knit hat with a white pompom, wearing a red sports-team parka with white bands and a fleece collar, mittens dangling from a neck cord, holding a small cup anemometer raised above her shoulder and watching it. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "commandeImage": "A bundled-up woman in her mid-thirties with rounded shoulders under a parka, dense freckles, a cold-reddened nose and a sideways smile, bright red hair in two braids under a red knit hat with a white pompom, wearing a red work parka with white bands and a fleece collar, mittens dangling from a neck cord, holding a small cup anemometer raised above her shoulder and watching it. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_jone_vakalau",
@@ -327,12 +327,12 @@
       "silhouette": "Large d’épaules et de cou, torse de nageur, le plus jeune et le plus massif du roster ; toujours en train de bouger.",
       "visage": "Sourire immense à fossettes ; sourcils épais relevés en permanence — tout l’étonne et rien ne l’inquiète.",
       "coiffure": "Noir, boucles courtes serrées, mouillées, sel séché aux tempes.",
-      "tenue": "Maillot de sélection turquoise sans manches à bandes blanches et vertes, brassard de capitaine trop grand, collier de cordon simple sans pendentif.",
+      "tenue": "Débardeur de lagon turquoise à bandes blanches et vertes, brassard de capitaine trop grand, collier de cordon simple sans pendentif.",
       "objetFetiche": "Un masque de plongée à jupe transparente relevé sur le front, sangle jaune.",
       "palette": ["#2fa0b8", "#12606f", "#2f8f5f"],
       "posture": "Face caméra, penché en avant, un bras qui pointe déjà le raccourci, sourire ouvert.",
       "jamais": "Jamais de référence coutumière ou cérémonielle (règle de la fiche fj), ni de collier de fleurs ; jamais de ballon ovale sur le buste.",
-      "commandeImage": "A very young broad-shouldered man of about twenty-two with a swimmer's chest, an enormous dimpled smile and thick permanently raised eyebrows, short tight black curls still wet with dried salt at the temples, wearing a sleeveless turquoise team jersey with white and green bands, an oversized captain's armband and a plain cord necklace without pendant, a clear-skirted diving mask with a yellow strap pushed up on his forehead, leaning forward and pointing. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "commandeImage": "A very young broad-shouldered man of about twenty-two with a swimmer's chest, an enormous dimpled smile and thick permanently raised eyebrows, short tight black curls still wet with dried salt at the temples, wearing a sleeveless turquoise lagoon vest with white and green bands, an oversized captain's armband and a plain cord necklace without pendant, a clear-skirted diving mask with a yellow strap pushed up on his forehead, leaning forward and pointing. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_nikos_delis",
@@ -342,12 +342,12 @@
       "silhouette": "Moyen, ventre rond, jambes courtes, un buste qui s’assoit même debout ; on le reconnaît à la moustache blanche.",
       "visage": "Moustache blanche épaisse et tombante ; sourcils broussailleux gris, yeux rieurs.",
       "coiffure": "Blanc, dru, coiffé en arrière, tempes plus courtes.",
-      "tenue": "Veste de sélection bleue à liseré blanc ouverte sur un polo blanc, casquette de patron de caïque bleue rejetée en arrière ; écusson vierge.",
-      "objetFetiche": "Une tasse de café en émail bleu ébréchée, tenue par l’anse — le café d’avant coup d’envoi.",
+      "tenue": "Veste de quai bleue à liseré blanc ouverte sur un polo blanc, casquette de patron de caïque bleue rejetée en arrière ; écusson vierge.",
+      "objetFetiche": "Une tasse de café en émail bleu ébréchée, tenue par l’anse — le café d’avant chaque traversée.",
       "palette": ["#2e78bf", "#17456f", "#f7f9fb"],
       "posture": "De trois quarts, la tasse levée à mi-hauteur, l’autre main qui raconte : la même finale, une fin différente.",
       "jamais": "Jamais de colonne, de casque antique ni de bouclier ; la casquette est une casquette de patron de barque, pas un uniforme de marine.",
-      "commandeImage": "A man in his early sixties of medium height with a round belly and short legs, a thick drooping white moustache, bushy grey eyebrows and laughing eyes, thick white hair combed back, wearing a blue sports-team jacket with white piping open over a white polo and a blue fishing-boat skipper's cap pushed back, holding a chipped blue enamel coffee cup by its handle at mid-height, the other hand mid-story. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "commandeImage": "A man in his early sixties of medium height with a round belly and short legs, a thick drooping white moustache, bushy grey eyebrows and laughing eyes, thick white hair combed back, wearing a blue harbour jacket with white piping open over a white polo and a blue fishing-boat skipper's cap pushed back, holding a chipped blue enamel coffee cup by its handle at mid-height, the other hand mid-story. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_elin_arnardottir",
@@ -372,12 +372,12 @@
       "silhouette": "Très mince, long, muscles secs de coureur de fond, immobile comme au départ d’une course.",
       "visage": "Crâne rasé luisant ; joues creuses, sourire lent qui arrive en dernier.",
       "coiffure": "Rasé de près.",
-      "tenue": "Veste de course verte à bandes rouge et noire, débardeur blanc dessous, dossard vierge épinglé sur la poitrine.",
+      "tenue": "Veste de marche verte à bandes rouge et noire, débardeur blanc dessous, carte de relais vierge épinglée sur la poitrine.",
       "objetFetiche": "Un chronomètre de course à gros cadran au cordon vert, tenu en main, pouce sur le bouton.",
       "palette": ["#2f7d4f", "#164d2e", "#c0392f"],
       "posture": "Face caméra, le chronomètre levé à hauteur du visage, tête un peu penchée : il attend l’épuisement adverse.",
       "jamais": "Jamais de savane animalière ni de safari (règle de la fiche ke) ; l’endurance est un entraînement — jamais un « don ».",
-      "commandeImage": "A very slim long-limbed man in his late thirties with a distance runner's dry musculature, a clean-shaven gleaming scalp, hollow cheeks and a slow smile, wearing a green running team jacket with red and black bands over a white singlet, a blank race bib pinned to the chest, holding a large-faced stopwatch on a green cord at face height with his thumb on the button, head slightly tilted. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "commandeImage": "A very slim long-limbed man in his late thirties with a distance runner's dry musculature, a clean-shaven gleaming scalp, hollow cheeks and a slow smile, wearing a light green marching jacket with red and black bands over a white singlet, a blank relay card pinned to the chest, holding a large-faced stopwatch on a green cord at face height with his thumb on the button, head slightly tilted. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_tiana_ravel",
@@ -402,12 +402,12 @@
       "silhouette": "Moyenne, épaules droites, assise même debout — le buste d’une cavalière ; la veste matelassée fait la vignette.",
       "visage": "Pommettes hautes et hâlées ; yeux plissés de vent.",
       "coiffure": "Noir, long, en deux nattes épaisses ramenées devant.",
-      "tenue": "Veste matelassée de sélection orange à col montant et bandes rouge et bleu nuit, ceinture de tissu large, gants de cuir accrochés à la ceinture.",
+      "tenue": "Veste matelassée de terrain orange à col montant et bandes rouge et bleu nuit, ceinture de tissu large, gants de cuir accrochés à la ceinture.",
       "objetFetiche": "Une gourde de selle en cuir à bouchon de bois, portée en bandoulière : le ravitaillement qui change de place à mi-parcours.",
       "palette": ["#e08a1e", "#8c4d08", "#c0392f"],
       "posture": "De trois quarts, tournée comme si elle regardait derrière elle ceux qu’elle a distancés, une main sur la gourde.",
       "jamais": "Jamais d’arc, d’empire ni de conquête ; jamais de yourte-décor exotique ; le cheval n’est pas sur le buste.",
-      "commandeImage": "A woman in her late twenties with straight shoulders and a rider's upright torso, high wind-tanned cheekbones and eyes narrowed by wind, long black hair in two thick braids brought forward, wearing an orange quilted team jacket with a standing collar and red and midnight-blue bands, a wide cloth belt with leather gloves hooked to it, a leather saddle flask with a wooden stopper slung across her, turned as if looking back at those she has outpaced. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "commandeImage": "A woman in her late twenties with straight shoulders and a rider's upright torso, high wind-tanned cheekbones and eyes narrowed by wind, long black hair in two thick braids brought forward, wearing an orange quilted jacket with a standing collar and red and midnight-blue bands, a wide cloth belt with leather gloves hooked to it, a leather saddle flask with a wooden stopper slung across her, turned as if looking back at those she has outpaced. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_amalie_haoses",
@@ -432,12 +432,12 @@
       "silhouette": "Petite, dense, épaules rondes sous la doudoune ; la corde enroulée en travers du torse fait la vignette.",
       "visage": "Joues hâlées et gercées ; sourire discret, yeux qui pétillent sous des sourcils droits.",
       "coiffure": "Noir, coupé court au carré, une pince métallique sur le côté.",
-      "tenue": "Doudoune de sélection rouge à bandes bleu nuit, col fermé, bonnet de laine rouge relevé sur le front.",
+      "tenue": "Doudoune de terrain rouge à bandes bleu nuit, col fermé, bonnet de laine rouge relevé sur le front.",
       "objetFetiche": "Une corde de cordée bleue enroulée en épaule, nœud visible : personne ne monte seul.",
       "palette": ["#b8443f", "#6d1f1d", "#2c4a86"],
       "posture": "De trois quarts, une main sur la corde à l’épaule, l’autre tendue vers le bas — pour tirer quelqu’un.",
       "jamais": "Jamais de fanion de prière (les fanions du décor sont des balises sans signe) ; jamais le sommet-conquête ; jamais de piolet.",
-      "commandeImage": "A small dense woman in her early forties with rounded shoulders under a down jacket, wind-chapped tanned cheeks, a discreet smile and bright eyes under straight brows, black hair cut in a short bob with a metal clip on one side, wearing a red team down jacket with midnight-blue bands, collar closed, a red wool beanie pushed up on her forehead, a blue climbing rope coiled across her shoulder, one hand reaching down as if to pull someone up. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "commandeImage": "A small dense woman in her early forties with rounded shoulders under a down jacket, wind-chapped tanned cheeks, a discreet smile and bright eyes under straight brows, black hair cut in a short bob with a metal clip on one side, wearing a red down jacket with midnight-blue bands, collar closed, a red wool beanie pushed up on her forehead, a blue climbing rope coiled across her shoulder, one hand reaching down as if to pull someone up. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_tess_roa",
@@ -467,7 +467,7 @@
       "palette": ["#c0392f", "#722018", "#f2cec9"],
       "posture": "De trois quarts, le casque sous le bras gauche, la main droite qui indique un tracé au sol.",
       "jamais": "Jamais de site archéologique ni de civilisation nommée (règle de la fiche pe) ; jamais de chapeau folklorique ; le casque reste sous le bras, jamais sur la tête au buste.",
-      "commandeImage": "A woman in her late thirties with square site-manager shoulders, straight decided eyebrows, a closed smile and high altitude-tanned cheeks, black hair in two long braids behind the shoulders tied with red thread, wearing a red construction team jacket with white bands over a cream wool shirt and a pocketed vest, a tape measure on her belt, a plain red hard hat under her left arm, right hand indicating a line on the ground. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "commandeImage": "A woman in her late thirties with square site-manager shoulders, straight decided eyebrows, a closed smile and high altitude-tanned cheeks, black hair in two long braids behind the shoulders tied with red thread, wearing a red construction jacket with white bands over a cream wool shirt and a pocketed vest, a tape measure on her belt, a plain red hard hat under her left arm, right hand indicating a line on the ground. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_mael_orven",
@@ -492,12 +492,12 @@
       "silhouette": "Trapue et solide, épaules larges, plantée droite ; le buste d’une organisatrice qui a porté des barrières.",
       "visage": "Mâchoire carrée ; yeux gris très clairs sous des sourcils épais blond cendré. Peau claire, sans taches.",
       "coiffure": "Blond cendré, tressé serré en une natte plaquée qui part du front et disparaît dans le col.",
-      "tenue": "Veste d’équipe gris moyen à col droit, épaulettes de sécurité rembourrées, badge orange sur la poitrine droite, gilet réfléchissant gris replié à la ceinture.",
+      "tenue": "Veste de la Sélection gris moyen à col droit, épaulettes de sécurité rembourrées, badge orange sur la poitrine droite, gilet réfléchissant gris replié à la ceinture.",
       "objetFetiche": "Un rapporteur de tir en laiton dans la poche poitrine, et une pochette de plans pliés sous le bras — les zones de sécurité qu’elle a dessinées.",
       "palette": ["#8c9097", "#4b5058", "#f0761e"],
       "posture": "Face caméra, les bras croisés sur la pochette de plans, immobile : déplacer ses pièces rompt son tempo.",
       "jamais": "Jamais un signe partagé avec Maël Orven (ni cheveux noirs, ni peau olive, ni nez fin, ni objet de vol, ni blouson à col tricot) ni avec Edran Sorel (ni barbe, ni nez large, ni carnet à élastique, ni couronne grise) ; jamais de protège-oreilles ni de casque ; jamais le badge au même endroit que Maël (lui la manche gauche, elle la poitrine droite). Aucune ressemblance familiale n’est un accident.",
-      "commandeImage": "A stocky solid woman in her early thirties with broad shoulders, a square jaw, very pale grey eyes under thick ash-blond eyebrows and clear unfreckled skin, ash-blond hair in a tight flat braid running from the forehead into the collar, wearing a mid-grey team jacket with a straight collar and padded safety shoulders, a small plain orange badge on the right chest and a folded grey reflective vest at the belt, a brass firing protractor in the chest pocket, arms crossed over a folder of folded plans. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "commandeImage": "A stocky solid woman in her early thirties with broad shoulders, a square jaw, very pale grey eyes under thick ash-blond eyebrows and clear unfreckled skin, ash-blond hair in a tight flat braid running from the forehead into the collar, wearing a mid-grey jacket with a straight collar and padded safety shoulders, a small plain orange badge on the right chest and a folded grey reflective vest at the belt, a brass firing protractor in the chest pocket, arms crossed over a folder of folded plans. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_edran_sorel",
@@ -522,12 +522,12 @@
       "silhouette": "Moyenne, mince, mobile, toujours de trois quarts comme entre deux interlocuteurs ; le trousseau de badges fait la vignette.",
       "visage": "Sourire poli et fatigué ; cernes légers, yeux vifs qui cherchent la sortie de la pièce.",
       "coiffure": "Brun, coupe au carré net au menton, frange droite.",
-      "tenue": "Veste d’équipe gris moyen à col ouvert, badge orange sur la poitrine gauche, chemise gris perle ; plusieurs cordons de badge de couleurs différentes superposés au cou.",
+      "tenue": "Veste de la Sélection gris moyen à col ouvert, badge orange sur la poitrine gauche, chemise gris perle ; plusieurs cordons de badge de couleurs différentes superposés au cou.",
       "objetFetiche": "Un trousseau de badges d’accès superposés — mandats provisoires de plusieurs délégations — tenu en éventail.",
       "palette": ["#8c9097", "#4b5058", "#f0761e"],
       "posture": "De trois quarts, tournée vers un interlocuteur hors champ, une main qui tend le trousseau, l’autre qui retient un badge.",
-      "jamais": "Jamais de tampon ni de marteau (elle n’est ni greffière ni juge) ; jamais un maillot de délégation nationale — elle représente des mandats, aucune nation.",
-      "commandeImage": "A slim mobile woman in her late thirties turned three-quarters as if between two people, with a polite tired smile, faint dark circles and quick eyes, brown hair in a sharp chin-length bob with a straight fringe, wearing a mid-grey team jacket with an open collar and a small plain orange badge on the left chest over a pearl-grey shirt, several differently coloured lanyards layered at the neck, holding a fan of access badges toward someone off-frame. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "jamais": "Jamais de tampon ni de marteau (elle n’est ni greffière ni juge) ; jamais la veste d’une armée nationale — elle représente des mandats, aucune nation.",
+      "commandeImage": "A slim mobile woman in her late thirties turned three-quarters as if between two people, with a polite tired smile, faint dark circles and quick eyes, brown hair in a sharp chin-length bob with a straight fringe, wearing a mid-grey jacket with an open collar and a small plain orange badge on the left chest over a pearl-grey shirt, several differently coloured lanyards layered at the neck, holding a fan of access badges toward someone off-frame. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_basile_kelm",
@@ -537,19 +537,19 @@
       "silhouette": "Massif, cou de taureau, épaules qui débordent du cadre ; immobile comme un dépôt fermé.",
       "visage": "Arcades lourdes, front bas ; bouche horizontale qui ne s’ouvre que pour dire non. Rasé de près.",
       "coiffure": "Poivre et sel rasé ras.",
-      "tenue": "Gilet de surveillance gris à bandes réfléchissantes sur veste d’équipe gris moyen, badge orange sur la poitrine gauche, lampe torche à la ceinture.",
+      "tenue": "Gilet de surveillance gris à bandes réfléchissantes sur veste de la Sélection gris moyen, badge orange sur la poitrine gauche, lampe torche à la ceinture.",
       "objetFetiche": "Un trousseau de clés de dépôt lourd, à anneau d’acier, tenu fermé dans le poing.",
       "palette": ["#7c828c", "#4b5058", "#f0761e"],
       "posture": "Face caméra, les bras le long du corps, le poing fermé sur les clés : rien n’entre, rien ne sort.",
       "jamais": "Jamais de matraque, de casque ni de bouclier — c’est un gardien de réserves, pas un policier ; jamais de sourire ni de menace : le neutre absolu.",
-      "commandeImage": "A massive bull-necked man in his early fifties whose shoulders fill the frame, with heavy brow ridges, a low forehead and a flat horizontal mouth, clean-shaven, salt-and-pepper hair cropped to the scalp, wearing a grey surveillance vest with reflective bands over a mid-grey team jacket, a small plain orange badge on the left chest and a torch at his belt, arms at his sides, one fist closed around a heavy steel-ringed bunch of depot keys. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+      "commandeImage": "A massive bull-necked man in his early fifties whose shoulders fill the frame, with heavy brow ridges, a low forehead and a flat horizontal mouth, clean-shaven, salt-and-pepper hair cropped to the scalp, wearing a grey surveillance vest with reflective bands over a mid-grey jacket, a small plain orange badge on the left chest and a torch at his belt, arms at his sides, one fist closed around a heavy steel-ringed bunch of depot keys. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     },
     {
       "cle": "cmd_sans_visage",
       "nom": "Relais Zéro",
       "registre": "gris",
       "ageApparent": "Sans objet — aucun corps n’est montré.",
-      "silhouette": "Aucune. À la place du buste : une plaque d’indicatif de tournoi, gris moyen, deux coins coupés, de la taille exacte du buste (132 × 190), avec la balise de liaison à trois traits en haut et un indicatif en glyphes non lisibles au centre.",
+      "silhouette": "Aucune. À la place du buste : une plaque d’indicatif de commandement, gris moyen, deux coins coupés, de la taille exacte du buste (132 × 190), avec la balise de liaison à trois traits en haut et un indicatif en glyphes non lisibles au centre.",
       "visage": "Aucun. Aucune ombre de visage, aucun masque, aucune silhouette à contre-jour : la plaque est plate et éclairée à plat.",
       "coiffure": "Aucune.",
       "tenue": "Aucune. Le badge orange du matériel à l’essai figure sur la plaque, en bas à droite, comme sur une caisse d’équipement.",
@@ -557,7 +557,67 @@
       "palette": ["#8c9097", "#4b5058", "#f0761e"],
       "posture": "Aucune. La plaque entre par la droite comme un buste adverse, sans animation d’humeur : l’émotion reste « neutre » dans la bande de nom, toujours.",
       "jamais": "Jamais de masque, de capuche, de silhouette dramatique, de voix figurée ni de révélation d’un visage en fin d’opus ; jamais un lettrage lisible (la clé interne ne devient jamais un libellé) ; jamais de rouge d’alerte.",
-      "commandeImage": "A flat mid-grey tournament call-sign plate with two clipped corners in portrait proportion, a three-bar signal beacon glyph at the top, an abstract non-readable identifier mark in the centre, a small plain orange badge in the lower-right corner like on an equipment crate, evenly lit with no shadow, plain slightly darker grey background, no face, no figure, no mask, no text."
+      "commandeImage": "A flat mid-grey command call-sign plate with two clipped corners in portrait proportion, a three-bar signal beacon glyph at the top, an abstract non-readable identifier mark in the centre, a small plain orange badge in the lower-right corner like on an equipment crate, evenly lit with no shadow, plain slightly darker grey background, no face, no figure, no mask, no text."
+    },
+    {
+      "cle": "dafni_rallis",
+      "nom": "Dafni Rallis",
+      "registre": "delegation",
+      "ageApparent": "26 ans",
+      "silhouette": "Mince et nerveuse, épaules hautes de barreuse ; c’est le foulard bleu noué en bandeau sur les cheveux qui fait la vignette.",
+      "visage": "Taches de rousseur sur un nez fin brûlé par le sel ; une bouche qui se serre quand elle compte.",
+      "coiffure": "Brun foncé, coupé court sous le bandeau, nuque dégagée.",
+      "tenue": "Veste de quai bleue à liseré blanc, trop grande d’une taille, ouverte sur un pull marin écru ; écusson vierge.",
+      "objetFetiche": "Un carnet de passage à couverture cirée, tenu fermé contre la poitrine : quarante traversées, quarante coches dans la marge.",
+      "palette": ["#2e78bf", "#17456f", "#d8c9a0"],
+      "posture": "De trois quarts, le carnet serré à deux mains contre la poitrine, le regard un peu à côté : elle écoute encore la consigne.",
+      "jamais": "Jamais de colonne, de casque antique ni de bouclier ; la mer est une manœuvre, jamais un naufrage (règles de la fiche gr). Jamais la casquette ni la tasse de Nikos : elle a sa méthode, pas un héritage.",
+      "commandeImage": "A slim wiry woman in her mid-twenties with high helmswoman's shoulders, freckles across a thin salt-burnt nose and lips pressed as if counting, short dark-brown hair under a blue scarf knotted as a headband, wearing a blue harbour jacket with white piping, one size too big, open over a cream sailor's sweater, holding a small wax-covered logbook closed with both hands against her chest, gaze slightly aside as if still listening. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+    },
+    {
+      "cle": "anju_basnet",
+      "nom": "Anju Basnet",
+      "registre": "delegation",
+      "ageApparent": "34 ans",
+      "silhouette": "Longue et anguleuse ; l’armature du sac de portage, qui dépasse haut au-dessus des épaules, fait la vignette.",
+      "visage": "Pommettes hautes marquées par le froid ; des sourcils épais qui se rejoignent presque quand elle calcule.",
+      "coiffure": "Noir, en une longue tresse ramenée sur l’épaule gauche.",
+      "tenue": "Veste d’atelier rouge à empiècements bleu nuit, col roulé gris dessous, mitaines de laine ; écusson vierge.",
+      "objetFetiche": "Un poste de relais portatif au boîtier cabossé, antenne repliée, serré contre la poitrine : l’atelier du haut parle par elle.",
+      "palette": ["#b8443f", "#6d1f1d", "#e8e2d0"],
+      "posture": "Face caméra, le poste contre la poitrine, l’autre main qui compte sur ses doigts : trois relais, trois journées.",
+      "jamais": "Jamais de fanion de prière ni de signe religieux (les fanions du décor sont des balises sans signe) ; jamais le sommet-conquête ni le piolet (règles de la fiche np) ; jamais la corde de Mira : elle porte sa propre charge.",
+      "commandeImage": "A tall angular woman in her mid-thirties with high cold-marked cheekbones and thick brows that almost meet when she calculates, black hair in one long braid over the left shoulder, wearing a red workshop jacket with midnight-blue panels over a grey roll-neck and wool fingerless mitts, the tall frame of a carrying pack rising above her shoulders, holding a battered portable relay radio with its antenna folded against her chest, the other hand counting on her fingers. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+    },
+    {
+      "cle": "lea_wagener",
+      "nom": "Léa Wagener",
+      "registre": "delegation",
+      "ageApparent": "31 ans",
+      "silhouette": "Petite et vive, épaules droites ; c’est la frange droite au ras des sourcils qui fait la vignette, avec l’éclat du carnet d’acier à hauteur de poitrine.",
+      "visage": "Un sourire en coin prêt à se moquer d’elle-même ; des yeux qui vérifient deux fois.",
+      "coiffure": "Châtain clair, frange droite, cheveux mi-longs noués bas.",
+      "tenue": "Veste de convoi bleu clair à bandes rouges sur les manches, brassard d’organisatrice au bras droit, gilet gris à poches ; écusson vierge.",
+      "objetFetiche": "Le carnet à couverture d’acier, fermé, tenu à plat contre la poitrine, un crayon glissé dans la spirale et trois carrés emboîtés gravés dans le coin (le motif de content/styles/lu.json).",
+      "palette": ["#3aa0c8", "#1d5f7c", "#a8dcef"],
+      "posture": "De trois quarts, le carnet fermé contre la poitrine, l’autre main levée, un doigt dressé : « une seconde, je vérifie ».",
+      "jamais": "Jamais de plaisanterie visuelle sur la taille du pays qui ne vienne pas d’elle, jamais de coffre-fort ni de costume de banque (règles de la fiche lu) ; jamais le brassard ni le carnet bleu de Tomas : elle a les siens.",
+      "commandeImage": "A small quick woman in her early thirties with square shoulders, a straight fringe cut right at the eyebrows and light-brown shoulder-length hair tied low, a wry half-smile ready to laugh at herself and eyes that check twice, wearing a light-blue convoy jacket with red sleeve bands and an organiser armband on the right arm under a grey pocketed vest, holding a closed steel-covered notebook flat against her chest with a pencil tucked in its spiral and three nested squares engraved in one corner, the other hand raised with one finger up as if to say one moment. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
+    },
+    {
+      "cle": "nadia_berrada",
+      "nom": "Nadia Berrada",
+      "registre": "delegation",
+      "ageApparent": "39 ans",
+      "silhouette": "Droite, épaules larges ; le chignon haut piqué d’un crayon fait la vignette.",
+      "visage": "Des sourcils arqués qui se lèvent à chaque réserve qu’on ne justifie pas ; une fossette d’un seul côté.",
+      "coiffure": "Noir et bouclé, relevé en chignon haut, un crayon de chargement planté dedans.",
+      "tenue": "Veste de route rouge brique à poches de poitrine, manches retroussées, foulard de coton sable doré noué au cou contre la poussière ; écusson vierge.",
+      "objetFetiche": "Un étui de cuir à rabat gonflé de listes de chargement, tenu contre la poitrine, deux crayons de couleurs différentes glissés dans la couture — une couleur par vérification.",
+      "palette": ["#b0402f", "#6b2117", "#e8c98a"],
+      "posture": "De trois quarts, l’étui serré contre la poitrine, l’autre main qui tapote un crayon sur la liste : la caravane part à l’heure.",
+      "jamais": "Jamais de motif ni de symbole religieux, jamais de coiffe qui puisse se lire comme telle, jamais de médina de carte postale ; le désert est un terrain de course, jamais un lieu de perdition (règles de la fiche ma).",
+      "commandeImage": "A broad-shouldered upright woman in her late thirties with arched eyebrows raised in question and a single-sided dimple, black curly hair pulled up into a high bun with a pencil pushed through it, wearing a brick-red road jacket with chest pockets and rolled sleeves and a golden-sand cotton scarf knotted at the neck against dust, holding a bulging flap-over leather folder of loading lists against her chest with two pencils of different colours tucked into its seam, the other hand tapping a pencil on the top sheet. Three-quarter bust portrait from the waist up, flat diffuse studio lighting with no cast shadow, plain mid-grey background, team-colour panels of the garment painted neutral grey, stylised realism, no text, no logo, no real flag, no military insignia."
     }
   ]
 }
