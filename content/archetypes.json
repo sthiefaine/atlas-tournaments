@@ -5,7 +5,7 @@
       "libelle": "Le stratège prudent",
       "temperament": "Posé, avare de mots, joue trois coups plus loin",
       "famillePouvoir": "Défense et prévoyance : bonus en terrain fortifié, réduction des dégâts subis, prévisualisation d'une intention adverse",
-      "courbe": "Lente, très forte en fin de match",
+      "courbe": "Lente, très forte en fin d'engagement",
       "contrePar": ["fonceuse", "showman"]
     },
     {
@@ -19,8 +19,8 @@
     {
       "cle": "veteran",
       "libelle": "Le vétéran",
-      "temperament": "Bourru, protecteur, plein d'anecdotes des guerres passées",
-      "famillePouvoir": "Vétérance : unités promues qui gardent leurs bonus, remise en état d'une unité marquée, moral d'équipe",
+      "temperament": "Bourru, protecteur, plein d'anecdotes des années passées",
+      "famillePouvoir": "Vétérance : unités promues qui gardent leurs bonus, remise en état d'une unité touchée, moral des troupes",
       "courbe": "Régulière, cumule sur la durée",
       "contrePar": ["meteorologue", "prodige"]
     },
@@ -35,9 +35,9 @@
     {
       "cle": "diplomate",
       "libelle": "La diplomate",
-      "temperament": "Chaleureuse, manœuvrière, connaît tout le monde dans le stade",
+      "temperament": "Chaleureuse, manœuvrière, connaît tout le monde à Port-Méridien",
       "famillePouvoir": "Capture et économie : capture accélérée, revenu majoré, ralliement d'une ville neutre, ravitaillement à distance",
-      "courbe": "Très lente, écrasante si le match dure",
+      "courbe": "Très lente, écrasante si l'engagement dure",
       "contrePar": ["fonceuse", "showman"]
     },
     {
@@ -52,7 +52,7 @@
       "cle": "survivante",
       "libelle": "La survivante",
       "temperament": "Sobre, tenace, ne commente jamais le score",
-      "famillePouvoir": "Résilience : remise en état, résistance, effets qui montent à mesure que l'équipe est menée",
+      "famillePouvoir": "Résilience : remise en état, résistance, effets qui montent à mesure que son armée est menée",
       "courbe": "Inverse : discrète en tête, redoutable menée",
       "contrePar": ["prodige", "diplomate"]
     },

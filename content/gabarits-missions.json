@@ -3,7 +3,7 @@
     {
       "cle": "capture_qg",
       "nom": "Prise de quartier général",
-      "intention": "Le match de référence : deux QG, une symétrie de valeur, une montée en puissance lisible du premier ordre au dernier.",
+      "intention": "L'engagement de référence : deux QG, une symétrie de valeur, une montée en puissance lisible du premier ordre au dernier.",
       "victoire": ["capture_qg", "hors_jeu_total"],
       "defaite": ["qg_perdu", "limite_journees"],
       "dureeVisee": { "min": 28, "max": 45 },
@@ -11,7 +11,7 @@
       "cote": { "min": 14, "max": 24 },
       "brouillardConseille": false,
       "hooksNarratifs": [
-        "présenter un adversaire et sa manière en une rencontre",
+        "présenter un adversaire et sa manière en un engagement",
         "installer une rivalité qui reviendra",
         "faire découvrir une mécanique régionale sans la commenter"
       ],
@@ -30,7 +30,7 @@
       "hooksNarratifs": [
         "un renfort annoncé qui arrive à une journée précise",
         "un allié qui demande qu'on lui laisse le temps",
-        "une décision d'arbitrage suspendue jusqu'au coup de sifflet"
+        "une décision d'arbitrage suspendue jusqu'à la dernière journée"
       ],
       "interdit": "Le joueur ne doit jamais pouvoir gagner en capturant le QG adverse : ce gabarit se joue en défense ou il ne se joue pas."
     },
@@ -47,7 +47,7 @@
       "hooksNarratifs": [
         "un convoi de la Commission d'homologation à faire arriver entier",
         "une pièce d'archive à sortir d'un bâtiment avant la fermeture",
-        "un commandant blessé dans son orgueil qu'on raccompagne au vestiaire"
+        "un commandant blessé dans son orgueil qu'on raccompagne à son cantonnement"
       ],
       "interdit": "L'unité escortée n'attaque jamais et n'a jamais de pouvoir : c'est un objectif qui marche, pas une unité de plus."
     },
@@ -79,9 +79,9 @@
       "cote": { "min": 12, "max": 22 },
       "brouillardConseille": false,
       "hooksNarratifs": [
-        "un pari lancé au vestiaire la veille",
-        "une rivalité sportive pure, sans rien d'autre en jeu",
-        "un public qui a choisi son camp avant le coup de sifflet"
+        "un pari lancé au cantonnement la veille",
+        "une rivalité pure entre deux commandants, sans rien d'autre en jeu",
+        "un public qui a choisi son camp avant la première journée"
       ],
       "interdit": "Aucune condition de victoire par mise hors jeu totale : ce serait la voie lente, et elle gagnerait quand même."
     },
@@ -98,14 +98,14 @@
       "hooksNarratifs": [
         "une nuit longue, un cycle jour/nuit déséquilibré",
         "une tempête annoncée deux journées à l'avance par le Bulletin",
-        "une équipe privée de matériel par une décision administrative"
+        "une armée privée de matériel par une décision administrative"
       ],
       "interdit": "Aucun renfort produit par le joueur : si la production reste ouverte, ce n'est plus de la survie, c'est de l'économie."
     },
     {
       "cle": "siege",
       "nom": "Siège",
-      "intention": "L'adversaire tient une position fortifiée, le joueur a l'avantage économique : le match le plus long du jeu, et le plus lisible.",
+      "intention": "L'adversaire tient une position fortifiée, le joueur a l'avantage économique : l'engagement le plus long du jeu, et le plus lisible.",
       "victoire": ["capture_qg", "capturer", "points"],
       "defaite": ["limite_journees", "toutes_unites_hors_jeu"],
       "dureeVisee": { "min": 40, "max": 65 },
@@ -113,7 +113,7 @@
       "cote": { "min": 18, "max": 30 },
       "brouillardConseille": false,
       "hooksNarratifs": [
-        "une finale continentale devant un stade plein",
+        "une finale suivie à l'antenne par le monde entier",
         "un point de bascule de la trame joué sur le terrain",
         "un adversaire qui n'a plus rien à perdre et le dit"
       ],
@@ -122,7 +122,7 @@
     {
       "cle": "revanche",
       "nom": "Revanche",
-      "intention": "Retour contre un commandant nommé, son équipe renforcée, son pouvoir amélioré et un objectif de match personnel contre le joueur.",
+      "intention": "Retour contre un commandant nommé, son armée renforcée, son pouvoir amélioré et un objectif personnel contre le joueur.",
       "victoire": ["capture_qg", "hors_jeu_total", "points"],
       "defaite": ["qg_perdu", "limite_journees"],
       "dureeVisee": { "min": 35, "max": 55 },
@@ -130,16 +130,16 @@
       "cote": { "min": 14, "max": 24 },
       "brouillardConseille": false,
       "hooksNarratifs": [
-        "un rival juré qui revient plus fort qu'à la première rencontre",
+        "un rival juré qui revient plus fort qu'au premier engagement",
         "un rival d'estime qui refuse de rejoindre la faction et le prouve sur le terrain",
         "une dette réclamée, ou une dette payée"
       ],
-      "interdit": "Jamais contre un commandant que le joueur n'a pas déjà rencontré : une revanche sans première fois n'est qu'un match."
+      "interdit": "Jamais contre un commandant que le joueur n'a pas déjà affronté : une revanche sans première fois n'est qu'un engagement de plus."
     },
     {
       "cle": "exhibition",
       "nom": "Exhibition",
-      "intention": "Manche courte hors classement, roster réduit ou imposé, une seule mécanique mise en avant. C'est le gabarit de la Dépêche du jour.",
+      "intention": "Exercice court à charges à blanc, hors de la guerre, roster réduit ou imposé, une seule mécanique mise en avant. C'est le gabarit de la Dépêche du jour.",
       "victoire": ["capture_qg", "capturer", "survivre", "points"],
       "defaite": ["qg_perdu", "limite_journees"],
       "dureeVisee": { "min": 12, "max": 22 },

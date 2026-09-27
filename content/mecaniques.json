@@ -88,7 +88,7 @@
       "regionCle": "region_fr_auvergne_rhone_alpes",
       "hookPrincipal": "surAttaque",
       "hookSecondaire": null,
-      "description": "Frapper depuis un puy ajoute au marquage : la hauteur se paie au tableau d'affichage."
+      "description": "Frapper depuis un puy frappe plus fort, voit et tire plus loin : la hauteur se paie d'un tour d'exposition."
     },
     {
       "cle": "meca_mistral",
