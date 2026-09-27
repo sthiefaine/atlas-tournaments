@@ -168,10 +168,10 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   const essaiAube = estMissionAube(scenario.code);
   const mission = useMemo(() => campagne.missions[index] ?? (essaiAube ? {
     entrainement: false,
-    objectif: scenario.code === 'aube_releve_1v3' ? 'Survivre quarante journées complètes jusqu’à la relève.' : 'Prendre tous les QG adverses ou mettre toute l’équipe adverse hors jeu.',
+    objectif: scenario.code === 'aube_releve_1v3' ? 'Survivre quarante journées complètes jusqu’à la relève.' : 'Prendre tous les QG adverses ou mettre toutes les unités adverses hors jeu.',
     conclusion: scenario.dialogueVictoire.map((d) => d.texte).join(' '),
     tutoriel: ['Les armées alliées jouent leur propre tour. Consultez leurs unités sans leur donner d’ordres.'],
-    conseil: 'Ces essais Aube sont indépendants des entraînements. Les décisions de fin de match modifient uniquement les nouvelles parties annoncées.',
+    conseil: 'Ces essais Aube sont indépendants des entraînements. Les décisions de fin de mission modifient uniquement les nouvelles parties annoncées.',
   } : undefined), [index, essaiAube, scenario]);
   const codeSuivant = essaiAube ? (ETAPES_AUBE.some((cle) => cle === scenario.code) ? ETAPES_AUBE[ETAPES_AUBE.findIndex((cle) => cle === scenario.code) + 1] : undefined) : campagne.missions[index + 1]?.scenarioCle;
   const [mode, setMode] = useState<Mode>('normal');
