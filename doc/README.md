@@ -5,7 +5,7 @@ Ordre de lecture conseillé. Le canon est `../BRIEF.md` ; en cas de désaccord e
 | Document | Sujet | Propriétaire de |
 |---|---|---|
 | [00-vision.md](00-vision.md) | Pitch, piliers, public, boucle de jeu, ce que le jeu n'est pas | la vision |
-| [01-bible.md](01-bible.md) | Le monde : les Jeux Tactiques, Atlas, le tournoi, le ton, la charte de sensibilité, les flags canon | le lore |
+| [01-bible.md](01-bible.md) | Le monde : la guerre de l'énergie, le Pacte et Atlas qui l'arbitre, l'engagement, le ton, la charte de sensibilité, les flags canon | le lore |
 | [02-architecture.md](02-architecture.md) | Couches, dépôt, serveur, cycle du contenu, déterminisme, tests | la technique |
 | [03-schemas.md](03-schemas.md) | Types TypeScript et exemples JSON de tout ce qui circule | les schémas |
 | [04-gameplay.md](04-gameplay.md) | Règles : tour, unités, terrains, dégâts, capture, commandants, mécaniques régionales | les règles |
@@ -17,7 +17,7 @@ Ordre de lecture conseillé. Le canon est `../BRIEF.md` ; en cas de désaccord e
 | [10-rendu-3d.md](10-rendu-3d.md) | La 3D three.js — **historique depuis le 23 septembre 2026** : le jeu ne dessine plus en 3D ; reste vrai de ce document ce qu'il dit des **modèles** (silhouettes, masque d'équipe, gabarits), source des images cuites | les modèles 3D, source des images |
 | [11-assets-spec.md](11-assets-spec.md) | Le format `AssetSpec` donné au générateur externe : échelle, pivot, budgets, textures et masque d'équipe, variantes, animations, glTF 2.0 et nommage, interdits, et le contrôle des livraisons | les assets |
 | [16-realisme.md](16-realisme.md) | Le plan vers des modèles réalistes : l'arbitrage « réaliste, ton léger et cartoon », le lot moteur (environnement, ombres, occlusion, vignettage), le lot des vrais modèles (préalables du chargeur, pilote, priorité 1, kits), le lot animation, jalons et risques | le plan de réalisme |
-| [17-aube.md](17-aube.md) | Canon énergétique : 24 nations dont 12 au premier plan, faction supplémentaire, biographies, douze étapes cibles et cinq essais distincts | la synthèse Aube, sous le brief et les documents propriétaires |
+| [17-aube.md](17-aube.md) | La guerre de l'énergie vue depuis Aube : 24 nations dont 12 au premier plan, la faction en plus, la course aux technologies, trois actes et sept saisons (172 épisodes), les essais distincts | la synthèse Aube, sous le brief et les documents propriétaires |
 | [18-rendu-sprites.md](18-rendu-sprites.md) | Le rendu en sprites précalculés : la caméra unique (orthographique, 50°, 128 px par case), la cuisson Blender depuis les GLB, le manifeste, la peau WebGL 2 (`src/render2d/`), ses calques, animations et écran de combat ; le contrat exécutable est `src/render2d/contrat.ts` | le rendu du jeu |
 | [12-au-dela-advance-wars.md](12-au-dela-advance-wars.md) | Réserve de propositions classées par coût : relief jouable, rejeux et défis, multijoueur asynchrone, draft, objectifs variés, génie, éditeur de cartes certifié, accessibilité… **aucune n'est du canon** | — |
 | [13-campagne.md](13-campagne.md) | Le budget d'heures chiffré et la réponse à « 80 h, réalisable ? », la structure d'un parcours, les neuf gabarits de mission, les fils secondaires et leurs conséquences bornées, les deux modes, les dix généraux secrets, le système de déblocage, la sauvegarde de campagne | la campagne |
@@ -32,4 +32,4 @@ Les spécifications d'assets produites depuis le canon vivent à la racine du d�
 
 Le plan d'étapes est dans `../PLAN.md`, et l'état réel du dépôt — ce qui est fait, ce qui manque, par quoi continuer — dans `../CLAUDE.md`.
 
-Depuis le 9 septembre 2026, lire `17-aube.md` après la bible : la guerre de tournoi énergétique remplace le canon sans enjeu de conflit. `content/personnages.json` contient les biographies versionnées. Les douze étapes constituent une cible ; les cinq scénarios Aube sont des essais brouillons, les quatre entraînements sont conservés. Le contrat opérationnel des routines est servi par `GET /api/routines/contrat` ; `refonte/routines.md` explique la version 2.
+Depuis le 26 septembre 2026, le lore v2 est canon (`BRIEF.md`, « Le lore v2 validé » ; `refonte/lore-v2.md` et `.json`) : le monde est en guerre depuis quatorze ans pour l'énergie et l'avance technique, et Atlas arbitre cette guerre. Lire `17-aube.md` après la bible. `content/personnages.json` contient les biographies versionnées. Le plan de campagne est le fil de 172 épisodes (`refonte/opus1-fil.md`, généré) ; les scénarios Aube sont des essais brouillons. Le contrat opérationnel des routines est servi par `GET /api/routines/contrat` ; `refonte/routines.md` explique la version 2.

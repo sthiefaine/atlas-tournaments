@@ -1,6 +1,6 @@
 # Atlas Tournament — Plan d'étapes
 
-Tactique au tour par tour dans l'esprit d'Advance Wars, où un jeune commandant fait le tour du monde pour disputer le Tournoi Atlas. Web, TypeScript, **rendu 3D three.js**, contenu produit par cinq routines Claude — quatre de contenu, une de traduction — et validé par un serveur qui ne fait confiance à rien.
+Tactique au tour par tour dans l'esprit d'Advance Wars, où un jeune commandant traverse la guerre de l'énergie qu'Atlas arbitre, de front en front, jusqu'à Aube, le programme de fusion que la Cinquième Manche veut pour elle seule. Web, TypeScript, **rendu 3D three.js**, contenu produit par cinq routines Claude — quatre de contenu, une de traduction — et validé par un serveur qui ne fait confiance à rien.
 
 Le canon est dans `BRIEF.md`. Les documents de conception sont dans `doc/` (lire `doc/README.md` pour l'ordre de lecture). Ce plan dit **dans quel ordre on construit, ce que chaque étape livre, et comment on sait qu'elle est finie**.
 
