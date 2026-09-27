@@ -1,17 +1,19 @@
-# Les supers des Gris — le matériel sans dossier (conception)
+# Les supers des Gris — les armes sans dossier (conception)
 
 *10 septembre 2026. Deux fichiers, et rien d'autre : ce document et `doc/refonte/supers-vilains.json`. Le moteur, le contenu et `git` ne sont pas touchés. Les trois familles nouvelles (`frappe_zone`, `rayon_laser`, `iem`) sont câblées en parallèle par un ingénieur moteur ; un agent transcrira ensuite les huit supers dans `content/commandants-capacites.json`. Les huit pouvoirs normaux et les huit passifs de la révision 4 ne bougent pas : ce lot ne touche que le **super** de chaque Gris. Tout ce qui est inventé ici est marqué **[Proposition]**.*
 
-## 1. Le principe : un super, c'est une pièce sans dossier
+*Révision du 26 septembre 2026, avec la validation du lore v2 (`BRIEF.md`, « Le lore v2 validé ») : le registre devient celui de la guerre. La « pièce sans dossier » devient l'**arme sans dossier**, le marquage et ses plastrons disparaissent (`01-bible.md` §5.3), et la proposition du §6, point 7, qui faisait sauter l'équipage d'un appareil abattu pour « boire quelque chose », tombe : un appareil abattu emporte son équipage. Les chiffres de ce document sont ceux de la conception du 10 septembre ; après les crans de mesure, `supers-vilains.json` et `content/commandants-capacites.json` font foi (Grêle à 7 barres, Rasante à 6 barres et 5 PV sur l'unité la plus chère, Réserves fermées à 7).*
 
-La bible dit deux choses qu'aucun kit n'avait encore lues ensemble. D'abord, §3.2 : le matériel a quatre statuts, et le badge orange de l'**essai** est ce que les Gris portent en permanence — « une pièce à l'essai est une pièce surveillée ; une pièce non homologuée est une pièce qui triche. La Cinquième Manche joue précisément sur la confusion entre les deux. » Ensuite, §5.3 : sur un terrain homologué, tout marque et rien ne blesse, parce que **le matériel est contrôlé** ; le matériel non homologué est donc « le scandale absolu de ce monde — et une arme narrative pour la Cinquième Manche ».
+## 1. Le principe : un super, c'est une arme sans dossier
 
-Un pouvoir national, c'est un commandant qui joue mieux. Un super de Gris, c'est **une pièce qui n'a pas le droit d'être là**. C'est la règle d'écriture de tout ce qui suit, et elle a quatre conséquences :
+La bible dit deux choses qu'aucun kit n'avait encore lues ensemble. D'abord, §3.2 : les armes ont quatre statuts, et le badge orange du **prototype sous surveillance** est ce que les Gris portent en permanence — « un prototype sous surveillance est une arme surveillée ; une arme sans dossier n'est pas une tricherie, c'est un crime du Pacte. La Cinquième Manche joue précisément sur la confusion entre les deux. » Ensuite, §2.3 et §5.3 : toute arme sur un front porte un dossier (article 2 du Pacte) ; une arme qui n'en a pas est le crime absolu de ce monde, et un aveu — elle a été volée quelque part.
 
-1. **Chaque super a une pièce.** Un nom, une silhouette dans le vocabulaire de `pieces.ts` (bases, corps, modules — jamais un modèle de plus), et ce qui lui manque : le badge orange, la plaque de série, le dossier à la Commission. Ce n'est pas une unité du catalogue : c'est ce que l'arbitre voit, et ce que Vantour commente.
-2. **Chaque déclenchement est un protêt.** Nera Aldouin tient les archives des protêts, « le seul endroit où les anomalies du tournoi sont écrites noir sur blanc » (§3.3). La première fois qu'un super part, une ligne s'ajoute au dossier. Le joueur ne gagne rien sur le moment ; il gagne une **pièce à charge**, et c'est le §4 qui dit quand elle sert.
-3. **Atlas ne surprend jamais un commandant.** L'IEM de station a une position, un rayon et un calendrier publics (`technologies.ts`, annonce la veille). Un super de Gris est plus rare et plus brutal, mais il obéit à la même loi : la jauge adverse est visible, la pièce est visible, et le Bulletin dit, un tour avant, ce qui peut partir. Ce que le joueur ne connaît pas, c'est **la case** — c'est là que se joue son contre-jeu.
-4. **Ils touchent les siens aussi.** `frappe_zone` et `iem` frappent les deux camps dans le rayon. C'est mécaniquement ce qui rend la case choisissable (on vise où l'on n'a personne) et narrativement ce qui dit que ce matériel n'a pas de dossier : une pièce homologuée sait qui elle marque.
+Un pouvoir national, c'est un commandant qui joue mieux. Un super de Gris, c'est **une arme qui n'a pas le droit d'être là**. C'est la règle d'écriture de tout ce qui suit, et elle a quatre conséquences :
+
+1. **Chaque super a une arme** (le champ `piece` du JSON). Un nom, une silhouette dans le vocabulaire de `pieces.ts` (bases, corps, modules — jamais un modèle de plus), et ce qui lui manque : le badge orange, la plaque de série, le dossier à la Commission. Ce n'est pas une unité du catalogue : c'est ce que l'arbitre voit, et ce que Vantour commente.
+2. **Chaque déclenchement est un protêt.** Nera Aldouin tient les archives des protêts, « le seul endroit où les violations du Pacte sont écrites noir sur blanc » (§3.3). La première fois qu'un super part, une ligne s'ajoute au dossier. Le joueur ne gagne rien sur le moment ; il gagne une **pièce à charge**, et c'est le §4 qui dit quand elle sert.
+3. **Atlas ne surprend jamais un commandant.** L'IEM de station a une position, un rayon et un calendrier publics (`technologies.ts`, annonce la veille). Un super de Gris est plus rare et plus brutal, mais il obéit à la même loi : la jauge adverse est visible, l'arme est visible, et le Bulletin d'engagement dit, un tour avant, ce qui peut partir. Ce que le joueur ne connaît pas, c'est **la case** — c'est là que se joue son contre-jeu.
+4. **Ils touchent les siens aussi.** `frappe_zone` et `iem` frappent les deux camps dans le rayon. C'est mécaniquement ce qui rend la case choisissable (on vise où l'on n'a personne) et narrativement ce qui dit que cette arme n'a pas de dossier : une arme déclarée sait qui elle frappe.
 
 Le vocabulaire est celui du §7.2 de `doc/04` plus les trois familles réservées aux Gris, avec leurs bornes : `frappe_zone` (`pv` 1–3, `rayon` 0–2, case choisie), `rayon_laser` (`pv` 1–5, `nombre` 1–3, `choix` `plus_cheres | plus_avancees`, pas de case), `iem` (`rayon` 1–3, `abattre`, case choisie ; seule famille du jeu qui met hors jeu directement). Super 5 à 9 barres, `abattre` au moins 8, un seul effet « choisi sur une case » par super.
 
@@ -33,7 +35,7 @@ Ordre des premières apparitions en adversaire principal (`opus1-tutoriels-final
   ] }
 ```
 
-**La pièce.** **[Proposition]** *La Batterie sans plaque* — un bloc à chenilles de taille 3 portant un rail de douze tubes gris, sans badge orange, sans plaque de série, sans dossier : Ost la présente comme « une pièce à l'essai dont le dossier est en cours » depuis deux Rondes (`chenilles · bloc · [lance_roquettes, antenne] · 3`).
+**L'arme.** **[Proposition]** *La Batterie sans plaque* — un bloc à chenilles de taille 3 portant un rail de douze tubes gris, sans badge orange, sans plaque de série, sans dossier : Ost la présente comme « un prototype dont le dossier est en cours » depuis huit ans (`chenilles · bloc · [lance_roquettes, antenne] · 3`).
 
 **Télégraphie.** La jauge d'Ost est visible sous son portrait ; quand elle atteint 8 barres à la fin de son tour, le Bulletin écrit « Batterie sans plaque en charge — Grêle possible au prochain tour » et le portrait prend le badge orange **barré**. Survoler la ligne montre le gabarit du rayon 2 (13 cases) sur la carte. La case reste son choix.
 
@@ -60,7 +62,7 @@ Ordre des premières apparitions en adversaire principal (`opus1-tutoriels-final
 
 Ce que le chiffre veut dire : un chasseur à 5 par tour passe à 10, un furtif à 8 passe à 16 ; un appareil qui était à deux tours de la panne sèche n'en a plus qu'un, et la panne sèche met hors jeu. Ce n'est pas un dégât, c'est une échéance.
 
-**La pièce.** **[Proposition]** *Le Coupleur* — une armoire grise vissée sur le poste de distribution du terrain, absente du relevé de la Cartographie, qui permet au Consortium de compter le courant des deux camps et de le couper d'un côté (`roues · bloc · [antenne, panneaux_solaires] · 2`, posée au pied de son QG comme un décor : on la voit dès la première journée, et elle ne se capture pas).
+**L'arme.** **[Proposition]** *Le Coupleur* — une armoire grise vissée sur le poste de distribution du terrain, absente du relevé de la Cartographie, qui permet au Consortium de compter le courant des deux camps et de le couper d'un côté (`roues · bloc · [antenne, panneaux_solaires] · 2`, posée au pied de son QG comme un décor : on la voit dès la première journée, et elle ne se capture pas).
 
 **Télégraphie.** Le Coupleur est sur la carte dès J1, et le briefing le nomme. Jauge visible ; à 8 barres, Bulletin : « Coupleur armé — Délestage possible au prochain tour ». Une fois déclenché, les deux colonnes suivantes du Bulletin portent l'icône du délestage, comme une météo imposée.
 
@@ -83,7 +85,7 @@ Ce que le chiffre veut dire : un chasseur à 5 par tour passe à 10, un furtif �
   ] }
 ```
 
-**La pièce.** **[Proposition]** *Le Rapace* — une aile delta sans dérive portant sous le ventre un marqueur à faisceau, dont le badge orange a été **peint puis gratté** : c'est pire qu'un badge absent, c'est une pièce qui a eu un dossier et l'a quitté (`ailes · plateau · [antenne] · 3`). Le faisceau marque sans charge, hors de portée de riposte : le règlement n'a pas de mot pour ça, donc pas d'article.
+**L'arme.** **[Proposition]** *Le Rapace* — une aile delta sans dérive portant sous le ventre un laser de désignation et de frappe, dont le badge orange a été **peint puis gratté** : c'est pire qu'un badge absent, c'est une arme qui a eu un dossier et l'a quitté (`ailes · plateau · [antenne] · 3`). Le laser frappe hors de portée de riposte : le règlement du Pacte n'a pas de mot pour ça, donc pas d'article.
 
 **Télégraphie.** Le choix est déterministe et sans case : quand la jauge de Maël est pleine, **les deux unités qu'il frapperait maintenant portent un chevron orange** au-dessus de leur étiquette (« désignées »), recalculé à chaque mouvement du joueur. Le Bulletin l'écrit. C'est la télégraphie la plus honnête de la table : on sait exactement qui, on ne sait pas quand.
 
@@ -91,11 +93,11 @@ Ce que le chiffre veut dire : un chasseur à 5 par tour passe à 10, un furtif �
 
 **Réplique.** « Rasante sur la tête de colonne. On ne se pose pas, on n'a pas le temps. »
 
-**Vantour.** « Un passage, deux marques, aucune charge tirée — on vient de voir une pièce faire quelque chose que le règlement ne sait pas nommer. »
+**Vantour.** « Un passage, deux coups au but, pas un tir qu'on ait vu partir — on vient de voir une arme faire quelque chose que le règlement ne sait pas nommer. »
 
 ### 2.4 Lise Varen — **« Zone rouge »** · 7 barres · `opus1_finale_04`
 
-**[Proposition]** Remplace « Passages verrouillés » (chenal de 3 cases + pièces ×1,2). Pourquoi : un super qui pose du terrain est laissé au joueur par l'IA (`doc/04` §7.2, « l'IA ne sait pas choisir des cases ») — Lise ne le déclenchait donc jamais. Et l'organisatrice de parcours qui « concevait des zones de sécurité pour les marqueurs lourds » a un super tout écrit : la zone où l'on n'entre pas.
+**[Proposition]** Remplace « Passages verrouillés » (chenal de 3 cases + pièces ×1,2). Pourquoi : un super qui pose du terrain est laissé au joueur par l'IA (`doc/04` §7.2, « l'IA ne sait pas choisir des cases ») — Lise ne le déclenchait donc jamais. Et l'organisatrice de parcours qui « concevait des zones de sécurité pour les pièces d'artillerie lourdes » a un super tout écrit : la zone où l'on n'entre pas.
 
 **Phrase.** Elle choisit une case ; les 5 cases de la croix perdent 3 PV — les siennes comprises —, et ses pièces de portée tirent 1 case plus loin jusqu'à son prochain tour.
 
@@ -109,9 +111,9 @@ Ce que le chiffre veut dire : un chasseur à 5 par tour passe à 10, un furtif �
 
 Contre Ost, c'est l'inverse : étroit et profond (5 cases, −3) là où Grêle est large et plate (13 cases, −2). Le joueur apprend deux gestes différents : on se disperse contre Ost, on ne s'empile pas contre Lise.
 
-**La pièce.** **[Proposition]** *Le Repère* — un marqueur lourd sur roues dont le tube fait deux fois la longueur du catalogue, calé sur les béquilles de sécurité qu'elle dessinait autrefois pour les autres ; badge orange en règle sur le châssis, **aucun** sur le tube, qui n'est pas celui du dossier (`roues · bloc · [canon_long, lance_roquettes] · 3`).
+**L'arme.** **[Proposition]** *Le Repère* — une pièce d'artillerie lourde sur roues dont le tube fait deux fois la longueur du catalogue, calé sur les béquilles de sécurité qu'elle dessinait autrefois pour les autres ; badge orange en règle sur le châssis, **aucun** sur le tube, qui n'est pas celui du dossier (`roues · bloc · [canon_long, lance_roquettes] · 3`).
 
-**Télégraphie.** Jauge visible ; à 7 barres, Bulletin « Repère calé — Zone rouge possible au prochain tour », gabarit de la croix au survol. Pendant son tour, quand la pièce tire, la case visée est balisée en rouge **avant** la chute (le geste de partition `chiffre` existe ; un geste `baliser` est à écrire dans la peau 3D).
+**Télégraphie.** Jauge visible ; à 7 barres, Bulletin « Repère calé — Zone rouge possible au prochain tour », gabarit de la croix au survol. Pendant son tour, quand le Repère tire, la case visée est balisée en rouge **avant** la chute (le geste de partition `chiffre` existe ; un geste `baliser` est à écrire dans la peau 3D).
 
 **Contre-jeu.** Jamais trois unités en croix ; approcher par le flanc, vite, avec de la reconnaissance — sa faiblesse tient toujours : ce qu'elle déplace ne tire pas.
 
@@ -133,7 +135,7 @@ Contre Ost, c'est l'inverse : étroit et profond (5 cases, −3) là où Grêle 
   ] }
 ```
 
-**La pièce.** **[Proposition]** *Le Convoi sans manifeste* — trois transports dont la cale porte des batteries de relève qui ne figurent sur aucun manifeste d'entrée de terrain : une chenille à sec repart au plein en un tour, ce qu'aucune pièce homologuée ne fait sur place (`roues · bloc · [grue] · 2`). C'est le matériel le plus discret des huit, et le plus grave : ce sont **les batteries d'Aube**, celles dont Maël a manqué avant la Ronde XIV, sorties d'un dépôt méridien sans bordereau.
+**L'arme.** **[Proposition]** *Le Convoi sans manifeste* — trois transports dont la cale porte des batteries de relève qui ne figurent sur aucun manifeste d'entrée de front : une chenille à sec repart au plein en un tour, ce qu'aucune arme déclarée ne fait sur place (`roues · bloc · [grue] · 2`). C'est la plus discrète des huit, et la plus grave : ce sont **les batteries d'Aube**, celles dont Maël a manqué avant l'an 14, sorties d'un dépôt méridien sans bordereau.
 
 **Pourquoi F10 et pas F15.** F10 exige que la fermeture stratégique soit « annoncée par le trafic des réserves et une route visible », sans « bonus de dégâts caché ». La relève ne fait aucun dégât, elle se voit venir (des transports sur une route), et elle est précisément ce qui ferme la nappe : le joueur comprend qu'il ne pourra pas tenir parce que la deuxième ligne rejoue. Le super sert la défaite écrite sans la truquer. La jauge d'Edran à son entrée en J3 est **à trancher** (§6).
 
@@ -159,7 +161,7 @@ Contre Ost, c'est l'inverse : étroit et profond (5 cases, −3) là où Grêle 
   ] }
 ```
 
-**La pièce.** **[Proposition]** *La Borne de scellés* — une borne d'émission grise montée sur un camion léger, peinte aux couleurs d'un scellé de concession, avec le numéro de mandat au pochoir à la place du badge orange : un numéro de mandat n'est pas un numéro d'homologation, et Nera est la première à le dire (`roues · bloc · [antenne, radar] · 2`).
+**L'arme.** **[Proposition]** *La Borne de scellés* — une borne d'émission grise montée sur un camion léger, peinte aux couleurs d'un scellé de concession, avec le numéro de mandat au pochoir à la place du badge orange : un numéro de mandat n'est pas un numéro d'homologation, et Nera est la première à le dire (`roues · bloc · [antenne, radar] · 2`).
 
 **Télégraphie.** Jauge visible ; à 7 barres, Bulletin « Borne en charge — Mise sous scellés possible au prochain tour », gabarit du rayon 2 au survol. Une unité scellée porte l'icône de l'IEM de station déjà prévue (`iemJusquaJournee`, icône `radar`).
 
@@ -171,7 +173,7 @@ Contre Ost, c'est l'inverse : étroit et profond (5 cases, −3) là où Grêle 
 
 ### 2.7 Basile Kelm — **« Réserves fermées »** · 8 barres · `opus1_finale_02` — **conservé**
 
-**Conservé tel quel** (−1 PV à toute l'armée adverse, vision −2 pendant une journée). Pourquoi : il a été mesuré le 10 septembre au soir (40/60 · 70/30 contre Ariane, 55/45 · 35/65 contre Tomas), sa faiblesse a été corrigée pour lui, et « −n PV à toute l'armée » est la signature déclarée des Gris — il faut qu'un Gris la porte, et avec Ost passé à la grêle, c'est lui seul. Ce que ce lot lui **ajoute**, c'est la pièce et le dossier : un super qui n'en avait pas.
+**Conservé tel quel** (−1 PV à toute l'armée adverse, vision −2 pendant une journée). Pourquoi : il a été mesuré le 10 septembre au soir (40/60 · 70/30 contre Ariane, 55/45 · 35/65 contre Tomas), sa faiblesse a été corrigée pour lui, et « −n PV à toute l'armée » est la signature déclarée des Gris — il faut qu'un Gris la porte, et avec Ost passé à la grêle, c'est lui seul. Ce que ce lot lui **ajoute**, c'est l'arme et le dossier : un super qui n'en avait pas.
 
 **Phrase.** Toutes les unités adverses perdent 1 PV, et pendant une journée elles voient 2 cases de moins.
 
@@ -183,7 +185,7 @@ Contre Ost, c'est l'inverse : étroit et profond (5 cases, −3) là où Grêle 
   ] }
 ```
 
-**La pièce.** **[Proposition]** *Le Verrou* — le coffret de commande des dépôts du terrain, gris, sans badge, qui parle à **tous les plastrons de marquage** présents sur la carte et leur fait enregistrer une marque à distance. C'est la pièce la plus scandaleuse des huit et la moins spectaculaire : elle ne tire rien, elle détourne le système de marquage d'Atlas lui-même — l'article 2 du Pacte, pris à l'envers (`chenilles · bloc · [radar, antenne] · 3`, posé au QG).
+**L'arme.** **[Proposition]** *Le Verrou* — le coffret de commande des dépôts du front, gris, sans badge, branché sur **la balise du Registre** que porte chaque arme déclarée (`01-bible.md` §5.3, « le marquage » des vétérans) : il ferme d'un coup les réserves de tout ce qui la porte en face, et chaque unité adverse perd un peu de sa charge et de ses écrans. C'est l'arme la plus scandaleuse des huit et la moins spectaculaire : elle ne tire rien, elle détourne l'arbitrage d'Atlas lui-même — l'article 2 du Pacte, pris à l'envers, du savoir volé au Bureau et non à un atelier (`chenilles · bloc · [radar, antenne] · 3`, posé au QG).
 
 **Télégraphie.** Jauge visible ; à 8 barres, Bulletin « Verrou armé — Réserves fermées possible au prochain tour ». Après déclenchement, la colonne suivante du Bulletin porte l'icône de vision réduite, comme une brume.
 
@@ -191,7 +193,7 @@ Contre Ost, c'est l'inverse : étroit et profond (5 cases, −3) là où Grêle 
 
 **Réplique.** « Les réserves sont fermées. Ce qui est dehors y reste, et vos écrans s'éteignent avec. » *(inchangée)*
 
-**Vantour.** « Tous les plastrons du terrain viennent de sonner en même temps — ce n'est pas une pièce, ça, c'est une clé, et elle n'est pas censée exister. »
+**Vantour.** « Toutes les balises du front viennent de sonner en même temps — ce n'est pas une arme, ça, c'est une clé, et elle n'est pas censée exister. »
 
 ### 2.8 Relais Zéro — **« Retour à zéro »** · 9 barres · `opus1_finale_06`
 
@@ -206,15 +208,15 @@ Contre Ost, c'est l'inverse : étroit et profond (5 cases, −3) là où Grêle 
   ] }
 ```
 
-**La pièce.** **[Proposition]** *Le Relais sans numéro* — un Veilleur dont l'antenne fait trois fois la taille du catalogue et dont le champ « identifiant de compétition » est vide sur la fiche d'entrée de terrain : la Commission homologue des pièces, pas des silences (`rotor · capsule · [antenne, antenne] · 2`). C'est l'impulsion de station de `technologies.ts` sortie de sa station.
+**L'arme.** **[Proposition]** *Le Relais sans numéro* — un Veilleur dont l'antenne fait trois fois la taille du catalogue et dont le champ « identifiant » est vide sur la fiche d'entrée de front : la Commission déclare des armes, pas des silences (`rotor · capsule · [antenne, antenne] · 2`). C'est l'impulsion de station de `technologies.ts` sortie de sa station.
 
-**Télégraphie.** Jauge visible ; à 9 barres, Bulletin « Relais sans numéro en charge — Retour à zéro possible au prochain tour », gabarit du rayon 2 au survol, et **chaque appareil et drone du joueur porte un point d'exclamation orange** : ce qui peut tomber le sait. Le super est le plus cher de la table : neuf barres, il part une fois par match.
+**Télégraphie.** Jauge visible ; à 9 barres, Bulletin « Relais sans numéro en charge — Retour à zéro possible au prochain tour », gabarit du rayon 2 au survol, et **chaque appareil et drone du joueur porte un point d'exclamation orange** : ce qui peut tomber le sait. Le super est le plus cher de la table : neuf barres, il part une fois par engagement.
 
 **Contre-jeu.** Espacer les appareils de plus de deux cases les uns des autres — il ne peut abattre qu'une zone de treize cases —, poser ce qui peut se poser, et mettre ses Veilleurs hors jeu un par un : ses drones sont fragiles, c'était déjà sa faiblesse.
 
 **Réplique.** « Retour à zéro sur le secteur. Ce qui volait est au sol ; ce qui roulait attend. »
 
-**Vantour.** « Un appareil qui tombe sur un terrain homologué — je n'ai pas de mot pour ça, et j'ai commenté quatre Rondes. »
+**Vantour.** « Un appareil qui tombe, et son équipage avec, sous une arme que personne n'a déclarée — je n'ai pas de mot pour ça, et je couvre cette guerre depuis le premier jour. »
 
 ## 3. Le tableau de variété
 
@@ -231,42 +233,42 @@ Contre Ost, c'est l'inverse : étroit et profond (5 cases, −3) là où Grêle 
 
 Huit familles ou couples distincts, aucun doublon ; deux `frappe_zone` de formes opposées ; deux `iem` dont un seul abat ; un seul −1 à tout le monde ; un seul super sans aucun dégât (Sélène) ; un seul qui met hors jeu (Relais Zéro). Coût moyen 7,75 barres contre 7,25 pour la révision 4 : les Gris paient plus cher pour faire plus mal, ce qui est le contrat de la signature.
 
-## 4. Le dossier : comment huit pièces entrent dans la trame
+## 4. Le dossier : comment huit armes entrent dans la trame
 
 Rien de ce qui suit n'ajoute une mission ni un choix aux 172 de `opus1-tutoriels-final.md`. Le dossier s'accroche aux choix **existants**, et il ne fait qu'une chose : donner à ces choix une pièce à charge de plus.
 
 ### 4.1 Les trois organes, et ce que chacun peut dire
 
-- **Nera Aldouin, le protêt.** À chaque **première** utilisation d'un super de Gris contre le joueur, le carnet reçoit une entrée de protêt **[Proposition]** : « Protêt n° … — matériel sans dossier, pièce observée : *la Batterie sans plaque*, finale 1, journée 6. Au règlement, article 2 du Pacte : le matériel est contrôlé. Réponse du Bureau : *pièce à l'essai, dossier en cours*. Classé sans suite. » Huit protêts possibles, huit fois « classé sans suite », et c'est la répétition qui fait le dossier. Nera ne dit jamais « je crois » ; elle numérote.
-- **Wren Osoko, l'homologation.** Responsable de l'homologation, elle « documente sans inventer une panne ou un accident » (`personnages.json`). Son rôle dans ce lot est **négatif** et c'est sa force : elle atteste qu'**aucune** des huit pièces n'a de dossier — ni à l'essai, ni homologuée, ni retirée. Le Bureau répond que le dépôt d'essai contient forcément des pièces sans badge (bible §3.4, acte II) : c'est la confusion exacte que la faction exploite, et le joueur la voit s'exercer sous ses yeux.
-- **Célestin Vantour, la voix.** Il commente chaque super en direct (une phrase par pièce, §2), et il ne comprend pas tout de suite ce qu'il commente : il cherche le badge, il n'a « pas de mot ». Sa mémoire encyclopédique est ce qui rend la répétition audible — « c'est la troisième fois que je ne trouve pas de plaque » — et son histoire (`celestin_vantour_3`) dit qu'il peut publier une preuve qui contredit ses propres commentaires. Les huit phrases de Vantour sont cette preuve en devenir.
+- **Nera Aldouin, le protêt.** À chaque **première** utilisation d'un super de Gris contre le joueur, le carnet reçoit une entrée de protêt **[Proposition]** : « Protêt n° … — arme sans dossier observée : *la Batterie sans plaque*, finale 1, journée 6. Au règlement, article 2 du Pacte : toute arme sur un front porte un dossier. Réponse du Bureau : *prototype à l'essai, dossier en cours*. Classé sans suite. » Huit protêts possibles, huit fois « classé sans suite », et c'est la répétition qui fait le dossier. Nera ne dit jamais « je crois » ; elle numérote.
+- **Wren Osoko, l'homologation.** Responsable de l'homologation, elle « documente sans inventer une panne ou un accident » (`personnages.json`). Son rôle dans ce lot est **négatif** et c'est sa force : elle atteste qu'**aucune** des huit armes n'a de dossier — ni à l'essai, ni déclarée, ni retirée. Le Bureau répond que le dépôt d'essai contient forcément des prototypes sans badge (bible §3.4, acte II) : c'est la confusion exacte que la faction exploite, et le joueur la voit s'exercer sous ses yeux.
+- **Célestin Vantour, la voix.** Il commente chaque super en direct (une phrase par arme, §2), et il ne comprend pas tout de suite ce qu'il commente : il cherche le badge, il n'a « pas de mot ». Sa mémoire encyclopédique est ce qui rend la répétition audible — « c'est la troisième fois que je ne trouve pas de plaque » — et son histoire (`celestin_vantour_3`) dit qu'il peut publier une preuve qui contredit ses propres commentaires. Les huit phrases de Vantour sont cette preuve en devenir.
 
 ### 4.2 Ce que le badge orange qui n'est pas là raconte
 
-Les Gris sont « la seule équipe à porter le badge orange en permanence » (§3.4). Les huit pièces jouent sur trois absences différentes, et l'ordre est voulu :
+Les Gris sont « la seule équipe à porter le badge orange en permanence » (§3.4). Les huit armes jouent sur trois absences différentes, et l'ordre est voulu :
 
-1. **Pas de plaque** (Ost, Lise, Basile, Relais Zéro) : la pièce n'a jamais eu de dossier. Le mensonge du Bureau — « à l'essai » — est le plus facile à démonter, c'est donc le premier qu'on voit (F01).
-2. **Pas de manifeste** (Edran, Sélène) : la pièce n'est pas une arme, c'est de la logistique et du courant — les batteries d'Aube, le coupleur du réseau. C'est ce que la Cinquième Manche veut vraiment, et on ne le voit qu'à la saison 5 (F08, F10).
-3. **Un badge gratté** (Maël) et **un mandat à la place du badge** (Yuna) : la pièce a eu un statut, ou en porte un faux. C'est là que la confusion essai / non homologué devient une **intention**, et non une négligence.
+1. **Pas de plaque** (Ost, Lise, Basile, Relais Zéro) : l'arme n'a jamais eu de dossier. Le mensonge du Bureau — « à l'essai » — est le plus facile à démonter, c'est donc le premier qu'on voit (F01).
+2. **Pas de manifeste** (Edran, Sélène) : l'arme ne tire pas, c'est de la logistique et du courant — les batteries d'Aube, le coupleur du réseau. C'est ce que la Cinquième Manche veut vraiment, et on ne le voit qu'à la saison 5 (F08, F10).
+3. **Un badge gratté** (Maël) et **un mandat à la place du badge** (Yuna) : l'arme a eu un statut, ou en porte un faux. C'est là que la confusion essai / non homologué devient une **intention**, et non une négligence.
 
 ### 4.3 Ce qu'un joueur peut prouver, et à quelle finale
 
-| Pièce | Vue pour la première fois | Le choix existant qui la transforme en preuve | Où la preuve sert |
+| Arme | Vue pour la première fois | Le choix existant qui la transforme en preuve | Où la preuve sert |
 |---|---|---|---|
 | Batterie sans plaque (Ost) | F01 | aucun : c'est le protêt fondateur de Nera, posé quoi qu'il arrive | F17 (Ost « perd la maîtrise du terrain ») et F18 |
 | Verrou (Basile) | F02 | F02 « maintenir les relais publics » : les relais enregistrent le signal du Verrou | F07 (révélation : « les réserves servent à imposer la tutelle ») |
 | Rapace (Maël) | F03 | F03 « échanger les journaux de vol » : le badge gratté est dans les journaux | F09 (« position d'un renfort révélée ») — la conséquence existante s'enrichit du Rapace |
-| Repère (Lise) | F04 | F04 « garantir l'accès public demandé par Lise » : elle laisse voir le tube | F13 (médiation) — elle ne change pas de camp sur un compliment, mais sur une pièce |
+| Repère (Lise) | F04 | F04 « garantir l'accès public demandé par Lise » : elle laisse voir le tube | F13 (médiation) — elle ne change pas de camp sur un compliment, mais sur une preuve |
 | Borne de scellés (Yuna) | F05 | F05 « offrir une audition à la délégation battue » : la délégation a vu le numéro de mandat | F11 (renfort conditionnel) et F18 (mandats révoqués) |
 | Relais sans numéro (Relais Zéro) | F06 | F06 « publier les relais compromis » | F16 (« brouillage adverse réduit ») — la conséquence existante |
 | Coupleur (Sélène) | F08 | F08 « rendre l'offre publique » : le Coupleur est dans l'offre | F17–F18 (« confiance des alliés », épilogue calculé sur les preuves) |
 | Convoi sans manifeste (Edran) | F10 | F09 « sécuriser les archives logistiques » (le manifeste absent y est) puis F15 « accepter sa déposition » | F13 (preuve à la médiation), F18 (épilogue) |
 
-Aucune ligne ne change une conséquence écrite : elle lui donne un objet. **[Proposition]** Un seul compteur de monde, `monde.atlas.dossier_pieces` (0–8), incrémenté par les protêts de Nera — c'est une décision humaine au sens de la bible §8.6, jamais une routine ; il se lit à l'épilogue comme une preuve parmi les autres, et **aucune fin n'en dépend seule** (doctrine « jamais indispensable »).
+Aucune ligne ne change une conséquence écrite : elle lui donne un objet. **[Proposition]** Un seul compteur de monde, `monde.atlas.dossier_pieces` (0–8), incrémenté par les protêts de Nera — c'est une décision humaine au sens de la bible §8.6, jamais une routine ; il se lit à l'épilogue comme une preuve parmi les autres, et **aucune fin n'en dépend** : il colore une fin, il ne la conditionne jamais (doctrine « jamais indispensable » ; décision du 26 septembre 2026, `BRIEF.md` « Le lore v2 validé », question 7 ; `08-narration-choix.md` §7). Il n'est pas encore au registre des flags (`01-bible.md` §8).
 
 ### 4.4 Ce que la trame ne fait pas
 
-Aucune scène de super n'expose la fratrie ni la paternité : la réplique de Maël en F03 parle de colonne, celle de Lise de zone, celle d'Edran de relève. Le Convoi porte les batteries d'Aube, pas le nom d'Orven. Vantour ne commente que ce qu'il voit — une pièce —, jamais qui la conduit. Et personne ne meurt d'un super : voir §6.
+Aucune scène de super n'expose la fratrie ni la paternité : la réplique de Maël en F03 parle de colonne, celle de Lise de zone, celle d'Edran de relève. Le Convoi porte les batteries d'Aube, pas le nom d'Orven. Vantour ne commente que ce qu'il voit — une arme —, jamais qui la conduit. Et un super tue : un appareil abattu par le Relais sans numéro emporte son équipage — dit, jamais montré (§6, point 7).
 
 ## 5. Deux relectures
 
@@ -304,7 +306,7 @@ Aucune scène de super n'expose la fratrie ni la paternité : la réplique de Ma
 
 **« Le badge gratté de Maël, c'est le meilleur détail. Mettez-le à l'écran. »** → **Noté pour la peau 3D**, non fait ici : une variante de texture du kit gris avec le badge gratté est un asset, pas une conception de pouvoir.
 
-**« Les répliques, on comprend tout ? »** Les huit champs de texte de chaque super ont été relus contre la table du §5.2 de la bible : aucun « ennemi » ni « armée » ; « munitions » devient « charges » ; « tomber », « abattre » et « perdu » sont libres depuis le 10 septembre pour la fiction, et le règlement dit toujours « hors jeu » à l'écran (§6, dernier point).
+**« Les répliques, on comprend tout ? »** Les huit champs de texte de chaque super ont été relus contre la table du §5.2 de la bible, dans son registre du 10 septembre : aucun « ennemi » ni « armée » — ils se disent depuis le 26 septembre —, « munitions » devient « charges » ; « tomber », « abattre » et « perdu » sont libres pour la fiction, et le Registre dit toujours « hors jeu » à l'écran (§6, point 7).
 
 ## 6. Ce qui reste à trancher
 
@@ -314,9 +316,9 @@ Aucune scène de super n'expose la fratrie ni la paternité : la réplique de Ma
 4. **Sélène et le `carburant` des unités sans consommation par tour.** Le filtre `roues, chenilles, air, mer` couvre ce qui a un moteur ; le ×2 ne fait rien à une unité dont `parTour` vaut 0 (ce qui roule), et tout à ce qui vole ou navigue. C'est voulu — le délestage vide le ciel —, mais la phrase dit « tout ce qui a un moteur » ; si la mesure montre que le sol ne sent rien, resserrer le filtre à `air, mer` et la phrase avec.
 5. **Le neuvième barreau d'Edran** et, plus largement, **la mesure** : les quatre supers sur des familles nouvelles (Ost, Lise, Yuna, Relais Zéro) ne se mesurent qu'une fois l'IA de ciblage câblée. Protocole de `pouvoirs-v4.md` §6, quatre paires (contre Ariane et Tomas, deux ordres), et la règle du soir du 10 septembre : on ne garde pas un 85/15.
 6. **Les gestes de partition.** `baliser` (la case visée en rouge avant la chute), `designer` (le chevron orange de Maël), `sceller` (l'icône sur une unité figée) et `tomber` (un appareil abattu) n'existent pas ; `chiffre`, `encaisser` et `sortir` existent. Le contrat de `partition.ts` « ne fait que s'étendre » : quatre genres à ajouter, aucun à renommer.
-7. **`abattre` et le ton.** Le brief dit « affrontements non sanglants », et la bible §5.3 que l'équipage « va boire quelque chose ». Un appareil abattu par une impulsion non homologuée ne change pas cette règle ; il en montre le prix. **[Proposition de ligne de bible, §5.3]** : *« Sous une impulsion sans dossier, un appareil tombe en panne en vol : l'équipage saute et rentre au dépôt boire quelque chose ; l'appareil, lui, ne revient pas au match suivant. C'est la première fois qu'une pièce de matériel est perdue sur un terrain homologué, et c'est exactement pour cela que c'est un scandale. »* Sur l'écran, le règlement continue de dire **hors jeu** ; « tombe » et « abattu » sont des mots de dialogue et de Vantour, pas du HUD.
-8. **Une page du carnet par protêt**, ou une seule page qui se remplit ? Ce document propose une seule page — « Dossier des pièces sans plaque » — avec huit lignes qui s'écrivent l'une après l'autre, parce que c'est la répétition qui accuse. À trancher avec l'auteur du carnet.
+7. **`abattre` et le ton — tranché le 26 septembre 2026.** La proposition de ligne de bible qui faisait sauter l'équipage d'un appareil abattu est retirée avec la validation du lore v2 : la guerre tue, sans gore, et un appareil abattu par une impulsion sans dossier est perdu **avec son équipage** (`01-bible.md` §5.3). On le dit, on ne le montre pas. Sur l'écran, le Registre continue de dire **hors jeu** ; « tombe » et « abattu » sont des mots de dialogue et de Vantour, pas du HUD.
+8. **Une page du carnet par protêt**, ou une seule page qui se remplit ? Ce document propose une seule page — « Dossier des armes sans plaque » — avec huit lignes qui s'écrivent l'une après l'autre, parce que c'est la répétition qui accuse. À trancher avec l'auteur du carnet.
 
 ## 7. Note pour la transcription
 
-Le JSON joint porte, par super : `cle`, `nom`, `description`, `barres`, `duree`, `effets` (dans le vocabulaire exact des familles), `piece`, `telegraphie`, `contreJeu`, `replique`, `vantour`, `premiereFinale`, plus `remplace` (le super de la révision 4 qu'il remplace, ou `null` pour Basile) et `familles` (annotation, à laisser tomber). Le champ `superPouvoir` de chaque Gris dans `commandants-capacites.json` est à remplacer par `{ nom, barres, duree, description, effets }` ; `replique.super` par `replique` ; `passif`, `pouvoir`, `faiblesse`, `replique.pouvoir` et `contreJeu` de kit ne bougent pas. Les chaînes à ajouter à `content/i18n/interface.fr.json` (annonces du Bulletin, étiquettes des gestes) restent à une seule main, comme le veut le dépôt.
+Le JSON joint porte, par super : `cle`, `nom`, `description`, `barres`, `duree`, `effets` (dans le vocabulaire exact des familles), `piece` (l'arme sans dossier), `telegraphie`, `contreJeu`, `replique`, `vantour`, `premiereFinale`, plus `remplace` (le super de la révision 4 qu'il remplace, ou `null` pour Basile) et `familles` (annotation, à laisser tomber). Le champ `superPouvoir` de chaque Gris dans `commandants-capacites.json` est à remplacer par `{ nom, barres, duree, description, effets }` ; `replique.super` par `replique` ; `passif`, `pouvoir`, `faiblesse`, `replique.pouvoir` et `contreJeu` de kit ne bougent pas. Les chaînes à ajouter à `content/i18n/interface.fr.json` (annonces du Bulletin, étiquettes des gestes) restent à une seule main, comme le veut le dépôt.
