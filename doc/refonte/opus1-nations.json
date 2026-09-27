@@ -111,7 +111,7 @@
       "personnages": [
         "cmd_ariane_belloc"
       ],
-      "statut": "integre_parcours_local_non_simule"
+      "statut": "integre_parcours_local_simule"
     },
     {
       "id": "opus1_fr_04",
