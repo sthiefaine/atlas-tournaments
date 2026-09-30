@@ -1,10 +1,10 @@
 {
   "cle": "qg_de_la_presquile",
-  "version": 9,
+  "version": 10,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-14",
+  "majLe": "2026-09-27",
   "code": "qg_de_la_presquile",
   "nom": "Entraînement 4 · Le QG de la presqu’île",
   "acte": 0,
@@ -72,7 +72,7 @@
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "QG capturé : l’engagement s’arrête. Vous avez donné à votre infanterie le temps de terminer, malgré la marée.",
+      "texte": "QG capturé : l’exercice s’arrête. Vous avez donné à votre infanterie le temps de terminer, malgré la marée.",
       "emotion": "neutre"
     },
     {

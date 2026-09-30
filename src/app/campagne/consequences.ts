@@ -43,11 +43,12 @@ export const CHOIX_FRANCE = {
     { cle: 'retour_sous_audit', titre: 'Accepter son retour, comptes vérifiés', effet: 'Dans Une victoire à partager, une reconnaissance de l’équipe de l’Est rejoint votre camp à J2, par l’ouest. Son arrivée est reportée si les cases proches sont occupées.' },
     { cle: 'fin_du_mandat', titre: 'Exiger d’abord la fin de son mandat', effet: 'Dans Une victoire à partager, votre camp commence avec 1 500 fonds supplémentaires. Les équipages de l’Est attendront.' },
   ],
-  // Sa cible, Le relais de Tomas (`opus1_lu_01`), n'est pas encore jouable : le
-  // choix s'enregistre et se fige dans la graine, l'effet attend la mission.
+  // Sa cible, Le relais de Tomas (`opus1_lu_01`), est jouable depuis le 27
+  // septembre 2026 : les textes disent désormais ce qui arrive, au présent,
+  // sans changer ni le sens ni l'effet annoncés au joueur qui a déjà choisi.
   opus1_fr_12: [
-    { cle: 'verser_reserve', titre: 'Verser une réserve à la coalition', effet: 'Au Luxembourg, dans Le relais de Tomas (mission à venir), une reconnaissance de la coalition rejoindra votre camp à J2.' },
-    { cle: 'preparation_locale', titre: 'Financer la préparation locale', effet: 'Au Luxembourg, dans Le relais de Tomas (mission à venir), votre camp commencera avec 1 500 fonds supplémentaires.' },
+    { cle: 'verser_reserve', titre: 'Verser une réserve à la coalition', effet: 'Au Luxembourg, dans Le relais de Tomas, une reconnaissance de la coalition rejoint votre camp à J2, par l’ouest. Son arrivée est reportée si les cases proches sont occupées.' },
+    { cle: 'preparation_locale', titre: 'Financer la préparation locale', effet: 'Au Luxembourg, dans Le relais de Tomas, votre camp commence avec 1 500 fonds supplémentaires.' },
   ],
 } as const;
 export type ScenarioDecision = keyof typeof CHOIX_AUBE | keyof typeof CHOIX_FRANCE;
@@ -87,11 +88,11 @@ export type Traduire = (cle: string, params?: Record<string, string | number>) =
  * scénarios effectifs.
  */
 const REPLIQUES_BANC = {
-  pacte_du_col_echange: { locuteur: 'cmd_tomas_reiner', emotion: 'neutre', texte: 'Formation terminée : voici votre premier vrai front. Vantour est à l’antenne, Nera Aldouin arbitre, et nous échangeons les bancs pour cette épreuve : vous jouez mes couleurs et mon matériel, Ariane tient le mien. Elle joue pour gagner, c’est la règle.' },
+  pacte_du_col_echange: { locuteur: 'cmd_tomas_reiner', emotion: 'neutre', texte: 'Formation terminée : voici votre première épreuve officielle, toujours à blanc. Vantour est à l’antenne, Nera Aldouin arbitre, et nous échangeons les bancs pour cette épreuve : vous jouez mes couleurs et mon matériel, Ariane tient le mien. Elle joue pour gagner, c’est la règle.' },
   couleurs_transport: { locuteur: 'cmd_ariane_belloc', emotion: 'joie', texte: 'Vous avez déjà joué les couleurs de Tomas au col, commandant. Le bureau d’Atlas vous laisse un transport de plus à la deuxième journée ; je n’ai pas oublié comment vous vous en servez.' },
-  nuit_fonds: { locuteur: 'cmd_tomas_reiner', emotion: 'neutre', texte: 'Vous avez tenu mon banc au détour des batteries. Le bureau d’Atlas a validé mille cinq cents fonds de plus pour la ligne de nuit : ne les gardez pas pour la fin.' },
-  routes_solveig: { locuteur: 'cmd_ariane_belloc', emotion: 'doute', texte: 'Solveig ne l’a pas oublié : vous avez tenu son banc sur la ligne de nuit. Ce soir elle est en face, et elle sait exactement comment vous couvrez un convoi.' },
-  routes_wren: { locuteur: 'cmd_ariane_belloc', emotion: 'neutre', texte: 'Wren a homologué votre relevé de la ligne de nuit, joué sous ses couleurs. Trois délégations d’un côté, Solveig de l’autre : voyez loin avant d’avancer.' },
+  nuit_fonds: { locuteur: 'cmd_tomas_reiner', emotion: 'neutre', texte: 'Vous avez mené mes couleurs au détour des batteries. Le bureau d’Atlas a validé mille cinq cents fonds de plus pour la ligne de nuit : ne les gardez pas pour la fin.' },
+  routes_solveig: { locuteur: 'cmd_ariane_belloc', emotion: 'doute', texte: 'Solveig ne l’a pas oublié : vous avez mené ses couleurs sur la ligne de nuit. Ce soir elle est en face, et elle sait exactement comment vous couvrez un convoi.' },
+  routes_wren: { locuteur: 'cmd_ariane_belloc', emotion: 'neutre', texte: 'Wren a certifié votre relevé de la ligne de nuit, joué sous ses couleurs. Trois camps d’un côté, Solveig de l’autre : voyez loin avant d’avancer.' },
 } as const satisfies Record<string, Dialogue>;
 
 /**
@@ -164,7 +165,7 @@ export function appliquerConsequences(scenario: Scenario, decisions: readonly De
     });
     appliquer('opus1_fr_04', 'garder_reserve', () => {
       crediterDe(1500);
-      ouvrir({locuteur:'cmd_ariane_belloc',emotion:'neutre',texte:'Vous avez gardé la réserve après le match des deux rives. Les 1 500 fonds sont disponibles malgré le gel du crédit. Choisissez à quoi ils serviront.'});
+      ouvrir({locuteur:'cmd_ariane_belloc',emotion:'neutre',texte:'Vous avez gardé la réserve après la bataille des deux rives. Les 1 500 fonds sont disponibles malgré le gel du crédit. Choisissez à quoi ils serviront.'});
       rappels.push('Votre réserve de 1 500 fonds est disponible ; aucun renfort de reconnaissance ne vient par ce choix.');
     });
   }
@@ -196,6 +197,23 @@ export function appliquerConsequences(scenario: Scenario, decisions: readonly De
       crediterDe(1500);
       ouvrir({ locuteur: 'cmd_ariane_belloc', emotion: 'neutre', texte: 'L’équipe de l’Est a rompu son mandat avec Méridien. Sa caisse nous verse 1 500 fonds ; ses équipages attendront la fin de la vérification.' });
       rappels.push('La caisse de l’équipe de l’Est vous verse 1 500 fonds ; ses équipages ne viennent pas par ce choix.');
+    });
+  }
+  // --- L'ouverture du Luxembourg (27 septembre 2026) : le choix de FR12, là où
+  // sa fiche l'annonçait. La réplique est de Tomas — seul commandant de la
+  // fiche, et celui dont le joueur tient la colonne ici ; il « mémorise toutes
+  // les promesses faites en route ». La reconnaissance entre par l'ouest, à
+  // côté du dépôt où arrivent les batteries.
+  if (scenario.code === 'opus1_lu_01') {
+    appliquer('opus1_fr_12', 'verser_reserve', () => {
+      renfort(2, 'recon', 0, 10);
+      ouvrir({ locuteur: 'cmd_tomas_reiner', emotion: 'joie', texte: 'Vous aviez versé la réserve française à la coalition. Je l’ai noté. Aujourd’hui, **la coalition vous rend la monnaie** : une reconnaissance nous rejoint à J2 par l’ouest, sous vos ordres.' });
+      rappels.push('La coalition, à qui vous avez versé la réserve, envoie une reconnaissance à votre camp à J2, par l’ouest.');
+    });
+    appliquer('opus1_fr_12', 'preparation_locale', () => {
+      crediterDe(1500);
+      ouvrir({ locuteur: 'cmd_tomas_reiner', emotion: 'neutre', texte: 'Vous aviez gardé la réserve pour armer le front suivant. Le voici : **1 500 fonds de plus** au départ. Je l’ai noté : compter ce qu’on promet, c’est mon métier.' });
+      rappels.push('Vos 1 500 fonds de la préparation locale sont disponibles ; la coalition n’envoie pas de reconnaissance par ce choix.');
     });
   }
   if (scenario.code === 'aube_convoi_secondaire') appliquer('aube_batteries_2v1', 'mutualiser_reserves', () => {

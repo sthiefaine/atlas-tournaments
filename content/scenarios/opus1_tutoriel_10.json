@@ -1,11 +1,11 @@
 {
   "cle": "opus1_tutoriel_10",
   "code": "opus1_tutoriel_10",
-  "version": 6,
+  "version": 7,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-12",
+  "majLe": "2026-09-27",
   "nom": "Entraînement 10 · La première promesse",
   "acte": 0,
   "paysCode": "fr",
@@ -76,7 +76,7 @@
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Après l’exercice, nous aurons **2 000 fonds à affecter** : préparer votre passage au col ou les garder pour notre prochain match sous mes couleurs. Gagnons d’abord ; nous en parlerons après.",
+      "texte": "Après l’exercice, nous aurons **2 000 fonds à affecter** : préparer votre passage au col ou les garder pour le front d’essai où vous prendrez mes couleurs. Gagnons d’abord ; nous en parlerons après.",
       "emotion": "neutre"
     }
   ],
@@ -88,7 +88,7 @@
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "**Maintenance partagée** : les garder pour le match où vous commanderez mon groupe. J’apprécierais de préparer ce départ ensemble.",
+      "texte": "**Maintenance partagée** : les garder pour le front d’essai où vous commanderez mon groupe. J’apprécierais de préparer ce départ ensemble.",
       "emotion": "neutre"
     },
     {
@@ -103,7 +103,7 @@
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Nous connaissons les deux aides proposées. Cela ne nous oblige pas à leur faire confiance sur tout. **Choisissez selon le prochain match que vous voulez préparer.**",
+      "texte": "Nous connaissons les deux aides proposées. Cela ne nous oblige pas à leur faire confiance sur tout. **Choisissez selon la prochaine épreuve que vous voulez préparer.**",
       "emotion": "neutre"
     },
     {

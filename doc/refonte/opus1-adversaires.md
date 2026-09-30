@@ -2,9 +2,11 @@
 
 Bible éditoriale de production. Ce fichier décrit huit adversaires ; il ne les ajoute pas au catalogue moteur. Les clés existantes de Sélène et Ost sont conservées. Les autres biographies alliées restent valides.
 
+*Révision du 26 septembre 2026, avec la validation du lore v2 (`BRIEF.md`, « Le lore v2 validé ») : les repères se comptent en années de guerre (« an 14 »), les mots de l'ancien tournoi quittent les biographies, et chaque Gris porte au super une **arme sans dossier** (`supers-vilains.md`). Les faits, les liens et les secrets ne bougent pas ; `content/personnages.json` reste la source des biographies publiées.*
+
 ## Canon et calendrier
 
-24 nations demeurent dans le monde, dont12 au premier plan. La Cinquième Manche est un réseau sans nation propre, porté sur le terrain par les Gris. Sélène Veyr le dirige ; Ost en reste le visage public. Les commandants nationaux qui passent provisoirement dans son alliance ne deviennent pas un neuvième adversaire exclusif.
+24 nations demeurent dans le monde, dont 12 au premier plan. La Cinquième Manche est un réseau sans nation propre, qui ne rend rien de ce qu'elle prend ; les Gris sont son armée sur le terrain. Sélène Veyr le dirige ; Ost en reste le visage public. Les commandants nationaux qui passent provisoirement dans son alliance ne deviennent pas un neuvième adversaire exclusif.
 
 **Correction utilisateur prioritaire : la fratrie reste cachée.** Maël Orven et Lise Varen portent des noms publics différents ; leurs liens ne sont connus que des auteurs. Ni dialogues, ni biographies publiques, ni résumés de mission ne doivent présenter Lise comme sa sœur. Aucun moment de révélation n’est décidé : par défaut elle reste inconnue pendant tout l’opus. Edran Sorel est vu tôt comme prestataire sans lien familial affiché.
 
@@ -44,7 +46,7 @@ An 11 : coordination utile des réserves. An 12 : contrats liant solaire, stocka
 
 **Fonction auteur :** Le frère. **Style :** Mobilité aérienne.
 
-Avant XIV : pilote de reconnaissance de circuits sportifs, il doit abandonner un programme indépendant faute d’accès aux batteries. XIV : accepte les moyens méridiens et transforme cette dépendance en loyauté choisie.
+Avant l’an 14 : pilote de reconnaissance, il doit abandonner un programme indépendant faute d’accès aux batteries. An 14 : accepte les moyens méridiens et transforme cette dépendance en loyauté choisie.
 
 **Motivation :** Ne plus dépendre de décisions prises loin du terrain.
 
@@ -58,7 +60,7 @@ Avant XIV : pilote de reconnaissance de circuits sportifs, il doit abandonner un
 
 **Fonction auteur :** La sœur. **Style :** Tirs indirects et contrôle des passages.
 
-Avant XIV : organisatrice de parcours, elle conçoit des zones de sécurité pour les marqueurs lourds. Elle rejoint les Gris après avoir négocié une clause protégeant ses techniciens, puis découvre que celle-ci dépend d’un fournisseur unique. Coulisses auteur : sœur de Maël, sous un nom professionnel distinct.
+Avant l’an 14 : ancienne organisatrice de parcours, elle conçoit des zones de sécurité pour les pièces d’artillerie lourdes. Elle rejoint les Gris après avoir négocié une clause protégeant ses techniciens, puis découvre que celle-ci dépend d’un fournisseur unique. Coulisses auteur : sœur de Maël, sous un nom professionnel distinct.
 
 **Motivation :** Protéger son équipe sans accepter que cette protection achète son silence.
 
@@ -72,7 +74,7 @@ Avant XIV : organisatrice de parcours, elle conçoit des zones de sécurité pou
 
 **Fonction auteur :** Le père sous son nom professionnel. **Style :** Relève et logistique.
 
-Avant XII : responsable de coopérative de maintenance, puis rupture familiale liée à un contrat de dépendance. XII–XIV : travaille sous son nom professionnel Sorel. Apparaît tôt comme prestataire de réserve. Les liens familiaux appartiennent aux seules données auteur.
+Avant l’an 12 : responsable de coopérative de maintenance, puis rupture familiale liée à un contrat de dépendance. De l’an 12 à l’an 14 : travaille sous son nom professionnel Sorel. Apparaît tôt comme prestataire de réserve. Les liens familiaux appartiennent aux seules données auteur.
 
 **Motivation :** Sauver son fils d’une nouvelle défaite, quitte à renforcer le réseau qu’il prétend seulement utiliser.
 
@@ -86,7 +88,7 @@ Avant XII : responsable de coopérative de maintenance, puis rupture familiale l
 
 **Fonction auteur :** La négociatrice de terrain. **Style :** Capture et manœuvre terrestre.
 
-XII : assure la médiation entre équipes privées d’accès à une piste. XIII : reçoit un mandat limité de gestion de concessions. XIV : étend ces délégations provisoires au bénéfice du Consortium, tout en se disant intermédiaire neutre.
+An 12 : assure la médiation entre équipes privées d’accès à une piste. An 13 : reçoit un mandat limité de gestion de concessions. An 14 : étend ces délégations provisoires au bénéfice du Consortium, tout en se disant intermédiaire neutre.
 
 **Motivation :** Ne plus être la personne que l’on consulte seulement après la signature.
 
@@ -100,7 +102,7 @@ XII : assure la médiation entre équipes privées d’accès à une piste. XIII
 
 **Fonction auteur :** Le gardien des réserves. **Style :** Défense et couverture radar.
 
-XI : organise la sécurité d’installations de tournoi après une panne sans victimes. XIII : crée des réserves redondantes. XIV : accepte leur contrôle exclusif au nom de la continuité et finit par exclure les équipes qui en ont besoin.
+An 11 : organise la sécurité d’installations d’énergie après une panne sans victimes. An 13 : crée des réserves redondantes. An 14 : accepte leur contrôle exclusif au nom de la continuité et finit par exclure les équipes qui en ont besoin.
 
 **Motivation :** Éviter toute interruption, même au prix d’un système injuste.
 
@@ -114,7 +116,7 @@ XI : organise la sécurité d’installations de tournoi après une panne sans v
 
 **Fonction auteur :** Le commandant entièrement inconnu. **Style :** Information et drones.
 
-Avant XIV : aucune biographie civile vérifiée. XIV : un identifiant de compétition récurrent signe des ordres dont les effets et la responsabilité sont consignés. Les archives attestent une continuité de commandement, sans révéler d’identité civile.
+Avant l’an 14 : aucune biographie civile vérifiée. An 14 : un même indicatif, revenant d’un front à l’autre, signe des ordres dont les effets et la responsabilité sont consignés. Les archives attestent une continuité de commandement, sans révéler d’identité civile.
 
 **Motivation :** Motivation personnelle inconnue ; objectif observable : maintenir l’avantage informationnel de la Cinquième Manche.
 
@@ -148,7 +150,7 @@ Les entrées `premiereApparitionEditoriale` sont des repères de coordination, p
 
 Le drone marin, les stations IEM et la météo de simulation enrichissent les missions existantes sans changer les **172 missions ni les huit adversaires**. Les fichiers JSON identifient précisément les fiches concernées. Ces ajouts restent des intentions éditoriales tant que leurs cartes et paramètres ne sont pas validés.
 
-La supériorité adverse vient du matériel et du placement. Les stations ont une position, une portée et un calendrier consultables avant engagement. Le joueur peut capturer la source, rejoindre un refuge ou se replier sur une route moins pénalisée. Le mode difficile renforce la défense et les patrouilles, jamais une portée ou activation cachée. Les nations adaptent leurs paysages et leurs stratégies sans immunités nationales implicites. Le forçage météo concerne le terrain de tournoi, pas le climat de populations réelles.
+La supériorité adverse vient du matériel et du placement. Les stations ont une position, une portée et un calendrier consultables avant engagement. Le joueur peut capturer la source, rejoindre un refuge ou se replier sur une route moins pénalisée. Le mode difficile renforce la défense et les patrouilles, jamais une portée ou activation cachée. Les nations adaptent leurs paysages et leurs stratégies sans immunités nationales implicites. Le forçage météo concerne un front, jamais le climat d’une région ni de populations réelles.
 
 Aucune scène publique nouvelle ne révèle la fratrie ; les doctrines techniques ne fournissent aucun indice familial imposé. La révélation père-fils reste au pivot prévu, sans révéler le lien avec Lise.
 

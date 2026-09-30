@@ -1,14 +1,14 @@
 {
   "cle": "fil_seconde_ilva",
-  "version": 1,
+  "version": 2,
   "statut": "valide",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-05",
+  "majLe": "2026-09-27",
   "code": "fil_seconde_ilva",
   "titre": "La Seconde",
-  "accroche": "Deux finales mondiales, deux défaites, puis elle a rendu son drapeau. Elle entraîne aujourd'hui les arbitres.",
-  "arc": "Ilva Marecq a disputé deux finales mondiales et n'en a gagné aucune. Après la seconde, elle est entrée à Atlas et a rendu son drapeau, ce qui se fait mais ne se raconte pas. Elle forme désormais les juges de terrain, et elle accepte de préparer le joueur à la finale — à sa manière, en le faisant perdre quatre fois de suite dans quatre conditions différentes. Le fil est une école : chaque défaite est une leçon nommée, et la cinquième rencontre se joue sans qu'elle dise un mot. Ce qu'elle veut n'est pas une revanche par procuration ; c'est que quelqu'un finisse par gagner en jouant comme elle jouait.",
+  "accroche": "Deux batailles décisives, deux défaites, puis elle a rendu son drapeau. Elle forme aujourd'hui les juges de front.",
+  "arc": "Ilva Marecq a commandé deux batailles décisives et n'en a gagné aucune. Après la seconde, elle est entrée à Atlas et a rendu son drapeau, ce qui se fait mais ne se raconte pas. Elle forme désormais les juges de front, et elle accepte de préparer le joueur aux finales — à sa manière, sur un terrain d'exercice et à charges à blanc, en le faisant perdre quatre fois de suite dans quatre conditions différentes. Le fil est une école : chaque défaite est une leçon nommée, et le cinquième engagement se livre sans qu'elle dise un mot. Ce qu'elle veut n'est pas une revanche par procuration ; c'est que quelqu'un finisse par gagner en commandant comme elle commandait.",
   "acteMin": 2,
   "missions": [
     { "ordre": 1, "scenarioCle": "scen_fil_seconde_01", "gabarit": "capture_qg", "dureeVisee": 30, "titre": "Première leçon : le tempo" },

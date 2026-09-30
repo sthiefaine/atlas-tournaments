@@ -19,7 +19,7 @@ import { debloquerCommandants, enregistrerRencontres, enregistrerVictoire, enreg
 import { appliquerConsequences, cleDecision, decisionsDeGraine, graineAube, libelleDecision, optionsDecision, ETAPES_AUBE, estMissionAube, CLES_QUETES_AUBE, queteOuverte, VERSION_CANON_AUBE } from '../../campagne/consequences';
 import { PROPRES_COULEURS, bancChoisi, cleSourceBanc, graineAvecCommandant, optionsBanc } from '../../campagne/bancs';
 import { grilleCommandants } from '../../campagne/roster';
-import { appliquerCommandantDeGraine } from '../../campagne/commandants-jouables';
+import { appliquerCommandantDeGraine, bancsProposes, paysDesCamps } from '../../campagne/commandants-jouables';
 import { chargerCommandantsJouables } from '@/content/commandants-jouables';
 import { compteRoster, ouvertures } from '@/render/roster-commandants';
 import ChoixCommandant from './choix-commandant';
@@ -168,11 +168,11 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   const essaiAube = estMissionAube(scenario.code);
   const mission = useMemo(() => campagne.missions[index] ?? (essaiAube ? {
     entrainement: false,
-    objectif: scenario.code === 'aube_releve_1v3' ? 'Survivre quarante journées complètes jusqu’à la relève.' : 'Prendre tous les QG adverses ou mettre toute l’équipe adverse hors jeu.',
+    objectif: t(locale, scenario.code === 'aube_releve_1v3' ? 'aube.mission_objectif_releve' : 'aube.mission_objectif'),
     conclusion: scenario.dialogueVictoire.map((d) => d.texte).join(' '),
-    tutoriel: ['Les armées alliées jouent leur propre tour. Consultez leurs unités sans leur donner d’ordres.'],
-    conseil: 'Ces essais Aube sont indépendants des entraînements. Les décisions de fin de match modifient uniquement les nouvelles parties annoncées.',
-  } : undefined), [index, essaiAube, scenario]);
+    tutoriel: [t(locale, 'aube.mission_tutoriel')],
+    conseil: t(locale, 'aube.mission_conseil'),
+  } : undefined), [index, essaiAube, scenario, locale]);
   const codeSuivant = essaiAube ? (ETAPES_AUBE.some((cle) => cle === scenario.code) ? ETAPES_AUBE[ETAPES_AUBE.findIndex((cle) => cle === scenario.code) + 1] : undefined) : campagne.missions[index + 1]?.scenarioCle;
   const [mode, setMode] = useState<Mode>('normal');
   const [queteVerrouillee, setQueteVerrouillee] = useState(false);
@@ -195,6 +195,11 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   // Le choix est gardé ici en plus de la progression : si le stockage refuse,
   // la partie se joue quand même sous les couleurs choisies.
   const bancs = useMemo(() => (scenario.bancs?.length ? optionsBanc(scenario.code) : []), [scenario.bancs, scenario.code]);
+  // Ce qu'on **montre** au choix : les mêmes bancs, moins les généraux disparus
+  // (`disparitions.ts`). La logique de la page lit `bancs`, qui ne dépend pas de la
+  // progression : la lire ici relancerait le montage à chaque progression relue.
+  // Jouer ses propres couleurs reste toujours proposé.
+  const bancsAffiches = useMemo(() => (scenario.bancs?.length ? bancsProposes(scenario.code, progression) : []), [scenario.bancs, scenario.code, progression]);
   // Le catalogue du scénario, pour nommer les unités qu'un filtre de pouvoir cite au briefing.
   const catalogueKit = useMemo(() => chargerCatalogue(scenario.catalogueVersion), [scenario.catalogueVersion]);
   // Le commandant du scénario : le défaut de tout choix de banc, et le premier
@@ -346,13 +351,11 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
           const commun = {
             audio,
             biome: carte.biome,
-            // La nation d'en face ne suit **pas** celle du joueur : elle le
-            // faisait — `incarnation ? 'fr' : 'lu'` — parce que l'incarnation
-            // était rare et toujours luxembourgeoise ; avec le vestiaire elle
-            // devient l'ordinaire, et l'adversaire changeait de couleurs chaque
-            // fois qu'on changeait d'entraîneur. Il garde le Luxembourg, sauf
-            // quand le joueur le lui prend.
-            paysParCamp: { 0: paysJoueur, 1: paysJoueur === 'lu' ? 'fr' : 'lu' },
+            // La nation d'en face ne suit **pas** celle du joueur : chaque camp
+            // prend celle de son propre commandant (`paysDesCamps`), dans le
+            // scénario **effectif** — un banc prêté a pu échanger deux généraux.
+            // Changer d'entraîneur ne repeint donc jamais l'adversaire.
+            paysParCamp: paysDesCamps(joue, paysJoueur),
             animationsReduites: preferences.animationsReduites,
             // Une peau qui cesse de pouvoir dessiner une fois montée — un
             // contexte WebGL perdu qu'on ne sait pas rebâtir — tombe sur le même
@@ -563,7 +566,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
         </div>
         <p className="atlas-aide">{t(locale, 'banc.note')}</p>
         <ul className="atlas-bancs">
-          {bancs.map((option) => {
+          {bancsAffiches.map((option) => {
             const general = option.cle === PROPRES_COULEURS ? commandantDefaut : option.cle;
             const kit = chargerCommandantJeu(general, revisionCommandants(scenario));
             const profil = lireProfilCommandant(general);

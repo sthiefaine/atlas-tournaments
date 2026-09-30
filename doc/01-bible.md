@@ -4,6 +4,10 @@
 
 Les enjeux se découvrent par les personnes et les situations : objectifs concrets, dialogues courts, Gris puis Ost avant les structures cachées. Chaque arc national transforme une relation au lieu de répéter la collecte de preuves. Les choix montrent qui reçoit l’aide et qui attend ; leurs effets sont rappelés dans la suite. La famille adverse reste secrète jusqu’au jalon prévu. Ces règles de présentation remplacent les conseils historiques incompatibles ; elles ne modifient ni les flags ni les règles de combat. Voir [Une aventure claire, des choix qui comptent](refonte/aventure-lisible.md). Le plan éditorial reste distinct des missions jouables.
 
+## Le lore v2 est canon — 26 septembre 2026
+
+Le propriétaire a validé le lore v2 (`BRIEF.md`, « Le lore v2 validé » ; `refonte/lore-v2.md` et `.json`). Cette bible le porte désormais : le monde est en guerre depuis quatorze ans pour l'énergie et l'avance technique, Atlas arbitre cette guerre par le Pacte du Terrain, la Cinquième Manche veut Aube pour elle seule, et les Gris sont son armée. Les sections 1 à 5 sont réécrites dans ce registre ; la numérotation n'a pas bougé, parce que d'autres documents la citent. La charte de sensibilité (§7.3) et les clés de flags (§8) sont inchangées. Le détail des 200 épisodes, des 20 technologies et du sort des 37 personnages est dans `refonte/lore-v2.json`, validé avec cette bible.
+
 *Atlas Tournament — document canon. Source de vérité supérieure : `BRIEF.md`, qui prime en cas de contradiction. Tout ce qui dépasse le brief est signalé par **[Proposition]**. Ce document est écrit pour être lu par des humains **et** servi tel quel aux routines IA comme référence canon.*
 
 ---
@@ -12,7 +16,7 @@ Les enjeux se découvrent par les personnes et les situations : objectifs concre
 
 ### 0.1 Pour un humain
 
-Lisez dans l'ordre. Les sections 2 (histoire), 3 (Atlas), 4 (tournoi, dont le climat en §4.5 et le Tableau des délégations en §4.6 et la Dépêche du jour en §4.7) posent le monde ; la section 5 (ton) et la section 7 (sensibilité) sont les règles d'écriture ; la section 6 (archétypes) et la section 8 (flags) sont les boîtes à outils réutilisables.
+Lisez dans l'ordre. Les sections 2 (histoire), 3 (Atlas), 4 (l'engagement, dont le Bulletin et le ciel en §4.5, le Tableau des belligérants en §4.6 et la Dépêche du jour en §4.7) posent le monde ; la section 5 (ton) et la section 7 (sensibilité) sont les règles d'écriture ; la section 6 (archétypes) et la section 8 (flags) sont les boîtes à outils réutilisables.
 
 ### 0.2 Pour une routine
 
@@ -20,72 +24,77 @@ Ce document est votre **référence canon**. Règles dures, dans l'ordre de prio
 
 1. **Vous ne contredisez jamais ce document.** Si votre production a besoin d'un fait qui n'y est pas, vous l'inventez uniquement dans les zones explicitement ouvertes (§ 7.4) et vous le signalez dans votre sortie JSON (`inventions: [...]`), sans jamais le présenter comme canon.
 2. **Vous n'inventez jamais de flag.** Vous n'utilisez que les flags de la section 8, ou un flag construit sur un gabarit de la section 8.1 avec un code pays existant.
-3. **Vous respectez le vocabulaire de la section 5.** Les termes du glossaire et leur contexte font foi ; le vocabulaire tactique fictif autorisé ne doit pas être rejeté comme une référence à un conflit réel.
+3. **Vous respectez le vocabulaire de la section 5.** Les termes du glossaire et leur contexte font foi ; les mots de la guerre fictive — guerre, front, bataille, arme, ennemi, détruire — sont autorisés et ne doivent pas être rejetés comme une référence à un conflit réel.
 4. **Vous respectez la charte de sensibilité de la section 7.** Ce n'est pas une préférence de style : c'est un critère de rejet automatique.
 5. **En cas de doute, vous ne produisez pas.** Une mission signalée en quarantaine coûte moins cher qu'une ligne à retirer après coup.
 6. **Vous n'écrivez pas de valeurs de flags dans un état de partie.** Vous *déclarez* dans votre JSON quels flags une scène lit et quels flags elle écrit ; le moteur applique. **[Proposition]**
+7. **Vous n'écrivez jamais une mort.** Ni un personnage, ni un équipage ne meurt dans ce que vous produisez, et aucune disparition n'est déclarée, suggérée ni prolongée (§5.3). Les morts du jeu sont écrites à la main.
 
 ---
 
 ## 1. Le monde en dix lignes
 
-- Les nations règlent une **guerre stratégique fictive sous forme de tournois** : les Jeux Tactiques attribuent des droits énergétiques, sur une grille, devant un public, sans affrontements sanglants.
-- Chaque pays entretient une **équipe** nationale et un **commandant** qui la mène.
-- Tous les quatre ans, une **Ronde** — le tournoi mondial — fait le tour de la planète. Chaque nation reçoit les autres sur son sol.
-- L'organisation **Atlas** possède le règlement, les arbitres, les cartes et la diffusion. Elle est neutre par construction et le répète beaucoup.
-- Le trophée s'appelle l'**Atlas d'Or**. Il ne se garde pas : on l'emprunte quatre ans.
-- Le joueur est un jeune commandant qui gagne sa sélection nationale, puis fait le tour du monde.
-- Une faction inconnue du joueur, **la Cinquième Manche**, cherche à concentrer les droits solaires, le stockage et la distribution, puis à contrôler le programme de fusion fictif **Aube**.
-- Les choix du joueur décident quels pays suivent qui, le jour où ça éclate.
-- Le ton est sérieux : compétition, fronts, alliances, sièges et conséquences durables ; l’humour des personnages ne nie pas les enjeux.
-- Sur un terrain homologué, personne ne meurt : les unités sont **mises hors jeu**, c'est la règle du monde (§5.3). Dans l'histoire, la mort existe, et **les mots guerre, combat, bataille, mort sont libres** — décision du propriétaire du 10 septembre 2026 : « c'est fictif, c'est un jeu ». Ce qui reste interdit est ce qui touche au monde réel (§7.3), jamais le vocabulaire de la fiction. **Amendement du 9 septembre 2026** : quatre chefs de nations alliées meurent au cours du premier opus, hors de tout terrain, hors de tout matériel de tournoi, sans qu'une personne identifiée en soit l'auteur — l'exception est fermée, écrite à la main, et nommée dans `BRIEF.md` (« Quatre disparitions ») et `doc/refonte/opus1-hors-serie.md` §3 ; aucune routine ne peut jamais en écrire une autre.
+- Le monde est en guerre depuis quatorze ans : **la guerre de l'énergie**. On se bat pour l'énergie — gisements, carburants, solaire, réserves, réseaux — et pour l'avance technique — laboratoires, prototypes, plans, brevets, ingénieurs. Nous sommes en **l'an 14** (§2.5).
+- Le **Pacte du Terrain** n'a pas aboli cette guerre : il l'a bornée. Fronts déclarés, armes déclarées, concessions inscrites au **Registre** de Port-Méridien (§2.3).
+- L'organisation **Atlas** arbitre cette guerre : elle déclare les fronts, contrôle les armes, tient le Registre et les trêves, diffuse le **Bulletin d'engagement**. Elle ne fait pas la guerre ; elle est neutre par construction, et le répète beaucoup.
+- Chaque nation a une **armée** et un **commandant** qui la mène. Les vingt-quatre nations sont des belligérants avec des intérêts ; aucune n'est mauvaise.
+- Une victoire prend **les sites, les richesses, les savoirs et le terrain tant qu'on le tient** — jamais les habitants. Tous les quatre ans, **la réouverture** remet les concessions en jeu.
+- Le joueur est un jeune commandant formé par Ariane Belloc et Tomas Reiner. Il part de France, puis fait le tour des fronts.
+- Une puissance sans nation, **la Cinquième Manche**, refuse le Pacte de l'intérieur, ne rend rien de ce qu'elle prend, et veut **Aube**, le programme de fusion fictif, pour elle seule. Son armée sur le terrain est la **Sélection Méridienne**, les Gris.
+- Les choix du joueur décident quelles nations se battent à ses côtés, ce qu'il sauve d'une défaite, et à qui revient Aube.
+- Le ton est sérieux, dur, sans complaisance : fronts, sièges, alliances et trêves ont un prix. L'humour appartient aux personnages, jamais au narrateur.
+- **La guerre tue, sans gore.** Un appareil abattu emporte son équipage ; ni sang, ni corps, ni violence graphique. Sur le front, le Registre d'Atlas dit **hors jeu** : Atlas compte des pièces, pas des morts (§5.3). Les mots guerre, combat, bataille, mort sont libres dans la fiction ; ce qui reste interdit touche au monde réel (§7.3) et à l'horreur graphique. **Quatre chefs de nations alliées** meurent au cours du premier opus, hors du front — l'exception est fermée, écrite à la main (`BRIEF.md`, « Quatre disparitions » ; `doc/refonte/opus1-hors-serie.md` §3), et aucune routine n'écrit jamais une mort.
 
 ---
 
-## 2. Histoire des Jeux Tactiques
+## 2. Histoire de la guerre bornée
 
 > **Contrainte absolue.** Cette histoire ne comporte **aucune date réelle, aucun événement réel, aucun conflit réel, aucun dirigeant réel, aucun traité réel**. Elle se raconte comme une fable fondatrice, volontairement imprécise sur son avant, et précise sur son après. Une routine qui a besoin d'un repère temporel utilise le calendrier interne (§ 2.5), jamais une année du calendrier réel.
 
 ### 2.1 Les Vieilles Manières
 
-Avant, on réglait les différends « à l'ancienne ». Le monde d'Atlas n'en dit pas plus, et le jeu non plus. On appelle cela **les Vieilles Manières**, toujours au pluriel, toujours sans exemple. Les vieux commandants disent « avant » en baissant la voix ; les jeunes trouvent ça théâtral. Personne ne raconte une bataille, personne ne nomme un vainqueur, personne ne montre une image. C'est un hors-champ permanent : ce qui donne du poids au tournoi, ce n'est pas ce qu'on sait des Vieilles Manières, c'est le soin obsessionnel qu'on met à ne pas y revenir.
+Avant le Pacte, la guerre n'avait pas de bornes. Le monde d'Atlas n'en dit pas plus, et le jeu non plus. On appelle cela **les Vieilles Manières**, toujours au pluriel, toujours sans exemple. Les vieux commandants disent « avant » en baissant la voix ; les jeunes, qui n'ont connu que la guerre bornée, trouvent ça théâtral. Personne ne raconte une bataille d'avant, personne ne nomme un vainqueur, personne ne montre une image. C'est un hors-champ permanent : ce qui donne du poids au Pacte, ce n'est pas ce qu'on sait des Vieilles Manières, c'est le soin obsessionnel qu'on met à ne pas y revenir — même au cœur d'une guerre qui dure depuis quatorze ans. Ce qui les sépare d'aujourd'hui n'est pas la guerre contre la paix : c'est la guerre sans bornes contre la guerre bornée.
 
 **Règle d'écriture :** on peut évoquer les Vieilles Manières comme une gêne, un tabou, une menace abstraite. On ne les illustre jamais, on ne les date jamais, on ne les localise jamais.
 
-**[Proposition] Le seul qui a connu l'avant : Barnab Estève, « le Dernier Arbitre ».** Un très vieux commandant, encore en activité par dérogation permanente du Collège, et la seule personne du jeu dont on sait qu'elle se souvient. Il ne raconte rien. Il **se conduit** : il salue avant et après chaque manche, refuse les objectifs alternatifs, rend lui-même le matériel adverse au dépôt, et coupe court dès qu'un commentateur essaie de le faire parler. Son unique réplique sur le sujet est la limite absolue du monde, et elle est écrite à la main, jamais générée :
+**[Proposition] Le seul qui a connu l'avant : Barnab Estève, « le Dernier Arbitre ».** Un très vieux commandant, encore en activité par dérogation permanente du Collège, et la seule personne du jeu dont on sait qu'elle se souvient. Il ne raconte rien. Il **se conduit** : il salue avant et après chaque engagement, refuse les objectifs alternatifs, rend à la réouverture ce qu'il a pris sans attendre qu'on le lui demande, et coupe court dès qu'un correspondant essaie de le faire parler. Son unique réplique sur le sujet est la limite absolue du monde, et elle est écrite à la main, jamais générée :
 
 > *« On a essayé autrement. Ça ne s'est pas bien passé. »*
 
 C'est tout. Aucune bataille, aucun vainqueur, aucune date, aucun lieu — la règle d'écriture ci-dessus n'a pas d'exception, pas même pour lui. Il est jouable comme **général secret** (`13-campagne.md` §7.2, n° 7), donc **jamais indispensable** : le plus ancien commandant du monde est une option, et c'est exactement ce qu'il faut qu'il soit.
 
-### 2.2 L'idée du terrain
+### 2.2 L'idée du front borné
 
-Le basculement, dans la légende officielle d'Atlas, ne vient pas des puissants mais des **cartographes**. Deux voisins se disputaient une vallée ; plutôt que de la parcourir en armes, ils la parcoururent en équipes, avec des règles, un arbitre et des jetons de marquage. Celui qui tenait le point haut à la fin de la journée obtenait la vallée pour dix ans, à charge de rejouer ensuite. Les deux camps rentrèrent entiers, ce qui n'était pas l'usage, et l'histoire se répandit parce qu'elle se racontait bien.
+Le basculement, dans la légende officielle d'Atlas, ne vient pas des puissants mais des **cartographes**. Deux voisins se disputaient une vallée et son eau. Plutôt que d'y porter la guerre partout, ils la bornèrent : un front tracé sur la carte, des armes montrées la veille, un arbitre venu d'ailleurs, et au soir de la dernière journée la vallée à celui qui tenait le point haut — pour dix ans, à charge de la remettre en jeu ensuite. On s'y battit pour de bon, et tout le monde ne rentra pas ; mais les villages derrière la ligne ne furent pas touchés, et leurs habitants étaient encore chez eux à la fin. L'histoire se répandit parce qu'elle se racontait bien.
 
-Le principe qui en reste tient en une phrase, gravée sur chaque terrain homologué :
+Le principe qui en reste tient en deux phrases, gravées sur la borne de chaque front homologué **[Proposition]** :
 
-> **« Le sol se gagne à la journée, et se rend au coup de sifflet. »**
+> **« Le sol se prend à la journée. Les gens ne se prennent pas. »**
 
 ### 2.3 Le Pacte du Terrain
 
-Les nations qui adoptèrent la méthode signèrent le **Pacte du Terrain** dans un port neutre, **Port-Méridien**, une île sans population permanente qui n'appartient à personne et sert depuis de siège à Atlas. **[Proposition : Port-Méridien et son statut sont une invention de cette bible.]**
+Les nations qui adoptèrent la méthode signèrent le **Pacte du Terrain** dans un port neutre, **Port-Méridien**, une île sans population permanente qui n'appartient à personne et sert depuis de siège à Atlas et au Registre. **[Proposition : Port-Méridien et son statut sont une invention de cette bible.]**
 
 Le Pacte tient en quatre articles, connus de tous les commandants :
 
-1. **Le terrain est prêté.** Aucun match ne transfère une population. Il attribue des droits limités d’exploitation, de stockage et de distribution. Un socle énergétique garanti aux services essentiels reste hors des concessions ; la faction veut abolir cette protection.
-2. **Le matériel est marqué.** Rien de ce qui entre sur un terrain homologué ne peut mettre quelqu'un hors d'état de rejouer (§ 5.3).
-3. **L'arbitrage est extérieur.** Ni l'hôte ni le visiteur n'arbitrent.
-4. **Le refus de jouer se paie plus cher que la défaite.** Un forfait coûte davantage au classement qu'un match perdu, et beaucoup plus à la réputation.
+1. **Ce qu'on prend est ce qu'on exploite.** Une victoire prend les sites, les richesses, les savoirs et le terrain tant qu'on le tient — gisements, centrales, dépôts, laboratoires, brevets, plans, archives. **Jamais les habitants** : c'est l'article premier, et il tient parce que personne n'a intérêt à ce qu'il tombe. Le **nécessaire civil** — le courant des maisons, l'eau, les soins — reste hors des concessions ; la Cinquième Manche veut abolir cette protection.
+2. **Le matériel est déclaré.** Toute arme sur un front porte un dossier — plans, essais, numéro de série. Une arme sans dossier n'est pas une tricherie, c'est un crime du Pacte (§3.2, §5.3).
+3. **L'arbitrage est extérieur.** Ni l'attaquant ni le défenseur n'arbitrent.
+4. **Le refus de se battre se paie plus cher que la défaite.** Un forfait coûte davantage au Registre qu'un front perdu, et beaucoup plus à la réputation.
+
+Le Pacte fixe où l'on se bat (des fronts déclarés), quand (le cycle de quatre ans qui rouvre chaque concession : **la réouverture**), avec quoi (des armes déclarées) et pour quoi (une concession nommée). C'est peu. C'est ce qui sépare ce monde des Vieilles Manières. Entre les vingt-quatre nations, ce qu'une victoire a pris se remet en jeu à la réouverture ; un savoir pris, lui, ne se rend pas — des plans lus restent lus. **La Cinquième Manche ne signe rien et ne rend rien** : apatride, elle garde les sites, les équipes et les laboratoires qu'elle prend (§3.4). Cette asymétrie est le cœur du conflit.
 
 ### 2.4 Naissance d'Atlas
 
-Atlas naît comme un service technique : il fallait quelqu'un pour homologuer les terrains, former les arbitres et tenir les registres. L'organisation grossit avec la Ronde : diffusion, calendrier, logistique de voyage, contrôle du matériel, gestion des sponsors. Aujourd'hui, Atlas est la seule institution que le monde entier reconnaît, ce qui est sa force et son problème : **on lui a confié la paix comme on confie un stade à un gardien.**
+Atlas naît comme un service technique : il fallait quelqu'un pour homologuer les fronts, contrôler les armes et tenir les registres. L'organisation grossit avec les guerres : le Bulletin, le calendrier des fronts et des réouvertures, la logistique des trêves, le contrôle des armes, les sponsors. Aujourd'hui, Atlas est la seule institution que le monde entier reconnaît, ce qui est sa force et son problème : **on lui a confié les bornes de la guerre comme on confie une digue à son gardien** — tant qu'elle tient, personne ne la regarde.
 
 ### 2.5 Le calendrier interne
 
-Le temps se compte en **Rondes** : une Ronde = un cycle de quatre ans = un tour du monde complet du tournoi. On écrit « Ronde VII », « la troisième étape de la Ronde XI ». Le jeu se déroule pendant la **Ronde XIV**. **[Proposition : la numérotation et la Ronde en cours sont une invention de cette bible ; elles fixent l'âge de l'institution à environ cinquante ans, assez pour qu'elle soit solide, assez peu pour que des vétérans se souviennent d'avant.]**
+Le temps se compte en **années de guerre**. On écrit « an 11 », « au printemps de l'an 12 », « l'hiver dernier », « il y a trois ans ». Le jeu se déroule pendant l'**an 14** : la guerre de l'énergie en est à sa quatorzième année (décision du propriétaire du 12 septembre 2026, canon depuis le 26 : « c'est quoi des rondes ? »). Le Pacte et Atlas sont plus anciens qu'elle : ils ont borné les guerres qui l'ont précédée depuis les Vieilles Manières. **[Proposition : l'âge du Pacte n'est pas fixé ; il est assez vieux pour que Barnab Estève soit le dernier à se souvenir d'avant (§2.1).]**
 
-**Règle d'écriture :** jamais « en 2019 », toujours « à la Ronde XI ». Jamais « il y a trente ans », plutôt « il y a sept Rondes ».
+Le cycle de quatre ans où les concessions se remettent en jeu existe toujours — **la réouverture** —, mais il ne date rien.
+
+**Règle d'écriture :** jamais « en 2019 », jamais une année du calendrier réel ; toujours « en l'an 11 », « il y a trois ans ». Le mot « Ronde » ne date plus rien ; il ne survit que comme nom de la mécanique de second parcours, la **Nouvelle Ronde**, jusqu'à décision contraire.
 
 ### 2.6 Ce que l'histoire ne dit jamais
 
@@ -93,9 +102,9 @@ Le temps se compte en **Rondes** : une Ronde = un cycle de quatre ans = un tour 
 |---|---|
 | Nommer un pays réel comme initiateur ou victime des Vieilles Manières | Désigne un coupable réel |
 | Dater le Pacte dans le calendrier réel | Accroche la fiction à l'histoire réelle |
-| Attribuer un conflit historique réel à une délégation ou à une personne réelle | Confond histoire réelle et conflit fictif ; les batailles de tournoi inventées sont permises |
+| Attribuer un conflit historique réel à une délégation ou à une personne réelle | Confond histoire réelle et conflit fictif ; les batailles inventées de la guerre de l'énergie sont permises |
 | Faire d'un pays réel un pays « non signataire » ou « exclu » | Statut politique réel déguisé |
-| Expliquer la paix par une religion, une idéologie, un régime | Hors périmètre absolu |
+| Expliquer la guerre ou le Pacte par une religion, une idéologie, un régime | Hors périmètre absolu |
 
 ---
 
@@ -103,77 +112,81 @@ Le temps se compte en **Rondes** : une Ronde = un cycle de quatre ans = un tour 
 
 ### 3.1 Rôle et principes
 
-Atlas ne joue pas : Atlas rend le jeu possible. Elle **homologue** les terrains, **forme** les arbitres, **tient** les registres et les classements, **organise** le voyage de la Ronde, **contrôle** le matériel et **diffuse** les matchs. Trois principes affichés partout dans ses locaux :
+Atlas ne fait pas la guerre : Atlas l'arbitre. Elle **déclare** les fronts, **contrôle** les armes, **tient** le Registre des concessions et les archives des protêts, **garantit** les trêves, **organise** les réouvertures et **diffuse** le Bulletin d'engagement. Trois principes affichés partout dans ses locaux :
 
 - **Neutralité** : le personnel d'Atlas n'a pas de nation. **[Proposition]** En entrant à Atlas, on rend son drapeau ; on est un **sans-drapeau**. C'est pourquoi les figures d'Atlas portent des noms inventés, sans origine identifiable : c'est un choix de fiction *et* un garde-fou éditorial (aucune faute d'Atlas ne peut être imputée à un pays réel).
-- **Transparence** : chaque match est enregistré, chaque décision d'arbitrage est motivée par écrit.
-- **Continuité** : la Ronde n'est jamais annulée. C'est la fierté d'Atlas, et le levier exact sur lequel appuie la faction dissidente.
+- **Transparence** : chaque engagement est enregistré, chaque décision d'arbitrage est motivée par écrit.
+- **Continuité** : la guerre ne s'interrompt jamais — un front déclaré se livre, une réouverture a lieu à son heure. C'est la fierté d'Atlas, et le levier exact sur lequel appuie la faction dissidente.
+
+Atlas ne lève pas d'armée, sauf une : la **Sélection Méridienne**, sa force d'essai et de garantie des trêves, financée par le Consortium Méridien (§3.4). Que le sponsor d'Atlas ait sa propre armée sous les couleurs de l'arbitre n'a jamais paru étrange à personne, et c'est le premier indice.
 
 ### 3.2 Les organes
 
 | Organe | Rôle | Ce qu'il pèse dans le jeu |
 |---|---|---|
-| **Le Bureau** | Direction générale, calendrier, sponsors, relations avec les fédérations nationales | Donne les autorisations, ferme les portes, fait pression |
-| **Le Collège des arbitres** | Règlement, arbitrage, sanctions, protêts | Source des preuves, des disqualifications, des enquêtes |
-| **La Régie** | Diffusion, commentaire, images officielles, récit public du tournoi | Fabrique la réputation du joueur auprès du public |
-| **L'Intendance** | Voyage, hébergement, logistique de la Ronde | Justifie diégétiquement le carnet de voyage et le choix de destination |
-| **La Cartographie** | Homologation des terrains, relevés, traces persistantes | Justifie diégétiquement l'état persistant des cartes |
-| **La Commission d'homologation** | Contrôle et autorisation du **matériel** : ce qui a le droit d'entrer sur un terrain, et sous quel statut | Justifie diégétiquement l'arrivée de nouvelles unités au catalogue |
+| **Le Bureau** | Direction générale, calendrier des fronts et des réouvertures, sponsors, relations avec les états-majors nationaux | Donne les autorisations, ferme les portes, classe les protêts, fait pression |
+| **Le Collège des arbitres** | Règlement du Pacte, arbitrage des fronts, sanctions, protêts | Source des preuves, des disqualifications, des enquêtes |
+| **La Régie** | Le bureau de presse de guerre : le Bulletin d'engagement, les correspondants, le récit public de la guerre | Fabrique la légende ou la honte du joueur auprès du public |
+| **L'Intendance** | Voyages, cantonnements, logistique des fronts et des trêves ; tient le Tableau des belligérants (§4.6) | Justifie diégétiquement le carnet de voyage et le choix de destination |
+| **La Cartographie** | Homologation des fronts, relevés, traces persistantes | Justifie diégétiquement l'état persistant des cartes |
+| **La Commission d'homologation** | Le contrôle des armes du Pacte : ce qui a le droit d'entrer sur un front, et sous quel statut | Justifie diégétiquement l'arrivée de nouvelles unités au catalogue |
 
-**[Proposition] La Commission d'homologation.** Ce que la Cartographie fait aux terrains, la Commission le fait au matériel. Elle siège à Port-Méridien, à huis clos, et publie quatre fois par Ronde une liste que tout le monde attend : ce qui entre au catalogue, ce qui y reste, ce qui en sort. Son vocabulaire est passé dans la langue courante des commandants, et il correspond exactement aux quatre statuts d'une pièce de matériel :
+Dans la bouche d'un personnage, un organe s'explique par ce qu'il fait la première fois qu'on le nomme — « l'Intendance, ceux qui organisent nos voyages et nos trêves » — ou ne se nomme pas (§5.2).
 
-| Statut | Ce que la Commission en dit | Ce qu'on voit sur le terrain |
+**[Proposition] La Commission d'homologation.** Ce que la Cartographie fait aux fronts, la Commission le fait aux armes : c'est le contrôle des armements du Pacte (article 2). Elle siège à Port-Méridien, à huis clos, et publie quatre fois par an une liste que tout le monde attend : ce qui entre au catalogue, ce qui y reste, ce qui en sort. Son vocabulaire est passé dans la langue courante des commandants, et il correspond exactement aux quatre statuts d'une arme ; les statuts ne changent pas dans le code, et leur sens est « déclaré au Pacte » :
+
+| Statut | Ce que la Commission en dit | Ce qu'on voit sur le front |
 |---|---|---|
-| `canon` | « matériel de fondation » — les dix pièces du règlement d'origine, jamais retirées | Rien de particulier : c'est le matériel que tout le monde connaît |
-| `essai` | **« matériel à l'essai »** — autorisé en exhibition seulement, le temps d'une observation | Un **badge orange** peint sur la coque, visible de loin. Le public le repère avant les commentateurs, et Vantour en fait tout un plat |
-| `homologuee` | « admis au catalogue » — utilisable partout, y compris en Ronde | Le badge disparaît ; la pièce entre dans les fiches d'équipe |
-| `retiree` | **« retiré du catalogue »** — la pièce ne rentre plus sur un terrain homologué | Elle finit en vitrine, ou en pièce de collection dans un dépôt. On en parle au passé |
+| `canon` | « matériel de fondation » — les dix armes du règlement d'origine du Pacte, jamais retirées | Rien de particulier : c'est le matériel que tout le monde connaît |
+| `essai` | **« prototype sous surveillance »** — autorisé sur un front d'essai seulement, le temps d'une observation | Un **badge orange** peint sur la coque, visible de loin. Le public le repère avant les correspondants, et Vantour en fait tout un plat |
+| `homologuee` | « déclaré au Pacte » — utilisable sur tout front | Le badge disparaît ; l'arme entre dans les fiches d'armée |
+| `retiree` | **« retiré du catalogue »** — l'arme ne rentre plus sur un front déclaré | Elle finit en réserve, ou en pièce de collection dans un dépôt. On en parle au passé |
 
-Le catalogue est **plafonné** : la Commission refuse de le laisser grossir indéfiniment, et elle retire volontiers ce qui ne sert pas. Ses décisions se contestent — un protêt d'homologation est une procédure ordinaire, parfois bruyante, et un pays qui voit son matériel retiré la veille d'une étape ne le prend jamais bien (`monde.atlas.homologation_contestee`, §8.4).
+Le catalogue est **plafonné** : la Commission refuse de le laisser grossir indéfiniment, et elle retire volontiers ce qui ne sert pas. Ses décisions se contestent — un protêt d'homologation est une procédure ordinaire, parfois bruyante, et une nation qui voit une arme retirée la veille d'un front ne le prend jamais bien (`monde.atlas.homologation_contestee`, §8.4).
 
-**Ce que la Commission ne change pas :** le scandale absolu de ce monde reste le **matériel non homologué** (§5.3) — celui qui n'a demandé aucun statut, qui n'a pas de badge et n'a jamais eu de dossier. Une pièce à l'essai est une pièce surveillée ; une pièce non homologuée est une pièce qui triche. La Cinquième Manche joue précisément sur la confusion entre les deux.
+**Ce que la Commission ne change pas :** le crime absolu de ce monde reste **l'arme sans dossier** (§5.3) — celle qui n'a demandé aucun statut, qui n'a ni badge, ni plaque de série, ni dossier. Un prototype sous surveillance est une arme surveillée ; une arme sans dossier n'est pas une tricherie, c'est un crime du Pacte, et c'est aussi un aveu : elle a été volée quelque part — des plans pris à un laboratoire, un prototype sorti d'un atelier. La Cinquième Manche joue précisément sur la confusion entre les deux : les Gris portent le badge orange en permanence, et présentent comme des prototypes des armes qui n'ont jamais eu de dossier.
 
 ### 3.3 Les figures
 
 #### Osmin Talvarec — directeur d'Atlas, dit « le Cartographe »
 
-Un homme long, calme, qui parle par cartes. Ancien géomètre entré à Atlas par le service d'homologation, monté jusqu'au Bureau sans jamais avoir été commandant — ce qu'on lui reproche et ce dont il tire une fierté froide. Sa conviction : le tournoi est une machine fragile qui tient parce que personne ne la regarde de trop près, et son devoir est qu'on continue de ne pas la regarder. Il n'est **pas** le méchant ; il est pire, il est prudent. Face à un scandale, son premier réflexe est de protéger la Ronde, pas la vérité, et c'est exactement cette prudence que la faction exploite.
+Un homme long, calme, qui parle par cartes. Ancien géomètre entré à Atlas par le service d'homologation, monté jusqu'au Bureau sans jamais avoir été commandant — ce qu'on lui reproche et ce dont il tire une fierté froide. Sa conviction : le Pacte est une machine fragile qui tient parce que personne ne la regarde de trop près, et son devoir est qu'on continue de ne pas la regarder. Il n'est **pas** le méchant ; il est pire, il est prudent. Face à un scandale, son premier réflexe est de protéger le calendrier des fronts, pas la vérité, et c'est exactement cette prudence que la faction exploite.
 
-- **Ce qu'il veut :** que la Ronde XIV aille à son terme sans incident.
+- **Ce qu'il veut :** que l'an 14 aille à son terme sans que le Pacte se déchire — quitte à ne pas regarder qui le viole.
 - **Ce qu'il craint :** un dossier public qu'il ne pourrait pas classer.
 - **Rapport au joueur :** paternaliste, puis méfiant à mesure que `monde.atlas.soupcon` monte. Il peut devenir un allié tardif si `monde.atlas.credibilite` est haute.
 - **Tic :** il déplie une carte pour éviter de répondre.
 
 #### Nera Aldouin — arbitre en chef, dite « la Ligne Blanche »
 
-Petite, sèche, sifflet en acier hérité de son maître d'arbitrage. Elle a arbitré quatre Rondes et n'a jamais reculé sur une décision. Elle applique le règlement à la lettre, y compris contre les intérêts d'Atlas, ce qui lui vaut d'être indispensable et détestée au Bureau. Elle tient les archives des protêts — le seul endroit où les anomalies du tournoi sont écrites noir sur blanc.
+Petite, sèche, sifflet en acier hérité de son maître d'arbitrage. Entrée au Collège des arbitres en l'an 11, elle n'a jamais reculé sur une décision. Elle applique le règlement du Pacte à la lettre, y compris contre les intérêts d'Atlas, ce qui lui vaut d'être indispensable et détestée au Bureau. Elle tient les archives des protêts — le seul endroit où les violations du Pacte sont écrites noir sur blanc —, et elle en dépose un par arme sans dossier qu'elle voit sur un front : le Bureau les classe « sans suite », et c'est la répétition qui fait le dossier (§4.4).
 
-- **Ce qu'elle veut :** que le règlement soit plus fort que ceux qui l'écrivent.
-- **Ce qu'elle craint :** avoir validé, sans le voir, un match arrangé.
+- **Ce qu'elle veut :** que le règlement soit plus fort que ceux qui l'écrivent — les mêmes règles pour les puissants et pour les petites armées.
+- **Ce qu'elle craint :** avoir validé, sans le voir, le contrat qui a rendu la guerre injuste.
 - **Rapport au joueur :** distante, puis alliée décisive. Elle est la porte d'entrée du dossier contre la Cinquième Manche (`monde.atlas.arbitre_alliee`).
 - **Tic :** elle ne dit jamais « je crois », elle dit « au règlement, article… ».
 
-#### Célestin Vantour — présentateur-commentateur, dit « la Voix »
+#### Célestin Vantour — correspondant de guerre, dit « la Voix »
 
-Le visage d'Atlas. Costume voyant, enthousiasme professionnel, mémoire encyclopédique des matchs. Il commente chaque rencontre de la Ronde et fabrique, phrase après phrase, la légende ou la réputation de ruine de chaque commandant. Il n'est ni corrompu ni naïf : il est en représentation, et il sait très bien qu'un tournoi qui n'a plus rien à raconter est un tournoi qui meurt — ce qui le rend dangereusement réceptif au récit que lui souffle la faction.
+La voix d'Atlas. Costume voyant, enthousiasme professionnel, mémoire encyclopédique des fronts. Il raconte chaque engagement au Bulletin et fabrique, phrase après phrase, la légende ou la honte de chaque commandant — il a fabriqué celle d'Ost. Il n'est ni corrompu ni naïf : il est à l'antenne, et il sait qu'une antenne qui se tait laisse d'autres raconter la guerre à sa place — ce qui le rend dangereusement réceptif au récit que lui souffle la faction.
 
-- **Ce qu'il veut :** la meilleure histoire de la Ronde. Et que ce soit la sienne.
-- **Ce qu'il craint :** l'ennui, et le silence de l'antenne.
-- **Rapport au joueur :** c'est le miroir public. Il commente les choix du joueur, et sa relation (`monde.regie.faveur`) décide si le joueur est raconté comme un champion ou comme une brute.
+- **Ce qu'il veut :** raconter ce qui se passe vraiment — et que ce soit lui qui le raconte.
+- **Ce qu'il craint :** le silence de l'antenne, et découvrir qu'il a raconté la légende d'un homme qui trichait.
+- **Rapport au joueur :** c'est le miroir public. Il commente les choix du joueur, et sa relation (`monde.regie.faveur`) décide si le joueur est raconté comme un héros ou comme une brute.
 - **Tic :** il baptise tout le monde d'un surnom au bout de trois minutes, et ces surnoms restent.
-- **Rôle système :** **[Proposition]** c'est par sa voix que le jeu rappelle au joueur les conséquences de ses choix passés, en début de match. Un narrateur diégétique, gratuit, qui rend les flags audibles.
+- **Rôle système :** **[Proposition]** c'est par sa voix que le jeu rappelle au joueur les conséquences de ses choix passés, avant chaque engagement. Un narrateur diégétique, gratuit, qui rend les flags audibles.
 
 #### **[Proposition]** Le Consortium Méridien
 
-Sponsor principal de la Ronde. Une entité commerciale apatride, sans pays, sans visage : des banderoles, des contrats, des enveloppes. Sert à porter les choix de « sponsor douteux » du brief sans impliquer une entreprise ou un pays réels. Relation suivie par `monde.atlas.sponsor_meridien`.
+Le sponsor d'Atlas. Une entreprise sans pays, sans visage : des contrats, du crédit, des transports, du matériel prêté à conditions. Elle finance la Sélection Méridienne, avance des fonds aux délégations à sec, rachète les ateliers en difficulté — elle se rend indispensable, puis retire à ceux qu'elle aide le choix de leur fournisseur. Elle porte les choix de « sponsor douteux » du brief sans impliquer une entreprise ou un pays réels. Relation suivie par `monde.atlas.sponsor_meridien`.
 
-### 3.3 bis Historique des personnages — canon énergétique du 9 septembre 2026
+### 3.3 bis Historique des personnages — canon énergétique du 9 septembre 2026, registre de guerre du 26 septembre
 
-`content/personnages.json` est la source structurée des biographies, liens, croyances et événements historiques. `acteRevelation` borne le moment de révélation ; la vérité du canon, la croyance d’un personnage et les connaissances du joueur restent distinctes. Les repères sont fictifs. Ariane, Tomas, Nera, Talvarec, Vantour, Ost, Solveig et Wren sont conservés ; Sélène est la dirigeante fixée. Le détail de campagne et la frontière avec l’inspiration scientifique sont dans `17-aube.md`.
+`content/personnages.json` est la source structurée des biographies, liens, croyances et événements historiques. `acteRevelation` borne le moment de révélation ; la vérité du canon, la croyance d’un personnage et les connaissances du joueur restent distinctes. Les repères sont fictifs et se comptent en années de guerre (§2.5). Ariane, Tomas, Nera, Talvarec, Vantour, Ost, Solveig et Wren sont conservés ; Sélène est la dirigeante fixée. Le sort des 37 personnages et leurs secrets auteur sont dans `refonte/lore-v2.json` ; le détail de campagne et la frontière avec l’inspiration scientifique sont dans `17-aube.md`.
 
 ### 3.5 **[Proposition]** Les figures qu'on ne voit pas d'abord — les généraux secrets
 
-Atlas emploie des gens qui ont su jouer, et quelques-uns savent encore. Dix d'entre eux sont **jouables** une fois un `Deblocage` acquis (`13-campagne.md` §7, propriétaire de la liste, des conditions et de leurs styles de pouvoir) : trois figures d'Atlas (Talvarec, Aldouin, Vantour), la présidente de la Commission d'homologation, l'intendante de la Ronde, une juge de terrain sans-drapeau qu'on n'appelle plus que par son dossard, une ancienne finaliste malheureuse entrée à Atlas après sa seconde défaite, la figure visible de la Cinquième Manche, le plus vieux commandant en activité, et un Cinquième sans grade.
+Atlas emploie des gens qui ont su commander, et quelques-uns savent encore. Dix d'entre eux sont **jouables** une fois un `Deblocage` acquis (`13-campagne.md` §7, propriétaire de la liste, des conditions et de leurs styles de pouvoir) : trois figures d'Atlas (Talvarec, Aldouin, Vantour), la présidente de la Commission d'homologation, l'intendante d'Atlas, une juge de front sans-drapeau qu'on n'appelle plus que par son matricule, une ancienne commandante malheureuse entrée à Atlas après sa seconde défaite, la figure visible de la Cinquième Manche, le plus vieux commandant en activité, et un Cinquième sans grade.
 
 Trois règles de lore, qui sont aussi des règles de conception :
 
@@ -181,117 +194,125 @@ Trois règles de lore, qui sont aussi des règles de conception :
 2. **Ils ne changent rien à l'histoire.** Aucune fin, aucun fil obligatoire, aucune destination, aucun autre déblocage ne dépend d'eux. C'est la doctrine **« jamais indispensable »** : un joueur qui n'en débloque aucun voit tout le jeu et obtient toutes les fins.
 3. **Ils sont équilibrés comme les autres.** Même budget de barres, un passif, un pouvoir, un super pouvoir plus cher, et **une faiblesse déclarée et réellement défavorable** (§6). La routine contrôle les simule comme n'importe quel commandant et rejette un général secret trop fort — un secret n'achète aucune indulgence.
 
-Diégétiquement, ils ne descendent pas sur le terrain par caprice : chacun a un motif écrit, et il faut le lui donner. C'est ce que le système de déblocage encode.
+Diégétiquement, ils ne descendent pas sur le front par caprice : chacun a un motif écrit, et il faut le lui donner. C'est ce que le système de déblocage encode.
 
 ### 3.4 La faction dissidente : **la Cinquième Manche**
 
-**Nom.** Un match de Jeux Tactiques se dispute en quatre manches. La faction tire son nom de l'idée qu'il en manque une : celle qui se jouerait **hors du terrain**, et qui seule dirait qui gagne vraiment. Ses membres se disent « les Cinquièmes ». Leur signe : quatre traits et un cinquième barré, tracés à la craie sur un mur de vestiaire.
+**Nom.** Au règlement du Pacte, un engagement se dispute en quatre manches — une expression, aujourd'hui, plus qu'un découpage. La faction tire son nom de celle qui manque : celle qui se jouerait **hors du front**, et qui seule dirait qui gagne vraiment. Ses membres se disent « les Cinquièmes ». Leur signe : quatre traits et un cinquième barré, tracés à la craie sur un mur de cantonnement.
 
-**Mobile.** La Cinquième Manche veut transformer les concessions temporaires en dépendance permanente. Elle contrôle progressivement l’exploitation solaire, les réserves et les interconnexions. La fusion ne doit pas permettre de lui échapper : elle vise les accès, les contrats et les données de coopération du programme fictif Aube. Elle ne contrôle ni le Soleil ni une énergie infinie. Son projet menace le socle de services garanti par le Pacte.
+**Mobile.** La Cinquième Manche est la puissance qui refuse le Pacte de l'intérieur et fait la guerre hors du front. Sans pays, elle ne signe rien et ne rend rien : les sites, les équipes et les laboratoires qu'elle prend, elle les garde — c'est la seule asymétrie du monde, et c'est ce qui finit par liguer les nations contre elle. Elle rafle chaque technologie nouvelle avant qu'elle soit déclarée. Son but dans cet opus est **Aube**, le programme de fusion fictif, la seule technologie capable de rendre inutile, à terme, tout ce que la guerre dispute : qui tient Aube tient le siècle. Elle le veut pour elle seule, sous tutelle irrévocable, et avec lui la fin du nécessaire civil garanti par le Pacte. Aube ne produit encore rien : gagner ne rend pas la fusion disponible, gagner décide à qui elle reviendra. La faction ne contrôle ni le Soleil ni une énergie infinie.
 
 **Où ils se trouvent.** À l'intérieur d'Atlas, à tous les étages — un cadre du Bureau, des arbitres, des techniciens de la Cartographie, un ou deux commandants nationaux vieillissants. Jamais dans un pays : **la Cinquième Manche n'a pas de nationalité, et aucune routine, aucun dialogue, aucun visuel ne peut la rattacher à un pays réel, à une culture réelle, à une région du monde réelle.** C'est une règle dure, pas une préférence.
 
-**Figure visible : Hadran Ost, dit « le Recordman ».** Ancien commandant, détenteur d'un record de matchs remportés d'affilée, cassé par une disqualification qu'il juge injuste, reconverti au service du matériel d'Atlas. Poli, chaleureux, désarmant. Il ne recrute pas en menaçant : il recrute en donnant raison. Sa phrase : *« Tu as gagné. Et alors ? Qu'est-ce que ça a changé ? »*
+**Figure visible : Hadran Ost, dit « le Recordman ».** Ancien commandant, détenteur d'un record de victoires d'affilée, cassé par une disqualification qu'il juge injuste, que le Consortium a mis à la tête de la Sélection Méridienne. Poli, chaleureux, désarmant. Il ne recrute pas en menaçant : il recrute en donnant raison. Sa phrase : *« Tu as gagné. Et alors ? Qu'est-ce que ça a changé ? »*
 
 **Figure cachée.** **Sélène Veyr**, directrice des concessions du Consortium Méridien, dirige la faction. C’est une vérité canon fixe ; le joueur la découvre progressivement. Ost en est le visage. Talvarec a couvert des décisions et porte sa responsabilité, mais il n’est pas un coupable interchangeable. Les routines ne changent jamais la tête de la faction entre deux parcours.
 
-**Méthodes.** Équipes de façade, contrats, manipulation des calendriers et batailles de tournoi coordonnées permettent d’accumuler des concessions. Les sièges et les coalitions ont des effets durables sur les routes et les ressources. La faction ne massacre personne et ne fait pas exploser de ville. Sa menace est un monopole énergétique, pas une simple suspension sportive.
+**Méthodes.** Contrats de dépendance, réserves rendues exclusives, routes sous autorisation, mandats provisoires, crédit aux délégations à sec, rachats d'ateliers, plans et prototypes pris avant d'être déclarés — et une armée : la Sélection Méridienne, ses huit armes sans dossier, ses stations à impulsion et de forçage météo. Les sièges et les coalitions ont des effets durables sur les routes et les ressources. La faction ne frappe pas de ville en jeu : ce qu'elle menace, c'est le nécessaire civil garanti par le Pacte, et cela reste hors champ. Sa menace est un monopole de l'énergie et du savoir.
 
 **Ce que la Cinquième Manche n’est jamais :** une nation, une religion, un groupe ethnique ou une organisation réelle transposée. Ses commandants sont fictifs et sans drapeau.
 
 #### La Sélection Méridienne — les Gris
 
-Atlas aligne officiellement sa propre équipe. Elle existe pour deux raisons que personne ne conteste : les **matchs d'exhibition** — une Dépêche a besoin d'un adversaire quand aucune délégation n'est disponible — et les **essais d'homologation**, où une pièce à l'essai (§3.2) doit être jouée par quelqu'un avant d'entrer au catalogue. Elle est financée par le Consortium Méridien, dont elle porte le nom sur le maillot. Que le sponsor de la Ronde ait son nom sur l'équipe de l'organisation n'a jamais paru étrange à personne, et c'est le premier indice.
+Atlas ne lève pas d'armée, sauf une. La **Sélection Méridienne** est, officiellement, la force d'essai et de garantie des trêves d'Atlas : elle se bat avec les prototypes sous surveillance sur les fronts d'essai — il faut bien que quelqu'un les emploie avant qu'ils soient déclarés —, et elle tient les trêves que le Pacte lui confie, ce qui la met partout (décision du 26 septembre 2026). Dans les faits, c'est l'**armée privée du Consortium Méridien**, qui la finance et dont elle porte le nom. Que le sponsor d'Atlas ait sa propre armée sous les couleurs de l'arbitre n'a jamais paru étrange à personne, et c'est le premier indice.
 
-Ses commandants sont des sans-drapeau (§3.1) ; **Hadran Ost** la dirige. Ses couleurs : le gris, et le **badge orange** du matériel à l'essai, qu'elle est la seule à porter en permanence. Le public l'appelle « les Gris ». Elle n'a ni pays, ni continent, ni climat, ni rival naturel, ni région ; elle n'est jamais une destination. On ne la visite pas, elle vient à vous.
+Ses commandants sont des sans-drapeau (§3.1) ; **Hadran Ost** la commande, et ses autres commandants sont ceux de `refonte/opus1-adversaires.md`. Ses couleurs : le gris, et le **badge orange** du prototype sous surveillance, qu'elle est la seule à porter en permanence. Tout le monde l'appelle « les Gris ». Elle n'a ni pays, ni continent, ni climat, ni rival naturel, ni région ; elle n'est jamais une destination. On ne la visite pas, elle vient à vous.
 
-**Ce qu'elle est dans la trame** (`08-narration-choix.md` §6). À l'acte I, un adversaire anodin : on la croise en exhibition, elle joue proprement, elle perd souvent. À l'acte II, c'est dans **son** dépôt que le matériel non homologué est retrouvé, et le Bureau classe l'affaire en disant qu'un dépôt d'essai contient forcément des pièces sans badge — exactement la confusion entre essai et non-homologué que la faction exploite (§3.2). À l'acte III, elle est **la faction sur le terrain** : l'équipe qui vient disputer la manche « à enjeux réels » à Port-Méridien, avec à ses côtés les nations retirées passées à la faction. C'est la forme sportive que prend une menace institutionnelle : la faction ne lève pas de troupes, elle a une équipe, et cette équipe joue avec des pièces qui trichent.
+**Ce qu'elle est dans la trame** (`08-narration-choix.md` §6). À l'acte I, un adversaire reconnaissable : on la croise sur les fronts d'essai et aux trêves qu'elle garantit, elle se bat proprement, elle perd souvent ; les Gris reçoivent leur surnom après le sixième exercice, Ost son visage au huitième. À l'acte II, c'est dans **son** dépôt que l'on retrouve des armes sans dossier, et le Bureau classe l'affaire en disant qu'un dépôt d'essai contient forcément des prototypes sans badge — exactement la confusion que la faction exploite (§3.2). À l'acte III, elle est **la Cinquième Manche à visage découvert** : l'armée qui prend les accès d'Aube, avec à ses côtés les délégations passées sous contrat méridien, et qui se bat avec des armes que personne n'a déclarées.
 
-**Ce que cela apporte.** La Sélection donne un adversaire à l’acte III même si aucune délégation ne rejoint la faction. La conclusion comporte une vraie bataille de tournoi pour préserver l’accès à Aube et son indépendance. L’équipe reste sans nationalité ; elle réemploie les familles d’unités et la géométrie commune. Ses doctrines et ses commandants la distinguent sans collection de modèles régionaux supplémentaires.
+**Ce que cela apporte.** La Sélection donne un adversaire à l'acte III même si aucune délégation ne rejoint la faction. La conclusion est une vraie bataille, pour les accès et le campus d'Aube. L'armée reste sans nationalité ; elle réemploie les familles d'unités et la géométrie commune, plus trois matériels qui n'appartiennent qu'à elle (le Veilleur, le Bastion et l'Automate méridiens). Ses doctrines et ses commandants la distinguent sans collection de modèles régionaux supplémentaires.
 
-**Dans les données.** Ce n'est pas une `Country` : une fiche pays porte un continent, un climat, un rival naturel et des voisins, et aucun n'a de sens ici. C'est un **code de camp à trois lettres**, `atl` — les nations gardent leur code ISO à deux lettres ; les trois lettres sont réservées aux camps sans drapeau —, un style de camp (`content/styles/atl.json`, gris et orange), des commandants dont Ost, et des scénarios qui lui donnent le catalogue à l'essai puis, à l'acte III, des pièces non homologuées. Le même code sert de **code de terrain à Port-Méridien**, qui n'appartient à aucune nation et n'en avait pas : la finale mondiale est un scénario `paysCode: 'atl'`, et ce qui s'y passe s'écrit sous `pays.atl.*`.
+**Dans les données.** Ce n'est pas une `Country` : une fiche pays porte un continent, un climat, un rival naturel et des voisins, et aucun n'a de sens ici. C'est un **code de camp à trois lettres**, `atl` — les nations gardent leur code ISO à deux lettres ; les trois lettres sont réservées aux camps sans drapeau —, un style de camp (`content/styles/atl.json`, gris et orange), des commandants dont Ost, et des scénarios qui lui donnent les prototypes à l'essai puis, à l'acte III, des armes sans dossier. Le même code sert de **code de terrain à Port-Méridien et au plateau d'Aube qui lui est rattaché**, qui n'appartiennent à aucune nation : les engagements qui s'y livrent — jusqu'au campus d'Aube, à la finale 18 — sont des scénarios `paysCode: 'atl'`, et ce qui s'y passe s'écrit sous `pays.atl.*`.
 
 ---
 
-## 4. Le format du tournoi
+## 4. L'engagement : comment se fait la guerre
 
-### 4.1 La qualification nationale
+### 4.1 L'école du front et les fronts nationaux
 
-Avant la Ronde, chaque nation désigne son commandant. Le joueur y passe : c'est le prologue de sa partie. La sélection prend la forme d'un tour du pays hôte, en **régions**, chaque région apportant une mécanique de terrain propre. La France, premier pays entièrement détaillé, se qualifie sur **18 régions** (13 métropolitaines + Guadeloupe, Martinique, Guyane, La Réunion, Mayotte), la Nouvelle-Calédonie et la Polynésie française pouvant constituer des étapes bonus en tant que collectivités. Le système de régions est générique et se réapplique à tout pays phare.
+Chaque nation forme ses commandants à l'**école du front** : un camp d'instruction où l'on apprend à commander à **charges à blanc**, sous l'arbitrage d'Atlas (§5.3). Le joueur y passe : c'est le prologue de sa partie — dix exercices avec Ariane Belloc et Tomas Reiner —, puis deux épreuves de sortie d'école, le col et les couleurs alliées, à blanc elles aussi. **Le premier engagement réel est « Premier courant » (`opus1_fr_01`)**, et il pèse d'autant plus (décision du 26 septembre 2026).
 
-Les pays qui ne sont pas « phares » ont une qualification résumée en une scène, construite depuis leur fiche.
+Ensuite, la guerre se fait sur les fronts du pays de départ, région par région, chaque région apportant une mécanique de terrain propre. La France, premier pays entièrement détaillé, compte **18 régions** (13 métropolitaines + Guadeloupe, Martinique, Guyane, La Réunion, Mayotte), la Nouvelle-Calédonie et la Polynésie française pouvant constituer des étapes bonus en tant que collectivités ; elles forment un réservoir de fronts et de revisites. Le système de régions est générique et se réapplique à tout pays phare.
 
-### 4.2 Les phases continentales
+Les pays qui ne sont pas « phares » ont une entrée en guerre résumée en une scène, construite depuis leur fiche.
 
-La Ronde propose deux ou trois destinations à chaque étape. Les trois actes suivent les droits du vainqueur, la découverte des concessions croisées et la défense d’Aube ; un acte n’est plus obligé de correspondre à un continent. Les finales régionales et continentales restent des rencontres possibles. Port-Méridien accueille l’enregistrement des résultats et des garanties finales.
+### 4.2 Les saisons et les fronts
 
-Le monde conserve 24 nations, dont 12 au premier plan de production, plus la faction adverse sans nationalité. Ce roster ne fixe pas le nombre de camps d’une rencontre : quatre au maximum. `17-aube.md` précise le parcours cible et les essais disponibles.
+Le voyage propose deux ou trois destinations à chaque étape. Les trois actes suivent les droits du vainqueur, la découverte des concessions croisées et la défense d’Aube ; un acte ne correspond pas à un continent. Le premier opus se déroule en **sept saisons** (`refonte/opus1-fil.md`) : le prologue, trois saisons nationales de quatre nations chacune — France, Luxembourg, Suisse, Pays-Bas ; Maroc, Sénégal, Brésil, Mexique ; Inde, Japon, Australie, Indonésie —, puis trois saisons globales de six finales, des armes de la Cinquième Manche jusqu'au campus d'Aube. **Aube** est sur un plateau neutre rattaché à Port-Méridien, fictif, dans aucune nation réelle (décision du 26 septembre 2026). Port-Méridien tient le Registre et les garanties finales.
 
-### 4.3 Le match
+Le monde conserve 24 nations, dont 12 au premier plan de production, plus la faction sans nationalité. Ce roster ne fixe pas le nombre de camps d'un engagement : quatre au maximum. `17-aube.md` précise le parcours et les essais disponibles.
 
-Un match oppose deux coalitions regroupant jusqu’à quatre camps au total : 1v1, 2v1, 1v2, 1v3, 3v1 ou 2v2. Le règlement traditionnel parle de **quatre manches** ; les missions de campagne déclarent leur propre durée. Une manche est la division *sportive* du match — l'équivalent d'un quart-temps —, pas l'unité de temps du moteur : celle-ci est la **journée** (un tour de chaque camp, `04-gameplay.md` §1). La journée représente un cycle complet des camps actifs. Le découpage traditionnel explique le nom de la Cinquième Manche ; il ne force pas chaque mission à durer un multiple de quatre journées. Conditions de victoire homologuées :
+### 4.3 L'engagement
+
+Un **engagement** est une bataille déclarée au Bulletin, sur un front homologué, pour une concession nommée, comptée en journées. Il oppose deux coalitions regroupant jusqu’à quatre camps au total : 1v1, 2v1, 1v2, 1v3, 3v1 ou 2v2. Le règlement du Pacte parle encore de **quatre manches** : c'est devenu une expression, et l'origine du nom de la faction (§3.4). L'unité de temps du moteur est la **journée** (un tour de chaque camp, `04-gameplay.md` §1) ; une mission ne dure pas forcément un multiple de quatre journées. « Match » et « manche » restent des mots du règlement d'Atlas, plus des mots du joueur. Conditions de victoire déclarées :
 
 | Condition | Description | Usage |
 |---|---|---|
 | **Capture du QG** | Atteindre le seuil moteur de capture des QG adverses requis ; voir `04-gameplay.md` | Victoire par défaut avec la mise hors jeu, sauf objectif exclusif déclaré |
-| **Mise hors jeu de l’équipe** | Toutes les unités des camps adverses requis sont hors jeu | Défaut ou objectif exclusif d’anéantissement, selon le scénario |
-| **Objectif spécial** | Objectif propre au terrain hôte : tenir trois cols, ouvrir une écluse, escorter un convoi de matériel, occuper le point haut au coup de sifflet | Signature mécanique du pays, définie dans sa fiche |
-| **Décision aux points** | Si les quatre manches s'achèvent sans conclusion (`limiteJournees` atteinte) : villes tenues, unités restantes, objectifs partiels. Formule exacte : `04-gameplay.md` §9.1 | Évite les parties infinies **[Proposition]** |
-| **Forfait** | Une équipe refuse de jouer ou est disqualifiée | Coûte plus cher qu'une défaite (Pacte, art. 4) |
+| **Mise hors jeu de l’armée adverse** | Toutes les unités des camps adverses requis sont hors jeu | Défaut ou objectif exclusif d’anéantissement, selon le scénario |
+| **Objectif spécial** | Objectif propre au front : tenir trois cols, ouvrir une écluse, escorter un convoi de batteries, tenir le point haut à la dernière journée | Signature mécanique du pays, définie dans sa fiche |
+| **Décision aux points** | Si la limite de journées (`limiteJournees`) est atteinte sans conclusion : sites tenus, unités restantes, objectifs partiels. Formule exacte : `04-gameplay.md` §9.1 | Évite les batailles sans fin **[Proposition]** |
+| **Forfait** | Un camp refuse de se battre ou est disqualifié | Coûte plus cher qu'une défaite (Pacte, art. 4) |
 
-**Ce qu'un match n'est jamais :** une conquête, une invasion, une occupation, une libération. Un match gagné donne un titre et des droits énergétiques limités ; jamais une population ni une autorité sur un pays. Le socle garanti reste hors des concessions.
+**Ce qu'une victoire prend, et ce qu'elle ne prend jamais.** Une victoire prend la concession nommée : des sites (gisements, centrales, dépôts, postes de distribution), des richesses, des savoirs (laboratoires, prototypes, plans, brevets, archives, relevés) et le terrain tant qu'on le tient. Entre les vingt-quatre nations, elle ne prend **jamais les habitants**, jamais le nécessaire civil, jamais un pays : les sites se remettent en jeu à la réouverture, les savoirs pris restent pris. Ce qu'une victoire a pris s'inscrit au **Registre des concessions** de Port-Méridien — qui tient quoi, jusqu'à quelle année ; il n'y a pas de trophée. La Cinquième Manche est la seule qui garde ce qu'elle prend (§2.3, §3.4).
 
-### 4.4 Arbitrage, sanctions, tricherie
+### 4.4 Arbitrage, sanctions, protêts
 
-Trois arbitres par match : un arbitre central, deux juges de terrain. Les sanctions vont du **rappel** (avertissement) au **carton** (unité retirée de la manche), puis à la **mise hors jeu du commandant** (l'équipe finit sans pouvoir), puis à la **disqualification**. Un commandant peut déposer un **protêt** après le match : le Collège des arbitres tranche, et sa décision est archivée — ces archives sont la matière première du dossier contre la Cinquième Manche.
+Trois arbitres par engagement : un arbitre central, deux juges de front. Les sanctions vont du **rappel** (avertissement) au **carton** (unité retirée de l'engagement), puis à la **mise hors jeu du commandant** (l'armée finit sans pouvoir), puis à la **disqualification**.
 
-La tricherie existe et fait partie du sujet : matériel non homologué, terrain modifié avant relevé, match arrangé. C'est le terrain de jeu moral du joueur, et la porte d'entrée de la trame de fond.
+Le **protêt du Pacte** est une plainte écrite qu'un arbitre est obligé d'inscrire au registre, même s'il la classe ; c'est la seule arme légale contre une arme sans dossier ou un front violé. Un commandant en dépose un après l'engagement ; le Collège des arbitres tranche, et sa décision est archivée. Nera Aldouin en dépose un par arme sans dossier des Gris, le Bureau en classe huit « sans suite », et **c'est la répétition qui fait le dossier** contre la Cinquième Manche. Le dossier colore les fins, il ne les conditionne jamais (`08-narration-choix.md` §7).
 
-### 4.5 Le ciel fait partie du terrain
+La violation du Pacte existe et fait partie du sujet : arme sans dossier, front modifié avant relevé, engagement arrangé, trêve rompue. C'est le terrain moral du joueur, et la porte d'entrée de la trame de fond.
 
-Atlas ne joue pas en salle. Un match se dispute dehors, à la date à laquelle il est disputé, sous le ciel du pays hôte — et le ciel compte autant que le relief. Les règles chiffrées sont dans `04-gameplay.md` ; voici ce que le monde en dit.
+### 4.5 Le ciel fait partie du front
 
-**Le Bulletin.** Vingt minutes avant le coup de sifflet, la Régie diffuse le **Bulletin** : Célestin Vantour annonce la saison, la phase du jour et la **prévision météo des deux prochaines journées**. C'est un rituel autant qu'une information — il l'ouvre toujours de la même façon, il se trompe une fois par Ronde et on le lui rappelle pendant quatre ans. Le Bulletin est **exact** : Atlas ne surprend pas un commandant avec le temps qu'il fait. Un joueur qui perd sous la pluie a été prévenu deux journées à l'avance, et c'est précisément ce qui rend la météo jouable au lieu d'être injuste.
+Atlas ne se bat pas en salle. Un engagement se livre dehors, à la date à laquelle il est livré, sous le ciel du pays où l'on se bat — et le ciel compte autant que le relief. Les règles chiffrées sont dans `04-gameplay.md` ; voici ce que le monde en dit.
 
-**Les saisons.** La Ronde suit les vraies saisons : un match prend la date du jour où il se dispute, et la saison est celle de l'hémisphère du pays hôte. Recevoir en hiver ou recevoir en été **fait partie du terrain d'un pays**, au même titre que ses montagnes : la Suisse ne reçoit pas la même chose en janvier et en juillet, et jouer le Brésil en janvier, c'est jouer en été. Les délégations le savent, les calendriers se négocient là-dessus, et un hôte qui obtient sa saison favorable n'a rien volé — il a bien lu l'Intendance. La saison ne change pas pendant un match.
+**Le Bulletin d'engagement.** Avant chaque engagement, la Régie diffuse le **Bulletin d'engagement** : Célestin Vantour annonce le front, les armes déclarées, la trêve en cours s'il y en a une, la saison, la phase du jour, la **prévision météo des deux prochaines journées**, et ce qui peut partir au tour suivant — une jauge adverse pleine, une station en charge. C'est un rituel autant qu'une information — il l'ouvre toujours de la même façon, il se trompe une fois par an et on le lui rappelle jusqu'à la réouverture. Le Bulletin est **exact** : **Atlas ne surprend jamais un commandant**, même avec une arme qui n'est pas à elle. Un joueur qui perd sous la pluie a été prévenu deux journées à l'avance ; un joueur que frappe le super d'un Gris a vu la jauge pleine et la ligne du Bulletin un tour avant. C'est précisément ce qui rend la météo, les stations et les supers jouables au lieu d'être injustes.
 
-**La nuit.** Un match ne s'arrête pas à la tombée du jour : c'est une règle sportive, pas un décor. Les manches se poursuivent, la lumière baisse, on voit moins loin, les villes et les quartiers généraux restent éclairés, et certaines équipes sont réputées meilleures à la nuit tombée. Un commandant qui demande l'interruption pour cause d'obscurité est renvoyé à l'article 4 du Pacte : le refus de jouer se paie plus cher que la défaite.
+**Les saisons.** La guerre suit les vraies saisons : un engagement prend la date du jour où il se livre, et la saison est celle de l'hémisphère du pays où l'on se bat — la date elle-même ne s'écrit jamais (§2.5). Se battre en hiver ou en été **fait partie du terrain d'un pays**, au même titre que ses montagnes : la Suisse ne se défend pas de la même façon en janvier et en juillet, et se battre au Brésil en janvier, c'est se battre en été. Les états-majors le savent, les calendriers des fronts se négocient là-dessus, et un défenseur qui obtient sa saison favorable n'a rien volé — il a bien lu le calendrier de l'Intendance. La saison ne change pas pendant un engagement.
+
+**La nuit.** Un engagement ne s'arrête pas à la tombée du jour : c'est une règle du Pacte, pas un décor. Les journées se poursuivent, la lumière baisse, on voit moins loin, les villes et les quartiers généraux restent éclairés, et certaines armées sont réputées meilleures à la nuit tombée. Un commandant qui demande l'interruption pour cause d'obscurité est renvoyé à l'article 4 du Pacte : le refus de se battre se paie plus cher que la défaite.
 
 **Vocabulaire imposé.** Trois mots, trois listes fermées, valables pour tous les documents et toutes les routines :
 
 | Terme | Valeurs | Ce qu'on dit dans le monde |
 |---|---|---|
-| `Saison` | `printemps`, `ete`, `automne`, `hiver` | « la saison de l'hôte », jamais un mois réel |
-| `PhaseJour` | `jour`, `nuit` | « la nuit tombe sur la troisième manche » |
+| `Saison` | `printemps`, `ete`, `automne`, `hiver` | « la saison du front », jamais un mois réel |
+| `PhaseJour` | `jour`, `nuit` | « la nuit tombe sur la troisième journée » |
 | `Meteo` | `clair`, `pluie`, `neige`, `brouillard`, `tempete`, `canicule` | « le Bulletin annonce brouillard sur la deuxième journée » |
 
-**Règle d'écriture.** Le temps qu'il fait est un **fait de match**, jamais un drame : une tempête cloue les appareils au sol et fait un beau commentaire, elle ne dévaste rien, ne blesse personne et ne détruit aucune ville. Une canicule gêne le matériel lourd, elle ne fait pas souffrir un public. Aucun phénomène météorologique réel, daté ou localisé, n'est jamais évoqué (§7.3). Le vent nommé — le mistral, l'alizé — reste une **mécanique régionale** du pays hôte, pas une météo.
+**Règle d'écriture.** Le temps qu'il fait est un **fait d'engagement**, jamais un drame : une tempête cloue les appareils au sol et fait un beau Bulletin, elle ne dévaste rien et ne détruit aucune ville. Une canicule gêne le matériel lourd, elle ne fait pas souffrir une population. La station de forçage météo des Gris impose une pluie ou une brume sur un front, jamais sur le climat d'une région. Aucun phénomène météorologique réel, daté ou localisé, n'est jamais évoqué (§7.3). Le vent nommé — le mistral, l'alizé — reste une **mécanique régionale** du pays, pas une météo.
 
-### 4.6 Le Tableau des délégations : comment Atlas annonce un ralliement, un grief, un retrait
+### 4.6 Le Tableau des belligérants : comment Atlas annonce une alliance, un grief, une paix séparée, une disparition
 
-**[Proposition : la mise en fiction est une invention de cette bible ; le dispositif — quatre états de relation, cinq retraits au plus — est fixé par `BRIEF.md`.]**
+**[Proposition : la mise en fiction est une invention de cette bible ; le dispositif — quatre états de relation, cinq retraits au plus — est fixé par `BRIEF.md`. Le geste de la plaque posée à plat vient de `refonte/opus1-hors-serie.md` §3, qui le proposait.]**
 
-Dans le hall de l'Intendance, à Port-Méridien, il y a un panneau de bois clair où sont accrochées les plaques des délégations engagées dans la Ronde en cours. C'est le **Tableau des délégations**, et c'est là que le monde apprend qui joue avec qui. On le regarde beaucoup, on n'en parle pas fort.
+Dans le hall de l'Intendance, à Port-Méridien, il y a un panneau de bois clair où sont accrochées les plaques des nations en guerre — les **belligérants**. C'est le **Tableau des belligérants**, « le Tableau » pour tout le monde, et c'est là que le monde apprend qui se bat avec qui, et contre qui. On le regarde beaucoup, on n'en parle pas fort. Les états de relation (`RelationNation`) ne changent pas pour autant : `alliee`, c'est une nation engagée à vos côtés ; `rivale`, un compte à régler ; `retiree`, une paix séparée ou le passage à la Cinquième Manche.
 
-**Un ralliement s'annonce par une ligne dans le programme.** Quand une délégation décide d'accompagner un commandant sur la fin de sa Ronde — de lui prêter son matériel, un assistant déclaré, un terrain d'entraînement —, l'Intendance le note comme elle note un changement d'horaire : *« Suisse — engagée aux côtés de la délégation française à partir de la quatrième étape. »* Pas de communiqué, pas de cérémonie. Solveig Tamm accroche les deux plaques côte à côte, et ceux qui passent dans le hall le remarquent avant que Vantour n'en fasse un mot à l'antenne. Le ton du monde tient dans ce détail : un ralliement est une **ligne d'organisation**, pas un serment.
+**Une alliance s'annonce par une ligne dans le programme.** Quand une nation décide de se battre aux côtés d'un commandant — de lui prêter son matériel, un commandant en appui déclaré, un front de repli —, l'Intendance le note comme elle note un changement d'horaire : *« Suisse — engagée aux côtés de la France à partir du quatrième front. »* Pas de communiqué, pas de cérémonie. Solveig Tamm accroche les deux plaques côte à côte, et ceux qui passent dans le hall le remarquent avant que Vantour n'en fasse un mot à l'antenne. Le ton du monde tient dans ce détail : une alliance de guerre est une **ligne d'organisation**, pas un serment.
 
-**La délégation prête son banc.** Quand un engagement va plus loin qu'une ligne au programme, la délégation qui accompagne un commandant lui **prête son banc** pour une rencontre : son général dirige depuis les gradins, l'invité s'assoit à sa place, joue son matériel et ses consignes, et la plaque reste la même au Tableau. L'Intendance appelle cela un banc prêté ; les commentateurs disent « il joue leurs couleurs ce soir », et personne n'y voit un changement de camp — c'est un échange d'entraîneurs, à la manière d'une fédération, et l'on rend le banc au coup de sifflet final.
+**La nation prête son banc.** Quand une alliance va plus loin qu'une ligne au programme, la nation alliée **prête son banc** — son poste de commandement — pour un engagement : son général confie ses unités et ses consignes au joueur et dirige depuis l'arrière, et la plaque reste la même au Tableau. L'Intendance appelle cela un banc prêté ; Vantour dit « il se bat sous leurs couleurs aujourd'hui », et personne n'y voit un changement de camp — c'est un commandement prêté, et on le rend à la fin de l'engagement.
 
-**Un grief s'annonce par un silence poli.** Une délégation fâchée ne dénonce personne : elle demande simplement à ne plus être programmée en même temps, et elle joue plus dur quand le calendrier la remet en face. Vantour, qui sait tout, dit *« retrouvailles »* avec une virgule un peu longue avant le mot.
+**Un grief s'annonce par un silence poli.** Une nation fâchée ne dénonce personne : elle demande à ne plus être engagée sur le même front, et elle se bat plus dur quand le calendrier la remet en face. Vantour, qui sait tout, dit *« retrouvailles »* avec une virgule un peu longue avant le mot.
 
-**Un retrait s'annonce en trois phrases, et c'est le seul moment où la Régie ne commente pas.** Une délégation qui se retire de la Ronde le fait par une note affichée au Tableau, toujours de la même longueur : ce qu'elle retire (son équipe), à partir de quand (la prochaine étape), et une formule de politesse. Sa plaque est retournée, face bois. Personne ne la décroche — retourner suffit, et c'est plus dur à regarder qu'un trou. Nera Aldouin contresigne, parce que le Pacte l'exige ; Osmin Talvarec descend dans le hall et reste devant un moment ; Vantour ouvre son Bulletin suivant sur la météo, comme d'habitude, et ne dit rien du tout. **Un retrait n'est jamais un drame, jamais une rupture diplomatique, jamais une menace** : c'est une équipe qui rentre chez elle, et un sport qui compte une équipe de moins ce mois-ci. On ne montre pas de foule en colère, on ne cite pas de gouvernement, personne ne claque de porte. Ce qui rend la chose lourde, c'est précisément qu'elle soit si petite et si calme.
+**Une paix séparée s'annonce en trois phrases, et c'est le seul moment où la Régie ne commente pas.** Une nation qui sort de la guerre par une **paix séparée** — un armistice qu'elle signe pour elle seule — le fait par une note affichée au Tableau, toujours de la même longueur : ce qu'elle retire (son armée), à partir de quand (le prochain front), et une formule de politesse. Sa plaque est retournée, face bois. Personne ne la décroche — retourner suffit, et c'est plus dur à regarder qu'un trou. Nera Aldouin contresigne, parce que le Pacte l'exige ; Osmin Talvarec descend dans le hall et reste devant un moment ; Vantour ouvre son Bulletin suivant sur la météo, comme d'habitude, et ne dit rien du tout. **Une paix séparée n'est jamais une rupture entre deux peuples, jamais une menace** : c'est une armée qui rentre chez elle, et une guerre qui compte un belligérant de moins ce mois-ci. On ne montre pas de foule en colère, on ne cite pas de gouvernement, personne ne claque de porte. Ce qui rend la chose lourde, c'est précisément qu'elle soit si petite et si calme.
 
-**Ce qu'Atlas ne dit jamais, et ce que les routines n'écrivent donc jamais** : qu'un retrait est une rupture entre deux peuples, qu'une nation « quitte le camp du joueur », qu'un ralliement est une alliance militaire. Le vocabulaire est celui d'une fédération sportive et d'une organisation logistique : on **s'engage aux côtés de**, on **demande à ne plus être programmé avec**, on **retire son équipe**. Et quand une délégation revient — cela arrive, un grief se répare —, elle revient comme on revient : sa plaque est remise à l'endroit, sans commentaire.
+**Un passage à la Cinquième Manche ne s'annonce pas. [Proposition]** La plaque est retournée comme pour une paix séparée, et la note ne dit qu'une chose : *« délégation sous contrat méridien »*. C'est le front qui dit le reste, quand la délégation revient en face sous les couleurs grises. Atlas n'écrit jamais qu'une nation a changé de camp : elle écrit qu'une délégation a signé — un contrat, pas un peuple.
+
+**Une disparition se dit en posant la plaque à plat.** C'est le seul cas où l'on décroche. Quand un chef de nation meurt — les quatre disparitions de `BRIEF.md`, hors du front —, Solveig Tamm décroche la plaque et la **pose à plat sur la tablette** du Tableau, face visible, avec une ligne d'organisation : *« Grèce — engagée. Commandement repris par son adjointe. »* La nation ne se retire pas ; elle change de banc. Nera Aldouin ne contresigne rien, parce qu'aucun article du Pacte ne le demande ; Osmin Talvarec descend dans le hall et reste devant, comme pour une paix séparée ; Célestin Vantour ouvre son Bulletin sur la météo, ne dit rien pendant tout le Bulletin, et ne prononce le nom qu'à la dernière phrase — une phrase, un fait. Au générique, la plaque est **remise à l'endroit** : c'est la seule fois où l'on remet une plaque qui n'a pas été retournée. Le joueur ne voit jamais l'instant, toujours l'annonce, et une disparition n'est jamais une paix séparée : la nation reste engagée.
+
+**Ce qu'Atlas ne dit jamais, et ce que les routines n'écrivent donc jamais** : qu'une paix séparée est une rupture entre deux peuples, qu'une nation « trahit » le joueur, qu'une alliance est un serment, qu'un peuple est passé à l'ennemi. Le vocabulaire est celui d'un arbitre et d'une intendance : on **s'engage aux côtés de**, on **demande à ne plus être engagé face à**, on **signe une paix séparée**, une délégation **signe avec le Consortium**. Et quand une nation revient — cela arrive, un grief se répare —, elle revient comme on revient : sa plaque est remise à l'endroit, sans commentaire.
 
 ### 4.7 La Dépêche du jour
 
 **[Proposition : la mise en fiction de la mission du jour est une invention de cette bible ; le dispositif lui-même est fixé par `BRIEF.md`.]**
 
-Entre deux étapes de la Ronde, la Régie diffuse la **Dépêche du jour** : une **manche d'exhibition**, une seule par jour, disputée quelque part dans le monde en écho à ce qui s'y passe ce jour-là. Un festival, une course, une première ascension, une saison remarquable, un anniversaire de fédération, une découverte : Atlas y voit une occasion de faire jouer un terrain et Vantour une occasion de commenter. La Dépêche est annoncée le matin, jouable une semaine, puis rangée aux archives de la Régie.
+Entre deux fronts, la Régie diffuse la **Dépêche du jour** : un **exercice à blanc**, un seul par jour, arbitré par Atlas sur un terrain d'exercice quelque part dans le monde, en écho à ce qui s'y passe ce jour-là. Un festival, une course, une première ascension, une saison remarquable, un anniversaire, une découverte : Atlas y voit une occasion d'entraîner les armées loin des fronts, et Vantour une occasion de parler d'autre chose que de la guerre. La Dépêche est annoncée le matin, jouable une semaine, puis rangée aux archives de la Régie.
 
-**Ce qu'elle est dans le monde :** une exhibition, hors classement, sans conséquence sur la Ronde. Personne ne se qualifie par une Dépêche, personne n'y perd sa place. Les commandants y viennent pour le plaisir, pour tester du matériel à l'essai (§3.2) ou parce que Vantour les a appelés la veille.
+**Ce qu'elle est dans le monde :** un exercice hors de la guerre — pas de front, pas de concession, des charges à blanc comme à l'école du front (§5.3). Personne n'y gagne ni n'y perd un site, personne n'y meurt. Les commandants y viennent pour s'entraîner, pour essayer un prototype à l'essai (§3.2) ou parce que Vantour les a appelés la veille.
 
-**Ce qu'elle n'est jamais :** une dépêche sur un drame. Atlas ne commente pas une catastrophe, un accident, un fait divers, une crise, un conflit, une élection. La règle de ton est simple et sans exception : **on ne fait pas jouer un match par-dessus le malheur de quelqu'un.** Un événement du monde n'entre dans la Dépêche que s'il appartient au registre autorisé (§7.2) — sport, fête, culture, exploit, découverte, science, saison remarquable. Dans le doute, il n'y a pas de Dépêche ce jour-là : le vide vaut mieux qu'une faute.
+**Ce qu'elle n'est jamais :** une dépêche sur un drame. Atlas ne commente pas une catastrophe, un accident, un fait divers, une crise, un conflit, une élection. La règle de ton est simple et sans exception : **on ne fait pas jouer un exercice par-dessus le malheur de quelqu'un.** Un événement du monde n'entre dans la Dépêche que s'il appartient au registre autorisé (§7.2) — sport, fête, culture, exploit, découverte, science, saison remarquable. Dans le doute, il n'y a pas de Dépêche ce jour-là : le vide vaut mieux qu'une faute.
 
 **Conséquence de règle :** une Dépêche n'écrit **aucun** flag de campagne. Elle ne peut rien changer au voyage, aux rivalités ni à la trame ; sa récompense est cosmétique, ou une carte de terrain au plus (`08-narration-choix.md` §4.4).
 
@@ -301,46 +322,58 @@ Entre deux étapes de la Ronde, la Régie diffuse la **Dépêche du jour** : une
 
 ### 5.1 Registre
 
-Conflit stratégique sérieux joué sous forme de tournois : fronts, sièges, concessions et alliances ont un prix. Les vestiaires, commentateurs et rivalités conservent de la chaleur, sans réduire la menace à une plaisanterie. Les affrontements restent non sanglants. L'humour est **affectueux**, jamais moqueur envers une culture ; l'ironie se dirige vers Atlas, les sponsors, les commentateurs et les commandants eux-mêmes, jamais vers un peuple.
+Une guerre sérieuse, dure, sans complaisance : on prend, on tient, on perd des équipages, on signe des trêves qu'on ne respecte pas ; fronts, sièges, concessions et alliances ont un prix. L'humour appartient aux personnages — Vantour, Nikos, Saran —, jamais au narrateur ; il est **affectueux**, jamais moqueur envers une culture ; l'ironie se dirige vers Atlas, le Consortium, les correspondants et les commandants eux-mêmes, jamais vers un peuple. Réalisme des matières et de la fatigue, pas de l'horreur : le sang, les corps, les ruines et les civils restent hors champ. Le sérieux passe par les relations et les suites des décisions, pas par des rappels de mort à chaque exercice ; des scènes de travail, de soulagement et d'humour sobre séparent les revers.
 
-**Longueur.** Une réplique tient en une à trois phrases. Une scène de choix tient en six à dix répliques. On ne fait jamais lire un paragraphe au joueur entre deux matchs.
+**Personne n'explique le monde au joueur.** Les mots du Pacte se comprennent la première fois qu'un personnage s'en sert ; un briefing commence par la personne qui a besoin d'aide, le problème visible et l'objectif (`refonte/lore-v2.md`, « Consignes pour la suite de production »).
+
+**Longueur.** Une réplique tient en une à trois phrases. Une scène de choix tient en six à dix répliques. On ne fait jamais lire un paragraphe au joueur entre deux batailles.
 
 ### 5.2 Vocabulaire
 
-> **Décision du propriétaire, 10 septembre 2026 : « on a droit de dire guerre, combat, mort, c'est fictif, c'est un jeu ».** La table ci-dessous ne bride plus le vocabulaire de la fiction : guerre, combat, bataille, mort, mourir, tuer, détruire, arme, soldat, blessé s'écrivent quand la scène le demande, et le glossaire (`content/i18n/glossaire.fr.json`) ne les refuse plus. Ce qui reste interdit est ce qui **accroche la fiction au monde réel** : un conflit, une guerre ou une victime réels (§7.3), la politique, la religion, l'horreur graphique (sang, cadavres, ruines, civils, réfugiés). Sur le terrain, le règlement d'Atlas continue de dire **mettre hors jeu** — c'est le vocabulaire du HUD et du moteur, une règle du monde, pas une pudeur.
+> **Décisions du propriétaire, canon depuis le 26 septembre 2026.** Le 10 septembre : « on a droit de dire guerre, combat, mort, c'est fictif, c'est un jeu » — les mots de la guerre s'écrivent quand la scène le demande, et le glossaire (`content/i18n/glossaire.fr.json`) ne les refuse plus. Le 12 septembre : **aucun mot que le joueur devrait chercher** — un terme du monde s'explique en une phrase par un personnage la première fois qu'il sert (concession, protêt, dossier, Registre, désaffecté), sinon on prend un mot courant (le « bocage » devient les champs et les haies). Cette seconde règle prime sur toute liste de vocabulaire, y compris celle-ci. Ce qui reste interdit est un **ancrage**, pas un vocabulaire : le monde réel (§7.3) et l'horreur graphique. Sur le front, le Registre d'Atlas dit **mettre hors jeu** — c'est le vocabulaire du HUD et du moteur, une règle du monde (§5.3), pas une pudeur.
 
-| Interdit | Imposé |
+| Interdit | Ce qu'on écrit |
 |---|---|
-| ennemi désignant un peuple réel | **adversaire**, camp adverse ; « ennemi » peut désigner une équipe du conflit fictif |
-| guerre ou conflit historique réel | **guerre de tournoi**, conflit fictif, front, match, Ronde |
-| violence graphique | **bataille**, combat, échange et siège de tournoi sont autorisés sans violence explicite |
-| armée réelle identifiable | **équipe**, sélection, effectif ; vocabulaire tactique permis pour le matériel fictif |
-| ~~tuer, mourir, mort, blessé, victime~~ — **libres depuis le 10 septembre 2026** | sur le terrain, le règlement dit **mettre hors jeu**, marquer, sortir du terrain ; dans le récit, le mot juste |
-| ~~détruire une unité~~ — **libre depuis le 10 septembre 2026** | le règlement d'Atlas dit **mettre hors jeu** ; « détruire » se dit dans un dialogue |
-| envahir, invasion, occuper, conquérir | **prendre le terrain**, tenir, capturer (un point), avancer |
-| libérer, annexer, coloniser | *(aucun équivalent : ces notions n'existent pas dans ce monde)* |
-| ~~arme, armement~~ — **libres depuis le 10 septembre 2026** ; « munitions » l'a toujours été (c'est une statistique du jeu) | **matériel**, équipement homologué restent le vocabulaire officiel d'Atlas ; « arme » se dit dans un dialogue |
-| sang, cadavre, ruines, civils, réfugiés | *(aucun équivalent : hors périmètre)* |
-| régime, gouvernement, président, ministre, parti, élection | **fédération nationale**, sélectionneur, délégation |
-| frontière (au sens de dispute) | **ligne de terrain**, limite de carte |
+| ennemi désignant un peuple réel | « ennemi » se dit d'une armée ou d'un commandant de la guerre fictive ; « adversaire » reste le mot d'Atlas, qui arbitre les deux camps et refuse d'en nommer un |
+| guerre ou conflit historique réel | la **guerre de l'énergie** (« la guerre » dans la bouche des personnages), un front, un engagement, une bataille — toujours fictifs |
+| violence graphique | bataille, combat, tir, destruction de matériel, équipage perdu : dits, jamais montrés |
+| armée réelle identifiable, arme réelle nommée | l'armée d'une nation du jeu ; ses unités par leur usage (blindé de percée, pièce de portée, appareil de reconnaissance) ; aucune arme réelle par sa marque ou son constructeur |
+| ~~tuer, mourir, mort, blessé, victime, détruire, arme, armement~~ — **libres depuis le 10 septembre 2026** | dans un dialogue écrit à la main, le mot juste ; sur le HUD et dans le moteur, le Registre dit **mettre hors jeu** ; une production de routine n'écrit jamais une mort (§5.3) |
+| envahir, invasion, occuper, conquérir | **prendre** un site, **tenir** un front, **avancer**, capturer un bâtiment : une victoire prend des sites, jamais un pays ni ses habitants |
+| libérer, annexer, coloniser — entre nations | *(aucun équivalent entre les vingt-quatre nations)* ; seule la Cinquième Manche annexe pour de bon (`refonte/lore-v2.json`), et l'on dit qu'elle **garde**, qu'elle **absorbe** ce qu'elle prend |
+| sang, cadavre, ruines, civils, réfugiés | *(aucun équivalent : hors champ)* |
+| régime, gouvernement, président, ministre, parti, élection | le commandant, l'état-major, la délégation, le Bureau d'Atlas |
+| frontière (au sens de dispute réelle) | **ligne de front**, limite de carte |
 | religion, foi, culte, dieu | *(hors périmètre)* |
-| ennemi juré | **rival**, rivalité |
-| massacre, anéantir un peuple | **anéantissement de l’équipe** signifie mise hors jeu de toutes ses unités, jamais des équipages |
-| mourir, mort — *amendement du 9 septembre 2026* | **restent interdits** pour tout ce qui se passe sur un terrain et pour toute production de routine ; ils ne s'emploient que dans les **quatre scènes écrites à la main** des disparitions (`BRIEF.md`, « Quatre disparitions » ; `doc/refonte/opus1-hors-serie.md` §3), une fois chacune, dans la bouche de la personne la plus proche, et « disparition » partout ailleurs |
+| ennemi juré | **rival**, rivalité, « un compte à régler » |
+| massacre, anéantir un peuple | l'**anéantissement d'une armée** signifie la mise hors jeu de toutes ses unités ; jamais un peuple, jamais des civils |
+| les Jeux, le tournoi, le match — pour dire la guerre | **la guerre, l'engagement** ; « les Jeux » ne se dit que par dérision, dans la bouche d'un vétéran — le Bureau l'écrit encore dans ses circulaires, et le front trouve ça obscène |
+| la Ronde — pour dater | l'**année de guerre** : « an 14 », « au printemps de l'an 12 » (§2.5) |
+| la mort d'un personnage nommé | uniquement dans les **quatre scènes écrites à la main** des disparitions (`BRIEF.md`, « Quatre disparitions » ; `refonte/opus1-hors-serie.md` §3), une fois chacune, dans la bouche de la personne la plus proche, et « disparition » partout ailleurs ; jamais dans une production de routine |
 
-**Zone grise assumée.** Les unités gardent leurs silhouettes de blindés, d'artillerie, d'hélicoptères : c'est la grammaire lisible du genre. On les nomme **matériel homologué** dans le texte officiel, et on les désigne par leur usage (blindé de percée, pièce de portée, appareil de reconnaissance) plutôt que par un lexique militaire. On ne les fait jamais « tirer sur » quelqu'un : elles **marquent**.
+**Zone grise assumée.** Les unités sont des armes : blindés, artillerie, appareils, navires. Le texte officiel d'Atlas dit **matériel déclaré** ; les personnages disent armes, chars, pièces. On les désigne par leur usage plutôt que par un lexique militaire réel, et aucune ne porte le nom, la marque ou le constructeur d'une arme réelle. Elles tirent, touchent et détruisent du matériel ; l'écran ne montre ni sang ni corps.
 
-### 5.3 **[Proposition]** La doctrine du marquage
+### 5.3 La règle du Registre : Atlas compte des pièces
 
-*Décision du propriétaire, 10 septembre 2026 (après-midi) : un appareil abattu par une IEM de la faction (`abattre`, `doc/04` §7.2) est perdu **avec son équipage** — « c'est pas grave si l'équipage meurt aussi, c'est fictif ». C'est la seule mort sur un terrain, et elle est le fait d'une pièce non homologuée ; le règlement d'Atlas continue de dire hors jeu pour tout le reste.*
+*Décision du propriétaire, 10 septembre 2026, canon depuis le 26 : « c'est vraiment une guerre ». La doctrine du marquage de l'ancien canon — des charges de marquage sur tout le matériel, une unité escortée au dépôt, un équipage qui retire son plastron et va boire quelque chose — est tombée. Le numéro de la section, que d'autres documents citent, ne change pas.*
 
-*Depuis le 10 septembre 2026, cette doctrine est une règle du **monde** — ce qui arrive à une unité touchée —, plus une règle de **mots** : un commandant peut dire « on va les détruire » dans un dialogue, et l'arbitre déclare l'unité hors jeu.*
+**Les armes sont réelles, et les équipages meurent.** Une unité mise hors jeu est une unité perdue : un blindé détruit, une pièce hors d'usage, un appareil abattu — et un appareil abattu emporte son équipage. On le dit, on ne le montre pas : ni sang, ni corps, ni violence graphique ; à l'écran, du matériel qui s'éteint et de la fumée grise (`18-rendu-sprites.md`).
 
-Pour que « personne ne meurt » soit une règle du monde et pas une pudeur d'écriture : tout matériel homologué embarque des **charges de marquage**. Une unité touchée est *marquée* ; au-delà d'un seuil, les juges de terrain la déclarent **hors jeu** et l'escortent au dépôt, où l'équipage retire son plastron et va boire quelque chose. Une unité hors jeu revient au match suivant. C'est pourquoi l'article 2 du Pacte existe, pourquoi le contrôle du matériel est un enjeu, et pourquoi du **matériel non homologué** est le scandale absolu de ce monde — et une arme narrative pour la Cinquième Manche. **Amendement du 9 septembre 2026** : les quatre disparitions de `BRIEF.md` ne touchent pas cette doctrine, qui reste intacte — aucune d'elles n'a lieu sur un terrain ni par du matériel de tournoi ; sur le terrain, on marque, on met hors jeu, et l'équipage va boire quelque chose.
+**Atlas compte des pièces, pas des morts.** Le Registre dit **hors jeu** : c'est le mot du HUD et du moteur, et c'est une règle du monde — l'arbitre compte ce qui sort du front, pas qui meurt, et c'est exactement ce que le monde reproche à Atlas. Les dialogues et Vantour disent mort, tué, détruit ; le HUD, jamais.
+
+**La balise du Registre. [Proposition]** Toute arme déclarée porte une plaque de série et une balise du Registre, qui compte les coups reçus, dit à l'arbitre ce qui est hors jeu, et permet à un juge de front de couper une pièce sanctionnée (le carton, §4.4). Les vétérans l'appellent encore « le marquage ». C'est cette balise que le Verrou de Basile Kelm détourne (`refonte/supers-vilains.md` §2.7) : du savoir volé au Bureau, pas à un atelier.
+
+**À l'exercice, à blanc.** À l'école du front — les dix exercices du prologue et les deux épreuves de sortie d'école (§4.1) — et à la Dépêche du jour (§4.7), on tire à **charges à blanc** : les unités portent des marqueurs, l'arbitre déclare hors jeu, et personne n'est blessé. Le premier engagement réel est « Premier courant » (`opus1_fr_01`) : c'est ce qui donne son poids au premier front.
+
+**L'arme sans dossier est le crime absolu du Pacte.** C'est pourquoi l'article 2 existe (§2.3), pourquoi le contrôle des armes est un enjeu (§3.2), et pourquoi les huit armes sans dossier des Gris sont la matière du dossier contre la Cinquième Manche (`refonte/supers-vilains.md`). La famille `iem.abattre` (`04-gameplay.md` §7.2) n'est pas un scandale de règlement : c'est un appareil abattu, et son équipage avec — décision du propriétaire du 10 septembre 2026 (après-midi).
+
+**Aucune routine n'écrit une mort.** Une production générée — routine lore, routine cerveau, Dépêche, fil — ne raconte, n'annonce ni ne suggère jamais la mort de quelqu'un, personnage ou équipage, et ne déclare, ne suggère ni ne prolonge une disparition. Elle peut dire la guerre : combats, destructions, pertes de matériel. Les morts du jeu sont écrites à la main. Un contenu généré qui en porte une est refusé (`05-routines.md` §4.3).
+
+**Les quatre disparitions** (amendement du 9 septembre 2026). Quatre chefs de nations alliées meurent au cours du premier opus — jamais sur un front, jamais par une arme, jamais par un homicide commis par une personne identifiée. Ce sont des morts du dehors — la route, la mer, la montagne, la maladie, l'âge —, auxquelles les décisions de la Cinquième Manche ont indirectement contribué. Ce sont les seules morts nommées de chefs alliés, écrites à la main (`BRIEF.md`, « Quatre disparitions » ; `refonte/opus1-hors-serie.md` §3), et Atlas les annonce en posant une plaque à plat (§4.6).
 
 ### 5.4 Réglage de la trame de fond
 
-La menace est stratégique et institutionnelle : concessions, fronts et sièges convergent vers une bataille de tournoi pour préserver Aube. Archives et conférences de presse rendent les responsabilités lisibles, sans remplacer le point culminant tactique. Le conflit reste non sanglant, sans explosion de réacteur ni atteinte aux équipages.
+La menace est une guerre et un monopole : la Cinquième Manche prend les réserves, les routes et les technologies, puis veut Aube. Les fronts convergent vers les accès d'Aube et son campus. Archives, protêts et conférences de presse rendent les responsabilités lisibles sans remplacer le point culminant tactique : **le dossier suit les victoires, il ne les remplace pas**. Pas d'explosion de réacteur : Aube est un campus d'essai, et la dernière bataille se livre pour ses accès, pas contre un réacteur à détruire. La guerre tue, jamais à l'écran.
 
 ---
 
@@ -356,9 +389,9 @@ La colonne **Clé** est celle que les données emploient : c'est la valeur de `C
 |---|---|---|---|---|---|---|
 | 1 | `stratege_prudent` | **Le stratège prudent** | Posé, avare de mots, joue trois coups plus loin | Défense et prévoyance : bonus en terrain fortifié, réduction des dégâts subis, prévisualisation d'une intention adverse | Lente, très forte en fin de match | La fonceuse, le showman |
 | 2 | `fonceuse` | **La fonceuse** | Impatiente, franche, allergique à l'attente | Mouvement et initiative : mouvement supplémentaire, seconde action, charge qui ignore un malus de terrain | Explosive tôt, s'essouffle | La gardienne, la survivante |
-| 3 | `veteran` | **Le vétéran** | Bourru, protecteur, plein d'anecdotes de Rondes passées | Vétérance : unités promues qui gardent leurs bonus, remise en état d'une unité marquée, moral d'équipe | Régulière, cumule sur la durée | La météorologue, le prodige |
+| 3 | `veteran` | **Le vétéran** | Bourru, protecteur, plein d'anecdotes des années passées | Vétérance : unités promues qui gardent leurs bonus, remise en état d'une unité touchée, moral des troupes | Régulière, cumule sur la durée | La météorologue, le prodige |
 | 4 | `ingenieur` | **L'ingénieur** | Méthodique, bricoleur, parle de la carte comme d'un chantier | Terrain construit : ponts temporaires, remblais, réparation de villes, blocage d'un passage | Moyenne, dépend de la carte | La fonceuse, la météorologue |
-| 5 | `diplomate` | **La diplomate** | Chaleureuse, manœuvrière, connaît tout le monde dans le stade | Capture et économie : capture accélérée, revenu majoré, ralliement d'une ville neutre, ravitaillement à distance | Très lente, écrasante si le match dure | La fonceuse, le showman |
+| 5 | `diplomate` | **La diplomate** | Chaleureuse, manœuvrière, connaît tout le monde à Port-Méridien | Capture et économie : capture accélérée, revenu majoré, ralliement d'une ville neutre, ravitaillement à distance | Très lente, écrasante si le match dure | La fonceuse, le showman |
 | 6 | `showman` | **Le showman** | Théâtral, généreux, joue pour le public | Élan : bonus qui monte avec les actions réussies et le public acquis, relance après une action spectaculaire, effets voyants | En dents de scie, dépend du momentum | Le stratège prudent, la gardienne |
 | 7 | `survivante` | **La survivante** | Sobre, tenace, ne commente jamais le score | Résilience : remise en état, résistance, effets qui montent à mesure que l'équipe est menée | Inverse : discrète en tête, redoutable menée | Le prodige, la diplomate |
 | 8 | `meteorologue` | **La météorologue** | Rêveuse, fataliste, toujours un œil sur le ciel | Climat : brume qui tombe, pluie qui ralentit, gel qui fige une rivière, vent qui modifie les portées | Irrégulière, très forte sur grandes cartes | Le stratège prudent, la diplomate |
@@ -372,9 +405,9 @@ La colonne **Clé** est celle que les données emploient : c'est la valeur de `C
 - Un archétype **ne dicte pas la personnalité complète** : il donne un axe. Deux commandants du même archétype doivent différer par leur rapport au joueur, leur tic, leur rival et leur objet fétiche.
 - Le pouvoir doit se justifier par la **géographie, le climat, la gastronomie, le sport ou le folklore** du pays — jamais par son histoire militaire, sa politique ou sa religion.
 - Un archétype **contré par** ne veut pas dire « perd contre » : cela oriente les rivalités naturelles entre commandants, donc les rencontres intéressantes.
-- Un co-commandant recruté apporte un **appoint mécanique** — c'est ce qui donne une valeur mécanique, et pas seulement narrative, au fait de traiter correctement ses adversaires. La règle est tranchée (`BRIEF.md`, arbitrage n° 2 du 5 septembre 2026) et sa formulation chiffrée appartient à `04-gameplay.md` §7.5 : un co-commandant apporte **son passif seul, plus une barre de jauge de départ**. Un **commandant régional français** apporte en plus sa **carte de terrain à usage unique** — et cette carte **est l'une des trois** de la sacoche, jamais une quatrième (`BRIEF.md`, seconde relecture, point 7 ; `04-gameplay.md` §7.5, `07-france-regions.md` §2.4). Plafonds : **trois co-commandants recrutés, un seul actif par match** (`08-narration-choix.md` §4.3), **trois cartes de terrain**, **cinq spécialités possédées et une seule équipée par match**. C'est par ces plafonds qu'on corrige l'inflation de puissance, jamais par une règle nouvelle. **Il n'existe pas de demi-pouvoir** : un archétype ne se joue jamais à moitié, et aucune routine ne doit en produire un.
+- Un co-commandant recruté apporte un **appoint mécanique** — c'est ce qui donne une valeur mécanique, et pas seulement narrative, au fait de traiter correctement ses adversaires. La règle est tranchée (`BRIEF.md`, arbitrage n° 2 du 5 septembre 2026) et sa formulation chiffrée appartient à `04-gameplay.md` §7.5 : un co-commandant apporte **son passif seul, plus une barre de jauge de départ**. Un **commandant régional français** apporte en plus sa **carte de terrain à usage unique** — et cette carte **est l'une des trois** de la sacoche, jamais une quatrième (`BRIEF.md`, seconde relecture, point 7 ; `04-gameplay.md` §7.5, `07-france-regions.md` §2.4). Plafonds : **trois co-commandants recrutés, un seul actif par engagement** (`08-narration-choix.md` §4.3), **trois cartes de terrain**, **cinq spécialités possédées et une seule équipée par engagement**. C'est par ces plafonds qu'on corrige l'inflation de puissance, jamais par une règle nouvelle. **Il n'existe pas de demi-pouvoir** : un archétype ne se joue jamais à moitié, et aucune routine ne doit en produire un.
 
-  Diégétiquement : un co-commandant n'entre pas sur le terrain à votre place. Il est sur le banc, il vous prête sa manière — ce que le règlement d'Atlas appelle une **assistance déclarée**, inscrite à la feuille de match avant le coup de sifflet. On en déclare une, pas trois.
+  Diégétiquement : un co-commandant n'entre pas sur le front à votre place. Il est au poste de commandement, il vous prête sa manière — ce que le règlement du Pacte appelle une **assistance déclarée**, inscrite au Bulletin d'engagement avant la première journée. On en déclare une, pas trois.
 
 ---
 
@@ -390,7 +423,7 @@ Un pays réel est représenté **comme on représente une équipe qu'on aime** :
 |---|---|
 | **Géographie et relief** | Montagnes, fleuves, deltas, îles, déserts, forêts, côtes, altitude, insularité |
 | **Climat et saisons** | Mousson, sécheresse, nuit polaire, brouillard, canicule, gel |
-| **Gastronomie** | Produits, plats, boissons, marchés, rituels de table, superstitions d'avant-match |
+| **Gastronomie** | Produits, plats, boissons, marchés, rituels de table, superstitions d'avant-bataille |
 | **Sport et jeu** | Sports populaires, ferveur des supporters, chants, rivalités sportives régionales |
 | **Folklore, contes, fêtes** | Créatures de légende, carnavals, festivals, costumes, musiques, danses |
 | **Savoir-faire et paysage construit** | Ingénierie (digues, tunnels, trains), artisanat, architecture, agriculture |
@@ -411,7 +444,7 @@ Un pays réel est représenté **comme on représente une équipe qu'on aime** :
 
 ### 7.4 Zones ouvertes à l'invention
 
-Les routines peuvent inventer librement : les **commandants** et leur entourage, les **noms de terrains** et de stades, les **surnoms d'équipes**, les **rituels d'avant-match**, les **objets fétiches**, les **anecdotes de Ronde passée**, les **figures d'Atlas secondaires** et les rencontres secondaires de la **Cinquième Manche**, sans modifier son but, sa dirigeante ni les biographies établies dans `content/personnages.json`. Toute invention est signalée dans la sortie JSON.
+Les routines peuvent inventer librement : les **commandants** et leur entourage, les **noms de fronts** et de terrains, les **surnoms d'armées et d'unités**, les **rituels d'avant-bataille**, les **objets fétiches**, les **anecdotes des années passées**, les **figures d'Atlas secondaires** et les rencontres secondaires de la **Cinquième Manche**, sans modifier son but, sa dirigeante ni les biographies établies dans `content/personnages.json`. Toute invention est signalée dans la sortie JSON.
 
 ### 7.5 Procédure en cas de doute
 
@@ -439,6 +472,8 @@ Le doute n'est jamais tranché par la routine dans le sens de la production. La 
 
 Types : **booléen** (posé une fois, jamais retiré), **compteur** (entier borné, monotone croissant sauf mention), **relation** (entier signé, de −3 à +3).
 
+Les clés ne changent pas avec le registre de guerre (26 septembre 2026) : le domaine `monde.tournoi.*` garde son nom et porte les engagements du joueur, et seuls les libellés de sens ci-dessous ont été repris.
+
 ### 8.2 Gabarits par pays (valables pour les 24 pays)
 
 | Flag | Type | Écrit par | Sens |
@@ -450,24 +485,24 @@ Types : **booléen** (posé une fois, jamais retiré), **compteur** (entier born
 | `pays.<xx>.allie_recrute` | booléen | choix | Un commandant de ce pays est devenu co-commandant |
 | `pays.<xx>.dette_envers_joueur` | compteur 0–3 | choix | Services rendus à la délégation locale |
 | `pays.<xx>.terrain_altere` | compteur 0–5 | moteur | Nombre de traces persistantes laissées sur les cartes du pays |
-| `pays.<xx>.ralliement_cinquieme` | booléen | trame | Ce pays a rejoint la Cinquième Manche à l'acte III |
+| `pays.<xx>.ralliement_cinquieme` | booléen | trame | Une délégation de ce pays est passée à la Cinquième Manche à l'acte III — un contrat, jamais un peuple |
 
 ### 8.3 Flags de pays spécifiques (exemples canon)
 
 | Flag | Type | Écrit par | Sens |
 |---|---|---|---|
-| `pays.fr.regions_visitees` | compteur 0–18 | moteur | Régions parcourues pendant la qualification française |
+| `pays.fr.regions_visitees` | compteur 0–18 | moteur | Régions parcourues pendant la campagne de France |
 | `pays.fr.tour_complet` | booléen | moteur | Les 18 régions ont été jouées |
-| `pays.fr.barrage_rompu` | booléen | choix | Un barrage a été ouvert pendant un match ; la vallée reste inondée |
+| `pays.fr.barrage_rompu` | booléen | choix | Un barrage a été ouvert pendant un engagement ; la vallée reste inondée |
 | `pays.lu.sponsor_accepte` | booléen | choix | Le contrat du Consortium Méridien a été signé |
 | `pays.lu.archives_ouvertes` | booléen | choix | Accès obtenu aux archives de protêts conservées sur place |
 | `pays.jp.train_prete` | booléen | choix | La ligne rapide reste utilisable par le joueur lors des revisites |
-| `pays.jp.duel_honore` | booléen | choix | Le duel de fin de match a été accepté selon la forme locale |
+| `pays.jp.duel_honore` | booléen | choix | Le duel d'honneur à blanc qui suit l'engagement a été accepté selon la forme locale |
 | `pays.br.foule_conquise` | booléen | choix | Le public local soutient le joueur, ici et ailleurs |
 | `pays.nl.digue_ouverte` | booléen | choix | Un polder est inondé de façon permanente |
 | `pays.ch.col_scelle` | booléen | choix | Un col a été bloqué et le reste |
 | `pays.ma.oasis_preservee` | booléen | choix | Le point d'eau n'a pas été utilisé comme levier tactique |
-| `pays.mx.fete_partagee` | booléen | choix | Le joueur a joué le jeu de la fête locale d'avant-match |
+| `pays.mx.fete_partagee` | booléen | choix | Le joueur a joué le jeu de la fête locale, la veille de l'engagement |
 
 **Régions d'un pays phare.** Il n'existe **pas** de portée `region.*`. Un flag régional est un flag de pays préfixé par le nom de la région : `pays.fr.bretagne_maree_lue`, `pays.fr.ile_de_france_finale_gagnee`. La liste des dix-huit est dans `07-france-regions.md` §4 (champ « Récompense et flag »).
 
@@ -480,7 +515,7 @@ Types : **booléen** (posé une fois, jamais retiré), **compteur** (entier born
 | `monde.atlas.soupcon` | compteur 0–10 | choix, trame | Ce que le joueur soupçonne et a vu de travers chez Atlas |
 | `monde.atlas.credibilite` | compteur 0–10 | choix, moteur | Crédit du joueur auprès du Bureau et du Collège |
 | `monde.atlas.arbitre_alliee` | booléen | trame | Nera Aldouin partage ses archives avec le joueur |
-| `monde.atlas.dossier_truquage` | compteur 0–5 | choix | Preuves réunies de matchs arrangés |
+| `monde.atlas.dossier_truquage` | compteur 0–5 | choix | Preuves réunies d'engagements arrangés |
 | `monde.atlas.reforme_deposee` | booléen | choix | Le joueur a déposé une demande de réforme du règlement |
 | `monde.atlas.sponsor_meridien` | relation −3…+3 | choix | Rapport au Consortium Méridien |
 | `monde.regie.faveur` | relation −3…+3 | choix, moteur | Comment Célestin Vantour raconte le joueur |
@@ -490,10 +525,10 @@ Types : **booléen** (posé une fois, jamais retiré), **compteur** (entier born
 | `monde.cinquieme.demasquee` | booléen | trame | La faction est publiquement nommée |
 | `monde.cinquieme.chef_identifie` | booléen | trame | Sélène Veyr est identifiée par le joueur |
 | `monde.cinquieme.ralliements` | compteur 0–24 | trame | Nombre de pays passés à la faction (dérivé) |
-| `monde.tournoi.serie_propre` | compteur | moteur | Matchs gagnés sans exploiter une faute adverse |
+| `monde.tournoi.serie_propre` | compteur | moteur | Engagements gagnés sans exploiter une faute adverse |
 | `monde.carnet.pages_scellees` | compteur 0–10 | choix | Pages du carnet remises officiellement au Collège |
 | `monde.atlas.homologation_contestee` | booléen **[Proposition]** | choix | Le joueur a déposé ou soutenu un protêt contre une décision de la Commission d'homologation (§3.2) |
-| `monde.atlas.essai_soutenu` | booléen **[Proposition]** | choix | Le joueur a défendu publiquement une pièce de matériel à l'essai, badge orange compris |
+| `monde.atlas.essai_soutenu` | booléen **[Proposition]** | choix | Le joueur a défendu publiquement un prototype à l'essai, badge orange compris |
 | `monde.depeche.serie` | compteur **[Proposition]** | moteur | Dépêches du jour enchaînées. **Vit au profil du joueur, hors sauvegarde de campagne** : aucune bascule de trame ne le lit, aucune fin ne le teste (§4.7). Un seul mécanisme a le droit de le lire : un `Deblocage` (`13-campagne.md` §8.4) |
 | `monde.tournoi.fils_termines` | compteur 0–12 **[Proposition]** | moteur (dérivé) | Fils secondaires menés à leur dernière mission. Recalculé depuis `ProfilCampagne.filsFinis`, **jamais écrit à la main** |
 
@@ -519,27 +554,30 @@ Types : **booléen** (posé une fois, jamais retiré), **compteur** (entier born
 6. **Toute scène déclare ses flags** en lecture et en écriture dans son JSON ; la routine contrôle rejette une scène qui référence un flag inconnu.
 7. **La Dépêche du jour n'écrit aucun flag de campagne** (§4.7). Une scène rattachée à une mission du jour qui déclare un flag `pays.*`, `monde.*` (hors `monde.depeche.*`) ou `cmd.*` en écriture est rejetée d'office par la routine contrôle. **[Proposition]**
 8. **Aucun contenu ne pose un flag `monde.secret.*`.** Ces flags sont posés par du code écrit à la main (`doc/14-secrets.md`), jamais par un scénario, un choix ou un fil. Une production qui en déclare un en écriture est refusée au schéma, pas à la relecture. **[Proposition]**
-9. **Un fil écrit des flags de campagne, contrairement à une Dépêche.** C'est sa différence de nature : un fil compte, une exhibition non (`13-campagne.md` §5.1, `08-narration-choix.md` §4.6). Ses flags restent pris dans cette liste, comme partout ailleurs. **[Proposition]**
+9. **Un fil écrit des flags de campagne, contrairement à une Dépêche.** C'est sa différence de nature : un fil compte, un exercice de la Dépêche non (`13-campagne.md` §5.1, `08-narration-choix.md` §4.6). Ses flags restent pris dans cette liste, comme partout ailleurs. **[Proposition]**
 
 ---
 
 ## 9. Récapitulatif des propositions de ce document
 
-1. **Port-Méridien**, île neutre, siège d'Atlas et terrain de la finale mondiale.
-2. Le **calendrier en Rondes** (Ronde XIV en cours) et l'interdiction des dates réelles qui en découle.
+*Depuis le 26 septembre 2026, ce que le lore v2 validé fixe n'est plus une proposition de cette bible : la guerre de l'énergie et l'an 14, le Pacte en quatre articles, l'engagement et le Registre, le Bulletin d'engagement, la Sélection Méridienne armée et garante des trêves, la règle du Registre (« hors jeu ») et la guerre qui tue sans gore (`BRIEF.md`, « Le lore v2 validé »). Restent des inventions de cette bible, marquées **[Proposition]** dans le texte :*
+
+1. **Port-Méridien**, île neutre, siège d'Atlas et du Registre, et le plateau d'Aube qui lui est rattaché, sous le même code de terrain `atl`.
+2. Le **calendrier en années de guerre** (an 14 en cours) et l'interdiction des dates réelles qui en découle ; l'âge du Pacte, laissé ouvert.
 3. Les **sans-drapeau** : le personnel d'Atlas renonce à sa nationalité, d'où des noms inventés et non localisables — garde-fou éditorial autant que trait de fiction.
-4. Les organes d'Atlas : Bureau, Collège des arbitres, Régie, Intendance, Cartographie, et la **Commission d'homologation** (matériel de fondation, matériel à l'essai et son badge orange, admission au catalogue, retrait du catalogue).
-5. Les trois figures : **Osmin Talvarec**, **Nera Aldouin**, **Célestin Vantour** — et Vantour comme narrateur diégétique des conséquences.
-6. Le **Consortium Méridien**, sponsor apatride, porteur des choix de « sponsor douteux ».
-7. La faction **la Cinquième Manche**, son mobile, son signe, sa figure visible **Hadran Ost**, sa dirigeante Sélène Veyr, son projet de monopole énergétique et son offensive contre le programme fictif Aube.
-8. La **doctrine du marquage** (charges de marquage, unité marquée, escortée, revenant au match suivant) et le matériel non homologué comme scandale absolu du monde.
-9. Le **Pacte du Terrain** en quatre articles, dont « le refus de jouer se paie plus cher que la défaite ».
-10. Le format en **quatre manches**, la **décision aux points**, l'échelle de sanctions (rappel, carton, mise hors jeu du commandant, disqualification) et le **protêt** comme source de preuves.
-11. Les colonnes d'équilibrage des **dix archétypes canon** (tempérament, famille de pouvoir, courbe, contré par), dont les trois entrées nouvelles — la diplomate, la survivante, le prodige — et les contres réajustés. La règle du co-commandant, elle, n'est plus une proposition : **passif seul plus une barre de jauge**, carte de terrain pour un commandant régional français — **l'une des trois, pas une quatrième** —, trois recrutés et un seul actif par match.
-12. Le **Bulletin** de Célestin Vantour comme rituel d'avant-match, la Ronde au rythme des vraies saisons, la nuit qui n'interrompt pas un match, et la règle « le temps qu'il fait est un fait de match, jamais un drame ».
-13. La **Dépêche du jour** : exhibition quotidienne hors classement, tirée du registre autorisé, jamais d'un drame, sans effet sur la campagne.
+4. Les organes d'Atlas : Bureau, Collège des arbitres, Régie (le bureau de presse de guerre), Intendance, Cartographie, et la **Commission d'homologation**, contrôle des armes du Pacte (matériel de fondation, prototype sous surveillance et son badge orange, déclaration au Pacte, retrait du catalogue).
+5. Les trois figures : **Osmin Talvarec**, **Nera Aldouin**, **Célestin Vantour** — et Vantour, correspondant de guerre, comme narrateur diégétique des conséquences.
+6. Le **Consortium Méridien**, sponsor apatride d'Atlas, porteur des choix de « sponsor douteux ».
+7. La faction **la Cinquième Manche**, son nom, son signe, sa figure visible **Hadran Ost**, sa dirigeante Sélène Veyr, son monopole de l'énergie et du savoir, et son offensive contre le programme fictif Aube.
+8. **La règle du Registre** mise en fiction : la balise du Registre (« le marquage » des vétérans), les charges à blanc réservées à l'exercice, et l'arme sans dossier comme crime absolu du Pacte.
+9. La **fable du front borné** et sa devise (« Le sol se prend à la journée. Les gens ne se prennent pas. »), et la **réouverture** comme nom du cycle de quatre ans.
+10. L'**engagement** et ses quatre manches devenues une expression, la **décision aux points**, l'échelle de sanctions (rappel, carton, mise hors jeu du commandant, disqualification) et le **protêt du Pacte** comme source de preuves.
+11. Les colonnes d'équilibrage des **dix archétypes canon** (tempérament, famille de pouvoir, courbe, contré par), dont les trois entrées nouvelles — la diplomate, la survivante, le prodige — et les contres réajustés. La règle du co-commandant, elle, n'est plus une proposition : **passif seul plus une barre de jauge**, carte de terrain pour un commandant régional français — **l'une des trois, pas une quatrième** —, trois recrutés et un seul actif par engagement.
+12. Le **Bulletin d'engagement** de Célestin Vantour comme rituel d'avant-bataille, la guerre au rythme des vraies saisons, la nuit qui n'interrompt pas un engagement, et la règle « le temps qu'il fait est un fait d'engagement, jamais un drame ».
+13. La **Dépêche du jour** : un exercice à blanc quotidien, hors de la guerre, tiré du registre autorisé, jamais d'un drame, sans effet sur la campagne.
 14. La portée de flags **`cmd.<id>.*`**, le domaine `monde.depeche.*`, les trois flags `monde.atlas.homologation_contestee`, `monde.atlas.essai_soutenu`, `monde.depeche.serie`, et les neuf règles dures sur les flags.
 15. **Barnab Estève**, le seul commandant en activité qui a connu les Vieilles Manières, et sa réplique unique — la limite absolue du hors-champ (§2.1).
 16. Les **généraux secrets** comme figures d'Atlas jouables (§3.5), leur statut de sans-drapeau, et la doctrine **« jamais indispensable »**.
 17. Le domaine `monde.secret.*` **absent de cette bible et de `content/flags.json` par construction**, le flag dérivé `monde.tournoi.fils_termines`, et les règles 8 et 9 du §8.6.
-18. **La Sélection Méridienne**, dite « les Gris » (§3.4) : l'équipe d'exhibition et d'essai d'Atlas, financée par le Consortium, dirigée par Ost, qui devient à l'acte III la faction sur le terrain — un adversaire sans être un pays. Son code de camp à trois lettres, `atl`, sert aussi de code de terrain à Port-Méridien.
+18. **La Sélection Méridienne**, dite « les Gris » (§3.4) : officiellement la force d'essai et de garantie des trêves d'Atlas, en fait l'armée privée du Consortium, commandée par Ost, qui devient à l'acte III la Cinquième Manche à visage découvert — un adversaire sans être un pays. Son code de camp à trois lettres, `atl`, sert aussi de code de terrain à Port-Méridien et au plateau d'Aube.
+19. **Le Tableau des belligérants** (§4.6) et ses gestes : deux plaques côte à côte, une plaque retournée, une note « sous contrat méridien », une plaque posée à plat, une plaque remise à l'endroit.

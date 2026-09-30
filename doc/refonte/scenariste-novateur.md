@@ -1,5 +1,7 @@
 # Proposition du scénariste novateur — Les Heures promises
 
+*Écrit avant la validation du lore v2 (26 septembre 2026) : le registre de guerre de `BRIEF.md` fait foi.*
+
 Statut : proposition de refonte du 9 septembre 2026, à arbitrer avec les autres contributions. Ce document ne modifie ni le canon chargé ni les sauvegardes. Il répond à la demande explicite de guerre disputée sous forme de tournois pour l'énergie. Les noms historiques d'Atlas restent disponibles ; les faits nouveaux ci-dessous ne deviennent canoniques qu'après intégration dans la bible et les schémas.
 
 ## Le conflit : qui a droit à demain ?

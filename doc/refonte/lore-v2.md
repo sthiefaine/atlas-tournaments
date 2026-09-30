@@ -1,6 +1,8 @@
 # Lore v2 — une guerre à comprendre, des personnes à suivre
 
-Révision éditoriale du 12 septembre 2026, demandée par le propriétaire. Ce document et `lore-v2.json` décrivent l’aventure visée ; ils ne livrent pas 200 cartes. **Le parcours local reste à 12 missions jouables : dix tutoriels et deux premiers matchs.** Le plan conserve 172 épisodes principaux (10 tutoriels, 144 nationaux, 18 finales), 28 hors-série, 79 décisions et quatre fins. Les identifiants, options, effets, cibles et jalons familiaux sont conservés.
+**Statut : validé le 26 septembre 2026.** Le propriétaire l’a validé par délégation (« va y lance plusieurs agents pour faire tout ça en autonomie », en réponse à « le lore v2 n’est pas validé ») : ce document et `lore-v2.json` sont désormais le canon du lore, porté par `BRIEF.md` (« Le lore v2 validé »), `../01-bible.md`, `../08-narration-choix.md` et `../17-aube.md`. Les huit questions que la proposition laissait ouvertes sont tranchées à la fin de ce document.
+
+Révision éditoriale du 12 septembre 2026, demandée par le propriétaire. Ce document et `lore-v2.json` décrivent l’aventure visée ; ils ne livrent pas 200 cartes. **Le parcours local compte 24 missions jouables : les dix exercices, deux épreuves de sortie d’école et le chapitre français de la saison nationale 1** (il en comptait 12 le 12 septembre). Le plan conserve 172 épisodes principaux (10 tutoriels, 144 nationaux, 18 finales), 28 hors-série, 79 décisions et quatre fins. Les identifiants, options, effets, cibles et jalons familiaux sont conservés.
 
 Cette passe simplifie l’entrée dans le monde, différencie les douze arcs et donne un sens humain aux choix existants. Elle ne prétend pas avoir démontré l’intérêt de 200 missions auprès de joueurs : les cartes nationales et finales restent à construire et à éprouver, en normal comme en difficile.
 
@@ -73,7 +75,7 @@ Les six premières finales montrent les armes de la Cinquième Manche. Leur effe
 
 Le lien frère–sœur entre Maël et Lise, ainsi que la paternité Edran–Lise, restent secrets pendant tout l’opus. Ni la coordination militaire, ni les noms techniques, ni un carnet public ne doivent les divulguer. Relais Zéro reste également sans identité confirmée à la fin.
 
-Les dernières batailles confrontent les personnages aux engagements passés. Lise ne se rallie que selon les conditions prévues ; Maël n’est pas réduit au rôle de fils ; Edran peut cette fois être battu loyalement. Les quatre fins du JSON conservent leurs conditions et leur portée. Aucune nouvelle fin n’est ajoutée et la fusion ne devient pas soudain disponible.
+Les dernières batailles confrontent les personnages aux engagements passés. Lise ne se rallie que selon les conditions prévues ; Maël n’est pas réduit au rôle de fils ; Edran peut cette fois être battu loyalement. Les quatre fins du JSON conservent leur portée ; depuis la validation, leurs conditions reposent sur les décisions seules, et le dossier des protêts ne fait que les colorer (question 7 ci-dessous). Aucune nouvelle fin n’est ajoutée et la fusion ne devient pas soudain disponible.
 
 ## Consignes pour la suite de production
 
@@ -84,3 +86,20 @@ Un tutoriel distribue ses explications dans le temps. Le sixième présente d’
 Les modes normal et difficile racontent la même histoire. Le difficile change les contraintes tactiques déclarées, pas les liens secrets, les choix acquis ou la moralité du joueur. Toute future carte doit faire vérifier ses objectifs et ses branches ; une fiche de conception n’est pas une preuve de jouabilité.
 
 La prochaine validation éditoriale doit se faire avec des lecteurs ados et adultes : peuvent-ils dire ce qu’ils doivent faire, pour qui, et ce qui a changé après leur choix ? Cette passe réduit les obstacles, elle ne remplace pas leurs retours.
+
+## Validation du 26 septembre 2026 — ce qui a été tranché
+
+La proposition laissait huit questions ouvertes ; elles sont tranchées dans `BRIEF.md` (« Le lore v2 validé »), qui fait foi :
+
+1. **Le nom** : « la guerre de l’énergie » dans les documents, « la guerre » dans la bouche des personnages.
+2. **Le camp d’instruction** : les dix exercices se jouent à charges à blanc ; le premier engagement réel est « Premier courant » (`opus1_fr_01`).
+3. **Les pertes** : pas de nouveau compteur ; le bilan de fin de mission montre déjà les unités perdues.
+4. **« Hors jeu »** reste sur le HUD : Atlas compte des pièces, pas des morts.
+5. **La Sélection Méridienne** est aussi une force de garantie des trêves, ce qui met les Gris partout.
+6. **Les stations capturables en saison nationale** : seule la station à impulsion ; la première capture d’une station de forçage météo est à la finale 17.
+7. **Le dossier des protêts** colore une fin, il ne la conditionne jamais : les conditions des quatre fins de `lore-v2.json` reposent désormais sur les décisions seules.
+8. **Aube** est sur un plateau neutre rattaché à Port-Méridien, fictif, dans aucune nation réelle.
+
+Dans `lore-v2.json`, cela tient en quatre endroits : `statut` vaut `valide` (avec `valideLe`), `presentation.statut` compte les 24 missions jouables, les conditions de `fins[]` ne citent plus aucun seuil de protêts, et `monde.regles` gagne deux règles — les exercices à blanc (question 2) et les fins lues sur les décisions (question 7). Aucun résumé d’épisode, aucune décision ni aucune cible n’a bougé.
+
+Ce qui ne change pas : rien du monde réel, aucune horreur graphique, la fratrie Maël–Lise et la paternité d’Edran cachées jusqu’à la finale 10, où seule la paternité Edran–Maël sort, les quatre disparitions, la Cinquième Manche sans nationalité, aucune arme réelle nommée, les 172 identifiants, les 28 hors-série, les 79 décisions et leurs cibles, les quatre fins, les clés de flags.

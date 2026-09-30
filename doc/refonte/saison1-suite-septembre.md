@@ -1,5 +1,7 @@
 # Bâtiments communs et suite française — 14 septembre 2026
 
+*Écrit avant la validation du lore v2 (26 septembre 2026) : le registre de guerre de `BRIEF.md` fait foi.*
+
 ## Livraison 3D
 
 Cinq modèles originaux fabriqués dans le dépôt, en LOD0, avec PNG PBR externes. Ils sont activés dans `public/assets/modeles` après contrôle technique ; aucune approbation artistique n'est revendiquée. Aucun modèle uploadé, dont le QG, n'a été remplacé par cette fabrication.

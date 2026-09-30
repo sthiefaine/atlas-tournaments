@@ -1,5 +1,7 @@
 # Deux quêtes secondaires pour Aube
 
+*Écrit avant la validation du lore v2 (26 septembre 2026) : le registre de guerre de `BRIEF.md` fait foi.*
+
 Livraison du 9 septembre 2026. Ces deux rencontres sont des scénarios d’essai (`brouillon`), au catalogue 6, avec des cartes originales. Elles prolongent l’idée d’étapes facultatives qui préparent un match futur ; elles ne reproduisent ni une carte, ni un dialogue, ni un personnage d’Advance Wars. Les modes normal et difficile et la persistance des récompenses sont raccordés par le chantier de campagne, séparément de ces JSON.
 
 ## Le convoi de Solveig

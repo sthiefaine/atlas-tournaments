@@ -1,10 +1,10 @@
 {
   "cle": "pays_br",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-05",
+  "majLe": "2026-09-27",
   "code": "br",
   "nom": "Brésil",
   "nomCourt": "Brésil",
@@ -42,7 +42,7 @@
         }
       ]
     },
-    "description": "Le moral monte avec le bruit du stade et se voit tout de suite dans l’attaque ; il tombe aussi vite, et trois unités perdues d’affilée coûtent une journée entière d’élan."
+    "description": "Le moral monte avec le bruit des tambours et se voit tout de suite dans l’attaque ; il tombe aussi vite, et trois unités perdues d’affilée coûtent une journée entière d’élan."
   },
   "archetypeCommandant": "showman",
   "rivalNaturel": "ar",
@@ -78,7 +78,7 @@
     "pays.br.diner_perdu"
   ],
   "phare": true,
-  "accroche": "Les plus grandes cartes des Amériques, un fleuve navigable qui traverse tout, et une commandante qui joue mieux quand le stade fait du bruit.",
+  "accroche": "Les plus grandes cartes des Amériques, un fleuve navigable qui traverse tout, et une commandante qui se bat mieux quand les tambours font du bruit.",
   "interdits": [
     "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
     "Aucune référence à la pauvreté ni à la violence urbaine : le Brésil du jeu est celui du carnaval, du fleuve et du public.",

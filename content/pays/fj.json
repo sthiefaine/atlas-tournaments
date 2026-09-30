@@ -1,10 +1,10 @@
 {
   "cle": "pays_fj",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-05",
+  "majLe": "2026-09-27",
   "code": "fj",
   "nom": "Fidji",
   "nomCourt": "Fidji",
@@ -47,7 +47,7 @@
         }
       ]
     },
-    "description": "Les eaux peu profondes se traversent comme de la plaine, et par personne d’autre ; le budget est le plus petit du tournoi et aucune unité lourde n’en sort."
+    "description": "Les eaux peu profondes se traversent comme de la plaine, et par personne d’autre ; le budget est le plus petit de la guerre et aucune unité lourde n’en sort."
   },
   "archetypeCommandant": "prodige",
   "rivalNaturel": "nz",
@@ -79,7 +79,7 @@
     "pays.fj.formateur_battu"
   ],
   "phare": false,
-  "accroche": "Un micro-archipel de lagon, une trentaine d’îlots, et le plus jeune commandant du tournoi qui improvise et s’en sort neuf fois sur dix.",
+  "accroche": "Un micro-archipel de lagon, une trentaine d’îlots, et le plus jeune commandant de la guerre, qui improvise et s’en sort neuf fois sur dix.",
   "interdits": [
     "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
     "Aucune référence coutumière ou cérémonielle : le registre est celui du lagon, du rugby et de l’accueil.",

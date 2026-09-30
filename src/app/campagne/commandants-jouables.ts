@@ -24,12 +24,12 @@
  * Ce qui n'est **pas** réutilisé : la table `BANCS_PRETES` et ses clés i18n de
  * conséquence. Un choix ouvert n'a pas de conséquence à annoncer.
  */
-import type { CodePays, Scenario } from '../../schemas/index';
+import type { CampId, CodePays, Scenario } from '../../schemas/index';
 import { chargerCommandantJeu, revisionCommandants, type CommandantJeu } from '../../content/commandants-jeu';
 import { chargerCommandantsJouables, type RosterJouables } from '../../content/commandants-jouables';
 import { lireProfilCommandant } from '../../content/profils-commandants';
-import { appliquerBanc, commandantDeGraine } from './bancs';
-import { vestiaire, type EtatCampagne, type Progression } from './progression';
+import { appliquerBanc, commandantDeGraine, optionsBanc } from './bancs';
+import { disparusDeProgression, vestiaire, type EtatCampagne, type Progression } from './progression';
 
 export { commandantDeGraine, graineAvecCommandant, cleSourceCommandant, estSourceCommandant } from './bancs';
 
@@ -61,6 +61,25 @@ export function paysDuCommandant(cle: string): CodePays {
   return (lireProfilCommandant(cle)?.paysCode as CodePays | undefined) ?? CODE_SANS_NATION;
 }
 
+/**
+ * La nation de chaque camp, qui donne ses couleurs et ses bâtiments nationaux à
+ * la peau : le joueur garde la sienne (`paysJoueur` — celle du scénario, ou de
+ * l'incarnation), et **chaque autre camp prend celle de son commandant**.
+ *
+ * La page écrivait `{ 0: paysJoueur, 1: paysJoueur === 'lu' ? 'fr' : 'lu' }` :
+ * l'adversaire était luxembourgeois par défaut, ce qui valait pour Tomas aux
+ * exercices et faussait tout le reste — les Gris d'Ost et d'Edran portaient les
+ * couleurs et le QG du Luxembourg dans le chapitre français, et Lise, au
+ * Luxembourg, le QG de la France. Un commandant sans nation (`atl` : les Gris,
+ * l'Intendance) n'a pas de style : son camp garde sa couleur et le bâtiment
+ * commun. Le choix du joueur ne change jamais les couleurs d'en face.
+ */
+export function paysDesCamps(scenario: Scenario, paysJoueur: CodePays): Partial<Record<CampId, CodePays>> {
+  const pays: Partial<Record<CampId, CodePays>> = { 0: paysJoueur };
+  for (const c of scenario.commandants) if (c.camp !== 0) pays[c.camp] = paysDuCommandant(c.commandantCle);
+  return pays;
+}
+
 /** Le commandant que le scénario met au camp du joueur. */
 export function commandantDuScenario(scenario: Scenario): string | null {
   return scenario.commandants.find((c) => c.camp === 0)?.commandantCle ?? null;
@@ -88,6 +107,9 @@ function kitDe(cle: string, scenario: Scenario): CommandantJeu | null {
  * par `grilleCommandants` (`roster.ts`), qui montre en plus les verrouillés et
  * les silhouettes des secrets ; les deux lisent le même acquis, calculé une
  * seule fois par `vestiaire()`, de sorte qu'aucune règle n'est écrite deux fois.
+ * C'est aussi par `vestiaire()` que le calendrier des disparitions
+ * (`disparitions.ts`) retire un général annoncé disparu — sauf du défaut : une
+ * épreuve se joue avec le commandant qu'elle déclare.
  */
 export function optionsCommandant(
   scenario: Scenario,
@@ -115,6 +137,26 @@ export function optionsCommandant(
     option(defaut, true),
     ...vestiaire(progression, roster, etat).filter((cle) => cle !== defaut).map((cle) => option(cle, false)),
   ];
+}
+
+/**
+ * Les **bancs** qu'un briefing propose (`bancs.ts`) : `optionsBanc`, moins les
+ * généraux disparus (`disparitions.ts`). Jouer ses propres couleurs reste
+ * toujours proposé.
+ *
+ * `optionsBanc` n'est pas filtré, et ne doit pas l'être : il donne la liste dans
+ * l'ordre des chiffres de la graine et relit les décisions enregistrées — une
+ * partie jouée sous les couleurs de Tomas avant la finale 11 se reprend et se
+ * rejoue sous ses couleurs, à l'identique. Ce qui change à l'annonce, c'est ce
+ * qu'on **propose**, jamais ce qu'on a joué.
+ */
+export function bancsProposes(
+  code: string,
+  progression: Progression,
+  etat: EtatCampagne = {},
+): ReturnType<typeof optionsBanc> {
+  const disparus = new Set(disparusDeProgression(progression, etat));
+  return optionsBanc(code).filter((o) => !disparus.has(o.cle));
 }
 
 /**

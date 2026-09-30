@@ -1,10 +1,10 @@
 {
   "cle": "pays_gr",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-05",
+  "majLe": "2026-09-27",
   "code": "gr",
   "nom": "Grèce",
   "nomCourt": "Grèce",
@@ -57,7 +57,7 @@
     "pays.gr.anecdote_corrigee"
   ],
   "phare": false,
-  "accroche": "Des centaines d’îlots, un café avant le coup d’envoi, et un vétéran qui raconte la même finale avec une fin différente.",
+  "accroche": "Des centaines d’îlots, un café avant chaque traversée, et un vétéran qui raconte la même bataille avec une fin différente.",
   "interdits": [
     "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
     "Aucune référence à l’Antiquité militaire : les colonnes du jeu tiennent des auvents de terrasse.",

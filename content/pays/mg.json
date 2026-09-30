@@ -1,10 +1,10 @@
 {
   "cle": "pays_mg",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-05",
+  "majLe": "2026-09-27",
   "code": "mg",
   "nom": "Madagascar",
   "nomCourt": "Madagascar",
@@ -48,7 +48,7 @@
         }
       ]
     },
-    "description": "Forêt, brousse et piste rouge se traversent au même prix quand on connaît l’île ; le budget, lui, est le plus court du tournoi et le revenu par ville est plafonné."
+    "description": "Forêt, brousse et piste rouge se traversent au même prix quand on connaît l’île ; le budget, lui, est le plus court de la guerre et le revenu par ville est plafonné."
   },
   "archetypeCommandant": "meteorologue",
   "rivalNaturel": "id",
@@ -80,7 +80,7 @@
     "pays.mg.piste_quittee"
   ],
   "phare": false,
-  "accroche": "Une île à deux climats séparés par une arête, des pistes rouges qui relient tout, et une commandante qui nomme chaque espèce en pleine partie.",
+  "accroche": "Une île à deux climats séparés par une arête, des pistes rouges qui relient tout, et une commandante qui nomme chaque espèce en pleine bataille.",
   "interdits": [
     "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
     "La forêt est un terrain vivant, jamais un sujet de déforestation ou de misère.",

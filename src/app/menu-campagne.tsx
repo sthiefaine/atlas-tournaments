@@ -5,7 +5,7 @@ export type { Epreuve } from './accueil-campagne';
 export interface LibellesCampagne {
   campagne: string;
   carnet: string;
-  /** Sous-ligne du serveur et du joueur neuf : « Six épreuves · commencez ici ». */
+  /** Sous-ligne du serveur et du joueur neuf : « Dix exercices · commencez ici ». */
   neuf: string;
   /** Sous-ligne « tout remporté ». */
   fini: string;

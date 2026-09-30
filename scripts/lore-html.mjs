@@ -1,7 +1,7 @@
 // L'atlas du lore : une page cliquable qui montre le monde, les saisons, les
 // 200 épisodes, les personnages, les technologies, et laisse le propriétaire
 // prendre chaque décision pour voir ce qu'elle déclenche. Les données viennent
-// de `doc/refonte/lore-v2.json` (la proposition de la scénariste) posées sur
+// de `doc/refonte/lore-v2.json` (le lore v2, validé le 26 septembre 2026) posées sur
 // les registres existants (fil, décisions nationales, finales, hors-série),
 // qui servent de repli pour tout champ absent.
 //   node scripts/lore-html.mjs <sortie.html>
@@ -80,12 +80,12 @@ for (const [id, r] of Object.entries(episodesRepli)) {
 }
 for (const [id, v] of Object.entries(lore?.episodes ?? {})) if (!episodes[id]) episodes[id] = { ...v, type: 'hors_serie', numero: null, chapitre: 'Hors du fil', format: '', nation: null };
 const saisons = (lore?.saisons?.length ? lore.saisons : saisonsRepli).map((s) => ({ ...s, episodes: s.episodes.filter((id) => episodes[id]) }));
-const monde = lore?.monde ?? { titre: 'Atlas Tournament — le monde (registres actuels)', premisse: 'La proposition de lore v2 n\'est pas encore posée : cette page montre les registres existants. Le propriétaire a tranché le 10 septembre 2026 : c\'est une guerre, une course à l\'énergie et aux nouvelles technologies ; les vilains veulent la fusion.', enjeu: '', ton: '', cequiChange: [], regles: [] };
+const monde = lore?.monde ?? { titre: 'Atlas Tournament — le monde (registres actuels)', premisse: 'Le fichier du lore v2 est absent : cette page ne montre que les registres existants. Le lore v2, validé le 26 septembre 2026, fait foi (BRIEF.md) : une guerre pour l\'énergie et l\'avance technique, qu\'Atlas arbitre, et la Cinquième Manche qui veut Aube pour elle seule.', enjeu: '', ton: '', cequiChange: [], regles: [] };
 const factions = lore?.factions ?? [];
 const technologies = lore?.technologies ?? [];
 const personnages = lore?.personnages ?? personnagesCanon.map((p) => ({ cle: p.cle, nom: p.nom, camp: p.paysCode ?? (p.role === 'civil' ? 'atlas' : 'atlas'), role: p.fonction, veut: p.motivation, craint: p.croyance, sort: 'inconnu', secret: null }));
 const fins = lore?.fins ?? [];
-const donnees = { presentation: lore?.presentation ?? null, arcsNationaux: lore?.arcsNationaux ?? [], monde, factions, technologies, personnages, saisons, episodes, fins, nomPays, genere: new Date().toISOString().slice(0, 10), source: lore ? 'lore-v2.json' : 'registres' };
+const donnees = { presentation: lore?.presentation ?? null, arcsNationaux: lore?.arcsNationaux ?? [], monde, factions, technologies, personnages, saisons, episodes, fins, nomPays, genere: new Date().toISOString().slice(0, 10), source: lore ? 'lore-v2.json' : 'registres', valideLe: lore?.statut === 'valide' ? lore.valideLe ?? null : null };
 
 const e = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const nbDecisions = Object.values(episodes).filter((x) => x.decision).length;
@@ -164,7 +164,7 @@ textarea{width:100%;min-height:120px;background:var(--panneau-2);color:var(--tex
 </style>
 <div class="app">
 <header>
-<h1><small>Atlas Tournament · proposition de lore v2 · ${e(donnees.genere)} · source ${e(donnees.source)}</small>L'atlas du lore</h1>
+<h1><small>Atlas Tournament · lore v2${donnees.valideLe ? ` validé le ${e(donnees.valideLe)}` : ''} · ${e(donnees.genere)} · source ${e(donnees.source)}</small>L'atlas du lore</h1>
 <span class="compte"><b>${Object.keys(episodes).length}</b> épisodes · <b>${nbDecisions}</b> décisions · <b>${nbMorts}</b> morts · <b id="cChoix">0</b> choix faits</span>
 <div class="onglets" role="tablist">
 <button data-onglet="fil" aria-pressed="true">Le fil</button><button data-onglet="monde">Le monde</button><button data-onglet="factions">Factions</button><button data-onglet="technos">Technologies</button><button data-onglet="persos">Personnages</button><button data-onglet="vue">Vue d'ensemble</button>
@@ -282,11 +282,11 @@ function rendreMonde() {
 }
 function rendreFactions() {
   const c = document.getElementById('centre');
-  c.innerHTML = '<h2>Factions</h2><div class="cartes">' + (D.factions.length ? D.factions.map((f) => '<div class="carte"><h4>' + esc(f.nom) + '</h4><p class="meta">' + esc(f.nature || '') + '</p><p><b>But.</b> ' + esc(f.but) + '</p><p><b>Moyens.</b> ' + esc(f.moyens) + '</p>' + (f.chef ? '<p><b>Chef.</b> ' + esc(nomP(f.chef)) + '</p>' : '') + ((f.membres || []).length ? '<p><b>Membres.</b> ' + f.membres.map(nomP).map(esc).join(', ') + '</p>' : '') + ((f.armes || []).length ? '<p><b>Armes.</b> ' + f.armes.map(nomT).map(esc).join(', ') + '</p>' : '') + '</div>').join('') : '<p class="premisse">Les factions arrivent avec la proposition de lore v2.</p>') + '</div>';
+  c.innerHTML = '<h2>Factions</h2><div class="cartes">' + (D.factions.length ? D.factions.map((f) => '<div class="carte"><h4>' + esc(f.nom) + '</h4><p class="meta">' + esc(f.nature || '') + '</p><p><b>But.</b> ' + esc(f.but) + '</p><p><b>Moyens.</b> ' + esc(f.moyens) + '</p>' + (f.chef ? '<p><b>Chef.</b> ' + esc(nomP(f.chef)) + '</p>' : '') + ((f.membres || []).length ? '<p><b>Membres.</b> ' + f.membres.map(nomP).map(esc).join(', ') + '</p>' : '') + ((f.armes || []).length ? '<p><b>Armes.</b> ' + f.armes.map(nomT).map(esc).join(', ') + '</p>' : '') + '</div>').join('') : '<p class="premisse">Les factions viennent du lore v2 (doc/refonte/lore-v2.json), absent ici.</p>') + '</div>';
 }
 function rendreTechnos() {
   const c = document.getElementById('centre');
-  c.innerHTML = '<h2>La course aux technologies</h2>' + (D.technologies.length ? '<table><thead><tr><th>Technologie</th><th>Camp</th><th>Ce que c\\'est</th><th>En jeu</th><th>Apparaît</th><th>Capturable</th></tr></thead><tbody>' + D.technologies.map((t) => '<tr><td><b>' + esc(t.nom) + '</b></td><td>' + esc(t.camp) + '</td><td>' + esc(t.description) + '</td><td>' + esc(t.effetJeu || '') + '</td><td>' + (t.apparait ? '<button class="lien" data-ep="' + esc(t.apparait) + '">' + esc(D.episodes[t.apparait]?.titre || t.apparait) + '</button>' : '—') + '</td><td>' + (t.capturable ? 'oui' + (t.capturePar ? ' · <button class="lien" data-ep="' + esc(t.capturePar) + '">' + esc(D.episodes[t.capturePar]?.titre || t.capturePar) + '</button>' : '') : 'non') + '</td></tr>').join('') + '</tbody></table>' : '<p class="premisse">Les technologies arrivent avec la proposition de lore v2.</p>');
+  c.innerHTML = '<h2>La course aux technologies</h2>' + (D.technologies.length ? '<table><thead><tr><th>Technologie</th><th>Camp</th><th>Ce que c\\'est</th><th>En jeu</th><th>Apparaît</th><th>Capturable</th></tr></thead><tbody>' + D.technologies.map((t) => '<tr><td><b>' + esc(t.nom) + '</b></td><td>' + esc(t.camp) + '</td><td>' + esc(t.description) + '</td><td>' + esc(t.effetJeu || '') + '</td><td>' + (t.apparait ? '<button class="lien" data-ep="' + esc(t.apparait) + '">' + esc(D.episodes[t.apparait]?.titre || t.apparait) + '</button>' : '—') + '</td><td>' + (t.capturable ? 'oui' + (t.capturePar ? ' · <button class="lien" data-ep="' + esc(t.capturePar) + '">' + esc(D.episodes[t.capturePar]?.titre || t.capturePar) + '</button>' : '') : 'non') + '</td></tr>').join('') + '</tbody></table>' : '<p class="premisse">Les technologies viennent du lore v2 (doc/refonte/lore-v2.json), absent ici.</p>');
   for (const b of c.querySelectorAll('[data-ep]')) b.onclick = () => allerA(b.dataset.ep);
 }
 function rendrePersos() {

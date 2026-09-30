@@ -1,12 +1,12 @@
 {
   "cle": "couleurs_alliees",
-  "version": 5,
+  "version": 6,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-12",
+  "majLe": "2026-09-27",
   "code": "couleurs_alliees",
-  "nom": "Exhibition · Sous les couleurs alliées",
+  "nom": "Front d’essai · Sous les couleurs alliées",
   "acte": 0,
   "paysCode": "fr",
   "carteCle": "carte_couleurs_alliees",
@@ -71,7 +71,7 @@
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Tenez **les trois postes en même temps**, au nord, au centre et au sud. Ariane essaiera d’en garder un. Si vous avez choisi la maintenance partagée, les fonds sont disponibles pour ce match.",
+      "texte": "Tenez **les trois postes en même temps**, au nord, au centre et au sud. Ariane essaiera d’en garder un. Si vous avez choisi la maintenance partagée, les fonds sont disponibles dès le départ.",
       "emotion": "neutre"
     }
   ],

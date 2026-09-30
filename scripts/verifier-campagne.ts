@@ -8,16 +8,31 @@
  * autres unités frappent au mieux, et les usines recrutent. Si cette heuristique
  * échoue, aucune solution n'est démontrée : cela ne prouve ni impossibilité ni
  * difficulté humaine. Tous les ordres et toutes les victoires passent par le moteur.
+ *
+ * Une mission d'escorte (objectif `proteger` avec destination) se joue comme une
+ * escorte (`src/ai/escorte.ts`, 27 septembre 2026) par les trois pilotes : la
+ * protégée joue en dernier et ne va que là où aucun adversaire connu ne peut la
+ * frapper au prochain passage — sinon elle attend ou recule —, et file dès que
+ * l'arrivée est à sa portée. L'heuristique y ajoute le **dégagement de
+ * l'arrivée** : ses capteurs prennent les producteurs adverses situés à un
+ * mouvement de la protégée de la destination, ses autres unités frappent ce qui
+ * occupe ces bâtiments ou l'arrivée, et n'y stationnent jamais.
+ *
+ * `SCENARIOS_CAMPAGNE=<clé,clé>` restreint la vérification ; `DEBUG_CAMPAGNE=<clé>`
+ * trace chaque journée du joueur ; `GRAINE_CAMPAGNE=<n>` rejoue sous la graine
+ * `<code>:<n>` au lieu de `<code>:1`, pour mesurer la robustesse d'une
+ * démonstration — la démonstration elle-même est celle de la graine 1.
  */
 import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { scenarioPourMode } from '../src/app/jeu/difficulte';
 import { sontAllies } from '../src/engine/equipes';
 import {
-  appliquer, prevoirDuel, chargerCatalogue, creerPartie, empreinte, enregistrerPartie, estDesaffecte, rejouer,
+  appliquer, chargerCatalogue, creerPartie, empreinte, enregistrerPartie, estDesaffecte, rejouer,
   restaurerRng, sceneDepuis, type Action, type EtatPartie, type Unite,
 } from '../src/engine/index';
 import { jouerTour, meilleureOption, meilleureProduction, POIDS_AGRESSIVE, POIDS_PONDEREE, strategie } from '../src/ai/index';
+import { escorteDuScenario, jouerTourEscorte, planEscorte, producteursAdversesPres } from '../src/ai/escorte';
 import { ciblesDepuis, terrainLogique } from '../src/engine/index';
 import { casesAtteignables, cheminVers, coutEntree, portee, voisines } from '../src/engine/regles/mouvement';
 import { cleCase, porte } from '../src/engine/types';
@@ -73,13 +88,15 @@ for (const scenarioCle of cles) for (const mode of MODES_VERIFICATION) {
   const commandants = resoudreCommandantsScenario(s);
   const scene = sceneDepuis(s, vm.valeur, commandants);
   const objectifsScenario = s.victoire;
+  const escorte = escorteDuScenario(s.victoire);
+  const graine = `${s.code}:${process.env['GRAINE_CAMPAGNE'] ?? '1'}`;
   const journeesMax = Math.max(60, s.limiteJournees ?? 0, ...s.victoire.map(v => 'journees' in v ? v.journees + 2 : 0));
   // Trois joueurs simples, du plus lisible au plus brutal : le premier qui gagne
   // est la démonstration. Aucun n'est une mesure de difficulté humaine.
   const JOUEURS = ['heuristique', 'ponderee', 'agressive'] as const;
   let demonstration: { joueur: string; etat: EtatPartie; actions: Action[] } | null = null;
   for (const joueur of JOUEURS) {
-  let e = creerPartie(scene, cat, `${s.code}:1`);
+  let e = creerPartie(scene, cat, graine);
   const actions: Action[] = [];
 
   function agir(a: Action): boolean {
@@ -90,9 +107,24 @@ for (const scenarioCle of cles) for (const mode of MODES_VERIFICATION) {
     return true;
   }
 
-  /** Les cases que le joueur doit encore prendre, selon l'objectif. */
+  /**
+   * Les cases que le joueur doit encore prendre, selon l'objectif. Sur une
+   * escorte s'y ajoutent les producteurs adverses à un mouvement de la
+   * protégée de l'arrivée : ce qui y naît la frapperait au dernier pas et
+   * fermerait l'approche. Les prendre, c'est dégager l'arrivée.
+   */
   function ciblesCapture(): Case[] {
-    return ciblesCaptureCampagne(e);
+    const cibles = ciblesCaptureCampagne(e);
+    if (!escorte) return cibles;
+    const protegee = e.unites.find((u) => u.id === escorte.uniteId);
+    const rayon = protegee ? cat.unites[protegee.type]?.mouvement ?? 0 : 0;
+    const deja = new Set(cibles.map(cleCase));
+    return [...cibles, ...producteursAdversesPres(e, cat, 0, escorte.destination, rayon).filter((c) => !deja.has(cleCase(c)))];
+  }
+
+  /** Les cases que nos unités ne doivent pas tenir : les objectifs, et l'arrivée d'une escorte. */
+  function casesALaisser(): Case[] {
+    return escorte ? [...ciblesCapture(), escorte.destination] : ciblesCapture();
   }
 
   /** Mène une unité vers la cible et capture si elle y arrive. */
@@ -100,24 +132,7 @@ for (const scenarioCle of cles) for (const mode of MODES_VERIFICATION) {
     const p = portee(e, cat, u);
     const distances = distancesVers(e, cat, u, cible);
     const libres = casesAtteignables(p).filter((c) => !e.unites.some((z) => z.id !== u.id && !z.dansTransport && z.x === c.x && z.y === c.y));
-    const escortee = objectifsScenario.some(v => v.type === 'proteger' && v.uniteRef === u.id);
-    const risques = new Map<string,number>();
-    if (escortee) {
-      // Prévision prudente, sans mutation : chaque adversaire fournit sa meilleure
-      // frappe légale au prochain mouvement. Ce n'est pas une recherche exhaustive.
-      const menaces = e.unites.filter(z => !sontAllies(e,z.camp,0) && !z.dansTransport).map(z => ({z,cases:casesAtteignables(portee(e,cat,z))}));
-      for (const c of libres) {
-        const cible = {...u,x:c.x,y:c.y};
-        const futur = {...e,unites:e.unites.map(z => z.id === u.id ? cible : z)};
-        const risque = menaces.reduce((somme,{z,cases}) => somme + Math.max(0,...cases.map(depuis => {
-          const bouge = depuis.x !== z.x || depuis.y !== z.y;
-          if (futur.unites.some(autre => autre.id !== z.id && !autre.dansTransport && cleCase(autre) === cleCase(depuis))) return 0;
-          return ciblesDepuis(futur,cat,z,depuis,bouge).some(t => t.id === u.id) ? prevoirDuel(futur,cat,z,cible,depuis).degats : 0;
-        })),0);
-        risques.set(cleCase(c),risque);
-      }
-    }
-    libres.sort((a, b) => (risques.get(cleCase(a)) ?? 0) - (risques.get(cleCase(b)) ?? 0) || (distances.get(cleCase(a)) ?? 999) - (distances.get(cleCase(b)) ?? 999));
+    libres.sort((a, b) => (distances.get(cleCase(a)) ?? 999) - (distances.get(cleCase(b)) ?? 999));
     const arrivee = libres[0];
     if (!arrivee) return false;
     const chemin = cheminVers(p, u, arrivee);
@@ -181,7 +196,10 @@ for (const scenarioCle of cles) for (const mode of MODES_VERIFICATION) {
     }
 
     if (joueur !== 'heuristique' && scenarioCle !== 'pacte_du_col') {
-      const tourJoueur = jouerTour(e, strategie(joueur), restaurerRng(e.graine, e.flux), cat, commandants);
+      const rng = restaurerRng(e.graine, e.flux);
+      const tourJoueur = escorte
+        ? jouerTourEscorte(e, strategie(joueur), rng, cat, commandants, escorte)
+        : jouerTour(e, strategie(joueur), rng, cat, commandants);
       if (tourJoueur.refus.length) throw new Error(JSON.stringify(tourJoueur.refus));
       e = tourJoueur.etat;
       actions.push(...tourJoueur.actions);
@@ -204,8 +222,14 @@ for (const scenarioCle of cles) for (const mode of MODES_VERIFICATION) {
       const capteur = porte(type, 'capture') && type.capture;
       const batisseur = porte(type, 'genie');
 
-      const escorte = objectifsScenario.find(v => v.type === 'proteger' && id === v.uniteRef);
-      if (escorte?.type === 'proteger' && escorte.destination && progresserVers(u, escorte.destination, false)) continue;
+      if (escorte && id === escorte.uniteId) {
+        const plan = planEscorte(e, cat, escorte, commandants);
+        if (plan) {
+          if (process.env['DEBUG_CAMPAGNE'] === scenarioCle) console.log(`    escorte ${u.x},${u.y}/${u.pv} → ${cleCase(plan.vers)} (${plan.regle}, pire ${plan.risque}, marge ${plan.marge})`);
+          for (const a of plan.actions) if (!agir(a) || e.partie.terminee) break;
+          continue;
+        }
+      }
       const relaisIndice = objectifsScenario.findIndex(v => v.type === 'relais');
       const relais = objectifsScenario[relaisIndice];
       if (relais?.type === 'relais') {
@@ -223,13 +247,13 @@ for (const scenarioCle of cles) for (const mode of MODES_VERIFICATION) {
       }
       // Un adversaire posé sur une case d'objectif est la cible prioritaire :
       // tant qu'il y reste, aucune capture ni remise en service n'est possible.
-      if (frapperOccupant(u, ciblesCapture())) continue;
+      if (frapperOccupant(u, casesALaisser())) continue;
       // Les autres frappent au mieux, mais ne stationnent jamais sur une case
       // d'objectif : un char garé sur la ville à prendre bloque son propre capteur.
       const option = meilleureOption(e, cat, u, POIDS_AGRESSIVE);
       const a = option.action;
       const arrivee = a.type === 'ordre' ? a.chemin[a.chemin.length - 1]! : null;
-      const objectifs = ciblesCapture();
+      const objectifs = casesALaisser();
       const gene = arrivee !== null && objectifs.some((c) => c.x === arrivee.x && c.y === arrivee.y);
       if (!gene && agir(a)) continue;
       degager(u, objectifs);

@@ -1,10 +1,10 @@
 {
   "cle": "premier_contact",
-  "version": 8,
+  "version": 9,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-12",
+  "majLe": "2026-09-27",
   "code": "premier_contact",
   "nom": "Entraînement 1 · Premier contact",
   "acte": 0,
@@ -79,7 +79,7 @@
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Tomas gagne cette manche. Regardons où vos unités se sont retrouvées seules, puis essayons un autre passage. Un entraînement sert à ça.",
+      "texte": "Cette fois, Tomas l’emporte. Regardons où vos unités se sont retrouvées seules, puis essayons un autre passage. Un entraînement sert à ça.",
       "emotion": "neutre"
     }
   ],

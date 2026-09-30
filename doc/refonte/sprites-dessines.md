@@ -20,6 +20,8 @@ Les six déclinaisons France / Chine demandées ensuite sont sous `assets/direct
 
 La source de provenance du manifeste peut être un PNG et son SHA-256. Le rendu ne charge jamais `source.fichier` : seules les pages d’images, masques et émissions sont chargées. Les images doivent respecter la projection fixe à 50° et la densité de référence de 128 pixels par case (`src/render2d/contrat.ts`).
 
+Les prompts sont conservés tels qu’envoyés : leur vocabulaire de tournoi provient du brief local antérieur à la synchronisation du lore v2. Les dessins ne portent ni texte ni insigne ; les prochains prompts doivent suivre le canon du 26 septembre (guerre sans gore, armement fictif), sans rétablir la doctrine du marquage.
+
 ## Retrait du parcours 3D
 
 Les GLB/glTF versionnés et leurs alias sont supprimés. Les atlas actuellement affichés et les textures PNG sont conservés pour maintenir le jeu. Le relevé des fichiers retirés est `assets/production/retrait-glb.json`. Les octets retirés du checkout ne sont pas une économie équivalente pour le joueur : son jeu utilisait déjà les sprites. L’historique Git et les sources distantes privées restent conservés.

@@ -1,7 +1,8 @@
 {
  "version": 2,
- "statut": "proposition",
+ "statut": "valide",
  "date": "2026-09-12",
+ "valideLe": "2026-09-26",
  "monde": {
   "titre": "La guerre de l’énergie et des inventions — an 14",
   "premisse": "Depuis quatorze ans, les nations se battent pour l’énergie et les nouvelles technologies. Atlas impose des règles pour limiter cette guerre. Vous débutez auprès d’Ariane et de Tomas, puis découvrez que les Gris rendent les pays dépendants de leur aide. Leur cible est Aube, un programme de recherche sur la fusion qui pourrait changer l’avenir. Pour les arrêter, il faut réunir des alliés qui ne se font pas tous confiance. Vos décisions déterminent qui vous suit, ce que vous sauvez et ce que les vainqueurs feront de leur pouvoir.",
@@ -93,7 +94,9 @@
    "La présentation suit le vécu du joueur : une personne, un besoin concret, une décision. Les détails du Pacte et des contrats viennent ensuite dans le carnet ; un briefing ne demande pas de mémoriser tous les services d’Atlas.",
    "Découverte de l’adversaire : les Gris après le tutoriel 6, Ost au tutoriel 8, Consortium et Aube après le tutoriel 10, Cinquième Manche après couleurs_alliees. Les biographies auteur ne sont jamais un texte d’ouverture public.",
    "Le sérieux passe par les relations et les suites des décisions, pas par des rappels de mort à chaque exercice. Des scènes de travail, de soulagement et d’humour sobre séparent les revers.",
-   "Les rappels de choix montrent qui attend une aide, qui la donne et ce qu’elle permet. Ils n’ajoutent ni unité, ni fonds, ni ralliement qui ne figurent dans les effets déclarés. Une variante de dialogue éditoriale n’est pas un nouvel effet du moteur."
+   "Les rappels de choix montrent qui attend une aide, qui la donne et ce qu’elle permet. Ils n’ajoutent ni unité, ni fonds, ni ralliement qui ne figurent dans les effets déclarés. Une variante de dialogue éditoriale n’est pas un nouvel effet du moteur.",
+   "Les dix exercices du prologue se jouent à charges à blanc, sous l’arbitrage d’Atlas ; le premier engagement réel est « Premier courant » (`opus1_fr_01`), et c’est ce qui lui donne son poids.",
+   "Les fins se lisent sur les décisions seules. Le dossier des protêts colore une fin — qui témoigne, ce que le Bureau juge, ce que Vantour lit à l’antenne —, il ne la conditionne jamais : à décisions égales, un joueur qui n’a vu partir aucune arme sans dossier obtient la même fin."
   ]
  },
  "factions": [
@@ -6510,14 +6513,14 @@
    "cle": "reseau_partage",
    "nom": "Le réseau partagé",
    "resume": "Sélène est battue et le dossier tient : huit protêts, le Coupleur dans l’offre publique, le manifeste absent, la déposition d’Edran, les témoins des délégations. Aube passe sous un collège des nations de la coalition ; les sites solaires sont remis en jeu à la prochaine échéance ; les contrats sont annulés ; le Bureau juge enfin. Ce qui compte autant : les plans des huit armes sont versés au registre public, donc à tout le monde — la faction perd d’un coup l’avance technique qu’elle avait volée en quatorze ans. La guerre continue, le Pacte n’a jamais promis la paix ; mais l’arbitre a retrouvé ses dents, et plus personne ne fabrique seul dans son coin.",
-   "condition": "Signer le réseau partagé à la finale 18 avec l’accès partagé de la finale 17, au moins cinq protêts au dossier, la déposition d’Edran acceptée (finale 15), l’offre rendue publique (finale 8) et au moins deux nations alliées présentes au campus.",
+   "condition": "Signer le réseau partagé à la finale 18 avec l’accès partagé de la finale 17, l’offre rendue publique (finale 8), la déposition d’Edran acceptée (finale 15) et au moins deux nations alliées présentes au campus.",
    "aubeDevient": "Un programme sous collège de plusieurs nations, aux accès publics, dont personne ne détient le contrôle — et dont la fusion reste au stade des essais."
   },
   {
    "cle": "couronne_electrique",
    "nom": "La couronne électrique",
    "resume": "La coalition a gagné la guerre et personne n’a signé la paix. Aube échappe à la prise méridienne parce que vos colonnes tiennent le campus, pas parce qu’un traité le dit ; les contrats de dépendance courent toujours, les délégations sous contrat n’ont pas été entendues, et Atlas n’a jugé aucun protêt. Les laboratoires que vous avez pris, vous les gardez — et vous voilà avec le même avantage technique que celui que vous reprochiez à Sélène, la même armoire sur le compteur, l’autre main dessus. Vous portez la couronne : c’est vous, maintenant, que le monde regarde tenir le courant.",
-   "condition": "Gagner la finale 18 en refusant un traité insuffisant, ou en signant sans les garanties — moins de cinq protêts au dossier, ni offre publique ni déposition acceptée.",
+   "condition": "Gagner la finale 18 en refusant un traité insuffisant, ou en signant sans les garanties d’aucune autre fin.",
    "aubeDevient": "Un site tenu par les armes de la coalition, sous contrôle militaire du joueur, sans statut : la prise méridienne est repoussée, la dépendance du monde ne l’est pas."
   },
   {
@@ -6531,7 +6534,7 @@
    "cle": "releve",
    "nom": "La relève",
    "resume": "Le joueur gagne et ne garde rien : l’enregistrement de la victoire est confié à un collège indépendant présidé par Nera Aldouin, avec les archives, le dossier des huit armes, les plans repris et la télémétrie récupérée. Tout est rendu — les laboratoires à leurs équipes, les brevets à qui les a dessinés, les sites à qui les exploitait, et Aube à personne. Talvarec transmet les cartes complètes et en répond ; Vantour publie ce qui contredit ses propres commentaires. C’est la seule fin où l’avance technique cesse d’être un butin de guerre, et c’est écrit ainsi au Registre.",
-   "condition": "Signer le réseau partagé à la finale 18 en ayant isolé le dernier relais (finale 16), refusé la participation opérationnelle d’Edran (finale 15) et garanti les équipes qui refusent la prise méridienne (finale 12) ; le dossier compte au moins six protêts.",
+   "condition": "Signer le réseau partagé à la finale 18 en ayant isolé le dernier relais (finale 16), refusé la participation opérationnelle d’Edran (finale 15) et garanti les équipes qui refusent la prise méridienne (finale 12).",
    "aubeDevient": "Un programme sous collège indépendant d’une Atlas réformée, hors de la main d’une nation comme du Consortium, dont l’accès est inscrit au Registre comme un droit de chaque signataire du Pacte."
   }
  ],
@@ -6778,7 +6781,7 @@
   }
  ],
  "presentation": {
-  "statut": "conception éditoriale ; 12 missions jouables locales, pas 200 missions implémentées",
+  "statut": "canon validé le 26 septembre 2026 ; 24 missions jouables locales, pas 200 missions implémentées",
   "entree": "Atlas fixe les règles. Les nations cherchent de l’énergie. Vous apprenez à commander avec Ariane et Tomas.",
   "decouverteAdversaire": [
    {

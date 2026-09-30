@@ -1,0 +1,127 @@
+{
+  "cle": "carte_opus1_lu_02",
+  "code": "carte_opus1_lu_02",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_map",
+  "creeLe": "2026-09-27",
+  "majLe": "2026-09-27",
+  "nom": "Les trois aiguillages",
+  "largeur": 22,
+  "hauteur": 14,
+  "camps": 2,
+  "biome": "plaine",
+  "grille": [
+    "PPPPPFFPPPPPPPFFPPPPPP",
+    "PPCPPFFPPPPGGPPPPPPCPP",
+    "PRRRRRRRRRRRRRRCRRRRPP",
+    "PRPPPPFFPPPMMPPPPFFRPP",
+    "PRPPPPFFPPPMMPPPPFFRPP",
+    "PRPPGGPPPPPFFFPPPPPRPP",
+    "PRPPGGPPPPPFFFPPPPPRUP",
+    "PHRRRRRRRRRRRRCRRRRHPP",
+    "PRPPPPPPPPPFFFPPPPPRPP",
+    "PRPPGGPPPPPFFFPPPPPRPP",
+    "PRPPPPFFPPPMMPPPPFFRPP",
+    "PUPPPPFFPPPMMPPPPFFRPP",
+    "PRRRRRRRRRRRRRRCRRRRPP",
+    "PPCPPFFPPPPPPPFFPPPPCP"
+  ],
+  "proprietaires": {
+    "1,7": 0,
+    "1,11": 0,
+    "19,7": 1,
+    "20,6": 1,
+    "19,1": 1,
+    "20,13": 1,
+    "15,2": 1,
+    "14,7": 1,
+    "15,12": 1
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 3,
+      "y": 6
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 3,
+      "y": 8
+    },
+    {
+      "camp": 0,
+      "type": "meca",
+      "x": 2,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 4,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "artillerie",
+      "x": 2,
+      "y": 5
+    },
+    {
+      "camp": 0,
+      "type": "recon",
+      "x": 2,
+      "y": 9
+    },
+    {
+      "camp": 1,
+      "type": "roquettes",
+      "x": 18,
+      "y": 6
+    },
+    {
+      "camp": 1,
+      "type": "artillerie",
+      "x": 17,
+      "y": 3
+    },
+    {
+      "camp": 1,
+      "type": "artillerie",
+      "x": 17,
+      "y": 11
+    },
+    {
+      "camp": 1,
+      "type": "char_leger",
+      "x": 16,
+      "y": 7
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 15,
+      "y": 2
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 14,
+      "y": 7
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 15,
+      "y": 12
+    },
+    {
+      "camp": 1,
+      "type": "meca",
+      "x": 18,
+      "y": 8
+    }
+  ]
+}

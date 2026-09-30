@@ -42,19 +42,25 @@
       "terme": "Port-Méridien",
       "categorie": "nom_propre",
       "traduction": null,
-      "note": "Île neutre, siège d'Atlas et terrain de la finale mondiale."
+      "note": "Île neutre, siège d'Atlas et du Registre. Le plateau d'Aube lui est rattaché."
     },
     {
       "terme": "la Cinquième Manche",
       "categorie": "nom_propre",
       "traduction": null,
-      "note": "La faction dissidente. Sans nationalité, jamais rattachée à un pays réel."
+      "note": "La puissance qui refuse le Pacte de l'intérieur et veut Aube pour elle seule. Sans nationalité, jamais rattachée à un pays réel."
     },
     {
       "terme": "la Sélection Méridienne",
       "categorie": "nom_propre",
       "traduction": null,
-      "note": "L’équipe d’exhibition et d’essai d’Atlas, dite « les Gris ». Une équipe sans drapeau, jamais un pays."
+      "note": "L’armée privée du Consortium Méridien, officiellement force d’essai d’Atlas, dite « les Gris ». Sans drapeau, jamais un pays."
+    },
+    {
+      "terme": "les Vieilles Manières",
+      "categorie": "nom_propre",
+      "traduction": null,
+      "note": "Ce qui précédait le Pacte. On n'en dit rien, et on ne l'attribue à aucun pays réel."
     },
     {
       "terme": "le Pacte du Terrain",
@@ -72,13 +78,13 @@
       "terme": "le Consortium Méridien",
       "categorie": "nom_propre",
       "traduction": null,
-      "note": "Le sponsor apatride."
+      "note": "L'entreprise apatride qui finance les Gris : contrats, crédit, transports."
     },
     {
       "terme": "la Commission d'homologation",
       "categorie": "nom_propre",
       "traduction": null,
-      "note": "L'organe qui autorise le matériel."
+      "note": "Le contrôle des armes d'Atlas : toute arme engagée sur un front doit avoir un dossier."
     },
     {
       "terme": "le Collège des arbitres",
@@ -89,13 +95,13 @@
       "terme": "la Régie",
       "categorie": "nom_propre",
       "traduction": null,
-      "note": "L'organe de diffusion d'Atlas."
+      "note": "Le bureau de presse d'Atlas : le Bulletin, et la voix de Vantour, correspondant de guerre."
     },
     {
       "terme": "la Cartographie",
       "categorie": "nom_propre",
       "traduction": null,
-      "note": "L'organe qui homologue les terrains."
+      "note": "L'organe d'Atlas qui relève les terrains et déclare les fronts."
     },
     {
       "terme": "Osmin Talvarec",
@@ -118,28 +124,10 @@
       "traduction": null
     },
     {
-      "terme": "adversaire",
+      "terme": "hors jeu",
       "categorie": "terme_impose",
-      "traduction": "adversaire",
-      "note": "Jamais « ennemi »."
-    },
-    {
-      "terme": "mis hors jeu",
-      "categorie": "terme_impose",
-      "traduction": "mis hors jeu",
-      "note": "Jamais « tué », « détruit »."
-    },
-    {
-      "terme": "match",
-      "categorie": "terme_impose",
-      "traduction": "match",
-      "note": "Jamais « bataille » ni « guerre »."
-    },
-    {
-      "terme": "manche",
-      "categorie": "terme_impose",
-      "traduction": "manche",
-      "note": "Division sportive d'un match : quatre par match."
+      "traduction": "hors jeu",
+      "note": "Le mot du HUD et du Registre : Atlas compte des pièces, pas des morts. Les dialogues peuvent dire détruit, abattu, tué."
     },
     {
       "terme": "journée",
@@ -148,22 +136,46 @@
       "note": "Un tour de chaque camp. L'unité de temps du moteur."
     },
     {
-      "terme": "équipe",
+      "terme": "an 14",
       "categorie": "terme_impose",
-      "traduction": "équipe",
-      "note": "Jamais « armée » ni « troupes »."
+      "traduction": "an 14",
+      "note": "La guerre se compte en années : an 11, an 12, an 14. Aucune autre façon de dater ; « Ronde » ne date plus rien."
+    },
+    {
+      "terme": "charges à blanc",
+      "categorie": "terme_impose",
+      "traduction": "charges à blanc",
+      "note": "Les dix exercices se tirent à blanc : personne n'y meurt. Au front, les charges sont réelles."
+    },
+    {
+      "terme": "concession",
+      "categorie": "terme_impose",
+      "traduction": "concession",
+      "note": "Ce qu'une victoire inscrit au Registre, le grand livre d'Atlas : un site, ce qu'il produit, ses savoirs, tant qu'on le tient. Jamais les habitants."
+    },
+    {
+      "terme": "Bulletin",
+      "categorie": "terme_impose",
+      "traduction": "Bulletin",
+      "note": "L'annonce d'Atlas avant une bataille : météo, front, armes déclarées, ce qui peut partir au tour suivant."
+    },
+    {
+      "terme": "protêt",
+      "categorie": "terme_impose",
+      "traduction": "protêt",
+      "note": "Une plainte écrite qu'un arbitre doit inscrire au registre, même s'il la classe. Un personnage l'explique la première fois."
+    },
+    {
+      "terme": "les Gris",
+      "categorie": "terme_impose",
+      "traduction": "les Gris",
+      "note": "Le surnom de la Sélection Méridienne, d'après la couleur de son matériel."
     },
     {
       "terme": "matériel homologué",
       "categorie": "terme_impose",
       "traduction": "matériel homologué",
-      "note": "Jamais « armement »."
-    },
-    {
-      "terme": "marquer",
-      "categorie": "terme_impose",
-      "traduction": "marquer",
-      "note": "Ce que fait une unité qui touche : elle marque, elle ne tire pas sur."
+      "note": "Le matériel déclaré au Pacte, avec son dossier. « Arme » et « armement » se disent aussi ; une arme sans dossier est hors du Pacte."
     },
     {
       "terme": "rival",
@@ -322,8 +334,8 @@
       "terme": "Aube",
       "categorie": "nom_propre",
       "traduction": null,
-      "note": "Programme de fusion entièrement fictif. Conflit énergétique sérieux, affrontements non sanglants. Anéantir signifie mettre toutes les unités adverses hors jeu. Aucun récit de violence réelle."
+      "note": "Programme de recherche sur la fusion, entièrement fictif, sur un plateau neutre rattaché à Port-Méridien. Il ne produit encore rien. Aucun projet réel n'est nommé."
     }
   ],
-  "majLe": "2026-09-12"
+  "majLe": "2026-09-27"
 }

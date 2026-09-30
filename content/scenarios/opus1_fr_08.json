@@ -1,11 +1,11 @@
 {
   "cle": "opus1_fr_08",
   "code": "opus1_fr_08",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-23",
-  "majLe": "2026-09-23",
+  "majLe": "2026-09-27",
   "nom": "Saison 1 · Ligne de partage",
   "acte": 1,
   "paysCode": "fr",
@@ -191,7 +191,7 @@
       "repliques": [
         {
           "locuteur": "cmd_solveig_tamm",
-          "texte": "Deux contrats pour une seule réserve, et ce sont mes camions qui roulent pour les deux. Je le note, commandant. Ça ne change rien à ce match.",
+          "texte": "Deux contrats pour une seule réserve, et ce sont mes camions qui roulent pour les deux. Je le note, commandant. Ça ne change rien à cette bataille.",
           "emotion": "neutre"
         }
       ]

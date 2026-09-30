@@ -1,5 +1,7 @@
 # Le banc prêté au briefing — choisir son héros (10 septembre 2026)
 
+*Écrit avant la validation du lore v2 (26 septembre 2026) : le registre de guerre de `BRIEF.md` fait foi.*
+
 La demande du propriétaire : « est-ce que pour certaines missions on peut choisir notre héros / nation avec laquelle on va jouer dans la campagne principale, ce qui va peut-être changer le futur, ou faire une mini-branche ». Ce document dit ce qui est livré, comment on ajoute un banc à une épreuve, quelles épreuves en portent, et ce qui n'est pas fait. Le canon est `BRIEF.md` (« Choisir son héros ») et `doc/13-campagne.md` §3.4 bis ; le vocabulaire est `doc/01-bible.md` §4.6.
 
 ## Ce que le joueur voit

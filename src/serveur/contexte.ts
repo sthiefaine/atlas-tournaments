@@ -69,15 +69,25 @@ export const SCHEMA_PAR_KIND: Record<string, string> = {
   'traduction.lot': 'Traduction[]',
 };
 
-/** Les extraits de bible servis au lore et au contrôle. */
+/**
+ * Les extraits de bible servis au lore et au contrôle — le registre du lore v2
+ * validé (`BRIEF.md`, 26 septembre 2026 ; `01-bible.md` §1, §2.5, §5.2, §5.3).
+ */
 export function extraitsBible(): Record<string, unknown> {
   const glossaire = chargerGlossaireFr();
   return {
-    ton: 'Sport de haut niveau, jamais la guerre. On dit adversaire, match, manche, journée. Les unités sont mises hors jeu.',
+    ton: 'La guerre de l’énergie, que les personnages appellent la guerre : sérieuse, dure, sans complaisance. '
+      + 'Atlas l’arbitre par le Pacte du Terrain. On dit front, engagement, bataille, journée ; « match », '
+      + '« manche », « tournoi » et « les Jeux » ne disent pas la guerre. Une victoire prend des sites, des '
+      + 'richesses et des savoirs, jamais des habitants. La guerre tue, sans gore : ni sang, ni corps, ni civils '
+      + 'à l’écran ; au HUD et au Registre, une unité est mise hors jeu. Aucune production générée n’écrit une '
+      + 'mort. On date en années de guerre (« an 14 »), jamais en Rondes ni en dates réelles. Un mot du monde '
+      + 's’explique en une phrase à sa première apparition.',
     vocabulaire_interdit: glossaire.termesInterdits,
     charte_sensibilite:
-      'Pays réels, jamais de conflit réel, de politique, d’élection, de religion, de catastrophe, '
-      + 'de fait divers ni de personne réelle. Les clichés sont affectueux ou n’existent pas.',
+      'Pays réels, guerre fictive : jamais de conflit réel, de politique, d’élection, de religion, de catastrophe, '
+      + 'de fait divers ni de personne réelle, aucune arme réelle nommée. La Cinquième Manche n’a pas de '
+      + 'nationalité. Les clichés sont affectueux ou n’existent pas.',
   };
 }
 

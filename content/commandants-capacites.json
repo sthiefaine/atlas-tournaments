@@ -93,7 +93,7 @@
       },
       "replique": {
         "pouvoir": "L’échappée part maintenant. Prenez la roue : tout le monde y est.",
-        "super": "Tout l’atelier sur le terrain : le plein, les charges, des plastrons neufs. Maintenant, on joue."
+        "super": "Tout l’atelier sur le terrain : le plein, les charges, les blindages refaits. Maintenant, on avance."
       }
     },
     {
@@ -567,8 +567,8 @@
     {
       "cle": "cmd_livia_moura",
       "nom": "Lívia Moura",
-      "style": "Le stade fait du bruit",
-      "description": "Joue sur l’élan : un pouvoir pas cher qui donne de la chance, un super qui met le feu au stade et baisse la garde.",
+      "style": "Les tambours donnent l’élan",
+      "description": "Joue sur l’élan : un pouvoir pas cher qui donne de la chance, un super qui enflamme la colonne et baisse la garde.",
       "contreJeu": "Encaisser sa journée de carnaval sans lui rendre un duel, puis frapper ses unités pendant que leur garde est basse.",
       "passif": {
         "cible": "mes_unites",
@@ -643,7 +643,7 @@
       },
       "replique": {
         "pouvoir": "Écoutez les tambours. Ils jouent pour nous, et l’adversaire le sait.",
-        "super": "C’est carnaval ! Tout le stade est debout, et personne ne reste sur le banc."
+        "super": "C’est carnaval ! Toute la colonne est debout, et personne ne reste en arrière."
       }
     },
     {
@@ -748,7 +748,7 @@
       "cle": "cmd_devika_rao",
       "nom": "Devika Rao",
       "style": "Le volume",
-      "description": "Le public paie la tournée : elle achète pour rien, puis fait rejouer tous ses véhicules quand les gradins sont pleins.",
+      "description": "Les ateliers paient la tournée : elle achète pour rien, puis fait rejouer tous ses véhicules quand la production tourne à plein.",
       "contreJeu": "Elle produit plus qu’elle ne vise : ses achats sont mous, ses appareils rares. Frapper du ciel et laisser sa masse s’étaler.",
       "passif": {
         "cible": "mes_unites",
@@ -814,8 +814,8 @@
         "description": "Tout se passe au sol : ses appareils frappent à 85 %."
       },
       "replique": {
-        "pouvoir": "La tournée est pour la maison ! Achetez, achetez, le public a déjà payé.",
-        "super": "Le camion est repeint et les gradins sont pleins. Deuxième passage, mêmes tarifs."
+        "pouvoir": "La tournée est pour la maison ! Achetez, achetez, les ateliers ont déjà payé.",
+        "super": "Le camion est repeint et les ateliers tournent à plein. Deuxième passage, mêmes tarifs."
       }
     },
     {
@@ -1219,7 +1219,7 @@
         "description": "Dès que le relief commence, ses unités se défendent à 85 %."
       },
       "replique": {
-        "pouvoir": "Le tableau est écrit depuis hier. Vous jouez exactement ce que j’ai dessiné.",
+        "pouvoir": "Le tableau est écrit depuis hier. Vous faites exactement ce que j’ai dessiné.",
         "super": "La ligne d’horizon est à nous. Tout ce qui roule, roule maintenant."
       }
     },
@@ -1384,7 +1384,7 @@
             "valeur": 0.85
           }
         },
-        "description": "Le plus petit budget du tournoi : ses revenus sont à 85 %."
+        "description": "Le plus petit budget de la guerre : ses revenus sont à 85 %."
       },
       "replique": {
         "pouvoir": "Je n’avais pas de plan. J’en ai un maintenant, et il est bon.",
@@ -1488,7 +1488,7 @@
         "description": "Les blindés restent au port : ses chenilles ont −1 de mouvement."
       },
       "replique": {
-        "pouvoir": "Un café, serré, et on reprend. Je vous ai déjà raconté la finale de la Ronde IX ?",
+        "pouvoir": "Un café, serré, et on reprend. Je vous ai déjà raconté la traversée de l’an 9 ?",
         "super": "La mer se retire. On passe à pied, comme on l’a toujours fait."
       }
     },
@@ -1768,7 +1768,7 @@
             "valeur": 0.85
           }
         },
-        "description": "Le budget le plus court du tournoi : ses revenus sont à 85 %."
+        "description": "Le budget le plus court de la guerre : ses revenus sont à 85 %."
       },
       "replique": {
         "pouvoir": "La pluie prend le versant est. Prenez la piste rouge, elle tient.",
@@ -2083,7 +2083,7 @@
       "cle": "cmd_tess_roa",
       "nom": "Tess Roa",
       "style": "La fougère répare",
-      "description": "La brume de vallée cache ses positions, et la fougère répare ce que le match a abîmé.",
+      "description": "La brume de vallée cache ses positions, et la fougère répare ce que la bataille a abîmé.",
       "contreJeu": "Elle ne court pas : contourner ses couverts par la route et prendre ce qu’elle ne peut pas rejoindre.",
       "passif": {
         "cible": "mes_unites",
@@ -2229,7 +2229,7 @@
         "nom": "Le pont",
         "barres": 7,
         "duree": "ce_tour",
-        "description": "Jusqu’à 3 cases de mer ou de rivière contiguës deviennent un pont, pour le reste du match.",
+        "description": "Jusqu’à 3 cases de mer ou de rivière contiguës deviennent un pont, pour le reste de la partie.",
         "effets": [
           {
             "cible": "terrain",
@@ -2261,7 +2261,7 @@
       },
       "replique": {
         "pouvoir": "La route est neuve, elle porte tout. Roulez, elle est faite pour ça.",
-        "super": "Un pont, ça se construit une fois. Celui-là restera après le match."
+        "super": "Un pont, ça se construit une fois. Celui-là restera après la bataille."
       }
     },
     {
@@ -2529,7 +2529,7 @@
       },
       "piece": {
         "nom": "Le Rapace",
-        "silhouette": "Une aile delta sans dérive portant sous le ventre un marqueur à faisceau qui marque sans charge et hors de riposte ; le badge orange a été peint puis gratté (ailes · plateau · [antenne] · 3)."
+        "silhouette": "Une aile delta sans dérive portant sous le ventre un émetteur à faisceau qui frappe sans charge et hors de riposte ; le badge orange a été peint puis gratté (ailes · plateau · [antenne] · 3)."
       },
       "faction": "atl",
       "faiblesse": {
@@ -2634,7 +2634,7 @@
       },
       "piece": {
         "nom": "Le Repère",
-        "silhouette": "Un marqueur lourd sur roues dont le tube fait deux fois la longueur du catalogue, calé sur les béquilles de sécurité qu’elle dessinait autrefois pour les autres ; badge en règle sur le châssis, aucun sur le tube, qui n’est pas celui du dossier (roues · bloc · [canon_long, lance_roquettes] · 3)."
+        "silhouette": "Un lanceur lourd sur roues dont le tube fait deux fois la longueur du catalogue, calé sur les béquilles de sécurité qu’elle dessinait autrefois pour les autres ; badge en règle sur le châssis, aucun sur le tube, qui n’est pas celui du dossier (roues · bloc · [canon_long, lance_roquettes] · 3)."
       },
       "faction": "atl",
       "faiblesse": {
@@ -2655,7 +2655,7 @@
         "description": "Déplacer une pièce rompt son tempo : ses roues et chenilles ont −1 de mouvement."
       },
       "replique": {
-        "pouvoir": "La zone est réservée. Entrez-y, et vous serez marqués avant d’avoir vu qui tire.",
+        "pouvoir": "La zone est réservée. Entrez-y, et vous serez touchés avant d’avoir vu qui tire.",
         "super": "La zone est rouge. Vous y êtes entrés, c’est votre choix, pas le mien."
       }
     },
@@ -2835,7 +2835,7 @@
       },
       "piece": {
         "nom": "Le Relais sans numéro",
-        "silhouette": "Un Veilleur dont l’antenne fait trois fois la taille du catalogue et dont le champ « identifiant de compétition » est vide sur la fiche d’entrée de terrain — l’impulsion de station sortie de sa station (rotor · capsule · [antenne, antenne] · 2)."
+        "silhouette": "Un Veilleur dont l’antenne fait trois fois la taille du catalogue et dont le champ « numéro de dossier » est vide sur la fiche d’engagement — l’impulsion de station sortie de sa station (rotor · capsule · [antenne, antenne] · 2)."
       },
       "faction": "atl",
       "faiblesse": {
@@ -3037,7 +3037,7 @@
       },
       "piece": {
         "nom": "Le Verrou",
-        "silhouette": "Le coffret de commande des dépôts du terrain, gris, sans badge, qui parle à tous les plastrons de marquage de la carte et leur fait enregistrer une marque à distance : il ne tire rien, il détourne le système de marquage d’Atlas (chenilles · bloc · [radar, antenne] · 3, posé au QG)."
+        "silhouette": "Le coffret de commande des dépôts du terrain, gris, sans badge, branché sur tous les réseaux de la carte : il ne tire rien, il ferme les réserves et éteint les écrans de ceux qui en dépendent (chenilles · bloc · [radar, antenne] · 3, posé au QG)."
       },
       "faction": "atl",
       "faiblesse": {
@@ -3168,7 +3168,7 @@
       "cle": "cmd_wren_osoko",
       "nom": "Wren Osoko",
       "style": "Les archives",
-      "description": "Connaît chaque fiche d’homologation : elle voit loin, et rien de ce qu’elle engage ne rate.",
+      "description": "Connaît le dossier de chaque arme : elle voit loin, et rien de ce qu’elle engage ne rate.",
       "contreJeu": "Voir n’est pas tenir : occuper les objectifs, et l’obliger à engager là où ses chiffres ne servent à rien.",
       "passif": {
         "cible": "mes_unites",
@@ -3239,7 +3239,7 @@
             "valeur": 0.9
           }
         },
-        "description": "L’homologation ne rapporte rien : ses revenus sont à 90 %."
+        "description": "Le contrôle des armes ne rapporte rien : ses revenus sont à 90 %."
       },
       "replique": {
         "pouvoir": "Les relevés sont publics. Lisez-les, tout le monde y a droit.",

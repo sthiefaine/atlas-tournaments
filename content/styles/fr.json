@@ -47,7 +47,7 @@
       "motif": "rayures_obliques",
       "placement": "flanc",
       "couleur": "#c8324a",
-      "note": "Trois obliques courtes reprises du maillot de la qualification nationale."
+      "note": "Trois obliques courtes reprises de la tenue de la colonne française."
     },
     {
       "motif": "carres_emboites",
@@ -58,5 +58,5 @@
   ],
   "motifDaltonien": "rayures_obliques",
   "priorite": 1,
-  "justification": "La France est le pays de la polyvalence : son style ne peut pas être une signature de matière, ce serait mentir sur sa fiche. C’est donc une signature de soin — rien de spécial, tout impeccable — et le damier d’arrivée, qui vient de la course par étapes de sa qualification."
+  "justification": "La France est le pays de la polyvalence : son style ne peut pas être une signature de matière, ce serait mentir sur sa fiche. C’est donc une signature de soin — rien de spécial, tout impeccable — et le damier d’arrivée, qui vient de la course par étapes chère à Ariane."
 }

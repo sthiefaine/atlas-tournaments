@@ -131,7 +131,7 @@
       ],
       "piece": {
         "nom": "Le Rapace",
-        "silhouette": "Une aile delta sans dérive portant sous le ventre un marqueur à faisceau qui marque sans charge et hors de riposte ; le badge orange a été peint puis gratté (ailes · plateau · [antenne] · 3)."
+        "silhouette": "Une aile delta sans dérive portant sous le ventre un émetteur à faisceau qui frappe sans charge et hors de riposte ; le badge orange a été peint puis gratté (ailes · plateau · [antenne] · 3)."
       },
       "telegraphie": "Le choix est déterministe et sans case : quand sa jauge est pleine, la pièce qu'il frapperait maintenant — la plus chère qu'il voie — porte un chevron orange au-dessus de son étiquette (« désignée »), recalculé à chaque achat et à chaque perte, et le Bulletin l'écrit. On sait qui, on ne sait pas quand.",
       "contreJeu": "Ne pas concentrer sa valeur sur une seule pièce — deux chars moyens portent mieux qu'un char lourd désigné — et, sous brouillard, tenir la plus chère hors de sa vue : le rayon ne prend que ce que son camp voit.",
@@ -176,7 +176,7 @@
       ],
       "piece": {
         "nom": "Le Repère",
-        "silhouette": "Un marqueur lourd sur roues dont le tube fait deux fois la longueur du catalogue, calé sur les béquilles de sécurité qu’elle dessinait autrefois pour les autres ; badge en règle sur le châssis, aucun sur le tube, qui n’est pas celui du dossier (roues · bloc · [canon_long, lance_roquettes] · 3)."
+        "silhouette": "Un lanceur lourd sur roues dont le tube fait deux fois la longueur du catalogue, calé sur les béquilles de sécurité qu’elle dessinait autrefois pour les autres ; badge en règle sur le châssis, aucun sur le tube, qui n’est pas celui du dossier (roues · bloc · [canon_long, lance_roquettes] · 3)."
       },
       "telegraphie": "Jauge visible ; à 7 barres, Bulletin « Repère calé — Zone rouge possible au prochain tour », gabarit de la croix au survol. Au tir, la case visée est balisée en rouge avant la chute (geste de partition « baliser », à écrire).",
       "contreJeu": "Jamais trois unités en croix ; approcher par le flanc, vite, avec de la reconnaissance — ce qu'elle déplace ne tire pas.",
@@ -300,7 +300,7 @@
       ],
       "piece": {
         "nom": "Le Verrou",
-        "silhouette": "Le coffret de commande des dépôts du terrain, gris, sans badge, qui parle à tous les plastrons de marquage de la carte et leur fait enregistrer une marque à distance : il ne tire rien, il détourne le système de marquage d’Atlas (chenilles · bloc · [radar, antenne] · 3, posé au QG)."
+        "silhouette": "Le coffret de commande des dépôts du terrain, gris, sans badge, branché sur tous les réseaux de la carte : il ne tire rien, il ferme les réserves et éteint les écrans de ceux qui en dépendent (chenilles · bloc · [radar, antenne] · 3, posé au QG)."
       },
       "telegraphie": "Jauge visible ; à 8 barres, Bulletin « Verrou armé — Réserves fermées possible au prochain tour ». Après déclenchement, la colonne suivante du Bulletin porte l'icône de vision réduite, comme une brume.",
       "contreJeu": "Ne pas s'attarder devant ses portes quand sa jauge est pleine, et garder un drone ou un bâtiment pour voir : un bâtiment possédé garde sa vision, le −2 ne touche que les unités.",
@@ -330,12 +330,12 @@
       ],
       "piece": {
         "nom": "Le Relais sans numéro",
-        "silhouette": "Un Veilleur dont l’antenne fait trois fois la taille du catalogue et dont le champ « identifiant de compétition » est vide sur la fiche d’entrée de terrain — l’impulsion de station sortie de sa station (rotor · capsule · [antenne, antenne] · 2)."
+        "silhouette": "Un Veilleur dont l’antenne fait trois fois la taille du catalogue et dont le champ « numéro de dossier » est vide sur la fiche d’engagement — l’impulsion de station sortie de sa station (rotor · capsule · [antenne, antenne] · 2)."
       },
-      "telegraphie": "Jauge visible ; à 9 barres, Bulletin « Relais sans numéro en charge — Retour à zéro possible au prochain tour », gabarit du rayon 2 au survol, et chaque appareil et drone du joueur porte un point d'exclamation orange : ce qui peut tomber le sait. Neuf barres : il part une fois par match.",
+      "telegraphie": "Jauge visible ; à 9 barres, Bulletin « Relais sans numéro en charge — Retour à zéro possible au prochain tour », gabarit du rayon 2 au survol, et chaque appareil et drone du joueur porte un point d'exclamation orange : ce qui peut tomber le sait. Neuf barres : il part une fois par bataille.",
       "contreJeu": "Espacer les appareils de plus de deux cases les uns des autres — il ne peut abattre qu'une zone de treize cases —, poser ce qui peut se poser, et mettre ses Veilleurs hors jeu un par un.",
       "replique": "Retour à zéro sur le secteur. Ce qui volait est au sol ; ce qui roulait attend.",
-      "vantour": "Un appareil qui tombe sur un terrain homologué — je n'ai pas de mot pour ça, et j'ai commenté quatre Rondes.",
+      "vantour": "Un appareil abattu par une arme qui n'a jamais été déclarée — je n'ai pas de mot pour ça, et je commente cette guerre depuis quatorze ans.",
       "premiereFinale": "opus1_finale_06",
       "remplace": "Réseau sans écho",
       "familles": [

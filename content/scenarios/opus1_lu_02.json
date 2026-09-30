@@ -1,0 +1,258 @@
+{
+  "cle": "opus1_lu_02",
+  "code": "opus1_lu_02",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-27",
+  "majLe": "2026-09-27",
+  "nom": "Saison 1 · Les trois aiguillages",
+  "acte": 1,
+  "paysCode": "lu",
+  "carteCle": "carte_opus1_lu_02",
+  "date": "2026-09-27",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 1,
+    "nuit": 0
+  },
+  "catalogueVersion": 0,
+  "commandantsVersion": 4,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_tomas_reiner"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_lise_orven",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 3000,
+  "fondsDepartParCamp": {
+    "0": 3000,
+    "1": 1500
+  },
+  "revenusParBatiment": 500,
+  "revenusParBatimentParCamp": {
+    "0": 500,
+    "1": 200
+  },
+  "brouillard": true,
+  "limiteJournees": 16,
+  "victoire": [
+    {
+      "type": "capturer",
+      "cases": [
+        {
+          "x": 15,
+          "y": 2
+        },
+        {
+          "x": 14,
+          "y": 7
+        },
+        {
+          "x": 15,
+          "y": 12
+        }
+      ],
+      "combien": 2
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 16
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Lise s’est repliée au dépôt, à l’est. Trois **aiguillages** y mènent : chacun est un poste qui envoie les convois sur la bonne voie.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Qui en tient deux décide de l’heure d’arrivée de tout le monde. **Reprenez-en deux**, et tenez-les en même temps, avant la fin de J16.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_lise_orven",
+      "texte": "Les trois postes sont dans ma zone. Choisissez bien : chaque voie que vous prendrez passe sous une de mes pièces.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Le plus court, c’est l’aiguillage du centre, par la route droite. Je connais le chemin ; je ne vais pas le choisir pour vous.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Un commandant qui attend toujours mon itinéraire n’apprend jamais le sien. Nord, centre ou sud : choisissez vos deux passages.",
+      "emotion": "doute"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Vous vous souvenez du relais ? Les pièces de Lise tiraient de loin et ne répondaient pas au contact. Ici aussi : prenez-les par le côté.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Deux aiguillages à nous : les convois de la coalition repassent par le dépôt, et c’est vous qui avez choisi par où.",
+      "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_lise_orven",
+      "texte": "Deux voies sur trois. Le dépôt reste à moi, mais plus rien n’en sort sans votre accord. Mes équipes, elles, rentrent entières.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Je note le chemin que vous avez pris. Pas pour le juger : pour me souvenir que vous en avez choisi un.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Maintenant, le transport doit passer la vallée avant la fermeture. J’aurai besoin de vous, et je vous dirai ce que je ne peux pas promettre.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Lise garde le dépôt. Reprenons : choisissez deux aiguillages, et ne lâchez pas le premier pendant que vous prenez le second.",
+      "emotion": "neutre"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "lu02_pieces",
+      "declencheur": {
+        "type": "journee",
+        "journee": 2
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Chaque aiguillage a sa pièce : les roquettes couvrent le centre, une artillerie sur chaque flanc. Les roquettes portent plus loin.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "lu02_premier_tir",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_lise_orven",
+          "texte": "Vous voilà dans ma zone. Je vous avais dit de bien choisir votre voie.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "lu02_deux",
+      "declencheur": {
+        "type": "capture",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Bien pris. Pour l’objectif, il faut **deux aiguillages en même temps** : ne lâchez pas le premier pendant que vous prenez le second.",
+          "emotion": "joie"
+        }
+      ]
+    },
+    {
+      "cle": "lu02_reprise",
+      "declencheur": {
+        "type": "capture",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Lise reprend du terrain. Un poste qu’elle reprend ne compte plus pour nous : gardez une unité dessus.",
+          "emotion": "doute"
+        }
+      ]
+    },
+    {
+      "cle": "lu02_caisse",
+      "declencheur": {
+        "type": "perte",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Une unité de moins chez Lise. Sa caisse se remplit lentement : chaque unité perdue laisse un poste moins bien gardé.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "lu02_changer",
+      "declencheur": {
+        "type": "journee",
+        "journee": 8
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Si un aiguillage vous résiste, changez de voie : c’est pour ça qu’il y en a trois.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "modes": {
+    "normal": {
+      "fondsDepart": 3000,
+      "fondsDepartIa": 1500,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 200,
+      "brouillard": true,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 16,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 25
+    },
+    "difficile": {
+      "fondsDepart": 3000,
+      "fondsDepartIa": 3000,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 200,
+      "brouillard": true,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 16,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 25
+    }
+  }
+}

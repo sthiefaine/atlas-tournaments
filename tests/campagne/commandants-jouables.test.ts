@@ -13,10 +13,10 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { readFileSync, readdirSync } from 'node:fs';
 import {
-  appliquerChoixCommandant, commandantDuScenario, optionsCommandant, paysDuCommandant,
+  appliquerChoixCommandant, commandantDuScenario, optionsCommandant, paysDesCamps, paysDuCommandant,
 } from '../../src/app/campagne/commandants-jouables';
 import {
-  cleSourceCommandant, commandantDeGraine, estSourceBanc, estSourceCommandant,
+  appliquerBanc, cleSourceCommandant, commandantDeGraine, estSourceBanc, estSourceCommandant,
   graineAvecCommandant, graineSansCommandant, scenarioDeSource,
 } from '../../src/app/campagne/bancs';
 import { appliquerConsequences, decisionsDeGraine, graineAube } from '../../src/app/campagne/consequences';
@@ -373,4 +373,19 @@ test('une victoire sans perte fait monter le compte, une victoire coûteuse non'
   assert.equal(normalisee.matchsSansPerte, 2, 'le compte se relit');
   assert.equal(normaliserProgression({ version: 1, victoires: [] }).matchsSansPerte, undefined,
     'une progression d’avant n’en a pas, et n’en invente pas');
+});
+
+test('chaque camp porte la nation de son propre commandant ; le joueur garde la sienne', () => {
+  // Tomas aux exercices : le Luxembourg, comme avant.
+  assert.deepEqual(paysDesCamps(scenario('premier_contact'), 'fr'), { 0: 'fr', 1: 'lu' });
+  // Les Gris n'ont pas de nation : plus les couleurs ni le QG du Luxembourg.
+  assert.deepEqual(paysDesCamps(scenario('opus1_fr_05'), 'fr'), { 0: 'fr', 1: 'atl' });
+  // Au Luxembourg, Lise ne prend plus le QG de la France.
+  assert.deepEqual(paysDesCamps(scenario('opus1_lu_01'), 'lu'), { 0: 'lu', 1: 'atl' });
+  // Quatre camps : chacun le sien, le Luxembourg allié compris.
+  assert.deepEqual(paysDesCamps(scenario('opus1_fr_12'), 'fr'), { 0: 'fr', 1: 'lu', 2: 'atl', 3: 'atl' });
+  // Un banc prêté échange deux généraux : celui qui passe en face porte sa nation.
+  const col = structuredClone(scenario('pacte_du_col'));
+  appliquerBanc(col, { commandantCle: 'cmd_tomas_reiner', paysCode: 'lu', libelle: 'banc.pacte_du_col.cmd_tomas_reiner' });
+  assert.deepEqual(paysDesCamps(col, 'lu'), { 0: 'lu', 1: 'fr' });
 });

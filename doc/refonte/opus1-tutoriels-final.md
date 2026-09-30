@@ -1,6 +1,6 @@
 # Opus 1 — Dix tutoriels et dix-huit finales
 
-Plan éditorial du 9 septembre 2026. **Ces fiches ne sont pas des scénarios jouables.** Les quatre premiers tutoriels réutilisent les identifiants, cartes et conditions actuels ; leurs réglages proposés ne sont pas appliqués ici. Les six autres tutoriels et les dix-huit finales restent à cartographier, écrire en scènes, intégrer et tester dans les deux modes.
+Plan éditorial du 9 septembre 2026, repris le 27 septembre dans le registre de la guerre (`lore-v2-restes.md`) : les dix exercices se disent à charges à blanc, et les révélations sont celles que le lore v2 a validées ; identifiants, formats, objectifs et choix n’ont pas bougé. **Ces fiches ne sont pas des scénarios jouables.** Les quatre premiers tutoriels réutilisent les identifiants, cartes et conditions actuels ; leurs réglages proposés ne sont pas appliqués ici. Les six autres tutoriels et les dix-huit finales restent à cartographier, écrire en scènes, intégrer et tester dans les deux modes.
 
 Le JSON voisin porte les 28 fiches et leurs contrats. Total de l’opus : **10 + 12 × 12 + 18 = 172 missions**. Les quêtes déjà existantes ne s’ajoutent pas silencieusement à ce total : leur reprise ou leur statut d’exhibition devra être identifié dans le manifeste général.
 
@@ -10,76 +10,78 @@ Trois saisons nationales de 48 missions précèdent trois saisons finales de six
 
 Une mission à repli imposé doit respecter le temps du joueur : briefing initial signalant une opération d’extraction sous pression ; révélation avant la prise de contrôle ; objectif explicite de sortie et récompenses proportionnelles aux groupes sauvés. Aucune invulnérabilité secrète, aucune défaite déclenchée après une victoire acquise. Le résultat stratégique est fixe, les objectifs jouables et leurs conséquences ne le sont pas. Un échec d’extraction permet de recommencer ; une extraction réussie avance la campagne avec la mention « Repli accompli — concession perdue ».
 
-Chaque scénario doit spécifier ses cases, unités objectives, échéances et conditions ET/OU avant intégration. Les descriptions de postes énergétiques utilisent les bâtiments existants ; elles n’inventent pas un système de ressource supplémentaire. Les personnages commandent des équipements de tournoi et aucun objectif ne vise une population ou un réacteur.
+Chaque scénario doit spécifier ses cases, unités objectives, échéances et conditions ET/OU avant intégration. Les descriptions de postes énergétiques utilisent les bâtiments existants ; elles n’inventent pas un système de ressource supplémentaire. Les personnages commandent des armes déclarées — les Gris, des armes sans dossier — et aucun objectif ne vise une population, le nécessaire civil ou un réacteur.
 
 ## Tutoriels
 
+*Les dix exercices sont l’école du front : ils se jouent à charges à blanc, sous l’arbitrage d’Atlas, et les marqueurs ne blessent personne (`01-bible.md` §4.1, §5.3). Trois révélations les ponctuent : au premier, « au front, les charges ne seront plus à blanc » ; au sixième, une station méridienne annonce son rayon et sa journée, parce qu’Atlas ne surprend pas un commandant ; au neuvième, ce qu’est une concession — jamais les habitants, jamais le nécessaire civil. Le premier engagement réel est « Premier courant » (`opus1_fr_01`).*
+
 ### T01 — Premier contact (`premier_contact`)
 
-**Apprentissage :** Déplacement, terrain, prévision et riposte. **Victoire :** Mettre hors jeu les trois unités de Tomas.
+**Apprentissage :** École du front, à charges à blanc : déplacement, terrain, prévision et riposte. **Victoire :** Mettre hors jeu les trois unités de Tomas.
 **Défaite :** Perdre son QG lorsque la carte en comporte un. Toutes les unités du joueur hors jeu. Dépasser la limite de 10 journées.
 **Normal :** Conserver la carte et le contrat existants ; aides contextuelles actives. **Difficile :** Même objectif et unités ; prévision à une journée et aides rappelables.
 **État :** existant_a_reviser. Débloquer le tutoriel suivant après victoire.
 
 ### T02 — Les quatre villes (`villes_du_bocage`)
 
-**Apprentissage :** Capture, revenus et soins. **Victoire :** Posséder simultanément trois des quatre villes désignées.
+**Apprentissage :** À blanc : capture, revenus et soins. **Victoire :** Posséder simultanément trois des quatre villes désignées.
 **Défaite :** Perdre son QG lorsque la carte en comporte un. Toutes les unités du joueur hors jeu. Dépasser la limite de 16 journées.
 **Normal :** Conserver les quatre villes et les vingt points de capture ordinaires. **Difficile :** Tomas donne priorité aux villes encore libres ; aucune réduction des points de capture.
 **État :** existant_a_reviser. Débloquer le tutoriel suivant après victoire.
 
 ### T03 — Le chantier des usines (`chantier_des_usines`)
 
-**Apprentissage :** Production, génie et remise en service. **Victoire :** Remettre en service et posséder les deux usines désignées.
+**Apprentissage :** À blanc : production, génie et remise en service. **Victoire :** Remettre en service et posséder les deux usines désignées.
 **Défaite :** Perdre son QG lorsque la carte en comporte un. Toutes les unités du joueur hors jeu. Dépasser la limite de 18 journées.
 **Normal :** Conserver carte, objectifs et prime du génie ; expliquer le menu de production. **Difficile :** Même économie ; IA protège davantage son infanterie de capture.
 **État :** existant_a_reviser. Débloquer le tutoriel suivant après victoire.
 
 ### T04 — Le QG de la presqu’île (`qg_de_la_presquile`)
 
-**Apprentissage :** Capture du QG, transport et marées. **Victoire :** Capturer le QG adverse : quarante points.
+**Apprentissage :** À blanc : capture du QG, transport et marées. **Victoire :** Capturer le QG adverse : quarante points.
 **Défaite :** Perdre son QG lorsque la carte en comporte un. Toutes les unités du joueur hors jeu. Dépasser la limite de 18 journées.
 **Normal :** Conserver la carte et les marées ; annoncer les quatre tours de capture. **Difficile :** Même fenêtre de marée ; IA intercepte le transport plutôt que recevoir des dégâts gratuits.
 **État :** existant_a_reviser. Débloquer le tutoriel suivant après victoire.
 
 ### T05 — La bonne distance (`opus1_tutoriel_05`)
 
-**Apprentissage :** Tir indirect et protection. **Victoire :** Capturer le QG du plateau ou mettre hors jeu toute la défense.
+**Apprentissage :** À blanc : tir indirect et protection. **Victoire :** Capturer le QG du plateau ou mettre hors jeu toute la défense.
 **Défaite :** Perdre son QG lorsque la carte en comporte un. Toutes les unités du joueur hors jeu. Dépasser la limite de 14 journées.
 **Normal :** Deux couloirs permettent de déplacer puis installer l’artillerie ; pas de tir après déplacement. **Difficile :** Une reconnaissance adverse cherche le flanc ; défense et dégâts inchangés.
 **État :** conception_non_jouable. Débloquer le tutoriel suivant après victoire.
 
 ### T06 — Au-delà des arbres (`opus1_tutoriel_06`)
 
-**Apprentissage :** Brouillard, radar et drones. **Victoire :** Capturer le radar central puis le QG adverse ; la prise du radar reste acquise dans le journal d’objectif.
+**Apprentissage :** À blanc : brouillard, radar et drones. **Victoire :** Capturer le radar central puis le QG adverse ; la prise du radar reste acquise dans le journal d’objectif.
 **Défaite :** Perdre son QG lorsque la carte en comporte un. Toutes les unités du joueur hors jeu. Dépasser la limite de 16 journées.
 **Normal :** Drone observateur et radar servent à préparer un combat réel. **Difficile :** Brouilleur adverse annoncé dans le briefing ; information jamais omnisciente.
 **État :** conception_non_jouable. Débloquer le tutoriel suivant après victoire.
 
 ### T07 — Le dernier kilomètre (`opus1_tutoriel_07`)
 
-**Apprentissage :** Munitions, ravitaillement et transport. **Victoire :** Faire parvenir le transport désigné à la sortie nord en conservant au moins une unité de couverture.
+**Apprentissage :** À blanc : munitions, ravitaillement et transport. **Victoire :** Faire parvenir le transport désigné à la sortie nord en conservant au moins une unité de couverture.
 **Défaite :** Perdre son QG lorsque la carte en comporte un. Toutes les unités du joueur hors jeu. Dépasser la limite de 14 journées. Transport désigné hors jeu.
 **Normal :** Ravitailleur et transport fournis ; un détour protège le convoi. **Difficile :** Une patrouille tente de couper le détour ; réserve de munitions identique.
 **État :** conception_non_jouable. Débloquer le tutoriel suivant après victoire.
 
 ### T08 — Une ligne commune (`opus1_tutoriel_08`)
 
-**Apprentissage :** Équipes, vision partagée et caisses séparées. **Victoire :** En équipe 2v1, capturer le QG adverse ou mettre hors jeu son armée.
+**Apprentissage :** À blanc : alliances, vision partagée et caisses séparées. **Victoire :** En équipe 2v1, capturer le QG adverse ou mettre hors jeu son armée.
 **Défaite :** Perdre son QG lorsque la carte en comporte un. Toutes les unités du joueur hors jeu. Dépasser la limite de 16 journées.
 **Normal :** Allié annonce sa route ; enseigner le ravitaillement allié sans transfert de propriété. **Difficile :** Allié autonome moins directif ; adversaire concentre ses attaques sur les positions découvertes.
 **État :** conception_non_jouable. Débloquer le tutoriel suivant après victoire.
 
 ### T09 — Le prix du courant (`opus1_tutoriel_09`)
 
-**Apprentissage :** Énergie et concessions. **Victoire :** Capturer deux des trois postes de distribution représentés par des bâtiments existants.
+**Apprentissage :** À blanc : énergie et concessions. **Victoire :** Capturer deux des trois postes de distribution représentés par des bâtiments existants.
 **Défaite :** Perdre son QG lorsque la carte en comporte un. Toutes les unités du joueur hors jeu. Dépasser la limite de 16 journées.
 **Normal :** Les revenus viennent des bâtiments ; aucune nouvelle ressource de combat implicite. **Difficile :** Deux postes plus disputés ; même revenu et même coût de production.
 **État :** conception_non_jouable. Débloquer le tutoriel suivant après victoire.
 
 ### T10 — La première promesse (`opus1_tutoriel_10`)
 
-**Apprentissage :** Synthèse et choix persistant. **Victoire :** Capturer le QG adverse ou mettre hors jeu son armée ; protéger le transport est un objectif secondaire facultatif.
+**Apprentissage :** Dernier exercice à blanc : synthèse et choix persistant, avant « Premier courant », le premier engagement réel. **Victoire :** Capturer le QG adverse ou mettre hors jeu son armée ; protéger le transport est un objectif secondaire facultatif.
 **Défaite :** Perdre son QG lorsque la carte en comporte un. Toutes les unités du joueur hors jeu. Dépasser la limite de 18 journées.
 **Normal :** Tous les rappels restent consultables ; choisir ensuite un contrat de maintenance ou des fonds immédiats. **Difficile :** IA coordonnée, même objectif ; le choix narratif garde exactement la même portée.
 **État :** conception_non_jouable. Ouvrir la première saison nationale.
@@ -130,11 +132,11 @@ Choix final : maintenance partagée (ravitailleur) ou fonds immédiats (+1 000) 
 
 ### F05 — Les pavillons hésitants · saison 4, épisode 5
 
-**Adversaire :** `cmd_yuna_serrat` ; **format :** 2v2. Ville basse avec itinéraire civil hors plateau de combat.
+**Adversaire :** `cmd_yuna_serrat` ; **format :** 2v2. Ville basse avec itinéraire civil hors du front.
 **Objectif :** Capturer les QG adverses ou mettre hors jeu leurs armées.
 **Défaite / transition :** QG du joueur perdu si présent. Toutes les unités du joueur hors jeu. Victoire ouvre la finale suivante.
 **Normal :** Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues. **Difficile :** IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.
-**Révélation :** Une délégation ayant choisi un contrat adverse peut combattre ici ; ce ne sont pas tous ses habitants qui ont changé de camp.
+**Révélation :** Une délégation sous contrat combat ici ; ce ne sont pas tous ses habitants qui ont changé de camp.
 **Choix :** Offrir une audition à la délégation battue ou suspendre son contrat. **Conséquence :** Renfort conditionnel en finale 11 ou fonds de compensation en finale 6.
 **À développer :** Liaison au journal de campagne et aux alliances conditionnelles.
 
@@ -154,7 +156,7 @@ Choix final : maintenance partagée (ravitailleur) ou fonds immédiats (+1 000) 
 **Objectif :** Capturer le QG de Basile ou mettre hors jeu sa défense.
 **Défaite / transition :** QG du joueur perdu si présent. Toutes les unités du joueur hors jeu. Victoire ouvre la finale suivante.
 **Normal :** Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues. **Difficile :** IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.
-**Révélation :** Les réserves servent à imposer la tutelle sur Aube.
+**Révélation :** Les réserves servent à imposer le contrôle d’Aube.
 **Choix :** Répartir les réserves ou équiper la colonne de tête. **Conséquence :** Ravitaillement allié en finale 12 ou unité lourde initiale en finale 8.
 **À développer :** Liaison au journal de campagne et aux alliances conditionnelles.
 
@@ -184,9 +186,9 @@ Choix final : maintenance partagée (ravitailleur) ou fonds immédiats (+1 000) 
 **Objectif :** Repli scénarisé : faire sortir le commandement désigné par la porte sud avant la fin de J8. La concession est perdue dans tous les cas.
 **Défaite / transition :** Commandement de repli hors jeu ou non sorti à la fin de J8 : recommencer la mission. Défaite stratégique imposée, transition réussie après extraction ; pas de victoire factice ni trophée de conquête. Le journal distingue repli accompli et concession perdue.
 **Normal :** J3 : arrivée annoncée d’Edran par une zone extérieure interdite au déploiement initial ; forces finies. Trois couloirs de sortie, huit journées pour le commandement. **Difficile :** Même repli obligatoire et huit journées ; une voie secondaire est plus disputée, sans fermer la sortie principale ni rendre le commandement ciblable avant sa fenêtre de décision.
-**Révélation :** Edran révèle être le père de Maël, rejoint son fils et bat notre coalition. La révélation précède les ordres, pas le résultat.
+**Révélation :** Edran révèle être le père de Maël, rejoint son fils et bat la coalition. La révélation précède les ordres, pas le résultat.
 **Choix :** Sauver les réserves, les archives ou le matériel d’une délégation isolée ; objectifs secondaires incompatibles faute de temps. **Conséquence :** Bonus distincts en finales 11–13 ; le retrait stratégique est fixé, les moyens sauvés et les relations restent ceux du joueur.
-**À développer :** Résultat de campagne repli accompli distinct du résultat de match. Extraction de plusieurs groupes et journal des groupes sauvés. Entrée scénarisée d’un commandant avec scène bloquant les tours IA. Issue stratégique fixe annoncée explicitement après révélation ; conservation des objectifs secondaires.
+**À développer :** Résultat de campagne repli accompli distinct du résultat de la bataille. Extraction de plusieurs groupes et journal des groupes sauvés. Entrée scénarisée d’un commandant avec scène bloquant les tours IA. Issue stratégique fixe annoncée explicitement après révélation ; conservation des objectifs secondaires.
 
 ### F11 — Les comptes du repli · saison 5, épisode 5
 
@@ -279,7 +281,7 @@ Limites éditoriales : finales ordinaires J24 ; F8 J18, F10 J8, F11 J16, F12 J20
 
 Le drone marin, les stations IEM et la météo de simulation enrichissent les missions existantes sans changer les **172 missions ni les huit adversaires**. Les fichiers JSON identifient précisément les fiches concernées. Ces ajouts restent des intentions éditoriales tant que leurs cartes et paramètres ne sont pas validés.
 
-La supériorité adverse vient du matériel et du placement. Les stations ont une position, une portée et un calendrier consultables avant engagement. Le joueur peut capturer la source, rejoindre un refuge ou se replier sur une route moins pénalisée. Le mode difficile renforce la défense et les patrouilles, jamais une portée ou activation cachée. Les nations adaptent leurs paysages et leurs stratégies sans immunités nationales implicites. Le forçage météo concerne le terrain de tournoi, pas le climat de populations réelles.
+La supériorité adverse vient du matériel et du placement. Les stations ont une position, une portée et un calendrier consultables avant engagement. Le joueur peut capturer la source, rejoindre un refuge ou se replier sur une route moins pénalisée. Le mode difficile renforce la défense et les patrouilles, jamais une portée ou activation cachée. Les nations adaptent leurs paysages et leurs stratégies sans immunités nationales implicites. Le forçage météo concerne un front, jamais le climat d’une région ni celui de populations réelles.
 
 Aucune scène publique nouvelle ne révèle la fratrie ; les doctrines techniques ne fournissent aucun indice familial imposé. La révélation père-fils reste au pivot prévu, sans révéler le lien avec Lise.
 

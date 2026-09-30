@@ -158,6 +158,62 @@ test('une confiance de trois ouvre le départ de Nouvelle Ronde comme une allian
   assert.deepEqual(deblocagesAcquis(confiant, [departSuisse], LE_JOUR), ['deb_depart_ch']);
 });
 
+/** Une entrée du journal des décisions, telle que la campagne l'écrit. */
+function decision(choixCle: string, optionCle: string): ProfilCampagne['flags']['journal'][number] {
+  return { journee: 0, scenarioCle: choixCle.replace(/_decision$/, ''), choixCle, optionCle, flagsEcrits: [] };
+}
+function avecJournal(journal: ProfilCampagne['flags']['journal'], booleens: Record<string, true> = {}): ProfilCampagne {
+  return profil({ flags: { booleens, compteurs: {}, journal } });
+}
+
+test('decision : une décision jamais prise est fausse, pour toutes ses options', () => {
+  const p = avecJournal([]);
+  assert.equal(evaluerCondition({ type: 'decision', cle: 'opus1_br_04_decision', option: 'partager_releves' }, p, LE_JOUR), false);
+  assert.equal(evaluerCondition({ type: 'decision', cle: 'opus1_br_04_decision', option: 'garder_reserve' }, p, LE_JOUR), false);
+});
+
+test('decision : l’option retenue satisfait sa condition, l’autre non', () => {
+  const p = avecJournal([decision('opus1_br_04_decision', 'partager_releves')]);
+  assert.equal(evaluerCondition({ type: 'decision', cle: 'opus1_br_04_decision', option: 'partager_releves' }, p, LE_JOUR), true);
+  assert.equal(evaluerCondition({ type: 'decision', cle: 'opus1_br_04_decision', option: 'garder_reserve' }, p, LE_JOUR), false);
+  // Une autre décision au même numéro, chez une autre nation, ne se confond pas.
+  assert.equal(evaluerCondition({ type: 'decision', cle: 'opus1_id_04_decision', option: 'partager_releves' }, p, LE_JOUR), false);
+});
+
+test('decision : la dernière entrée d’une décision est la retenue, jamais les deux', () => {
+  // Une épreuve révisée repose sa question : le journal porte les deux réponses.
+  const p = avecJournal([
+    decision('opus1_mx_10_decision', 'retour_sous_audit'),
+    decision('opus1_fr_04_decision', 'garder_reserve'),
+    decision('opus1_mx_10_decision', 'fin_du_mandat'),
+  ]);
+  assert.equal(evaluerCondition({ type: 'decision', cle: 'opus1_mx_10_decision', option: 'fin_du_mandat' }, p, LE_JOUR), true);
+  assert.equal(evaluerCondition({ type: 'decision', cle: 'opus1_mx_10_decision', option: 'retour_sous_audit' }, p, LE_JOUR), false,
+    'deux options d’une même décision ne sont jamais vraies ensemble');
+});
+
+test('decision : un ou avec un flag ouvre par l’une ou l’autre porte', () => {
+  // La forme des hors-série : une décision de la trame *ou* un flag canon.
+  const deuxPortes: Condition = {
+    type: 'ou',
+    conditions: [
+      { type: 'decision', cle: 'opus1_br_04_decision', option: 'partager_releves' },
+      { type: 'flag', cle: 'pays.br.rival_respecte' },
+    ],
+  };
+  assert.equal(evaluerCondition(deuxPortes, avecJournal([]), LE_JOUR), false);
+  assert.equal(evaluerCondition(deuxPortes, avecJournal([decision('opus1_br_04_decision', 'partager_releves')]), LE_JOUR), true);
+  assert.equal(evaluerCondition(deuxPortes, avecJournal([], { 'pays.br.rival_respecte': true }), LE_JOUR), true);
+  assert.equal(evaluerCondition(deuxPortes, avecJournal([decision('opus1_br_04_decision', 'garder_reserve')]), LE_JOUR), false,
+    'l’autre option de la décision ne suffit pas');
+});
+
+test('decision : un profil sans journal n’a rien décidé, et rien ne lève', () => {
+  const ancien = profil();
+  delete (ancien.flags as Partial<ProfilCampagne['flags']>).journal;
+  assert.equal(evaluerCondition({ type: 'decision', cle: 'opus1_fr_04_decision', option: 'partager_releves' }, ancien, LE_JOUR), false);
+});
+
 test('un secret trouvé satisfait sa condition', () => {
   const p = profil();
   assert.equal(evaluerCondition({ type: 'secret', cle: 'mur_du_vestiaire' }, p, LE_JOUR), true);

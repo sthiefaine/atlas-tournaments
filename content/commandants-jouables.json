@@ -1,15 +1,15 @@
 {
-  "version": 1,
+  "version": 2,
   "statut": "conception",
   "source": "doc/refonte/roster-jouable.md (12 septembre 2026) ; kits dans content/commandants-capacites.json révision 4 ; doctrine des secrets dans doc/13-campagne.md §7 ; vocabulaire du prêt de banc dans doc/01-bible.md §4.6.",
   "note": "Seize commandants jouables, quatre secrets. Les seize couvrent les dix-sept familles d'effet qu'une nation a le droit d'employer ; les trois familles qui restent — frappe_zone, rayon_laser, iem — sont celles de la faction, et c'est exactement ce que les quatre secrets achètent. Aucune clé n'est dans les deux listes ; chaque clé existe dans content/commandants-capacites.json.",
   "regles": [
-    "Les dix exercices imposent leur commandant : on y apprend le jeu, pas le roster. Le choix s'ouvre à la Qualification.",
-    "Choisir un commandant qui n'est pas le vôtre est un banc prêté (01-bible §4.6) : sa délégation vous prête son général, vous jouez ses consignes, on rend le banc au coup de sifflet. Un banc écrit dans Scenario.bancs garde sa conséquence annoncée ; un commandant simplement débloqué n'en a aucune.",
+    "Les dix exercices imposent leur commandant : on y apprend le jeu, pas le roster. Le choix s'ouvre après les exercices, dans les essais Aube et les parties libres.",
+    "Choisir un commandant qui n'est pas le vôtre est un banc prêté (01-bible §4.6) : sa nation vous prête son général, vous menez ses couleurs, et l'on rend le banc à la fin de l'engagement. Un banc écrit dans Scenario.bancs garde sa conséquence annoncée ; un commandant simplement débloqué n'en a aucune.",
     "Un secret n'est jamais indispensable (13-campagne §7.1) : un joueur qui n'en débloque aucun voit tout le jeu, toutes les fins et tous les fils. Il est équilibré comme les autres et porte la faiblesse déclarée de son kit.",
     "Un commandant dont le super appartient à une famille de la faction (frappe_zone, rayon_laser, iem) ne tire ce super que depuis un camp déclaré atl : le choix doit poser reglages.factionsParCamp pour le camp du joueur, sinon verifierPouvoir refuse en silence. Cela concerne cmd_hadran_ost, cmd_mael_orven et cmd_yuna_serrat, jamais les seize.",
     "Le même drapeau ouvre le matériel : uniteAutorisee (catalogue.ts) lit factionsParCamp, donc déclarer atl met meridien_veilleur et meridien_bastion (catalogue 7), et meridien_automate (catalogue 9), dans le menu de production du joueur. À décider exprès, pas à découvrir.",
-    "Les flags cités par les conditions sont écrits par Scenario.recompenses.flags à la victoire, sur le modèle de monde.tournoi.pacte_du_col qui existe déjà ; le compteur monde.tournoi.matchs_sans_perte est écrit à la fin d'un match gagné sans perte. Aucun n'est encore posé : la liste est dans roster-jouable.md.",
+    "Les flags cités par les conditions sont écrits par Scenario.recompenses.flags à la victoire, sur le modèle de monde.tournoi.pacte_du_col qui existe déjà ; le compteur monde.tournoi.matchs_sans_perte est écrit à la fin d'une bataille gagnée sans perte. Aucun n'est encore posé : la liste est dans roster-jouable.md.",
     "Les lignes de goût sont écrites verbe en tête et disent le pouvoir puis le super, jamais un multiplicateur nu : deux relectures (le joueur d’Advance Wars, l’ado de quinze ans) les ont refaites. Une ligne se réaligne sur le kit, jamais l’inverse."
   ],
   "jouables": [
@@ -71,7 +71,7 @@
     {
       "cle": "cmd_awa_diagne",
       "ouvertPar": "aube_routes_3v1",
-      "gout": "Faire rejouer : ses fantassins cognent plus fort, et une fois par match toute son infanterie rejoue son tour entier."
+      "gout": "Faire rejouer : ses fantassins cognent plus fort, et une fois par bataille toute son infanterie rejoue son tour entier."
     },
     {
       "cle": "cmd_kito_njoroge",
@@ -157,7 +157,7 @@
     {
       "cle": "cmd_basile_kelm",
       "libelle": "Le Verrou",
-      "indice": "Un coffret gris parle à tous les plastrons de marquage du terrain. On ne l'ouvre pas : on prend la Forge, et on la reprend une seconde fois par le chemin le plus dur.",
+      "indice": "Un coffret gris ferme les réserves de tout le terrain. On ne l'ouvre pas : on prend la Forge, et on la reprend une seconde fois par le chemin le plus dur.",
       "condition": {
         "type": "et",
         "conditions": [

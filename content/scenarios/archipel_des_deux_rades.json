@@ -1,10 +1,10 @@
 {
   "cle": "archipel_des_deux_rades",
-  "version": 3,
+  "version": 4,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-07",
-  "majLe": "2026-09-12",
+  "majLe": "2026-09-27",
   "code": "archipel_des_deux_rades",
   "nom": "Jeu libre · L’archipel des Deux Rades",
   "acte": 0,
@@ -67,14 +67,14 @@
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Barge, plage, quatre journées de capture. Le match se gagnait par la mer, et il s’est gagné par la mer.",
+      "texte": "Barge, plage, quatre journées de capture. La bataille se gagnait par la mer, et elle s’est gagnée par la mer.",
       "emotion": "joie"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Tu as passé le match à défendre un pont pendant que mes barges tournaient autour. Reviens avec une rade tenue.",
+      "texte": "Tu as passé la bataille à défendre un pont pendant que mes barges tournaient autour. Reviens avec une rade tenue.",
       "emotion": "triomphe"
     }
   ],

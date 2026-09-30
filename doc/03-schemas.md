@@ -13,7 +13,7 @@
 **Types de base partagés**, définis une fois dans `src/schemas/types.ts` :
 
 ```ts
-/** Code de camp : ISO 3166-1 alpha-2 en minuscules pour une nation ('fr', 'lu', 'jp'), trois lettres pour une équipe sans drapeau ('atl'). Regex : ^[a-z]{2,3}$ */
+/** Code de camp : ISO 3166-1 alpha-2 en minuscules pour une nation ('fr', 'lu', 'jp'), trois lettres pour un camp sans drapeau ('atl'). Regex : ^[a-z]{2,3}$ */
 export type CodePays = string;
 
 /** Identifiant stable, minuscules, chiffres et tirets bas. Regex : ^[a-z][a-z0-9_]{1,47}$ */
@@ -171,7 +171,7 @@ export interface Country extends Enveloppe {
 
 **Validations serveur.** `code` unique et présent dans la liste ISO fermée embarquée dans le canon. `nomCourt` ≤ 14 caractères (contrainte de HUD). `biomes` : 1 à 4, sans doublon, valeurs de l'énumération. `voisins` : ≤ 12, sans doublon, chaque code existe, ne contient pas `code` lui-même. `rivalNaturel ≠ code` et existe. `palette` : les trois couleurs distinctes, et un contraste minimum de 3:1 entre `main` et `light` pour rester lisible sur le canvas **[proposition]**. `flagsDisponibles` : chaque clé existe dans `flags.json` et respecte la convention `pays.<code>.*` ou `monde.<domaine>.*` (§8) ; un pays ne peut déclarer que ses propres flags de pays. `regions` : présent **si et seulement si** `phare === true`. `accroche` et `interdits` passent le filtre de bible (aucun terme de la liste noire : conflit, politique, religion, catastrophe, dirigeant réel).
 
-`hemisphere` est obligatoire et cohérent avec `continent` (`equateur` réservé aux pays traversés par la zone intertropicale) : c'est lui, et non le continent, qui décide de la saison d'un match — jouer le Brésil en janvier, c'est jouer en été (§13). `specialite` : un `contenu` d'un seul variant. Variant `modificateur` : 1 à 2 effets, tous du variant `EffetModificateur` (**une spécialité ne pose jamais de terrain**), tous permanents, chacun dans les bornes du §2. Variant `trait` : exactement une valeur de `TraitSpecialite`, et le trait doit être cohérent avec la `famille` (`franchissement_riviere` et `pied_marin` relèvent de `mobilite` ou `ingenierie`, `experience_rapide` de `infanterie` ou `polyvalence`, `ravitaillement_ville` de `economie` ou `defense`, `vision_nuit` de `defense` ou `polyvalence`) ; une valeur hors liste est un refus (`motif: 'schema_invalide'`), une routine ne peut jamais en inventer une. **Plafond de cumul : une seule spécialité active à la fois** (`BRIEF.md`, seconde relecture, point 2) — le joueur en possède jusqu'à **cinq** et en **équipe une par match**, exactement comme les co-commandants (trois recrutés, un actif ; `04-gameplay.md` §7.5). Il n'y a donc pas de produit de multiplicateurs entre spécialités à saturer : les bornes du §2 s'appliquent effet par effet, et la routine contrôle vérifie l'équilibre spécialité par spécialité. Enfin, **il n'existe pas de `rival_secondaire`** : la rivalité est unique et réciproque (`BRIEF.md`, points mineurs du 5 septembre 2026) ; un champ de ce nom est refusé comme `champ_inconnu`.
+`hemisphere` est obligatoire et cohérent avec `continent` (`equateur` réservé aux pays traversés par la zone intertropicale) : c'est lui, et non le continent, qui décide de la saison d'une mission — jouer au Brésil en janvier, c'est jouer en été (§13). `specialite` : un `contenu` d'un seul variant. Variant `modificateur` : 1 à 2 effets, tous du variant `EffetModificateur` (**une spécialité ne pose jamais de terrain**), tous permanents, chacun dans les bornes du §2. Variant `trait` : exactement une valeur de `TraitSpecialite`, et le trait doit être cohérent avec la `famille` (`franchissement_riviere` et `pied_marin` relèvent de `mobilite` ou `ingenierie`, `experience_rapide` de `infanterie` ou `polyvalence`, `ravitaillement_ville` de `economie` ou `defense`, `vision_nuit` de `defense` ou `polyvalence`) ; une valeur hors liste est un refus (`motif: 'schema_invalide'`), une routine ne peut jamais en inventer une. **Plafond de cumul : une seule spécialité active à la fois** (`BRIEF.md`, seconde relecture, point 2) — le joueur en possède jusqu'à **cinq** et en **équipe une par mission**, exactement comme les co-commandants (trois recrutés, un actif ; `04-gameplay.md` §7.5). Il n'y a donc pas de produit de multiplicateurs entre spécialités à saturer : les bornes du §2 s'appliquent effet par effet, et la routine contrôle vérifie l'équilibre spécialité par spécialité. Enfin, **il n'existe pas de `rival_secondaire`** : la rivalité est unique et réciproque (`BRIEF.md`, points mineurs du 5 septembre 2026) ; un champ de ce nom est refusé comme `champ_inconnu`.
 
 ```json
 {
@@ -221,7 +221,7 @@ export interface Country extends Enveloppe {
     "…", "region_fr_ile_de_france"
   ],
   "phare": true,
-  "accroche": "Dix-huit régions à convaincre avant d'avoir le droit de porter le maillot.",
+  "accroche": "Le pays qui change le plus de visage : un fleuve, un relief, une côte et dix-huit manières de jouer la même carte.",
   "interdits": ["ne jamais évoquer de conflit réel impliquant la France"]
 }
 ```
@@ -278,7 +278,7 @@ export type EffetPouvoir = EffetModificateur | EffetPoserTerrain;
 
 export interface Pouvoir {
   nom: string;                    // 'Levée en masse'
-  description: string;            // ≤ 200 caractères, ton sportif
+  description: string;            // ≤ 200 caractères, ton du jeu (01-bible.md §5)
   barres: number;                 // coût en barres de jauge, 2 à 9
   effets: EffetPouvoir[];         // 1 à 3
   /** `journees` : 1 à 3 journées pleines (`BRIEF.md`, arbitrage n° 4). */
@@ -287,7 +287,7 @@ export interface Pouvoir {
 }
 
 export interface Commander extends Enveloppe {
-  code: Cle;                      // 'cmd_camille_aubertin' — prénom + nom, jamais un numéro
+  code: Cle;                      // 'cmd_ariane_belloc' — prénom + nom, jamais un numéro
   nom: string;
   paysCode: CodePays;
   archetype: Archetype;
@@ -313,52 +313,51 @@ export interface Commander extends Enveloppe {
 }
 ```
 
-**Validations serveur.** `code` a la forme `cmd_<prenom>_<nom>` ; **c'est lui qui fournit l'identifiant des flags de commandant** : `cmd_mireille_bousquet` donne `cmd.mireille_bousquet.respect` (convention de `01-bible.md` §8.1). `paysCode` existe et `archetype === Country.archetypeCommandant` (le commandant ne contredit pas sa fiche). `traits` : exactement 3, distincts. `superPouvoir.barres > pouvoir.barres` et `superPouvoir.barres ≤ 9`. Chaque `modificateur.valeur` est dans la borne de son `quoi` ; une valeur multiplicative hors [0,5 ; 2,0] est refusée (`motif: 'effet_hors_bornes'`), **`capture` excepté, dont la borne est [0,5 ; 3,0]** (`BRIEF.md`, seconde relecture, point 4). Une valeur de `capture` **inférieure à 1,0 n'est acceptée que si `cible === 'unites_adverses'`** — ralentir la capture chez soi est un outil de défense, se ralentir soi-même n'a pas de sens et un malus de capture ne s'applique jamais à `toutes_unites` ; toute autre cible sous 1,0 est un refus (`motif: 'effet_hors_bornes'`). C'est ce qui rend sa famille de pouvoir à **la gardienne** (`01-bible.md` §6) : elle peut enfin ralentir ce qui approche de ses villes. Un pouvoir a 1 à 3 effets — au-delà, c'est illisible en jeu. **Invariant d'équilibrage** **[proposition]** : le « poids » d'un pouvoir, somme des écarts à la neutralité pondérés par une table, doit être ≤ 3 pour le pouvoir normal et ≤ 7 pour le super ; la routine contrôle vérifie ce poids et rejette au-delà. `faiblesse` est obligatoire et son effet doit être **défavorable** (multiplicateur < 1 ou additif < 0) : un commandant sans faiblesse réelle est refusé. Toutes les répliques passent le filtre de bible et le filtre de ton (vocabulaire sportif : « adversaire », « mise hors jeu », jamais « ennemi », « tuer », « détruire »).
+**Validations serveur.** `code` a la forme `cmd_<prenom>_<nom>` ; **c'est lui qui fournit l'identifiant des flags de commandant** : `cmd_mireille_bousquet` donne `cmd.mireille_bousquet.respect` (convention de `01-bible.md` §8.1). `paysCode` existe et `archetype === Country.archetypeCommandant` (le commandant ne contredit pas sa fiche). `traits` : exactement 3, distincts. `superPouvoir.barres > pouvoir.barres` et `superPouvoir.barres ≤ 9`. Chaque `modificateur.valeur` est dans la borne de son `quoi` ; une valeur multiplicative hors [0,5 ; 2,0] est refusée (`motif: 'effet_hors_bornes'`), **`capture` excepté, dont la borne est [0,5 ; 3,0]** (`BRIEF.md`, seconde relecture, point 4). Une valeur de `capture` **inférieure à 1,0 n'est acceptée que si `cible === 'unites_adverses'`** — ralentir la capture chez soi est un outil de défense, se ralentir soi-même n'a pas de sens et un malus de capture ne s'applique jamais à `toutes_unites` ; toute autre cible sous 1,0 est un refus (`motif: 'effet_hors_bornes'`). C'est ce qui rend sa famille de pouvoir à **la gardienne** (`01-bible.md` §6) : elle peut enfin ralentir ce qui approche de ses villes. Un pouvoir a 1 à 3 effets — au-delà, c'est illisible en jeu. **Invariant d'équilibrage** **[proposition]** : le « poids » d'un pouvoir, somme des écarts à la neutralité pondérés par une table, doit être ≤ 3 pour le pouvoir normal et ≤ 7 pour le super ; la routine contrôle vérifie ce poids et rejette au-delà. `faiblesse` est obligatoire et son effet doit être **défavorable** (multiplicateur < 1 ou additif < 0) : un commandant sans faiblesse réelle est refusé. Toutes les répliques passent le filtre de bible et le filtre de ton (`01-bible.md` §5.2 : les mots de la guerre sont libres, l'horreur graphique et tout ancrage dans un conflit réel ne le sont pas ; le HUD et le moteur disent « mettre hors jeu »).
 
 **Validations propres aux deux ajouts de l'arbitrage n° 4.** `duree` de la forme `{ type: 'journees', n }` : `n` entier de 1 à 3, et **réservé au super pouvoir** au-delà de `n = 2` **[proposition]** — un pouvoir à 2 barres qui dure trois journées est un super pouvoir déguisé. `EffetPoserTerrain` : `casesMax` entier de 1 à 4 (**3 au plus pour un pouvoir normal**), `depuis` de 1 à 3 terrains, chaque terrain de `depuis` **non capturable** (jamais `ville`, `usine`, `aeroport`, `qg`), `vers` différent de chaque entrée de `depuis`, et `duree: 'permanent'` **réservée au super pouvoir**. Les **sept** formes ont chacune leur couple `depuis → vers` autorisé, fixé par `04-gameplay.md` §7.2, qui fait foi ; un couple hors table est un refus (`motif: 'effet_hors_bornes'`), et **la table ne s'ouvre pas** : une forme nouvelle demande un arbitrage, une routine n'en invente jamais. Ni `source_chaude` ni `glace` n'en font partie (`BRIEF.md`, seconde relecture, point 3). Un `EffetPoserTerrain` est refusé partout où le schéma attend un `EffetModificateur` : `Commander.passif`, `Commander.faiblesse.effet`, le variant `modificateur` de `Specialite.contenu`, `ChoixScenario.options[].effetImmediat` et `Event.effet.modificateur` n'acceptent **que** le variant modificateur.
 
-L'exemple ci-dessous est le commandant **canon** de la France, tel que le fixe `06-pays-de-depart.md` §5.1 : les noms propres, l'archétype et les noms de pouvoirs viennent de là et ne s'inventent pas ici.
+L'exemple ci-dessous est le commandant **canon** de la France : son nom vient de `content/personnages.json`, son archétype de la fiche pays (`06-pays-de-depart.md` §5.1), son passif, ses deux pouvoirs et sa faiblesse de `content/commandants-capacites.json`, révision 4 — rien de cela ne s'invente ici. Les traits, les répliques de situation et le portrait, que le contenu ne porte pas encore, sont illustratifs. Le super-pouvoir emploie `ravitailler`, une des familles d'effet ouvertes le 10 septembre 2026 que l'union `EffetPouvoir` ci-dessus ne montre pas : `04-gameplay.md` §7.2 (« Familles d'effets — 10 septembre 2026 ») fait foi.
 
 ```json
 {
-  "cle": "cmd_camille_aubertin",
-  "version": 2,
+  "cle": "cmd_ariane_belloc",
+  "version": 4,
   "statut": "valide",
   "source": "humain",
   "creeLe": "2026-09-04",
-  "majLe": "2026-09-04",
-  "code": "cmd_camille_aubertin",
-  "nom": "Camille Aubertin",
+  "majLe": "2026-09-27",
+  "code": "cmd_ariane_belloc",
+  "nom": "Ariane Belloc",
   "paysCode": "fr",
   "archetype": "prodige",
-  "traits": ["curieux", "gourmand", "complexé par sa jeunesse"],
+  "traits": ["ancienne mécanicienne", "économe de ses équipages", "demande peu d'aide"],
   "passif": {
     "cible": "mes_unites",
-    "filtre": { "surTerrain": ["ville"] },
-    "modificateur": { "quoi": "soin", "valeur": 1 }
+    "modificateur": { "quoi": "attaque", "valeur": 1.05 }
   },
   "pouvoir": {
-    "nom": "Tour de France",
-    "description": "Toute l'équipe avance d'une case de plus, et chaque région déjà remportée ajoute un peu de mordant.",
+    "nom": "L'échappée",
+    "description": "Ce tour, toutes vos unités au sol gagnent +1 de mouvement : l'échappée part, et tout le monde y est.",
     "barres": 3,
     "effets": [
-      { "cible": "mes_unites", "modificateur": { "quoi": "mouvement", "valeur": 1 } },
-      { "cible": "mes_unites", "modificateur": { "quoi": "attaque", "valeur": 1.2 } }
+      { "cible": "mes_unites", "filtre": { "mouvement": ["pied", "bottes", "roues", "chenilles"] },
+        "modificateur": { "quoi": "mouvement", "valeur": 1 } }
     ],
     "duree": "ce_tour",
-    "replique": "On repart, et cette fois on ne s'arrête pas au ravitaillement."
+    "replique": "L'échappée part maintenant. Prenez la roue : tout le monde y est."
   },
   "superPouvoir": {
-    "nom": "Le drapeau à damier",
-    "description": "Une relance générale : tout le monde repart devant, et les unités en ville se refont une santé.",
-    "barres": 6,
+    "nom": "L'atelier roulant",
+    "description": "Toutes vos unités récupèrent 3 PV, repartent le plein fait et les charges au complet, et frappent ×1,15 ce tour.",
+    "barres": 7,
     "effets": [
-      { "cible": "mes_unites", "modificateur": { "quoi": "mouvement", "valeur": 3 } },
-      { "cible": "mes_unites", "filtre": { "surTerrain": ["ville"] },
-        "modificateur": { "quoi": "soin", "valeur": 2 } }
+      { "cible": "mes_unites", "modificateur": { "quoi": "soin", "valeur": 3 } },
+      { "cible": "mes_unites", "ravitailler": { "carburant": true, "munitions": true } },
+      { "cible": "mes_unites", "modificateur": { "quoi": "attaque", "valeur": 1.15 } }
     ],
-    "duree": "tour_complet",
-    "replique": "Dernier tour ! Tout le monde devant !"
+    "duree": "ce_tour",
+    "replique": "Tout l'atelier sur le terrain : le plein, les charges, les blindages refaits. Maintenant, on avance."
   },
   "faiblesse": {
     "axe": "economie",
@@ -366,15 +365,15 @@ L'exemple ci-dessous est le commandant **canon** de la France, tel que le fixe `
       "cible": "economie",
       "modificateur": { "quoi": "fonds", "valeur": 0.9 }
     },
-    "description": "L'école coûte cher : ses villes rapportent moins que celles des autres."
+    "description": "L'atelier coûte : ses revenus sont à 90 %."
   },
   "repliques": {
-    "ouverture": ["J'ai dix-huit régions dans les jambes. On verra bien.", "On joue chez moi, on joue bien."],
-    "victoire": ["Voilà. Et je suis jeune, en plus."],
-    "defaite": ["Bien joué. Sincèrement. Ça m'agace, mais bien joué."],
-    "unitePerdue": ["Rentrez au vestiaire, on vous remplace."]
+    "ouverture": ["Le plein est fait, les équipes sont prêtes. On part ensemble.", "Chaque case se paie. On la paie le moins cher possible."],
+    "victoire": ["Tout le monde rentre. C'est ça, gagner."],
+    "defaite": ["On rentre à l'atelier. On comprend, puis on revient."],
+    "unitePerdue": ["Une pièce de moins. Qu'elle ne soit pas perdue pour rien."]
   },
-  "portrait": { "teint": "#e8c39e", "cheveux": "#3a2a22", "accessoire": "foulard" }
+  "portrait": { "teint": "#e8c39e", "cheveux": "#5a3e2b", "accessoire": "aucun" }
 }
 ```
 
@@ -723,14 +722,14 @@ export interface Incarnation {
 export interface Scenario extends Enveloppe {
   code: Cle;
   nom: string;
-  acte: number;                   // 0 = prologue (qualification nationale), 1 à 3 = les trois actes/continents (08-narration-choix §6)
+  acte: number;                   // 0 = prologue (l'école du front, 01-bible §4.1), 1 à 3 = les trois actes (08-narration-choix §6)
   /** Présent : **match d'incarnation** — le joueur joue cette nation, avec son
    *  général au camp 0, son catalogue et sa spécialité (§15.2 bis). */
   incarnation?: Incarnation;
   paysCode: CodePays;
   regionCle?: Cle;
   carteCle: Cle;
-  /** Date **réelle** du jour où le match commence, figée à la création et jamais
+  /** Date **réelle** du jour où la mission commence, figée à la création et jamais
    *  recalculée : c'est elle qui donne la saison, via `Country.hemisphere` (§13).
    *  Le moteur ne lit jamais l'horloge (`02-architecture.md` §3.1 et §7). */
   date: DateIso;
@@ -752,7 +751,7 @@ export interface Scenario extends Enveloppe {
   dialogueOuverture: Dialogue[];  // 1 à 8
   dialogueVictoire: Dialogue[];   // 1 à 6
   dialogueDefaite: Dialogue[];    // 1 à 4
-  scenesDialogue?: SceneDialogue[]; // 0 à 12, jouées PENDANT le match
+  scenesDialogue?: SceneDialogue[]; // 0 à 12, jouées PENDANT la mission
   choix: ChoixScenario[];         // 0 à 3
   flagsRequis: Cle[];             // conditions d'accès
   flagsInterdits: Cle[];
@@ -765,7 +764,7 @@ export interface Scenario extends Enveloppe {
 }
 ```
 
-**Les scènes de dialogue** (`scenesDialogue`) sont ce qui manquait pour que les commandants parlent *pendant* un match, et pas seulement avant et après.
+**Les scènes de dialogue** (`scenesDialogue`) sont ce qui manquait pour que les commandants parlent *pendant* une mission, et pas seulement avant et après.
 
 ```ts
 type DeclencheurScene =
@@ -786,7 +785,7 @@ interface SceneDialogue {
 }
 ```
 
-Trois règles, et elles tiennent tout : un déclencheur se juge sur les **événements** que le moteur vient de rendre — jamais sur une horloge, jamais sur un sondage —, ce qui rend les dialogues rejouables à l'identique ; une scène ne se joue **qu'une fois** par partie, identifiée par sa `cle`, sans quoi une scène de capture reviendrait à chaque ville prise ; et l'ordre de sortie est celui du scénario, pas celui des événements, pour qu'un auteur entende ses scènes dans l'ordre où il les a écrites. La fin de match n'a **pas** de déclencheur : elle appartient à `dialogueVictoire` et `dialogueDefaite`, qui existaient avant et restent propriétaires du moment. Le champ est facultatif : un scénario sans scène se joue exactement comme avant.
+Trois règles, et elles tiennent tout : un déclencheur se juge sur les **événements** que le moteur vient de rendre — jamais sur une horloge, jamais sur un sondage —, ce qui rend les dialogues rejouables à l'identique ; une scène ne se joue **qu'une fois** par partie, identifiée par sa `cle`, sans quoi une scène de capture reviendrait à chaque ville prise ; et l'ordre de sortie est celui du scénario, pas celui des événements, pour qu'un auteur entende ses scènes dans l'ordre où il les a écrites. La fin de mission n'a **pas** de déclencheur : elle appartient à `dialogueVictoire` et `dialogueDefaite`, qui existaient avant et restent propriétaires du moment. Le champ est facultatif : un scénario sans scène se joue exactement comme avant.
 
 **Validations serveur.** `date` est une `DateIso` valide, écrite **une seule fois** : une soumission qui modifie la `date` d'un scénario déjà validé est refusée (`motif: 'champ_calcule'`), sans quoi un rejeu changerait de saison. `cycleJourNuit` : deux entiers ≥ 0 dont la somme est comprise entre 1 et 12 ; `{ jour: 4, nuit: 2 }` à défaut. `climatFixe`, s'il est présent, ne contient que des valeurs des énumérations `Saison` et `Meteo` (§13) ; une météo forcée hors de la table de probabilités du climat du pays est acceptée mais signalée à la routine contrôle (c'est un scénario scripté, pas un tirage). `catalogueVersion` désigne une version de catalogue existante, et **toute** `CleUnite` citée par la carte, les unités de départ et les objectifs se résout dans **cette** version, avec un statut `canon` ou `homologuee` — une unité en `essai` n'est autorisée que dans le scénario d'une `MissionDuJour` (§14). `carteCle` existe et son statut est au moins `valide`. `commandants` : un par camp de la carte, exactement, pas deux fois le même `camp` ; le camp 0 sans `ia` est le joueur, tous les autres doivent avoir une `ia`. `victoire` et `defaite` : 1 à 3 entrées, non vides — un scénario sans condition de défaite est refusé. Toute `Case` citée dans un objectif est dans les bornes de la carte et sur une case pertinente (`capturer` et `tenir` exigent un terrain capturable). `uniteRef` référence une unité de `unitesDepart` (identifiée par son index ou une clé). `limiteJournees` cohérent avec `defaite` : si un objectif `survivre` existe, `limiteJournees` doit être ≥ ses journées ou nul. Tous les flags de `ecritFlags`, `flagsRequis`, `flagsInterdits` et `recompenses.flags` existent dans `flags.json` et respectent la convention de portée (§8) : un scénario de pays ne peut écrire que `pays.<son code>.*` et `monde.*`. **Un scénario d'`incarnation` est plus serré encore** : il n'écrit **aucun** flag de la trame principale du joueur, donc rien en `monde.*`, et ses flags de pays sont ceux de la **nation incarnée** — `pays.<incarnation.paysCode>.*` et `cmd.*`, et rien d'autre, ni en récompense ni dans une option de choix (§15.2 bis). Son `commandants[camp 0].commandantCle` est **exactement** `incarnation.commandantCle` : le joueur joue le général de la nation, pas le sien. Les dialogues passent le filtre de bible et de ton. `scenesDialogue` : 0 à 12 scènes, **clés distinctes** (deux scènes de même clé ne se distingueraient plus, et la seconde ne se jouerait jamais), 1 à 6 répliques chacune ; un déclencheur `journee` porte une journée de 1 à 60, un déclencheur `etape` un jalon de 1 à 12, et chacun des deux est **obligatoire** — un `{ type: 'journee' }` sans journée passerait sinon, et la scène ne se jouerait jamais sans que personne ne sache pourquoi. `choix` : chaque `ChoixScenario` a 2 ou 3 options, chaque option écrit au moins un flag, et **deux options d'un même choix n'écrivent jamais le même ensemble de flags** (sinon le choix est décoratif — `motif: 'choix_sans_consequence'`).
 
@@ -800,7 +799,7 @@ Trois règles, et elles tiennent tout : un déclencheur se juge sur les **évén
   "majLe": "2026-09-08",
   "code": "scen_fr_bretagne_01",
   "nom": "Bretagne — La marée n'attend personne",
-  "acte": 0,
+  "acte": 1,
   "paysCode": "fr",
   "regionCle": "region_fr_bretagne",
   "carteCle": "carte_fr_bretagne_01",
@@ -808,7 +807,7 @@ Trois règles, et elles tiennent tout : un déclencheur se juge sur les **évén
   "cycleJourNuit": { "jour": 4, "nuit": 2 },
   "catalogueVersion": 1,
   "commandants": [
-    { "camp": 0, "commandantCle": "cmd_camille_aubertin" },
+    { "camp": 0, "commandantCle": "cmd_ariane_belloc" },
     { "camp": 1, "commandantCle": "cmd_maelle_kerdraon", "ia": "defensive" }
   ],
   "fondsDepart": 6000,
@@ -822,7 +821,7 @@ Trois règles, et elles tiennent tout : un déclencheur se juge sur les **évén
   "defaite": [{ "type": "qg_perdu" }, { "type": "limite_journees", "journees": 20 }],
   "dialogueOuverture": [
     { "locuteur": "cmd_maelle_kerdraon", "texte": "Bienvenue chez moi. Regarde bien l'eau : elle joue pour moi.", "emotion": "joie" },
-    { "locuteur": "cmd_camille_aubertin", "texte": "Alors je jouerai plus vite qu'elle.", "emotion": "triomphe" }
+    { "locuteur": "cmd_ariane_belloc", "texte": "Alors je jouerai plus vite qu'elle.", "emotion": "triomphe" }
   ],
   "dialogueVictoire": [
     { "locuteur": "cmd_maelle_kerdraon", "texte": "Tu as compris la marée avant moi. C'est rare.", "emotion": "surprise" }
@@ -842,7 +841,7 @@ Trois règles, et elles tiennent tout : un déclencheur se juge sur les **évén
             { "cle": "pays.fr.bretagne_maelle_respectee", "valeur": true },
             { "cle": "monde.tournoi.serie_propre", "valeur": 1 }
           ] },
-        { "cle": "achever", "libelle": "Finir le match proprement, sans cadeau.",
+        { "cle": "achever", "libelle": "Finir la bataille proprement, sans cadeau.",
           "ecritFlags": [{ "cle": "pays.fr.bretagne_maelle_humiliee", "valeur": true }],
           "effetImmediat": { "cible": "economie", "modificateur": { "quoi": "fonds", "valeur": 1.2 } } }
       ]
@@ -888,7 +887,7 @@ export interface Region extends Enveloppe {
 }
 ```
 
-**Validations serveur.** `paysCode` désigne un pays avec `phare === true` et `code` figure dans son tableau `regions`. `specialiteLocale.portee === 'region'`, et elle est soumise au plafond du §1 : **une seule spécialité équipée par match**, la spécialité régionale entrant dans la collection de cinq. `ordreConseille` unique au sein d'un pays. `mecanique.cle` existe dans le registre du moteur, respecte le préfixe `meca_`, et **ses `parametres` valident contre le schéma déclaré par la mécanique** (chaque mécanique publie son propre schéma de paramètres — contrat et noms de hooks dans `04-gameplay.md` §11, qui fait foi). Toute mécanique accepte en outre le paramètre commun **`gelable: boolean` (défaut `true`)** : à `false`, aucun effet de saison ne peut rendre franchissables ni neutraliser les cases que la mécanique régit — c'est ainsi que le Grand Est garde son fleuve libre en hiver (`BRIEF.md`, seconde relecture, point 5 ; ordre de résolution dans `04-gameplay.md` §12). `scenarios` : 1 à 3, chacun avec `regionCle === code`. Une région peut **porter plusieurs `MapDef`** : `scenarios` désigne jusqu'à trois scénarios, et deux scénarios d'une même région peuvent référencer deux cartes distinctes plutôt qu'une seule carte à paramètres variables — c'est la règle retenue pour Mayotte, dont la version de repli et la version maritime sont **deux `MapDef` distinctes** aux deux clés `carte_fr_mayotte_repli_01` et `carte_fr_mayotte_01` (`BRIEF.md`, seconde relecture, point 6 ; `07-france-regions.md` §4.17). Une `MapDef` certifiée ne change jamais de ratio après coup : on en publie une seconde. `motsCles` : 3 à 8, tous filtrés par la bible — c'est le champ le plus exposé aux clichés qui dérapent, il est donc relu par la routine contrôle avec un seuil de tolérance bas. `type === 'collectivite'` implique `ordreConseille > 18` (les 18 régions occupent les rangs 1 à 18 ; les collectivités — Nouvelle-Calédonie, Polynésie — sont des étapes bonus, voir `07-france-regions.md` §5).
+**Validations serveur.** `paysCode` désigne un pays avec `phare === true` et `code` figure dans son tableau `regions`. `specialiteLocale.portee === 'region'`, et elle est soumise au plafond du §1 : **une seule spécialité équipée par mission**, la spécialité régionale entrant dans la collection de cinq. `ordreConseille` unique au sein d'un pays. `mecanique.cle` existe dans le registre du moteur, respecte le préfixe `meca_`, et **ses `parametres` valident contre le schéma déclaré par la mécanique** (chaque mécanique publie son propre schéma de paramètres — contrat et noms de hooks dans `04-gameplay.md` §11, qui fait foi). Toute mécanique accepte en outre le paramètre commun **`gelable: boolean` (défaut `true`)** : à `false`, aucun effet de saison ne peut rendre franchissables ni neutraliser les cases que la mécanique régit — c'est ainsi que le Grand Est garde son fleuve libre en hiver (`BRIEF.md`, seconde relecture, point 5 ; ordre de résolution dans `04-gameplay.md` §12). `scenarios` : 1 à 3, chacun avec `regionCle === code`. Une région peut **porter plusieurs `MapDef`** : `scenarios` désigne jusqu'à trois scénarios, et deux scénarios d'une même région peuvent référencer deux cartes distinctes plutôt qu'une seule carte à paramètres variables — c'est la règle retenue pour Mayotte, dont la version de repli et la version maritime sont **deux `MapDef` distinctes** aux deux clés `carte_fr_mayotte_repli_01` et `carte_fr_mayotte_01` (`BRIEF.md`, seconde relecture, point 6 ; `07-france-regions.md` §4.17). Une `MapDef` certifiée ne change jamais de ratio après coup : on en publie une seconde. `motsCles` : 3 à 8, tous filtrés par la bible — c'est le champ le plus exposé aux clichés qui dérapent, il est donc relu par la routine contrôle avec un seuil de tolérance bas. `type === 'collectivite'` implique `ordreConseille > 18` (les 18 régions occupent les rangs 1 à 18 ; les collectivités — Nouvelle-Calédonie, Polynésie — sont des étapes bonus, voir `07-france-regions.md` §5).
 
 ```json
 {
@@ -984,7 +983,7 @@ export interface EtatFlags {
   "portee": "pays",
   "paysCode": "fr",
   "libelle": "Tu as laissé le Luxembourg sortir la tête haute.",
-  "description": "Posé quand le joueur refuse d'aggraver le score contre le rival naturel de la France. Ouvre son recrutement comme co-commandant et adoucit ses répliques ultérieures.",
+  "description": "Posé quand le joueur bat le rival naturel de la France sans l'écraser. Ouvre son recrutement comme co-commandant et adoucit ses répliques ultérieures.",
   "valeur": "booleen",
   "min": null,
   "max": null,
@@ -1330,7 +1329,7 @@ export interface ReviewVerdict {
 Le climat est une **mécanique globale du moteur** (`BRIEF.md`, « Climat »). Ce paragraphe fixe les types ; **`04-gameplay.md` §12 fait foi sur les effets, les tables et les hooks**.
 
 ```ts
-/** Quatre valeurs, toujours. La saison est **fixe pendant un match**. */
+/** Quatre valeurs, toujours. La saison est **fixe pendant une mission**. */
 export type Saison = 'printemps' | 'ete' | 'automne' | 'hiver';
 
 export type PhaseJour = 'jour' | 'nuit';
@@ -1366,7 +1365,7 @@ export interface EtatPartie {
 **Validations et invariants.**
 
 - `EtatClimat` est **calculé**, jamais soumis par une routine (`motif: 'champ_calcule'`). Il se dérive de `Scenario.date`, `Country.hemisphere`, `Scenario.cycleJourNuit`, `Scenario.climatFixe` et de la graine de la partie.
-- `saison` : dérivée du couple (`date`, `hemisphere`) par la table de `04-gameplay.md` §12.1, ou imposée par `climatFixe.saison`. Elle ne change pas en cours de match.
+- `saison` : dérivée du couple (`date`, `hemisphere`) par la table de `04-gameplay.md` §12.1, ou imposée par `climatFixe.saison`. Elle ne change pas en cours de mission.
 - `phase` : `journeeDansCycle < cycleJourNuit.jour ? 'jour' : 'nuit'`. Avec `{ jour: 0, nuit: 6 }` la partie entière est de nuit (nuit polaire) ; avec `{ jour: 6, nuit: 0 }` elle est entièrement de jour.
 - `meteo` et `previsions` : tirées du flux `rng.branche('climat')` dans la table de probabilités (climat du pays × saison) de `04-gameplay.md` §12.4. `previsions` est **toujours** rempli de deux valeurs, y compris à la journée 1. Un `climatFixe.meteo` force les trois valeurs à la même météo.
 - Rejeu : deux parties de même graine, même `Scenario.date` et même `catalogueVersion` produisent exactement la même suite de météos. C'est la raison pour laquelle `date` est figée dans le scénario et jamais relue à l'horloge.
@@ -1423,7 +1422,7 @@ export interface MissionDuJour {
 | Où | Rôle |
 |---|---|
 | `Scenario.catalogueVersion` (§6) | la version dans laquelle les `CleUnite` du scénario se résolvent |
-| `Sauvegarde.catalogueVersion` (ci-dessous) | la version figée par la partie, recopiée du scénario au coup d'envoi |
+| `Sauvegarde.catalogueVersion` (ci-dessous) | la version figée par la partie, recopiée du scénario à son lancement |
 | `MissionDuJour` → son `Scenario` | la mission fige sa version comme n'importe quel scénario |
 
 ```ts
@@ -1431,7 +1430,7 @@ export interface MissionDuJour {
 export interface Sauvegarde {
   scenarioCle: Cle;
   graine: string;
-  catalogueVersion: number;       // figée au coup d'envoi, jamais mise à jour
+  catalogueVersion: number;       // figée au lancement, jamais mise à jour
   engineVersion: number;
   mapgenVersion: number;
   contentVersion: number;
@@ -1501,7 +1500,7 @@ export interface Incarnation {
 
 export interface Scenario extends Enveloppe {
   // …
-  incarnation?: Incarnation;   // présent : ce match est un match d'incarnation
+  incarnation?: Incarnation;   // présent : cette mission est un match d'incarnation
 }
 ```
 
@@ -1574,11 +1573,11 @@ export const RELATIONS_CONSEQUENCE = ['alliee', 'rivale'] as const;  // ce qu'un
 | État | Ce qu'il apporte au joueur |
 |---|---|
 | `neutre` | Rien. C'est l'état par défaut : une nation absente de `relations` est neutre, comme un compteur absent vaut zéro |
-| `alliee` | Son commandant recrutable en co-commandant, son **unité spéciale produisible** (quantité bornée par match), sa carte de terrain, son **soutien à l'acte III**, et son **déblocage comme pays de départ** de la prochaine Nouvelle Ronde |
+| `alliee` | Son commandant recrutable en co-commandant, son **unité spéciale produisible** (quantité bornée par mission), sa carte de terrain, son **soutien à l'acte III**, et son **déblocage comme pays de départ** de la prochaine Nouvelle Ronde |
 | `rivale` | Un grief : IA plus dure, dialogue de revanche, et la possibilité que sa destination se ferme |
-| `retiree` | Elle a quitté la Ronde à cause du joueur : destination fermée, territoire grisé, absence à l'acte III ou passage à la Cinquième Manche |
+| `retiree` | Elle sort de la guerre à cause du joueur, par une paix séparée : destination fermée, territoire grisé, absence à l'acte III ou passage à la Cinquième Manche |
 
-**Les deux bornes, et où chacune est tenue.** `retireesMax: 5` est un **invariant de schéma**, refusé par `validerProfilCampagne` : au-delà, une fin devient inaccessible, et le brief l'interdit. `allieesGaranties: 2` est une garantie de **contenu**, portée par la colonne vertébrale (`13-campagne.md` §3.4) — un profil au premier match n'a légitimement aucune alliée, le schéma ne peut donc pas l'exiger sans refuser tous les débuts de partie. **[Proposition]**
+**Les deux bornes, et où chacune est tenue.** `retireesMax: 5` est un **invariant de schéma**, refusé par `validerProfilCampagne` : au-delà, une fin devient inaccessible, et le brief l'interdit. `allieesGaranties: 2` est une garantie de **contenu**, portée par la colonne vertébrale (`13-campagne.md` §3.4) — un profil à sa première mission n'a légitimement aucune alliée, le schéma ne peut donc pas l'exiger sans refuser tous les débuts de partie. **[Proposition]**
 
 **Qui calcule.** La relation est **dérivée** des flags (respect, grief, choix de scène, sponsor, fair-play) par le moteur ou le serveur, et écrite dans `ProfilCampagne.relations` — **jamais par le rendu**, exactement comme un déblocage (§15.5).
 
@@ -1602,7 +1601,7 @@ export type Consequence =
 
 Les bornes numériques sont publiées comme données (`BORNES_CONSEQUENCE`), pour que le validateur et la documentation ne puissent pas diverger.
 
-**`relation_nation` est bornée par son type**, et c'est délibéré : `RelationConsequence` ne vaut que `alliee` ou `rivale`. Un fil **rallie ou fâche** ; il ne **retire** jamais une nation de la Ronde — un retrait est la conséquence d'un choix de la campagne principale, pas d'un contenu facultatif — et il ne remet jamais une relation à `neutre`, ce qui serait une conséquence qui ne change rien. Le validateur refuse les deux, et la routine lore ne peut donc pas produire un fil qui vide la carte du monde. **[Proposition]**
+**`relation_nation` est bornée par son type**, et c'est délibéré : `RelationConsequence` ne vaut que `alliee` ou `rivale`. Un fil **rallie ou fâche** ; il ne **retire** jamais une nation de la guerre — un retrait est la conséquence d'un choix de la campagne principale, pas d'un contenu facultatif — et il ne remet jamais une relation à `neutre`, ce qui serait une conséquence qui ne change rien. Le validateur refuse les deux, et la routine lore ne peut donc pas produire un fil qui vide la carte du monde. **[Proposition]**
 
 ### 15.5 `Condition` — composable, évaluée par le moteur
 
@@ -1616,11 +1615,14 @@ export type Condition =
   | { type: 'secret'; cle: Cle }                      // un easter egg de `doc/14-secrets.md`
   | { type: 'relation'; pays: CodePays[]; relation: RelationNation; combien: number }
   | { type: 'confiance'; commandantCle: Cle; min: NiveauConfiance }  // 1 à 3 ; absent = 0
+  | { type: 'decision'; cle: Cle; option: Cle }  // option retenue : dernière entrée du journal ; jamais la lettre d'une fiche
   | { type: 'et'; conditions: Condition[] }           // 2 à 4
   | { type: 'ou'; conditions: Condition[] };          // 2 à 4
 ```
 
 **`confiance` a exactement la forme de `compteur`**, parce qu'elle est un compteur : la confiance d'un général envers le joueur, de 0 à `CONFIANCE_MAX` (3), montée en **incarnant** sa nation (§15.2 bis). Un général absent de `ProfilCampagne.confiance` est à 0 — l'oubli et l'indifférence sont le même état. Le `min` vaut 1 à 3 : exiger 0 serait une condition toujours vraie, exiger 4 une condition inatteignable, et les deux sont refusées.
+
+**`decision` lit le journal, pas un flag** : c'est l'option **retenue** d'une décision passée, la dernière entrée de `flags.journal` dont `choixCle` vaut `cle` ; une décision jamais prise est fausse pour toutes ses options, et `option` est l'identifiant que la campagne enregistre (`partager_releves`), jamais la lettre d'une fiche (`a`). Le onzième type, ses quatre règles et la raison qui le fait préférer à quarante-huit flags de pays sont dans `13-campagne.md` §8.2, qui fait foi (décision du 26 septembre 2026).
 
 **`relation` a exactement la forme de `pays_visite`**, parce qu'elle répond à la même famille de questions : « le Japon est-il allié » (`pays: ['jp'], combien: 1`) et « ai-je au moins deux alliées » (une liste, `combien: 2`) s'écrivent avec un seul type. Une nation absente de `ProfilCampagne.relations` est `neutre` — l'oubli et la neutralité sont le même état. Comme pour `pays_visite`, exiger plus de nations qu'on n'en liste est refusé : une condition inatteignable est un bug. **[Proposition]**
 
@@ -1683,7 +1685,7 @@ export interface Fil extends Enveloppe {
 }
 ```
 
-**Validations propres au `Fil`.** Le gabarit `exhibition` est refusé : c'est celui de la Dépêche, et une Dépêche n'écrit aucun flag de campagne. Un flag `monde.depeche.*` est refusé dans `flagsEcrits` (étanchéité de la Dépêche, `08-narration-choix.md` §4.4) ; un flag `monde.secret.*` aussi (un secret est posé par un easter egg codé à la main, jamais par du contenu). Un fil ancré dans un pays n'écrit que `pays.<son pays>.*`. Un fil sans conséquence est refusé : ce serait une suite de matchs, pas un fil. **[Proposition]**
+**Validations propres au `Fil`.** Le gabarit `exhibition` est refusé : c'est celui de la Dépêche, et une Dépêche n'écrit aucun flag de campagne. Un flag `monde.depeche.*` est refusé dans `flagsEcrits` (étanchéité de la Dépêche, `08-narration-choix.md` §4.4) ; un flag `monde.secret.*` aussi (un secret est posé par un easter egg codé à la main, jamais par du contenu). Un fil ancré dans un pays n'écrit que `pays.<son pays>.*`. Un fil sans conséquence est refusé : ce serait une suite de missions, pas un fil. **[Proposition]**
 
 ### 15.9 `ProfilCampagne` — la sauvegarde de campagne
 
@@ -1712,11 +1714,11 @@ export interface ProfilCampagne {
 
 **Validations.** Un booléen posé vaut `true` et jamais `false` : on ne défait pas une décision (`08-narration-choix.md` §2.1). Un fil ne peut pas être à la fois dans `filsEnCours` et dans `filsFinis`. Les listes sont sans doublon. `serieDepeches` est un champ **à part**, hors de `flags` : c'est le type qui protège l'étanchéité de la Dépêche, pas la discipline.
 
-**Validations propres à `confiance`.** Une clé qui est un **code de commandant** (`cmd_<prenom>_<nom>`, jamais un code pays : la confiance se gagne auprès d'un général, pas d'une administration), une valeur entière de 0 à `CONFIANCE_MAX`. Un général absent est à 0, ce qui rend l'objet vide parfaitement valide au premier match. Le champ est **calculé** comme `relations` : il monte quand le joueur incarne la nation du général (§15.2 bis), jamais par une écriture du rendu. **[Proposition]**
+**Validations propres à `confiance`.** Une clé qui est un **code de commandant** (`cmd_<prenom>_<nom>`, jamais un code pays : la confiance se gagne auprès d'un général, pas d'une administration), une valeur entière de 0 à `CONFIANCE_MAX`. Un général absent est à 0, ce qui rend l'objet vide parfaitement valide à la première mission. Le champ est **calculé** comme `relations` : il monte quand le joueur incarne la nation du général (§15.2 bis), jamais par une écriture du rendu. **[Proposition]**
 
-**Validations propres à `relations`.** Vingt-quatre entrées au plus, une clé qui est un `CodePays`, une valeur qui est une `RelationNation`, **au plus cinq `retiree`** (`BORNES_RELATIONS.retireesMax`) — la borne anti-blocage du brief, tenue par le type et non par la bonne volonté d'une routine — et **jamais `paysDepart`** : la nation que le joueur représente n'est pas une relation, c'est lui. Une nation absente est `neutre`, ce qui rend le champ vide parfaitement valide au premier match. **[Proposition]**
+**Validations propres à `relations`.** Vingt-quatre entrées au plus, une clé qui est un `CodePays`, une valeur qui est une `RelationNation`, **au plus cinq `retiree`** (`BORNES_RELATIONS.retireesMax`) — la borne anti-blocage du brief, tenue par le type et non par la bonne volonté d'une routine — et **jamais `paysDepart`** : la nation que le joueur représente n'est pas une relation, c'est lui. Une nation absente est `neutre`, ce qui rend le champ vide parfaitement valide à la première mission. **[Proposition]**
 
-Le profil ne porte **jamais** l'état d'une partie en cours : celui-ci est une `Sauvegarde` (§14), qui est ses actions et les versions qu'elle a figées. Les deux ne se mélangent pas — c'est ce qui permet d'abandonner un match sans perdre une campagne.
+Le profil ne porte **jamais** l'état d'une partie en cours : celui-ci est une `Sauvegarde` (§14), qui est ses actions et les versions qu'elle a figées. Les deux ne se mélangent pas — c'est ce qui permet d'abandonner une mission sans perdre une campagne.
 
 ---
 

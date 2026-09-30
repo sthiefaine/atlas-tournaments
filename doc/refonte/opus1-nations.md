@@ -115,7 +115,7 @@ Normal et difficile conservent les mêmes enjeux. Les changements proposés sont
 8. **Le partenaire impatient** — Prendre tous les QG adverses nécessaires à la victoire de coalition. Une délégation rejoint temporairement Méridien pour recevoir son équipement.
 9. **La livraison maintenue** — Conserver les deux positions annoncées pendant trois journées consécutives. Le joueur décide de tenir ou non la promesse faite avant ce ralliement.
 10. **Les témoins du quai** — Capturer deux des trois bâtiments objectifs annoncés. Yuna tente de reprendre le centre logistique pendant l’examen des reçus.
-11. **Le match des garanties** — Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG. Les délégations mettent à l’épreuve l’accord négocié plutôt qu’une amitié abstraite.
+11. **Les garanties à l’épreuve** — Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG. Les délégations mettent à l’épreuve l’accord négocié plutôt qu’une amitié abstraite.
 12. **La réserve du soir** — Prendre tous les QG adverses nécessaires à la victoire de coalition. La finale tranche entre revenus immédiats et sécurité du stockage collectif.
 
 ### BR — La forêt des contrats
@@ -125,7 +125,7 @@ Normal et difficile conservent les mêmes enjeux. Les changements proposés sont
 3. **La tournée de maintenance** — Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission. Un transport circule entre des couloirs forestiers tenus par l’adversaire.
 4. **Le pont du milieu** — Prendre tous les QG adverses nécessaires à la victoire de coalition. L’axe central paraît efficace mais expose les soutiens aux prises de flanc.
 5. **Les relevés sous couvert** — Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG. Des drones observent un réseau où les unités terrestres profitent du couvert.
-6. **L’avance engagée** — Tenir jusqu’à la fin de la journée 8 ; arrivée de la relève au début de la journée suivante. Une délégation a dépensé son crédit et doit finir le match avec une réserve limitée.
+6. **L’avance engagée** — Tenir jusqu’à la fin de la journée 8 ; arrivée de la relève au début de la journée suivante. Une délégation a dépensé son crédit et doit finir la bataille avec une réserve limitée.
 7. **Trois carnets concordants** — Faire passer une unité admissible sur les trois relais dans l’ordre indiqué. Les pièces comptables sont recoupées dans trois stations de terrain.
 8. **Le prêteur et l’équipe** — Prendre tous les QG adverses nécessaires à la victoire de coalition. Un sponsor cherche à parler au nom d’une nation entière ; le récit le contredit explicitement.
 9. **Le dépôt sans privilège** — Conserver les deux positions annoncées pendant trois journées consécutives. Le joueur protège une réserve qui doit rester accessible à ses anciens rivaux.
@@ -142,7 +142,7 @@ Normal et difficile conservent les mêmes enjeux. Les changements proposés sont
 5. **Le ciel du plateau** — Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG. le commandant aérien montre le coût d’une défense privée d’intercepteurs.
 6. **La réserve comptée** — Tenir jusqu’à la fin de la journée 10 ; arrivée de la relève au début de la journée suivante. La production ennemie est remplacée par une réserve finie annoncée au briefing.
 7. **Trois permis concurrents** — Faire passer une unité admissible sur les trois relais dans l’ordre indiqué. Trois postes abritent des versions incompatibles d’un même permis d’accès.
-8. **Le contrat de sécurité** — Prendre tous les QG adverses nécessaires à la victoire de coalition. Une équipe accepte une exclusivité en échange de sa participation au tournoi.
+8. **Le contrat de sécurité** — Prendre tous les QG adverses nécessaires à la victoire de coalition. Une équipe accepte une exclusivité en échange de sa place sur le front.
 9. **Le passage accordé** — Conserver les deux positions annoncées pendant trois journées consécutives. Le joueur peut préserver une voie logistique pour un futur partenaire.
 10. **Le reçu refusé** — Capturer deux des trois bâtiments objectifs annoncés. Le signataire découvre que son engagement ne garantit pas la livraison.
 11. **La revanche du plateau** — Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG. Le partenaire choisit de rester fidèle au prêteur ou de demander une sortie.
@@ -213,7 +213,7 @@ Normal et difficile conservent les mêmes enjeux. Les changements proposés sont
 
 Le drone marin, les stations IEM et la météo de simulation enrichissent les missions existantes sans changer les **172 missions ni les huit adversaires**. Les fichiers JSON identifient précisément les fiches concernées. Ces ajouts restent des intentions éditoriales tant que leurs cartes et paramètres ne sont pas validés.
 
-La supériorité adverse vient du matériel et du placement. Les stations ont une position, une portée et un calendrier consultables avant engagement. Le joueur peut capturer la source, rejoindre un refuge ou se replier sur une route moins pénalisée. Le mode difficile renforce la défense et les patrouilles, jamais une portée ou activation cachée. Les nations adaptent leurs paysages et leurs stratégies sans immunités nationales implicites. Le forçage météo concerne le terrain de tournoi, pas le climat de populations réelles.
+La supériorité adverse vient du matériel et du placement. Les stations ont une position, une portée et un calendrier consultables avant engagement. Le joueur peut capturer la source, rejoindre un refuge ou se replier sur une route moins pénalisée. Le mode difficile renforce la défense et les patrouilles, jamais une portée ou activation cachée. Les nations adaptent leurs paysages et leurs stratégies sans immunités nationales implicites. Le forçage météo concerne le front déclaré, pas le climat de populations réelles.
 
 Aucune scène publique nouvelle ne révèle la fratrie ; les doctrines techniques ne fournissent aucun indice familial imposé. La révélation père-fils reste au pivot prévu, sans révéler le lien avec Lise.
 

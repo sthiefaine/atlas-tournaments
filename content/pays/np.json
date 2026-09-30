@@ -1,10 +1,10 @@
 {
   "cle": "pays_np",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-05",
+  "majLe": "2026-09-27",
   "code": "np",
   "nom": "Népal",
   "nomCourt": "Népal",
@@ -89,7 +89,7 @@
     "pays.np.sourire_en_difficulte"
   ],
   "phare": false,
-  "accroche": "Du subtropical au glacier en cent cinquante kilomètres : la carte la plus contrainte du tournoi, et la plus verticale.",
+  "accroche": "Du subtropical au glacier en cent cinquante kilomètres : la carte la plus contrainte du jeu, et la plus verticale.",
   "interdits": [
     "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
     "Aucune référence religieuse : les drapeaux de prière deviennent des fanions de balisage, sans signe.",

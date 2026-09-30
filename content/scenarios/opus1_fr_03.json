@@ -1,11 +1,11 @@
 {
   "cle": "opus1_fr_03",
   "code": "opus1_fr_03",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-14",
-  "majLe": "2026-09-14",
+  "majLe": "2026-09-27",
   "nom": "Saison 1 · La voie de service",
   "acte": 1,
   "paysCode": "fr",
@@ -98,7 +98,7 @@
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le dépôt confirme la livraison. Tomas a perdu le match ; il nous propose pourtant son pont pour la prochaine liaison.",
+      "texte": "Le dépôt confirme la livraison. Tomas a perdu la bataille ; il nous propose pourtant son pont pour la prochaine liaison.",
       "emotion": "neutre"
     },
     {

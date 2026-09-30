@@ -23,7 +23,7 @@
     {"cle": "reglages.volume_sons", "texte": "Volume général", "contexte": {"ecran": "reglages", "note": "Réglage des effets sonores de partie."}, "longueurMax": 90},
     {"cle":"illustration.case_verte","texte":"Case verte : là où l’unité peut aller","contexte":{"ecran":"partie","note":"La nappe de déplacement, vue sur une case de terrain. Nom accessible du pictogramme et de la vignette ; le dessin est composé par render/illustrations.ts."},"longueurMax":50},
     {"cle":"illustration.case_rouge","texte":"Case rouge : là où l’unité peut frapper","contexte":{"ecran":"partie","note":"L’enveloppe de tir, vue sur une case de terrain."},"longueurMax":50},
-    {"cle":"illustration.case_or","texte":"Case or : objectif de la manche","contexte":{"ecran":"partie","note":"La surbrillance des objectifs, vue sur une case de terrain."},"longueurMax":50},
+    {"cle":"illustration.case_or","texte":"Case or : objectif de la mission","contexte":{"ecran":"partie","note":"La surbrillance des objectifs, vue sur une case de terrain."},"longueurMax":50},
     {"cle":"illustration.case_bleue","texte":"Case bleue : chantier du génie","contexte":{"ecran":"partie","note":"La surbrillance des chantiers, vue sur une case de terrain."},"longueurMax":50},
     {"cle":"illustration.fleche_chemin","texte":"Flèche du chemin parcouru","contexte":{"ecran":"partie","note":"La flèche coudée qui montre le trajet choisi avant de valider un déplacement."},"longueurMax":50},
     {"cle":"illustration.curseur","texte":"Curseur posé sur une case","contexte":{"ecran":"partie","note":"Les quatre équerres du curseur autour d’une case."},"longueurMax":50},
@@ -36,7 +36,7 @@
     {"cle":"illustration.reserve","texte":"Réserve de fonds","contexte":{"ecran":"partie","note":"Les caisses et le jeton de fonds : le stock dont parlent les commandants."},"longueurMax":50},
     {"cle":"illustration.poste","texte":"Poste de distribution","contexte":{"ecran":"partie","note":"Le bâtiment qu’on capture et le pylône qui dit à quoi il sert."},"longueurMax":50},
     {"cle":"illustration.usine","texte":"Usine","contexte":{"ecran":"partie","note":"Le bâtiment qui produit les unités terrestres."},"longueurMax":50},
-    {"cle":"illustration.qg","texte":"Quartier général","contexte":{"ecran":"partie","note":"Le bâtiment dont la prise termine la manche."},"longueurMax":50},
+    {"cle":"illustration.qg","texte":"Quartier général","contexte":{"ecran":"partie","note":"Le bâtiment dont la prise termine la mission."},"longueurMax":50},
     {"cle":"illustration.ville","texte":"Ville","contexte":{"ecran":"partie","note":"Les maisons d’une ville : elle rapporte et elle répare."},"longueurMax":50},
     {"cle":"illustration.foret","texte":"Forêt","contexte":{"ecran":"partie","note":"Deux conifères : la forêt cache et bouche la vue."},"longueurMax":50},
     {"cle":"illustration.montagne","texte":"Montagne","contexte":{"ecran":"partie","note":"Un sommet enneigé : la montagne coupe la ligne de vue."},"longueurMax":50},
@@ -62,7 +62,7 @@
     {"cle":"commandant.cmd_ariane_belloc.pouvoir_v4_desc","texte":"Ce tour, toutes vos unités au sol gagnent +1 de mouvement : l’échappée part, et tout le monde y est.","contexte":{"ecran":"campagne","note":"Ce que fait le pouvoir, révision 4, en une phrase. Le HUD lit les effets ; cette phrase sert au carnet et au briefing."},"longueurMax":null},
     {"cle":"commandant.cmd_ariane_belloc.super_v4_desc","texte":"Toutes vos unités récupèrent 3 PV, repartent le plein fait et les charges au complet, et frappent ×1,15 ce tour.","contexte":{"ecran":"campagne","note":"Ce que fait le super pouvoir, révision 4, en une phrase."},"longueurMax":null},
     {"cle":"commandant.cmd_ariane_belloc.replique_pouvoir_v4","texte":"L’échappée part maintenant. Prenez la roue : tout le monde y est.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son pouvoir, révision 4."},"longueurMax":null},
-    {"cle":"commandant.cmd_ariane_belloc.replique_super_v4","texte":"Tout l’atelier sur le terrain : le plein, les charges, des plastrons neufs. Maintenant, on joue.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son super pouvoir, révision 4."},"longueurMax":null},
+    {"cle":"commandant.cmd_ariane_belloc.replique_super_v4","texte":"Tout l’atelier sur le terrain : le plein, les charges, les blindages refaits. Maintenant, on avance.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son super pouvoir, révision 4."},"longueurMax":null},
     {"cle":"commandant.cmd_tomas_reiner.pouvoir_v4","texte":"Marché du matin","contexte":{"ecran":"partie","note":"Nom du pouvoir, révision 4 des capacités (10 septembre 2026). Annoncé au splash et sur le bouton de la jauge."},"longueurMax":40},
     {"cle":"commandant.cmd_tomas_reiner.super_v4","texte":"Toutes les routes","contexte":{"ecran":"partie","note":"Nom du super pouvoir, révision 4."},"longueurMax":40},
     {"cle":"commandant.cmd_tomas_reiner.passif_v4","texte":"Défense ×1,1 pour vos unités sur un bâtiment.","contexte":{"ecran":"campagne","note":"Le passif du commandant, révision 4, en une phrase : carnet, briefing, admin."},"longueurMax":null},
@@ -110,7 +110,7 @@
     {"cle":"commandant.cmd_livia_moura.pouvoir_v4_desc","texte":"Vos unités ont +10 % de chance dans chaque duel et frappent ×1,1 ce tour.","contexte":{"ecran":"campagne","note":"Ce que fait le pouvoir, révision 4, en une phrase. Le HUD lit les effets ; cette phrase sert au carnet et au briefing."},"longueurMax":null},
     {"cle":"commandant.cmd_livia_moura.super_v4_desc","texte":"Vos unités frappent ×1,4 avec +15 % de chance ce tour, mais se défendent à 85 % : quand on danse, on ne se couvre pas.","contexte":{"ecran":"campagne","note":"Ce que fait le super pouvoir, révision 4, en une phrase."},"longueurMax":null},
     {"cle":"commandant.cmd_livia_moura.replique_pouvoir_v4","texte":"Écoutez les tambours. Ils jouent pour nous, et l’adversaire le sait.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son pouvoir, révision 4."},"longueurMax":null},
-    {"cle":"commandant.cmd_livia_moura.replique_super_v4","texte":"C’est carnaval ! Tout le stade est debout, et personne ne reste sur le banc.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son super pouvoir, révision 4."},"longueurMax":null},
+    {"cle":"commandant.cmd_livia_moura.replique_super_v4","texte":"C’est carnaval ! Toute la colonne est debout, et personne ne reste en arrière.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son super pouvoir, révision 4."},"longueurMax":null},
     {"cle":"commandant.cmd_ines_valdes.pouvoir_v4","texte":"Clé de bras","contexte":{"ecran":"partie","note":"Nom du pouvoir, révision 4 des capacités (10 septembre 2026). Annoncé au splash et sur le bouton de la jauge."},"longueurMax":40},
     {"cle":"commandant.cmd_ines_valdes.super_v4","texte":"Saut de la troisième corde","contexte":{"ecran":"partie","note":"Nom du super pouvoir, révision 4."},"longueurMax":40},
     {"cle":"commandant.cmd_ines_valdes.passif_v4","texte":"Points de capture ×1,1 pour vos infanteries et mécas.","contexte":{"ecran":"campagne","note":"Le passif du commandant, révision 4, en une phrase : carnet, briefing, admin."},"longueurMax":null},
@@ -125,8 +125,8 @@
     {"cle":"commandant.cmd_devika_rao.faiblesse_v4","texte":"Tout se passe au sol : ses appareils frappent à 85 %.","contexte":{"ecran":"campagne","note":"La faiblesse permanente du commandant, révision 4, en une phrase."},"longueurMax":null},
     {"cle":"commandant.cmd_devika_rao.pouvoir_v4_desc","texte":"Ce tour, tout ce que vous achetez coûte 25 % de moins.","contexte":{"ecran":"campagne","note":"Ce que fait le pouvoir, révision 4, en une phrase. Le HUD lit les effets ; cette phrase sert au carnet et au briefing."},"longueurMax":null},
     {"cle":"commandant.cmd_devika_rao.super_v4_desc","texte":"Tous vos véhicules à roues et à chenilles qui ont déjà agi rejouent une fois ce tour.","contexte":{"ecran":"campagne","note":"Ce que fait le super pouvoir, révision 4, en une phrase."},"longueurMax":null},
-    {"cle":"commandant.cmd_devika_rao.replique_pouvoir_v4","texte":"La tournée est pour la maison ! Achetez, achetez, le public a déjà payé.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son pouvoir, révision 4."},"longueurMax":null},
-    {"cle":"commandant.cmd_devika_rao.replique_super_v4","texte":"Le camion est repeint et les gradins sont pleins. Deuxième passage, mêmes tarifs.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son super pouvoir, révision 4."},"longueurMax":null},
+    {"cle":"commandant.cmd_devika_rao.replique_pouvoir_v4","texte":"La tournée est pour la maison ! Achetez, achetez, les ateliers ont déjà payé.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son pouvoir, révision 4."},"longueurMax":null},
+    {"cle":"commandant.cmd_devika_rao.replique_super_v4","texte":"Le camion est repeint et les ateliers tournent à plein. Deuxième passage, mêmes tarifs.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son super pouvoir, révision 4."},"longueurMax":null},
     {"cle":"commandant.cmd_ren_mizuno.pouvoir_v4","texte":"Correspondance","contexte":{"ecran":"partie","note":"Nom du pouvoir, révision 4 des capacités (10 septembre 2026). Annoncé au splash et sur le bouton de la jauge."},"longueurMax":40},
     {"cle":"commandant.cmd_ren_mizuno.super_v4","texte":"Dernier train","contexte":{"ecran":"partie","note":"Nom du super pouvoir, révision 4."},"longueurMax":40},
     {"cle":"commandant.cmd_ren_mizuno.passif_v4","texte":"Vision +1 pour vos pièces de portée.","contexte":{"ecran":"campagne","note":"Le passif du commandant, révision 4, en une phrase : carnet, briefing, admin."},"longueurMax":null},
@@ -157,7 +157,7 @@
     {"cle":"commandant.cmd_leandro_paz.faiblesse_v4","texte":"Dès que le relief commence, ses unités se défendent à 85 %.","contexte":{"ecran":"campagne","note":"La faiblesse permanente du commandant, révision 4, en une phrase."},"longueurMax":null},
     {"cle":"commandant.cmd_leandro_paz.pouvoir_v4_desc","texte":"Vos unités voient 2 cases plus loin et se défendent ×1,15 jusqu’à votre prochain tour.","contexte":{"ecran":"campagne","note":"Ce que fait le pouvoir, révision 4, en une phrase. Le HUD lit les effets ; cette phrase sert au carnet et au briefing."},"longueurMax":null},
     {"cle":"commandant.cmd_leandro_paz.super_v4_desc","texte":"Vos roues et chenilles gagnent +2 de mouvement ce tour, et frappent ×1,2 depuis la plaine ou la route.","contexte":{"ecran":"campagne","note":"Ce que fait le super pouvoir, révision 4, en une phrase."},"longueurMax":null},
-    {"cle":"commandant.cmd_leandro_paz.replique_pouvoir_v4","texte":"Le tableau est écrit depuis hier. Vous jouez exactement ce que j’ai dessiné.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son pouvoir, révision 4."},"longueurMax":null},
+    {"cle":"commandant.cmd_leandro_paz.replique_pouvoir_v4","texte":"Le tableau est écrit depuis hier. Vous faites exactement ce que j’ai dessiné.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son pouvoir, révision 4."},"longueurMax":null},
     {"cle":"commandant.cmd_leandro_paz.replique_super_v4","texte":"La ligne d’horizon est à nous. Tout ce qui roule, roule maintenant.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son super pouvoir, révision 4."},"longueurMax":null},
     {"cle":"commandant.cmd_noemie_leduc.pouvoir_v4","texte":"Bulletin de neige","contexte":{"ecran":"partie","note":"Nom du pouvoir, révision 4 des capacités (10 septembre 2026). Annoncé au splash et sur le bouton de la jauge."},"longueurMax":40},
     {"cle":"commandant.cmd_noemie_leduc.super_v4","texte":"Grand Nord","contexte":{"ecran":"partie","note":"Nom du super pouvoir, révision 4."},"longueurMax":40},
@@ -170,7 +170,7 @@
     {"cle":"commandant.cmd_jone_vakalau.pouvoir_v4","texte":"Passe au large","contexte":{"ecran":"partie","note":"Nom du pouvoir, révision 4 des capacités (10 septembre 2026). Annoncé au splash et sur le bouton de la jauge."},"longueurMax":40},
     {"cle":"commandant.cmd_jone_vakalau.super_v4","texte":"Le cyclone","contexte":{"ecran":"partie","note":"Nom du super pouvoir, révision 4."},"longueurMax":40},
     {"cle":"commandant.cmd_jone_vakalau.passif_v4","texte":"Vos unités ont +5 % de chance dans chaque duel.","contexte":{"ecran":"campagne","note":"Le passif du commandant, révision 4, en une phrase : carnet, briefing, admin."},"longueurMax":null},
-    {"cle":"commandant.cmd_jone_vakalau.faiblesse_v4","texte":"Le plus petit budget du tournoi : ses revenus sont à 85 %.","contexte":{"ecran":"campagne","note":"La faiblesse permanente du commandant, révision 4, en une phrase."},"longueurMax":null},
+    {"cle":"commandant.cmd_jone_vakalau.faiblesse_v4","texte":"Le plus petit budget de la guerre : ses revenus sont à 85 %.","contexte":{"ecran":"campagne","note":"La faiblesse permanente du commandant, révision 4, en une phrase."},"longueurMax":null},
     {"cle":"commandant.cmd_jone_vakalau.pouvoir_v4_desc","texte":"Vos unités ont +10 % de chance dans chaque duel ce tour, et vos coques gagnent +1 de mouvement.","contexte":{"ecran":"campagne","note":"Ce que fait le pouvoir, révision 4, en une phrase. Le HUD lit les effets ; cette phrase sert au carnet et au briefing."},"longueurMax":null},
     {"cle":"commandant.cmd_jone_vakalau.super_v4_desc","texte":"Tempête pendant 2 journées : les appareils avancent deux fois moins, les tirs de loin font −20 %, et vos coques gagnent +1 de mouvement.","contexte":{"ecran":"campagne","note":"Ce que fait le super pouvoir, révision 4, en une phrase."},"longueurMax":null},
     {"cle":"commandant.cmd_jone_vakalau.replique_pouvoir_v4","texte":"Je n’avais pas de plan. J’en ai un maintenant, et il est bon.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son pouvoir, révision 4."},"longueurMax":null},
@@ -181,7 +181,7 @@
     {"cle":"commandant.cmd_nikos_delis.faiblesse_v4","texte":"Les blindés restent au port : ses chenilles ont −1 de mouvement.","contexte":{"ecran":"campagne","note":"La faiblesse permanente du commandant, révision 4, en une phrase."},"longueurMax":null},
     {"cle":"commandant.cmd_nikos_delis.pouvoir_v4_desc","texte":"Vos unités récupèrent 1 PV tout de suite, et se défendent ×1,2 jusqu’à votre prochain tour.","contexte":{"ecran":"campagne","note":"Ce que fait le pouvoir, révision 4, en une phrase. Le HUD lit les effets ; cette phrase sert au carnet et au briefing."},"longueurMax":null},
     {"cle":"commandant.cmd_nikos_delis.super_v4_desc","texte":"Jusqu’à 4 cases de mer contiguës deviennent une plage pendant une journée, et vos troupes à pied gagnent +1 de mouvement ce tour.","contexte":{"ecran":"campagne","note":"Ce que fait le super pouvoir, révision 4, en une phrase."},"longueurMax":null},
-    {"cle":"commandant.cmd_nikos_delis.replique_pouvoir_v4","texte":"Un café, serré, et on reprend. Je vous ai déjà raconté la finale de la Ronde IX ?","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son pouvoir, révision 4."},"longueurMax":null},
+    {"cle":"commandant.cmd_nikos_delis.replique_pouvoir_v4","texte":"Un café, serré, et on reprend. Je vous ai déjà raconté la traversée de l’an 9 ?","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son pouvoir, révision 4."},"longueurMax":null},
     {"cle":"commandant.cmd_nikos_delis.replique_super_v4","texte":"La mer se retire. On passe à pied, comme on l’a toujours fait.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son super pouvoir, révision 4."},"longueurMax":null},
     {"cle":"commandant.cmd_elin_arnardottir.pouvoir_v4","texte":"La vapeur monte","contexte":{"ecran":"partie","note":"Nom du pouvoir, révision 4 des capacités (10 septembre 2026). Annoncé au splash et sur le bouton de la jauge."},"longueurMax":40},
     {"cle":"commandant.cmd_elin_arnardottir.super_v4","texte":"Source chaude","contexte":{"ecran":"partie","note":"Nom du super pouvoir, révision 4."},"longueurMax":40},
@@ -202,7 +202,7 @@
     {"cle":"commandant.cmd_tiana_ravel.pouvoir_v4","texte":"Saison des pluies","contexte":{"ecran":"partie","note":"Nom du pouvoir, révision 4 des capacités (10 septembre 2026). Annoncé au splash et sur le bouton de la jauge."},"longueurMax":40},
     {"cle":"commandant.cmd_tiana_ravel.super_v4","texte":"Chaque espèce a un nom","contexte":{"ecran":"partie","note":"Nom du super pouvoir, révision 4."},"longueurMax":40},
     {"cle":"commandant.cmd_tiana_ravel.passif_v4","texte":"Défense ×1,1 pour vos unités en forêt et dans les hautes herbes.","contexte":{"ecran":"campagne","note":"Le passif du commandant, révision 4, en une phrase : carnet, briefing, admin."},"longueurMax":null},
-    {"cle":"commandant.cmd_tiana_ravel.faiblesse_v4","texte":"Le budget le plus court du tournoi : ses revenus sont à 85 %.","contexte":{"ecran":"campagne","note":"La faiblesse permanente du commandant, révision 4, en une phrase."},"longueurMax":null},
+    {"cle":"commandant.cmd_tiana_ravel.faiblesse_v4","texte":"Le budget le plus court de la guerre : ses revenus sont à 85 %.","contexte":{"ecran":"campagne","note":"La faiblesse permanente du commandant, révision 4, en une phrase."},"longueurMax":null},
     {"cle":"commandant.cmd_tiana_ravel.pouvoir_v4_desc","texte":"Il pleut pendant une journée : roues +1 par case hors route et vision −1 pour tous, mais vos unités gagnent +1 de mouvement sur forêt et route.","contexte":{"ecran":"campagne","note":"Ce que fait le pouvoir, révision 4, en une phrase. Le HUD lit les effets ; cette phrase sert au carnet et au briefing."},"longueurMax":null},
     {"cle":"commandant.cmd_tiana_ravel.super_v4_desc","texte":"Pendant une journée, vos unités en forêt et dans les hautes herbes ont +2 étoiles de terrain, et toutes voient 2 cases plus loin.","contexte":{"ecran":"campagne","note":"Ce que fait le super pouvoir, révision 4, en une phrase."},"longueurMax":null},
     {"cle":"commandant.cmd_tiana_ravel.replique_pouvoir_v4","texte":"La pluie prend le versant est. Prenez la piste rouge, elle tient.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son pouvoir, révision 4."},"longueurMax":null},
@@ -244,9 +244,9 @@
     {"cle":"commandant.cmd_luz_quispe.passif_v4","texte":"Défense ×1,2 pour vos génies.","contexte":{"ecran":"campagne","note":"Le passif du commandant, révision 4, en une phrase : carnet, briefing, admin."},"longueurMax":null},
     {"cle":"commandant.cmd_luz_quispe.faiblesse_v4","texte":"Le trésor reste court : ses revenus sont à 90 %.","contexte":{"ecran":"campagne","note":"La faiblesse permanente du commandant, révision 4, en une phrase."},"longueurMax":null},
     {"cle":"commandant.cmd_luz_quispe.pouvoir_v4_desc","texte":"Vos unités gagnent +2 de mouvement sur route et pont ce tour, et vos génies se défendent ×1,2.","contexte":{"ecran":"campagne","note":"Ce que fait le pouvoir, révision 4, en une phrase. Le HUD lit les effets ; cette phrase sert au carnet et au briefing."},"longueurMax":null},
-    {"cle":"commandant.cmd_luz_quispe.super_v4_desc","texte":"Jusqu’à 3 cases de mer ou de rivière contiguës deviennent un pont, pour le reste du match.","contexte":{"ecran":"campagne","note":"Ce que fait le super pouvoir, révision 4, en une phrase."},"longueurMax":null},
+    {"cle":"commandant.cmd_luz_quispe.super_v4_desc","texte":"Jusqu’à 3 cases de mer ou de rivière contiguës deviennent un pont, pour le reste de la partie.","contexte":{"ecran":"campagne","note":"Ce que fait le super pouvoir, révision 4, en une phrase."},"longueurMax":null},
     {"cle":"commandant.cmd_luz_quispe.replique_pouvoir_v4","texte":"La route est neuve, elle porte tout. Roulez, elle est faite pour ça.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son pouvoir, révision 4."},"longueurMax":null},
-    {"cle":"commandant.cmd_luz_quispe.replique_super_v4","texte":"Un pont, ça se construit une fois. Celui-là restera après le match.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son super pouvoir, révision 4."},"longueurMax":null},
+    {"cle":"commandant.cmd_luz_quispe.replique_super_v4","texte":"Un pont, ça se construit une fois. Celui-là restera après la bataille.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son super pouvoir, révision 4."},"longueurMax":null},
     {"cle":"commandant.cmd_hadran_ost.pouvoir_v4","texte":"Pression méridienne","contexte":{"ecran":"partie","note":"Nom du pouvoir, révision 4 des capacités (10 septembre 2026). Annoncé au splash et sur le bouton de la jauge."},"longueurMax":40},
     {"cle":"commandant.cmd_hadran_ost.super_v4","texte":"Grêle","contexte":{"ecran":"partie","note":"Nom du super pouvoir, révision 4."},"longueurMax":40},
     {"cle":"commandant.cmd_hadran_ost.passif_v4","texte":"Attaque ×1,08 pour vos chenilles.","contexte":{"ecran":"campagne","note":"Le passif du commandant, révision 4, en une phrase : carnet, briefing, admin."},"longueurMax":null},
@@ -280,7 +280,7 @@
     {"cle":"commandant.cmd_lise_orven.faiblesse_v4","texte":"Déplacer une pièce rompt son tempo : ses roues et chenilles ont −1 de mouvement.","contexte":{"ecran":"campagne","note":"La faiblesse permanente du commandant, révision 4, en une phrase."},"longueurMax":null},
     {"cle":"commandant.cmd_lise_orven.pouvoir_v4_desc","texte":"Vos pièces de portée tirent 1 case plus loin jusqu’à votre prochain tour.","contexte":{"ecran":"campagne","note":"Ce que fait le pouvoir, révision 4, en une phrase. Le HUD lit les effets ; cette phrase sert au carnet et au briefing."},"longueurMax":null},
     {"cle":"commandant.cmd_lise_orven.super_v4_desc","texte":"Elle choisit une case : les 5 cases de la croix perdent 3 PV, les siennes comprises, et ses pièces de portée tirent 1 case plus loin jusqu'à son prochain tour.","contexte":{"ecran":"campagne","note":"Ce que fait le super pouvoir, révision 4, en une phrase."},"longueurMax":null},
-    {"cle":"commandant.cmd_lise_orven.replique_pouvoir_v4","texte":"La zone est réservée. Entrez-y, et vous serez marqués avant d’avoir vu qui tire.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son pouvoir, révision 4."},"longueurMax":null},
+    {"cle":"commandant.cmd_lise_orven.replique_pouvoir_v4","texte":"La zone est réservée. Entrez-y, et vous serez touchés avant d’avoir vu qui tire.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son pouvoir, révision 4."},"longueurMax":null},
     {"cle":"commandant.cmd_lise_orven.replique_super_v4","texte":"La zone est rouge. Vous y êtes entrés, c’est votre choix, pas le mien.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son super pouvoir, révision 4."},"longueurMax":null},
     {"cle":"commandant.cmd_lise_orven.piece_super","texte":"Le Repère","contexte":{"ecran":"partie","note":"La pièce de matériel sans dossier qui porte le super pouvoir (doc/refonte/supers-vilains.json) : nommée par le télégraphage et par le protêt."},"longueurMax":40},
     {"cle":"commandant.cmd_edran_sorel.pouvoir_v4","texte":"Colonne de relève","contexte":{"ecran":"partie","note":"Nom du pouvoir, révision 4 des capacités (10 septembre 2026). Annoncé au splash et sur le bouton de la jauge."},"longueurMax":40},
@@ -330,7 +330,7 @@
     {"cle":"commandant.cmd_wren_osoko.pouvoir_v4","texte":"Relevés ouverts","contexte":{"ecran":"partie","note":"Nom du pouvoir, révision 4 des capacités (10 septembre 2026). Annoncé au splash et sur le bouton de la jauge."},"longueurMax":40},
     {"cle":"commandant.cmd_wren_osoko.super_v4","texte":"Carte complète","contexte":{"ecran":"partie","note":"Nom du super pouvoir, révision 4."},"longueurMax":40},
     {"cle":"commandant.cmd_wren_osoko.passif_v4","texte":"Vision +1 pour vos éclaireurs et drones.","contexte":{"ecran":"campagne","note":"Le passif du commandant, révision 4, en une phrase : carnet, briefing, admin."},"longueurMax":null},
-    {"cle":"commandant.cmd_wren_osoko.faiblesse_v4","texte":"L’homologation ne rapporte rien : ses revenus sont à 90 %.","contexte":{"ecran":"campagne","note":"La faiblesse permanente du commandant, révision 4, en une phrase."},"longueurMax":null},
+    {"cle":"commandant.cmd_wren_osoko.faiblesse_v4","texte":"Le contrôle des armes ne rapporte rien : ses revenus sont à 90 %.","contexte":{"ecran":"campagne","note":"La faiblesse permanente du commandant, révision 4, en une phrase."},"longueurMax":null},
     {"cle":"commandant.cmd_wren_osoko.pouvoir_v4_desc","texte":"Vos unités voient 2 cases plus loin et ont +5 % de chance dans chaque duel, jusqu’à votre prochain tour.","contexte":{"ecran":"campagne","note":"Ce que fait le pouvoir, révision 4, en une phrase. Le HUD lit les effets ; cette phrase sert au carnet et au briefing."},"longueurMax":null},
     {"cle":"commandant.cmd_wren_osoko.super_v4_desc","texte":"Jusqu’à votre prochain tour, vos unités ont +15 % de chance dans chaque duel et voient 3 cases plus loin.","contexte":{"ecran":"campagne","note":"Ce que fait le super pouvoir, révision 4, en une phrase."},"longueurMax":null},
     {"cle":"commandant.cmd_wren_osoko.replique_pouvoir_v4","texte":"Les relevés sont publics. Lisez-les, tout le monde y a droit.","contexte":{"ecran":"partie","note":"Ce que le commandant dit au splash de son pouvoir, révision 4."},"longueurMax":null},
@@ -725,6 +725,42 @@
       "longueurMax": 40
     },
     {
+      "cle": "aube.mission_objectif",
+      "texte": "Prendre tous les QG adverses ou mettre toutes les unités adverses hors jeu.",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Objectif du briefing d’un essai Aube hors campagne, quand le scénario ne l’écrit pas lui-même. « Hors jeu » : le mot du HUD."
+      },
+      "longueurMax": null
+    },
+    {
+      "cle": "aube.mission_objectif_releve",
+      "texte": "Survivre quarante journées complètes jusqu’à la relève.",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Objectif du briefing de l’essai « La quarantième relève » : tenir jusqu’au début de la journée 41."
+      },
+      "longueurMax": null
+    },
+    {
+      "cle": "aube.mission_tutoriel",
+      "texte": "Les armées alliées jouent leur propre tour. Consultez leurs unités sans leur donner d’ordres.",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Seule étape d’aide d’un essai Aube hors campagne."
+      },
+      "longueurMax": null
+    },
+    {
+      "cle": "aube.mission_conseil",
+      "texte": "Ces essais Aube sont indépendants des entraînements. Les décisions de fin de mission modifient uniquement les nouvelles parties annoncées.",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Conseil du briefing d’un essai Aube hors campagne."
+      },
+      "longueurMax": null
+    },
+    {
       "cle": "hud.tour_allie",
       "texte": "Tour allié",
       "contexte": {
@@ -744,7 +780,7 @@
     },
     {
       "cle": "accueil.accroche",
-      "texte": "Les guerres sont finies. Reste le tournoi.",
+      "texte": "Quatorze ans de guerre. Atlas fixe les règles.",
       "contexte": {
         "ecran": "accueil",
         "note": "La seule phrase de l'écran-titre, sur une ligne sous le nom du jeu."
@@ -765,13 +801,13 @@
       "texte": "{n}/{total} · {epreuve}",
       "contexte": {
         "ecran": "accueil",
-        "note": "Sous-ligne du bouton Campagne en cours de qualification. Tient sur une ligne."
+        "note": "Sous-ligne du bouton Campagne quand la campagne est commencée. Tient sur une ligne."
       },
       "longueurMax": 36
     },
     {
       "cle": "accueil.campagne_fini",
-      "texte": "Six épreuves remportées",
+      "texte": "Toutes les épreuves remportées",
       "contexte": {
         "ecran": "accueil",
         "note": "Sous-ligne du bouton Campagne, tout gagné."
@@ -780,7 +816,7 @@
     },
     {
       "cle": "accueil.campagne_neuf",
-      "texte": "Six épreuves · commencez ici",
+      "texte": "Dix exercices · commencez ici",
       "contexte": {
         "ecran": "accueil",
         "note": "Sous-ligne du bouton Campagne quand rien n'a été joué. C'est ce que rend le serveur."
@@ -816,7 +852,7 @@
     },
     {
       "cle": "accueil.entrer",
-      "texte": "Entrer dans la Ronde",
+      "texte": "Commencer la campagne",
       "contexte": {
         "ecran": "accueil",
         "note": "Bouton principal, joueur qui n'a rien disputé."
@@ -825,7 +861,7 @@
     },
     {
       "cle": "accueil.frise_legende",
-      "texte": "24 nations · 18 régions · une manche",
+      "texte": "24 nations · 18 régions · une guerre",
       "contexte": {
         "ecran": "accueil",
         "note": "Légende sous la frise des nations."
@@ -834,7 +870,7 @@
     },
     {
       "cle": "accueil.frise_titre",
-      "texte": "Le parcours de la Ronde, de la France aux vingt-quatre nations",
+      "texte": "Le parcours de la campagne, de la France aux vingt-quatre nations",
       "contexte": {
         "ecran": "accueil",
         "note": "Titre du SVG de la frise : c'est ce que lit un lecteur d'écran."
@@ -861,7 +897,7 @@
     },
     {
       "cle": "accueil.jeu_libre_note",
-      "texte": "Une manche seule, sans progression",
+      "texte": "Une bataille seule, sans progression",
       "contexte": {
         "ecran": "accueil",
         "note": "Sous-ligne du bouton Jeu libre."
@@ -870,7 +906,7 @@
     },
     {
       "cle": "accueil.match_libre",
-      "texte": "Match libre",
+      "texte": "Partie libre",
       "contexte": {
         "ecran": "accueil",
         "note": "Lien annexe vers la partie de démonstration. Nom court : un joueur ne connaît pas « exhibition »."
@@ -942,16 +978,16 @@
     },
     {
       "cle": "accueil.pitch",
-      "texte": "Vous commandez l’équipe de France dans la Ronde, le tournoi qui a remplacé les guerres. Dix-huit régions, puis le monde — et chaque nation ralliée se joue ensuite avec son général et ses unités.",
+      "texte": "Quatorze ans de guerre pour l’énergie, et Atlas en fixe les règles. Vous commandez pour la France : dix-huit régions, puis le monde — et chaque nation ralliée se joue ensuite avec son général et ses unités.",
       "contexte": {
         "ecran": "accueil",
-        "note": "Le pitch, trois lignes au plus. Doit contenir le tournoi mondial et l'incarnation d'une nation alliée."
+        "note": "Le pitch, trois lignes au plus. Doit contenir la guerre bornée par Atlas et l'incarnation d'une nation alliée."
       },
       "longueurMax": 220
     },
     {
       "cle": "accueil.plateau_titre",
-      "texte": "Un plateau des Jeux Tactiques : portée de déplacement en vert, portée de tir en rouge",
+      "texte": "Une carte de bataille : portée de déplacement en vert, portée de tir en rouge",
       "contexte": {
         "ecran": "accueil",
         "note": "Titre du SVG de fond : c'est ce que lit un lecteur d'écran."
@@ -996,10 +1032,10 @@
     },
     {
       "cle": "accueil.reprendre",
-      "texte": "Reprendre la sélection",
+      "texte": "Reprendre la campagne",
       "contexte": {
         "ecran": "accueil",
-        "note": "Bouton principal, joueur en cours de qualification."
+        "note": "Bouton principal, joueur qui a commencé la campagne."
       },
       "longueurMax": 28
     },
@@ -1014,7 +1050,7 @@
     },
     {
       "cle": "accueil.titre_bas",
-      "texte": "Reste le tournoi.",
+      "texte": "Atlas fixe les règles.",
       "contexte": {
         "ecran": "accueil",
         "note": "Seconde ligne du titre. Phrase complète, voir accueil.titre_haut."
@@ -1023,7 +1059,7 @@
     },
     {
       "cle": "accueil.titre_haut",
-      "texte": "Les guerres sont finies.",
+      "texte": "Quatorze ans de guerre.",
       "contexte": {
         "ecran": "accueil",
         "note": "Première ligne du titre, en réserve claire. Phrase complète : les deux lignes se traduisent séparément."
@@ -1338,7 +1374,7 @@
     },
     {
       "cle": "app.baseline",
-      "texte": "Le tour du monde en une manche.",
+      "texte": "Le tour d’un monde en guerre.",
       "contexte": {
         "ecran": "accueil",
         "note": "Accroche sous le titre, une ligne."
@@ -1544,7 +1580,7 @@
     },
     {
       "cle": "campagne.defaite",
-      "texte": "La qualification continue : relisez l’objectif et retentez votre approche.",
+      "texte": "La campagne continue : relisez l’objectif et retentez votre approche.",
       "contexte": {
         "ecran": "campagne"
       },
@@ -1553,7 +1589,7 @@
     },
     {
       "cle": "campagne.demo",
-      "texte": "Exhibition libre",
+      "texte": "Partie libre",
       "contexte": {
         "ecran": "campagne"
       },
@@ -1562,7 +1598,7 @@
     },
     {
       "cle": "campagne.dialogue",
-      "texte": "Vestiaire",
+      "texte": "État-major",
       "contexte": {
         "ecran": "campagne"
       },
@@ -1571,7 +1607,7 @@
     },
     {
       "cle": "bilan.titre",
-      "texte": "Bilan de la manche",
+      "texte": "Bilan de la mission",
       "contexte": {
         "ecran": "jeu",
         "note": "Nom accessible du bloc de bilan, sur l'écran de fin de mission."
@@ -1655,7 +1691,7 @@
       "texte": "Bâtiments tenus",
       "contexte": {
         "ecran": "jeu",
-        "note": "Tableau de marque : bâtiments possédés à la fin de la manche."
+        "note": "Tableau de marque : bâtiments possédés à la fin de la mission."
       },
       "longueurMax": 18
     },
@@ -1733,7 +1769,7 @@
     },
     {
       "cle": "campagne.fin",
-      "texte": "Votre sélection a uni deux délégations. Mais le sceau découvert au col pose une nouvelle question : qui veut fausser la Ronde ?",
+      "texte": "Votre coalition réunit deux nations. Mais une question reste ouverte : qui veut fausser le Pacte ?",
       "contexte": {
         "ecran": "campagne"
       },
@@ -1760,7 +1796,7 @@
     },
     {
       "cle": "campagne.incarnation",
-      "texte": "Vous commandez la délégation luxembourgeoise",
+      "texte": "Vous commandez sous les couleurs du Luxembourg",
       "contexte": {
         "ecran": "campagne"
       },
@@ -1769,7 +1805,7 @@
     },
     {
       "cle": "campagne.introduction_tuto",
-      "texte": "Quatre manches pour apprendre les Jeux Tactiques, puis vos premiers matchs officiels : une qualification au col et une alliance à jouer.",
+      "texte": "Dix exercices à blanc pour apprendre à commander, puis vos premières épreuves officielles : le pacte du col, puis un front d’essai sous des couleurs alliées.",
       "contexte": {
         "ecran": "campagne"
       },
@@ -1778,7 +1814,7 @@
     },
     {
       "cle": "campagne.itineraire",
-      "texte": "Itinéraire de la sélection",
+      "texte": "Itinéraire de la campagne",
       "contexte": {
         "ecran": "campagne",
         "note": "Intitulé accessible de la barre de stations du fil de campagne. Chaque station est une épreuve ; le trait qui les relie se remplit derrière soi."
@@ -1814,7 +1850,7 @@
     },
     {
       "cle": "campagne.officiel",
-      "texte": "Qualification de la Ronde",
+      "texte": "Campagne",
       "contexte": {
         "ecran": "campagne"
       },
@@ -1832,7 +1868,7 @@
     },
     {
       "cle": "campagne.presentation",
-      "texte": "Quatre manches pour apprendre les Jeux Tactiques, puis vos premiers matchs officiels : une qualification au col et une alliance à jouer.",
+      "texte": "Dix exercices à blanc pour apprendre à commander, puis vos premières épreuves officielles : le pacte du col, puis un front d’essai sous des couleurs alliées.",
       "contexte": {
         "ecran": "campagne"
       },
@@ -1940,7 +1976,7 @@
     },
     {
       "cle": "campagne.surtitre",
-      "texte": "Atlas Tournament · Première sélection",
+      "texte": "Atlas Tournament · Campagne",
       "contexte": {
         "ecran": "campagne"
       },
@@ -1949,7 +1985,7 @@
     },
     {
       "cle": "campagne.terminee",
-      "texte": "Qualification terminée",
+      "texte": "Campagne terminée",
       "contexte": {
         "ecran": "campagne"
       },
@@ -2082,22 +2118,22 @@
       "texte": "{unite} est mise hors jeu",
       "contexte": {
         "ecran": "hud",
-        "note": "Jamais « détruite », jamais « tuée »."
+        "note": "Le HUD dit « hors jeu » : c'est le mot du Registre d'Atlas, qui compte des pièces."
       },
       "longueurMax": 44
     },
     {
       "cle": "combat.manche_gagnee",
-      "texte": "Manche gagnée",
+      "texte": "Victoire",
       "contexte": {
         "ecran": "fin_de_match",
-        "note": "« manche », jamais « bataille »."
+        "note": "Titre de l’écran de fin quand la mission est gagnée."
       },
       "longueurMax": 22
     },
     {
       "cle": "combat.manche_perdue",
-      "texte": "Manche perdue",
+      "texte": "Défaite",
       "contexte": {
         "ecran": "fin_de_match"
       },
@@ -2125,7 +2161,7 @@
       "texte": "QG capturé",
       "contexte": {
         "ecran": "hud",
-        "note": "Annonce de prise d'un quartier général : elle termine souvent le match."
+        "note": "Annonce de prise d'un quartier général : elle termine souvent la mission."
       },
       "longueurMax": 18
     },
@@ -2236,21 +2272,21 @@
     },
     {
       "cle": "dialogue.defaite_defaut",
-      "texte": "La manche nous échappe, mais pas la Ronde. Relisez le terrain, comptez vos unités, et revenez : on gagne rarement au premier essai, on gagne souvent au second.",
+      "texte": "Cette bataille nous échappe, pas la guerre. Relisez le terrain, comptez vos unités, et revenez : on gagne rarement au premier essai, on gagne souvent au second.",
       "contexte": {
         "ecran": "dialogue",
         "locuteur": "le commandant du joueur",
-        "note": "Réplique de repli en fin de match perdu, quand le scénario ne déclare aucun dialogueDefaite. Registre du jeu : rien n’est détruit, personne n’est un ennemi."
+        "note": "Réplique de repli en fin de mission perdue, quand le scénario ne déclare aucun dialogueDefaite. Dite par le commandant du joueur."
       },
       "longueurMax": 240
     },
     {
       "cle": "dialogue.victoire_defaut",
-      "texte": "Manche gagnée. Vous avez lu le terrain avant l’adversaire et frappé au bon moment : c’est exactement ce qu’on attend d’un commandant. La Ronde continue.",
+      "texte": "Victoire. Vous avez lu le terrain avant l’adversaire et frappé au bon moment : c’est exactement ce qu’on attend d’un commandant. La guerre continue.",
       "contexte": {
         "ecran": "dialogue",
         "locuteur": "le commandant du joueur",
-        "note": "Réplique de repli en fin de match gagné, quand le scénario ne déclare aucun dialogueVictoire. « Adversaire », jamais « ennemi »."
+        "note": "Réplique de repli en fin de mission gagnée, quand le scénario ne déclare aucun dialogueVictoire. Dite par le commandant du joueur."
       },
       "longueurMax": 240
     },
@@ -2628,7 +2664,7 @@
       "texte": "Recrutées",
       "contexte": {
         "ecran": "hud",
-        "note": "Écran de fin : idem, unités produites pendant le match."
+        "note": "Écran de fin : idem, unités produites pendant la mission."
       },
       "longueurMax": 14
     },
@@ -2770,7 +2806,7 @@
       "texte": "Mise hors jeu",
       "contexte": {
         "ecran": "hud",
-        "note": "La cible ne survit pas à l'attaque prévue. Jamais « détruite » : les Jeux Tactiques mettent hors jeu."
+        "note": "La cible ne survit pas à l'attaque prévue. Le HUD dit « hors jeu » : c'est le mot du Registre d'Atlas, qui compte des pièces."
       },
       "longueurMax": 20
     },
@@ -2902,10 +2938,10 @@
     },
     {
       "cle": "hud.match_nul",
-      "texte": "Match nul",
+      "texte": "Aucun vainqueur",
       "contexte": {
         "ecran": "fin_de_match",
-        "note": "Ni gagnée ni perdue : la manche est nulle."
+        "note": "Ni victoire ni défaite : personne ne l’emporte."
       },
       "longueurMax": 20
     },
@@ -2994,7 +3030,7 @@
       "texte": "Panne sèche : {unite} est mise hors jeu",
       "contexte": {
         "ecran": "hud",
-        "note": "Annonce éphémère au début d’un tour, quand une unité aérienne tombe à sec (04 §2). Nom court de l’unité. Jamais « détruite »."
+        "note": "Annonce éphémère au début d’un tour, quand une unité aérienne tombe à sec (04 §2). Nom court de l’unité. Le HUD dit « hors jeu »."
       },
       "longueurMax": 56
     },
@@ -3191,7 +3227,7 @@
       "texte": "Tour de l’adversaire",
       "contexte": {
         "ecran": "hud",
-        "note": "Jamais « ennemi »."
+        "note": "Le HUD dit « adversaire », le mot d’Atlas, qui arbitre les deux camps."
       },
       "longueurMax": 28
     },
@@ -3445,7 +3481,7 @@
     },
     {
       "cle": "objectif.hors_jeu_total",
-      "texte": "Mettez toute l’équipe adverse hors jeu.",
+      "texte": "Mettez toutes les unités adverses hors jeu.",
       "contexte": {
         "ecran": "campagne"
       },
@@ -3687,7 +3723,7 @@
     },
     {
       "cle": "reglages.effacer_note",
-      "texte": "Les six épreuves et les parties en cours seront perdues.",
+      "texte": "Vos épreuves remportées et vos parties en cours seront perdues.",
       "contexte": {
         "ecran": "reglages",
         "note": "Aide sous l'effacement."
@@ -3708,7 +3744,7 @@
       "texte": "En partie",
       "contexte": {
         "ecran": "reglages",
-        "note": "Titre du panneau des réglages qui se voient pendant un match : dialogues, écran de combat."
+        "note": "Titre du panneau des réglages qui se voient pendant une partie : dialogues, écran de combat."
       },
       "longueurMax": 20
     },
@@ -4606,19 +4642,19 @@
     },
     {
       "cle": "banc.choisir",
-      "texte": "Choisissez votre banc",
+      "texte": "Choisissez vos couleurs",
       "contexte": {
         "ecran": "campagne",
-        "note": "Banc prêté au briefing : le joueur choisit son héros avant le montage (13-campagne.md §3.4 bis)."
+        "note": "Commandement prêté (le « banc prêté » de 13-campagne.md §3.4 bis) : au briefing, le joueur choisit sous quelles couleurs il combat. Ne pas écrire « banc » à l’écran."
       },
       "longueurMax": 40
     },
     {
       "cle": "banc.note",
-      "texte": "Un banc prêté est un échange d’entraîneurs : vous jouez leurs couleurs ce soir, et vous rendez le banc au coup de sifflet final. Le choix vaut pour cette partie et pour la suite annoncée.",
+      "texte": "Un commandement prêté : vous menez les unités et le général d’un allié, sous ses couleurs, le temps d’une bataille, puis vous les lui rendez. Le choix vaut pour cette partie et pour la suite annoncée.",
       "contexte": {
         "ecran": "campagne",
-        "note": "Banc prêté au briefing : le joueur choisit son héros avant le montage (13-campagne.md §3.4 bis)."
+        "note": "Commandement prêté (le « banc prêté » de 13-campagne.md §3.4 bis) : au briefing, le joueur choisit sous quelles couleurs il combat. Ne pas écrire « banc » à l’écran."
       },
       "longueurMax": 220
     },
@@ -4627,7 +4663,7 @@
       "texte": "Jouer {banc}",
       "contexte": {
         "ecran": "campagne",
-        "note": "Banc prêté au briefing : le joueur choisit son héros avant le montage (13-campagne.md §3.4 bis)."
+        "note": "Commandement prêté (le « banc prêté » de 13-campagne.md §3.4 bis) : au briefing, le joueur choisit sous quelles couleurs il combat. Ne pas écrire « banc » à l’écran."
       },
       "longueurMax": 90
     },
@@ -4636,16 +4672,16 @@
       "texte": "Vous avez joué {banc}",
       "contexte": {
         "ecran": "campagne",
-        "note": "Banc prêté au briefing : le joueur choisit son héros avant le montage (13-campagne.md §3.4 bis)."
+        "note": "Commandement prêté (le « banc prêté » de 13-campagne.md §3.4 bis) : au briefing, le joueur choisit sous quelles couleurs il combat. Ne pas écrire « banc » à l’écran."
       },
       "longueurMax": 110
     },
     {
       "cle": "banc.en_cours",
-      "texte": "Banc prêté : {banc}",
+      "texte": "Commandement prêté : {banc}",
       "contexte": {
         "ecran": "campagne",
-        "note": "Banc prêté au briefing : le joueur choisit son héros avant le montage (13-campagne.md §3.4 bis)."
+        "note": "Commandement prêté (le « banc prêté » de 13-campagne.md §3.4 bis) : au briefing, le joueur choisit sous quelles couleurs il combat. Ne pas écrire « banc » à l’écran."
       },
       "longueurMax": 110
     },
@@ -4654,7 +4690,7 @@
       "texte": "{style} · pouvoir « {pouvoir} », super « {super} »",
       "contexte": {
         "ecran": "campagne",
-        "note": "Banc prêté au briefing : le joueur choisit son héros avant le montage (13-campagne.md §3.4 bis)."
+        "note": "Commandement prêté (le « banc prêté » de 13-campagne.md §3.4 bis) : au briefing, le joueur choisit sous quelles couleurs il combat. Ne pas écrire « banc » à l’écran."
       },
       "longueurMax": 140
     },
@@ -4663,7 +4699,7 @@
       "texte": "sous vos propres couleurs",
       "contexte": {
         "ecran": "campagne",
-        "note": "Banc prêté au briefing : le joueur choisit son héros avant le montage (13-campagne.md §3.4 bis)."
+        "note": "Commandement prêté (le « banc prêté » de 13-campagne.md §3.4 bis) : au briefing, le joueur choisit sous quelles couleurs il combat. Ne pas écrire « banc » à l’écran."
       },
       "longueurMax": 40
     },
@@ -4672,7 +4708,7 @@
       "texte": "Aucune suite particulière : l’épreuve suivante se joue telle qu’annoncée.",
       "contexte": {
         "ecran": "campagne",
-        "note": "Banc prêté au briefing : le joueur choisit son héros avant le montage (13-campagne.md §3.4 bis)."
+        "note": "Commandement prêté (le « banc prêté » de 13-campagne.md §3.4 bis) : au briefing, le joueur choisit sous quelles couleurs il combat. Ne pas écrire « banc » à l’écran."
       },
       "longueurMax": 120
     },
@@ -4681,7 +4717,7 @@
       "texte": "sous les couleurs du Luxembourg, avec Tomas Reiner",
       "contexte": {
         "ecran": "campagne",
-        "note": "Banc prêté au briefing : le joueur choisit son héros avant le montage (13-campagne.md §3.4 bis)."
+        "note": "Commandement prêté (le « banc prêté » de 13-campagne.md §3.4 bis) : au briefing, le joueur choisit sous quelles couleurs il combat. Ne pas écrire « banc » à l’écran."
       },
       "longueurMax": 60
     },
@@ -4690,7 +4726,7 @@
       "texte": "À la prochaine nouvelle partie de Sous les couleurs alliées, un transport rejoint votre camp à la journée 2, et Ariane s’en souvient à l’ouverture.",
       "contexte": {
         "ecran": "campagne",
-        "note": "Banc prêté au briefing : le joueur choisit son héros avant le montage (13-campagne.md §3.4 bis)."
+        "note": "Commandement prêté (le « banc prêté » de 13-campagne.md §3.4 bis) : au briefing, le joueur choisit sous quelles couleurs il combat. Ne pas écrire « banc » à l’écran."
       },
       "longueurMax": 200
     },
@@ -4699,7 +4735,7 @@
       "texte": "sous les couleurs du Luxembourg, avec Tomas Reiner",
       "contexte": {
         "ecran": "campagne",
-        "note": "Banc prêté au briefing : le joueur choisit son héros avant le montage (13-campagne.md §3.4 bis)."
+        "note": "Commandement prêté (le « banc prêté » de 13-campagne.md §3.4 bis) : au briefing, le joueur choisit sous quelles couleurs il combat. Ne pas écrire « banc » à l’écran."
       },
       "longueurMax": 60
     },
@@ -4708,43 +4744,43 @@
       "texte": "À la prochaine nouvelle partie de La ligne de nuit, votre camp commence avec 1 500 fonds supplémentaires, et Tomas le dit à l’ouverture.",
       "contexte": {
         "ecran": "campagne",
-        "note": "Banc prêté au briefing : le joueur choisit son héros avant le montage (13-campagne.md §3.4 bis)."
+        "note": "Commandement prêté (le « banc prêté » de 13-campagne.md §3.4 bis) : au briefing, le joueur choisit sous quelles couleurs il combat. Ne pas écrire « banc » à l’écran."
       },
       "longueurMax": 200
     },
     {
       "cle": "banc.aube_nuit_2v2.cmd_solveig_tamm",
-      "texte": "sous les couleurs de l’Intendance, avec Solveig Tamm",
+      "texte": "sous les couleurs des convois d’Atlas, avec Solveig Tamm",
       "contexte": {
         "ecran": "campagne",
-        "note": "Banc prêté au briefing : le joueur choisit son héros avant le montage (13-campagne.md §3.4 bis)."
+        "note": "Commandement prêté (le « banc prêté » de 13-campagne.md §3.4 bis) : au briefing, le joueur choisit sous quelles couleurs il combat. Ne pas écrire « banc » à l’écran."
       },
       "longueurMax": 60
     },
     {
       "cle": "banc.aube_nuit_2v2.cmd_solveig_tamm.effet",
-      "texte": "À la prochaine nouvelle partie des Routes d’Aube, Ariane rappelle à l’ouverture le convoi que vous avez couvert sous les couleurs de l’Intendance.",
+      "texte": "À la prochaine nouvelle partie des Routes d’Aube, Ariane rappelle à l’ouverture le convoi que vous avez couvert sous les couleurs de Solveig.",
       "contexte": {
         "ecran": "campagne",
-        "note": "Banc prêté au briefing : le joueur choisit son héros avant le montage (13-campagne.md §3.4 bis)."
+        "note": "Commandement prêté (le « banc prêté » de 13-campagne.md §3.4 bis) : au briefing, le joueur choisit sous quelles couleurs il combat. Ne pas écrire « banc » à l’écran."
       },
       "longueurMax": 200
     },
     {
       "cle": "banc.aube_nuit_2v2.cmd_wren_osoko",
-      "texte": "sous les couleurs de l’Homologation, avec Wren Osoko",
+      "texte": "sous les couleurs du contrôle des armes, avec Wren Osoko",
       "contexte": {
         "ecran": "campagne",
-        "note": "Banc prêté au briefing : le joueur choisit son héros avant le montage (13-campagne.md §3.4 bis)."
+        "note": "Commandement prêté (le « banc prêté » de 13-campagne.md §3.4 bis) : au briefing, le joueur choisit sous quelles couleurs il combat. Ne pas écrire « banc » à l’écran."
       },
       "longueurMax": 60
     },
     {
       "cle": "banc.aube_nuit_2v2.cmd_wren_osoko.effet",
-      "texte": "À la prochaine nouvelle partie des Routes d’Aube, Ariane rappelle à l’ouverture le relevé que vous avez homologué sous les couleurs de Wren.",
+      "texte": "À la prochaine nouvelle partie des Routes d’Aube, Ariane rappelle à l’ouverture le relevé que vous avez certifié sous les couleurs de Wren.",
       "contexte": {
         "ecran": "campagne",
-        "note": "Banc prêté au briefing : le joueur choisit son héros avant le montage (13-campagne.md §3.4 bis)."
+        "note": "Commandement prêté (le « banc prêté » de 13-campagne.md §3.4 bis) : au briefing, le joueur choisit sous quelles couleurs il combat. Ne pas écrire « banc » à l’écran."
       },
       "longueurMax": 200
     },
@@ -4753,7 +4789,7 @@
       "texte": "Choisissez votre commandant",
       "contexte": {
         "ecran": "campagne",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 40
     },
@@ -4762,7 +4798,7 @@
       "texte": "Choisissez un commandant disponible.",
       "contexte": {
         "ecran": "campagne",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 220
     },
@@ -4771,7 +4807,7 @@
       "texte": "{acquis} commandants sur {total}",
       "contexte": {
         "ecran": "campagne",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 40
     },
@@ -4780,34 +4816,34 @@
       "texte": "et {n} sous silhouette",
       "contexte": {
         "ecran": "campagne",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 32
     },
     {
       "cle": "vestiaire.grille",
-      "texte": "Vestiaire des commandants",
+      "texte": "Les commandants de votre état-major",
       "contexte": {
         "ecran": "campagne",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 40
     },
     {
       "cle": "vestiaire.prendre",
-      "texte": "Prendre ce banc",
+      "texte": "Prendre ce commandant",
       "contexte": {
         "ecran": "campagne",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 24
     },
     {
       "cle": "vestiaire.defaut",
-      "texte": "Banc de l’épreuve",
+      "texte": "Commandant prévu",
       "contexte": {
         "ecran": "campagne",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 24
     },
@@ -4816,7 +4852,7 @@
       "texte": "À gagner",
       "contexte": {
         "ecran": "campagne",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 16
     },
@@ -4825,7 +4861,7 @@
       "texte": "Commandant secret",
       "contexte": {
         "ecran": "campagne",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 24
     },
@@ -4834,7 +4870,7 @@
       "texte": "Indice",
       "contexte": {
         "ecran": "campagne",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 12
     },
@@ -4843,7 +4879,7 @@
       "texte": "Ce qu’il change",
       "contexte": {
         "ecran": "campagne",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 24
     },
@@ -4852,7 +4888,7 @@
       "texte": "Remportez {epreuve}",
       "contexte": {
         "ecran": "campagne",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 60
     },
@@ -4861,7 +4897,7 @@
       "texte": "Son épreuve d’entrée reste à écrire",
       "contexte": {
         "ecran": "campagne",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 48
     },
@@ -4870,43 +4906,43 @@
       "texte": "Se gagne plus loin dans la campagne",
       "contexte": {
         "ecran": "campagne",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 48
     },
     {
       "cle": "vestiaire.ouvert",
-      "texte": "Un commandant rejoint votre vestiaire",
+      "texte": "Un commandant rejoint votre état-major",
       "contexte": {
         "ecran": "fin_de_match",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 48
     },
     {
       "cle": "vestiaire.ouverts",
-      "texte": "{n} commandants rejoignent votre vestiaire",
+      "texte": "{n} commandants rejoignent votre état-major",
       "contexte": {
         "ecran": "fin_de_match",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 48
     },
     {
       "cle": "vestiaire.ouvert_note",
-      "texte": "Vous pourrez le prendre au briefing des épreuves qui laissent choisir leur banc.",
+      "texte": "Vous pourrez le choisir au briefing des missions qui laissent choisir son commandant.",
       "contexte": {
         "ecran": "fin_de_match",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 110
     },
     {
       "cle": "vestiaire.carnet_titre",
-      "texte": "Le vestiaire",
+      "texte": "L’état-major",
       "contexte": {
         "ecran": "campagne",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 24
     },
@@ -4915,7 +4951,7 @@
       "texte": "Choisissez un commandant disponible.",
       "contexte": {
         "ecran": "campagne",
-        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+        "note": "L’état-major (le « vestiaire » de 13-campagne.md §8) : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet."
       },
       "longueurMax": 220
     },
@@ -4924,16 +4960,16 @@
       "texte": "Le détour des batteries",
       "contexte": {
         "ecran": "campagne",
-        "note": "Titre court d'un essai d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+        "note": "Titre court d'un essai d'Aube, pour dire ce qui fait entrer un commandant dans l’état-major."
       },
       "longueurMax": 40
     },
     {
       "cle": "epreuve.aube_reserves_1v2",
-      "texte": "La finale des réserves",
+      "texte": "Les réserves contestées",
       "contexte": {
         "ecran": "campagne",
-        "note": "Titre court d'un essai d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+        "note": "Titre court d'un essai d'Aube, pour dire ce qui fait entrer un commandant dans l’état-major."
       },
       "longueurMax": 40
     },
@@ -4942,7 +4978,7 @@
       "texte": "La ligne de nuit",
       "contexte": {
         "ecran": "campagne",
-        "note": "Titre court d'un essai d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+        "note": "Titre court d'un essai d'Aube, pour dire ce qui fait entrer un commandant dans l’état-major."
       },
       "longueurMax": 40
     },
@@ -4951,7 +4987,7 @@
       "texte": "La quarantième relève",
       "contexte": {
         "ecran": "campagne",
-        "note": "Titre court d'un essai d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+        "note": "Titre court d'un essai d'Aube, pour dire ce qui fait entrer un commandant dans l’état-major."
       },
       "longueurMax": 40
     },
@@ -4960,7 +4996,7 @@
       "texte": "Les routes d’Aube",
       "contexte": {
         "ecran": "campagne",
-        "note": "Titre court d'un essai d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+        "note": "Titre court d'un essai d'Aube, pour dire ce qui fait entrer un commandant dans l’état-major."
       },
       "longueurMax": 40
     },
@@ -4969,7 +5005,7 @@
       "texte": "La Forge de la retenue",
       "contexte": {
         "ecran": "campagne",
-        "note": "Titre court d'un essai d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+        "note": "Titre court d'un essai d'Aube, pour dire ce qui fait entrer un commandant dans l’état-major."
       },
       "longueurMax": 40
     },
@@ -4978,7 +5014,7 @@
       "texte": "Le convoi de Solveig",
       "contexte": {
         "ecran": "campagne",
-        "note": "Titre court d'un essai ou d'une quête d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+        "note": "Titre court d'un essai ou d'une quête d'Aube, pour dire ce qui fait entrer un commandant dans l’état-major."
       },
       "longueurMax": 40
     },
@@ -4987,7 +5023,7 @@
       "texte": "Les archives de Wren",
       "contexte": {
         "ecran": "campagne",
-        "note": "Titre court d'un essai ou d'une quête d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+        "note": "Titre court d'un essai ou d'une quête d'Aube, pour dire ce qui fait entrer un commandant dans l’état-major."
       },
       "longueurMax": 40
     },
@@ -4996,7 +5032,7 @@
       "texte": "Drones et matériel méridien",
       "contexte": {
         "ecran": "campagne",
-        "note": "Titre court d'un essai ou d'une quête d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+        "note": "Titre court d'un essai ou d'une quête d'Aube, pour dire ce qui fait entrer un commandant dans l’état-major."
       },
       "longueurMax": 40
     },
@@ -5005,7 +5041,7 @@
       "texte": "Le chenal des signaux",
       "contexte": {
         "ecran": "campagne",
-        "note": "Titre court d'un essai ou d'une quête d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+        "note": "Titre court d'un essai ou d'une quête d'Aube, pour dire ce qui fait entrer un commandant dans l’état-major."
       },
       "longueurMax": 40
     },
@@ -5014,7 +5050,7 @@
       "texte": "La rade des signaux",
       "contexte": {
         "ecran": "campagne",
-        "note": "Titre court d'un essai ou d'une quête d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+        "note": "Titre court d'un essai ou d'une quête d'Aube, pour dire ce qui fait entrer un commandant dans l’état-major."
       },
       "longueurMax": 40
     }

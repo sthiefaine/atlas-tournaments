@@ -2,7 +2,7 @@
 
 > Document 04. Découle du canon `BRIEF.md`, cohérent avec `02-architecture.md` et `03-schemas.md` (mêmes clés d'unités, de terrains et de champs). Les propositions hors brief sont marquées **[proposition]**.
 >
-> Rappel de ton, canon : ce sont des **Jeux Tactiques**. On affronte un **adversaire**, pas un ennemi. Une unité réduite à zéro est **mise hors jeu** (elle rentre au vestiaire), elle n'est jamais détruite ni tuée. Les règles ci-dessous sont des règles de **sport**.
+> Rappel de ton, canon (lore v2, validé le 26 septembre 2026 : `BRIEF.md` ; `01-bible.md` §5) : c'est **une guerre**, la guerre de l'énergie, qu'Atlas arbitre par le Pacte du Terrain. Les règles parlent d'**adversaire**, le mot d'Atlas, qui arbitre les deux camps ; « ennemi » se dit dans la bouche des personnages. Une unité réduite à zéro est **mise hors jeu** : c'est la règle du Registre, et le seul mot du HUD et du moteur ; dans le monde, la pièce est détruite, et un appareil abattu emporte son équipage (`01-bible.md` §5.3) — dit, jamais montré. Les règles ci-dessous sont celles d'un **front arbitré** : Atlas compte des pièces, pas des morts.
 
 ---
 
@@ -318,7 +318,7 @@ Le char passe de 100 à 95, soit toujours **10 PV affichés**. L'échange reste 
 
 ## 6. La capture
 
-Un bâtiment capturable (`ville`, `usine`, `aeroport`, `radar`) se prend en accumulant **20 points de capture** ; le **QG en demande 40** (5 septembre 2026) : une infanterie intacte y passe **quatre tours**, sous le feu, et c'est voulu — on ne finit pas un match en deux actions sous le nez du propriétaire.
+Un bâtiment capturable (`ville`, `usine`, `aeroport`, `radar`) se prend en accumulant **20 points de capture** ; le **QG en demande 40** (5 septembre 2026) : une infanterie intacte y passe **quatre tours**, sous le feu, et c'est voulu — on ne finit pas une bataille en deux actions sous le nez du propriétaire.
 
 ```
 pointsCapture += pvAffiches de l'unité qui capture       (1 à 10 par tour)
@@ -343,7 +343,7 @@ Un bâtiment **désaffecté** (`MapDef.desaffectes`, jamais un QG) n'appartient 
 - l'**infanterie** et la **méca**, au rythme habituel de leurs PV affichés — **quatre tours** à pleine force ;
 - le **génie**, seule unité bâtisseuse, qui gagne **le double** de ses PV affichés — **deux tours** à pleine force. Le génie ne capture rien d'autre : un bâtiment en service ne se prend qu'avec un capteur.
 
-À 40 points, le bâtiment sort de la liste des désaffectés, prend les couleurs du camp, et le moteur émet `remise_en_service` puis l'événement `capture` acquis habituel. **Atlas verse une prime de remise en service** au camp qui relance le bâtiment : `PRIME_REMISE_EN_SERVICE` = 1 000 fonds, **doublée (2 000) quand c'est le génie** — quatre tours d'infanterie immobile coûtent déjà assez cher, la prime récompense d'abord le bâtisseur. L'événement porte la `prime`. Il rapporte et produit dès la journée suivante. Un bâtiment en service ne redevient jamais désaffecté : il n'existe aucun système de destruction (`doc/15`). Dans l'interface, l'ordre s'appelle « Remettre en service », jamais « capturer » — on ne capture pas ce qui n'appartient à personne — et le mot « ruine » est banni par la charte (`content/i18n/glossaire.fr.json`) : rien n'est détruit dans les Jeux Tactiques, seulement hors service.
+À 40 points, le bâtiment sort de la liste des désaffectés, prend les couleurs du camp, et le moteur émet `remise_en_service` puis l'événement `capture` acquis habituel. **Atlas verse une prime de remise en service** au camp qui relance le bâtiment : `PRIME_REMISE_EN_SERVICE` = 1 000 fonds, **doublée (2 000) quand c'est le génie** — quatre tours d'infanterie immobile coûtent déjà assez cher, la prime récompense d'abord le bâtisseur. L'événement porte la `prime`. Il rapporte et produit dès la journée suivante. Un bâtiment en service ne redevient jamais désaffecté : il n'existe aucun système de destruction (`doc/15`). Dans l'interface, l'ordre s'appelle « Remettre en service », jamais « capturer » — on ne capture pas ce qui n'appartient à personne — et le mot « ruines » reste banni par la charte (`content/i18n/glossaire.fr.json`), avec les corps et les civils : la guerre détruit du matériel, mais l'horreur graphique reste hors champ (`01-bible.md` §5.2), et un bâtiment qui ne tourne plus se dit hors service.
 
 ---
 
@@ -358,7 +358,7 @@ Une barre vaut **100 points**. La jauge est plafonnée au coût du super pouvoir
 | Une de mes unités inflige des dégâts | `+10 × PV affichés retirés à la cible` |
 | Une de mes unités subit des dégâts | `+5 × PV affichés perdus` |
 
-Le camp qui encaisse gagne donc aussi de la jauge : un camp dominé revient dans le match. Mettre hors jeu une unité pleine rapporte 100 points, soit une barre — un pouvoir à 3 barres se charge en trois bons échanges.
+Le camp qui encaisse gagne donc aussi de la jauge : un camp dominé revient dans la bataille. Mettre hors jeu une unité pleine rapporte 100 points, soit une barre — un pouvoir à 3 barres se charge en trois bons échanges.
 
 ### 7.2 Pouvoir et super pouvoir
 
@@ -466,21 +466,21 @@ Le HUD affiche la **journée**, pas le tour. Les pouvoirs, les mécaniques régi
 Tranché par `BRIEF.md`, arbitrage n° 2. Un commandant recruté via un flag (`cmd.<id>.co_commandant`, écrit par une récompense de scénario `recompenses.coCommandant`) est adjoint au commandant principal et apporte **deux choses, et deux seulement** :
 
 1. **son passif** — jamais son pouvoir, jamais son super pouvoir, et **pas de demi-pouvoir** : la notion n'existe pas dans le moteur ;
-2. **une barre de jauge de départ**, soit 100 points de jauge au coup d'envoi, une fois par match.
+2. **une barre de jauge de départ**, soit 100 points de jauge au lancement de la mission, une fois par mission.
 
 **L'incarnation renverse les rôles, sans ajouter de règle.** Dans un **match d'incarnation** (`Scenario.incarnation`, `03-schemas.md` §15.2 bis), le joueur joue entièrement une nation alliée : le camp du joueur prend **le général de cette nation** — son passif, son pouvoir, son super pouvoir, sa jauge, sa barre entière —, **son catalogue** (unité spéciale comprise), sa **spécialité** et son **style visuel**. Le **commandant d'origine du joueur reste au banc en co-commandant passif** : exactement les deux choses ci-dessus, son passif et sa barre de jauge de départ, et rien de plus. Le lien avec sa propre campagne ne se perd donc jamais, et le moteur n'apprend aucune notion nouvelle — c'est le co-commandant qui change de siège, pas la règle.
 
-**Ce que la confiance ajoute, et son seul palier.** Incarner une nation fait monter la **confiance** de son général (`ProfilCampagne.confiance[commandantCle]`, 0 à 3). Elle n'a **qu'un** palier utile, et c'est voulu : à **3**, le général devient co-commandant **avec sa barre de jauge entière** — pas 100 points de départ mais sa jauge complète — et sa nation se débloque comme **départ de Nouvelle Ronde** (`13-campagne.md` §3.5). Aux niveaux 1 et 2, la confiance ne donne rien d'autre que des dialogues : c'est un compteur qu'on lit, pas une échelle de puissance. Le plafond de **trois co-commandants recrutés, un seul actif par match** s'applique au général incarné comme aux autres, et un général à confiance 3 **ne s'ajoute pas** aux trois : il prend une place, ou il attend.
+**Ce que la confiance ajoute, et son seul palier.** Incarner une nation fait monter la **confiance** de son général (`ProfilCampagne.confiance[commandantCle]`, 0 à 3). Elle n'a **qu'un** palier utile, et c'est voulu : à **3**, le général devient co-commandant **avec sa barre de jauge entière** — pas 100 points de départ mais sa jauge complète — et sa nation se débloque comme **départ de Nouvelle Ronde** (`13-campagne.md` §3.5). Aux niveaux 1 et 2, la confiance ne donne rien d'autre que des dialogues : c'est un compteur qu'on lit, pas une échelle de puissance. Le plafond de **trois co-commandants recrutés, un seul actif par mission** s'applique au général incarné comme aux autres, et un général à confiance 3 **ne s'ajoute pas** aux trois : il prend une place, ou il attend.
 
-**Un commandant régional de France** apporte en plus sa **carte de terrain à usage unique** — la récompense déjà prévue par `07-france-regions.md` §2.4, jouable une fois dans le match, **trois cartes au plus** dans la sacoche. C'est la seule chose que le régional ajoute au socle : on garde une mécanique nouvelle, pas deux.
+**Un commandant régional de France** apporte en plus sa **carte de terrain à usage unique** — la récompense déjà prévue par `07-france-regions.md` §2.4, jouable une fois dans la mission, **trois cartes au plus** dans la sacoche. C'est la seule chose que le régional ajoute au socle : on garde une mécanique nouvelle, pas deux.
 
-**Sa carte est l'une des trois, pas une quatrième** (`BRIEF.md`, seconde relecture, point 7). La sacoche compte trois emplacements pour tout le voyage : la carte apportée par un co-commandant régional y prend un emplacement comme n'importe quelle autre, et si les trois sont pris, le joueur choisit laquelle il laisse. Il n'existe **aucun** chemin qui porte le total à quatre. Les plafonds — trois cartes, trois co-commandants recrutés, un actif, cinq spécialités possédées, une équipée (§7.6) — sont les seuls outils de correction de l'inflation : on mesure d'abord (taux de victoire au mondial avec 0, 1 et 3 cartes emportées, étape 7 du plan), on resserre un plafond ensuite, on n'ajoute jamais une règle nouvelle.
+**Sa carte est l'une des trois, pas une quatrième** (`BRIEF.md`, seconde relecture, point 7). La sacoche compte trois emplacements pour tout le voyage : la carte apportée par un co-commandant régional y prend un emplacement comme n'importe quelle autre, et si les trois sont pris, le joueur choisit laquelle il laisse. Il n'existe **aucun** chemin qui porte le total à quatre. Les plafonds — trois cartes, trois co-commandants recrutés, un actif, cinq spécialités possédées, une équipée (§7.6) — sont les seuls outils de correction de l'inflation : on mesure d'abord (taux de victoire hors de France avec 0, 1 et 3 cartes emportées, étape 7 du plan), on resserre un plafond ensuite, on n'ajoute jamais une règle nouvelle.
 
 ### 7.6 Spécialités : cinq possédées, une équipée
 
-Même geste que les co-commandants (`BRIEF.md`, seconde relecture, point 2). Une `Specialite` (`03-schemas.md` §1) est soit un **modificateur**, soit un **trait** de la liste fermée `TraitSpecialite`. Le joueur en **possède jusqu'à cinq** — celle de son pays, plus celles gagnées en région — et en **équipe une seule par match**, choisie avant le coup d'envoi, jamais changée en cours de match. Le plafond de cumul du moteur est donc **un** : aucune multiplication de spécialités entre elles, donc aucune saturation à arbitrer, et un équilibrage qui se vérifie spécialité par spécialité.
+Même geste que les co-commandants (`BRIEF.md`, seconde relecture, point 2). Une `Specialite` (`03-schemas.md` §1) est soit un **modificateur**, soit un **trait** de la liste fermée `TraitSpecialite`. Le joueur en **possède jusqu'à cinq** — celle de son pays, plus celles gagnées en région — et en **équipe une seule par mission**, choisie avant son lancement, jamais changée en cours de mission. Le plafond de cumul du moteur est donc **un** : aucune multiplication de spécialités entre elles, donc aucune saturation à arbitrer, et un équilibrage qui se vérifie spécialité par spécialité.
 
-**Plafonds** : **trois co-commandants recrutés** au total, **un seul actif par match**. Le joueur choisit lequel il emmène avant le coup d'envoi ; le changement se fait entre deux matchs, jamais pendant **[proposition]**. La limite « un seul emmené au mondial » de `07-france-regions.md` §2.4 devient une conséquence de cette règle, pas une règle concurrente ; `01-bible.md` §6 et `08-narration-choix.md` §4.2 pointent ici.
+**Plafonds** : **trois co-commandants recrutés** au total, **un seul actif par mission**. Le joueur choisit lequel il emmène avant le lancement ; le changement se fait entre deux missions, jamais pendant **[proposition]**. La limite « un seul emmené hors de France » de `07-france-regions.md` §2.4 devient une conséquence de cette règle, pas une règle concurrente ; `01-bible.md` §6 et `08-narration-choix.md` §4.2 pointent ici.
 
 Le joueur qui collectionne les alliés gagne en **régularité et en tempo de départ**, pas en pic de puissance — c'est ce qui empêche le système de choix de devenir un système de puissance.
 
@@ -562,7 +562,7 @@ Un scénario déclare 1 à 3 conditions de victoire et 1 à 3 conditions de déf
 
 ### 9.1 Fin aux points
 
-Quand `Scenario.limiteJournees` est atteinte sans qu'aucune condition ne se soit déclenchée, le match se décide **aux points** **[proposition]**. Un match sportif ne s'arrête pas sur un « personne n'a gagné ». C'est ce que la bible appelle la **décision aux points à l'issue des quatre manches** (`01-bible.md` §4.3) : la manche est la division sportive du match, la journée son unité mécanique, et `limiteJournees` couvre les quatre manches.
+Quand `Scenario.limiteJournees` est atteinte sans qu'aucune condition ne se soit déclenchée, la bataille se décide **aux points** **[proposition]**. Un engagement déclaré ne s'arrête pas sur un « personne n'a gagné » : la concession nommée doit revenir à quelqu'un. C'est la **décision aux points** de la bible (`01-bible.md` §4.3) — le règlement d'Atlas parle encore de « quatre manches », mais ce n'est plus qu'une expression : la journée est l'unité mécanique, et `limiteJournees` borne l'engagement.
 
 ```
 score = 5 × (nombre de bâtiments capturables possédés)
@@ -571,7 +571,7 @@ score = 5 × (nombre de bâtiments capturables possédés)
       + (fonds en caisse) / 2000
 ```
 
-Le score le plus haut l'emporte. En cas d'égalité parfaite : match nul, qui compte comme une défaite pour la progression narrative mais laisse rejouer sans pénalité de flag.
+Le score le plus haut l'emporte. En cas d'égalité parfaite, l'engagement est nul — la concession ne change pas de main —, ce qui compte comme une défaite pour la progression narrative mais laisse rejouer sans pénalité de flag.
 
 C'est aussi cette formule que la simulation IA contre IA utilise pour classer les parties non terminées, et le champ `points` d'un objectif `{ type: 'points', seuil }` s'y réfère.
 
@@ -611,7 +611,7 @@ Le brouillard a ses yeux et ses aveugles (5 septembre 2026, `src/engine/regles/v
 
 **Brouillage.** Un drone brouillé garde **un dixième** de sa vision, arrondi, jamais moins d'une case : à cinq de vision, il ne voit plus que la case d'à côté. Le brouillage se lit à chaque calcul de vision, sans état : entrer et sortir du rayon suffit. Une station neutre ne brouille personne. Les rayons sont des constantes du moteur (`RAYON_BROUILLEUR_MOBILE`, `RAYON_STATION_RADAR`) : sur une carte de douze cases de large, une station couvre toute la carte — c'est une arme de grande carte, et la routine map devra en tenir compte avant d'en poser sur un 12 × 10.
 
-**Le drone abattu lit la production.** Un drone (trait `drone`) mis hors jeu **au-dessus d'un bâtiment adverse** — capturé par un antiaérien, tombé en panne sèche — a eu le temps de voir ce qui en sortait : son camp reçoit `production_revelee`, avec tout ce que le propriétaire du bâtiment a produit depuis le début du match, type par type. C'est la seule consolation d'un œil perdu, et une raison de le risquer au-dessus d'une usine plutôt qu'au-dessus d'une plaine.
+**Le drone abattu lit la production.** Un drone (trait `drone`) mis hors jeu **au-dessus d'un bâtiment adverse** — capturé par un antiaérien, tombé en panne sèche — a eu le temps de voir ce qui en sortait : son camp reçoit `production_revelee`, avec tout ce que le propriétaire du bâtiment a produit depuis le début de la bataille, type par type. C'est la seule consolation d'un œil perdu, et une raison de le risquer au-dessus d'une usine plutôt qu'au-dessus d'une plaine.
 
 **Ce que cela ne fait pas.** Le brouillage n'agit que sur le trait `drone` : recon, hélicoptère, infanterie sur une montagne voient comme avant. Il ne touche ni l'attaque, ni le mouvement, ni la capture.
 
@@ -625,7 +625,7 @@ Le brouillard a ses yeux et ses aveugles (5 septembre 2026, `src/engine/regles/v
 |---|---|---:|---:|---:|---:|---|---|
 | `char_moyen` — Char moyen | `homologuee`, catalogue 4. Entre le char léger et le char lourd, en tout : il frappe plus fort que le léger (85 sur l'infanterie, 70 sur un char léger), encaisse mieux (35 d'une méca ou d'un char léger, 70 d'un char lourd ou d'un lance-roquettes), et fait l'air à **0** comme les deux autres. Arme secondaire contre `infanterie`, `meca`, `genie` (§5.3). Produit à l'usine. | 10 000 | 5 | 2 | 8 | 60 / 1 / 0 | chenilles · bloc · `tourelle`, `canon_long` · 2 |
 
-Sa ligne : infanterie 85, méca 80, recon 95, char léger 70, char moyen 55, char lourd 30, artillerie 85, roquettes 95, anti-air 90, hélico 0, transport 105, génie 85, drone 0, brouilleur 95. Sa colonne : infanterie 7, méca 35, recon 3, char léger 35, char moyen 55, char lourd 70, artillerie 55, roquettes 70, anti-air 15, hélico 40, transport 0, génie 8, drone 0, brouilleur 0. Les quatre contraintes du §13.3 tiennent : diagonale 55, le char lourd et les roquettes lui infligent 70, il inflige 30 au char lourd et 0 à l'hélicoptère. Les unités homologuées existantes (`genie`, `drone`, `brouilleur`) portent sa clé dans leur colonne, sans quoi `degatsBase` — qui lit d'abord la colonne de la cible — leur ferait subir 0 de sa part. Mesuré sur `plaine.json`, 20 parties, graine 1, catalogue 4 : l'IA en achète 99 (contre 186 chars légers et 27 chars lourds, 59 avant) et le taux pondérée/agressive passe de 30/70 à 45/55. Il ouvre l'exhibition `couleurs_alliees` à la place du char léger : sans lui, la nouvelle ligne infanterie → char léger laissait le joueur simple de `verifier:campagne` perdre son char au troisième jour.
+Sa ligne : infanterie 85, méca 80, recon 95, char léger 70, char moyen 55, char lourd 30, artillerie 85, roquettes 95, anti-air 90, hélico 0, transport 105, génie 85, drone 0, brouilleur 95. Sa colonne : infanterie 7, méca 35, recon 3, char léger 35, char moyen 55, char lourd 70, artillerie 55, roquettes 70, anti-air 15, hélico 40, transport 0, génie 8, drone 0, brouilleur 0. Les quatre contraintes du §13.3 tiennent : diagonale 55, le char lourd et les roquettes lui infligent 70, il inflige 30 au char lourd et 0 à l'hélicoptère. Les unités homologuées existantes (`genie`, `drone`, `brouilleur`) portent sa clé dans leur colonne, sans quoi `degatsBase` — qui lit d'abord la colonne de la cible — leur ferait subir 0 de sa part. Mesuré sur `plaine.json`, 20 parties, graine 1, catalogue 4 : l'IA en achète 99 (contre 186 chars légers et 27 chars lourds, 59 avant) et le taux pondérée/agressive passe de 30/70 à 45/55. Il ouvre l'épreuve de sortie d'école `couleurs_alliees` à la place du char léger : sans lui, la nouvelle ligne infanterie → char léger laissait le joueur simple de `verifier:campagne` perdre son char au troisième jour.
 
 **Le transport ravitaille.** `traits: ['transport', 'ravitaillement']` — les deux traits, le plafond —, `transport: { places: 2, accepte: ['infanterie', 'meca', 'genie'] }`, 5 000 fonds au lieu de 4 500. Le trait `ravitaillement` était implémenté depuis le premier jour et porté par personne (§13.2) ; le validateur exigeait déjà ce que le transport avait : une ligne de dégâts entièrement à 0 et `munitions: null`. L'IA ne l'achète toujours pas — son score d'achat est nul, elle ne sait ni transporter ni ravitailler — et c'est connu. **Faux depuis le 7 septembre 2026** : `valeurSoutien` (`src/ai/evaluation.ts`) donne un score aux unités qui ne tirent pas — un transport ou un ravitailleur par tranche de six unités armées (`ARMEES_PAR_SOUTIEN`), jamais le premier achat, jamais si les fonds ne permettent plus une unité armée au tour suivant, et à `VALEUR_SOUTIEN` = 0,12, sous la plupart des unités armées : sur `plaine.json` × 20, graine 1, catalogue 4, l'IA achète onze transports (à 0,3, elle en achetait cent deux et les parties se décidaient en 24 journées médianes au lieu de 41 ; c'est un curseur, pas une loi). Un drone ne vaut quelque chose que sous brouillard, un brouilleur que face à un drone adverse. La stratégie sait ensuite **embarquer** (un capteur monte quand le transport le rapproche plus vite que ses jambes, tours comptés, débarquement compris), **débarquer** (sur l'objectif ou à un tour de marche, ou dès que le transport menacé ne peut pas fuir), **ravitailler** (le voisin dont le manque, en fonds, est le plus grand) et **rentrer se poser** (une unité aérienne dont l'autonomie de sécurité passe sous zéro regagne son aéroport ou sa ville). Voir `doc/02-architecture.md` §3.2.
 
@@ -835,9 +835,9 @@ Trois principes, avant les tables :
 - **Tout est déterministe.** Même graine, même `Scenario.date`, même suite de météos. Le moteur ne lit jamais l'horloge.
 - **Le climat handicape, il n'élimine pas.** Comme une mécanique régionale : aucune mise hors jeu directe, aucun changement de propriétaire.
 
-### 12.1 Calendrier réel et date du match
+### 12.1 Calendrier réel et date de la mission
 
-La Ronde se joue en temps réel : **la date du monde est la date réelle**. Un match prend la date du jour où il commence, `Scenario.date` (`03-schemas.md` §6), **figée à la création et jamais recalculée** — c'est elle qui rend le rejeu stable. La date réelle n'entre dans le système qu'au moment où le scénario est écrit ; le moteur la reçoit comme une donnée quelconque.
+Le monde vit en temps réel : **la date du monde est la date réelle**. Une mission prend la date du jour où elle commence, `Scenario.date` (`03-schemas.md` §6), **figée à la création et jamais recalculée** — c'est elle qui rend le rejeu stable. La date réelle n'entre dans le système qu'au moment où le scénario est écrit ; le moteur la reçoit comme une donnée quelconque.
 
 La saison se déduit du couple (`Scenario.date`, `Country.hemisphere`) :
 
@@ -853,7 +853,7 @@ hemisphere 'sud'       → saison = oppose(base)      // printemps↔automne, et
 
 Jouer le Brésil en janvier, c'est donc jouer **en été**. Le découpage est mensuel et non astronomique **[proposition]** : c'est lisible, ça se calcule sans table d'équinoxes, et l'écart de trois semaines avec le vrai solstice n'a aucune conséquence de jeu. Pour un pays `equateur`, la saison est calculée comme au nord mais seules deux saisons ont un effet (voir la ligne `tropical` du §12.2) : l'été est la saison des pluies, l'hiver la saison sèche, le printemps et l'automne sont des transitions neutres.
 
-**La saison est fixe pendant un match.** Un match dure au plus 60 journées de jeu, pas six mois. Un scénario peut la forcer avec `Scenario.climatFixe.saison` — c'est ce qui permet d'écrire un prologue « en plein hiver » quel que soit le jour où on le joue.
+**La saison est fixe pendant une mission.** Une mission dure au plus 60 journées de jeu, pas six mois. Un scénario peut la forcer avec `Scenario.climatFixe.saison` — c'est ce qui permet d'écrire un prologue « en plein hiver » quel que soit le jour où on le joue.
 
 ### 12.2 Table climat × saison
 
@@ -1114,7 +1114,7 @@ Ce que le mode **ne touche jamais** :
 - les mécaniques régionales (§11) ;
 - le catalogue d'unités (§13).
 
-Autrement dit : **un scénario en `difficile` se joue avec le même moteur, la même graine et le même contenu.** Seuls changent les paramètres de `Scenario.modes` — ce qui est exactement ce qui permet à la routine contrôle de certifier les deux modes avec le même code, et à un rejeu de rester valide quand le joueur change d'avis entre deux matchs.
+Autrement dit : **un scénario en `difficile` se joue avec le même moteur, la même graine et le même contenu.** Seuls changent les paramètres de `Scenario.modes` — ce qui est exactement ce qui permet à la routine contrôle de certifier les deux modes avec le même code, et à un rejeu de rester valide quand le joueur change d'avis entre deux missions.
 
 ### 14.2 La table des paramètres
 
@@ -1126,10 +1126,10 @@ Autrement dit : **un scénario en `difficile` se joue avec le même moteur, la m
 | `revenusIaParBatiment` | 1 000 | **1 400** | L'écart se creuse avec la durée : un `siege` devient réellement plus dur |
 | `brouillard` | selon le scénario | **imposé une fois sur deux**, jamais levé s'il l'était déjà | Règle existante (§10), jamais une règle nouvelle |
 | `previsionJournees` (le Bulletin, §12.4) | **2** | **1** | Le climat reste annoncé, jamais subi : on voit moins loin, on voit quand même |
-| `vitesseJauge` | × 1,0 | **× 0,8** | Environ un pouvoir de moins par match. Levier le plus sensible : ne pas descendre sous 0,7 |
+| `vitesseJauge` | × 1,0 | **× 0,8** | Environ un pouvoir de moins par mission. Levier le plus sensible : ne pas descendre sous 0,7 |
 | `limiteJournees` | valeur du scénario | **× 0,85**, arrondi au supérieur, plancher 5 | Moins de temps pour la même chose ; la fin aux points (§9.1) arrive plus tôt |
 | `strategieIa` | `ponderee` | **`agressive`**, ou `ponderee` sur les cartes où l'agressivité se suicide | Une IA plus dure, jamais une IA qui triche |
-| `reprises` | **3 par match** | **0** | Fixé par `BRIEF.md` |
+| `reprises` | **3 par mission** | **0** | Fixé par `BRIEF.md` |
 | `dureeVisee` | référence | **+10 à +20 %**, mesurés | Une conséquence, pas un réglage |
 
 ### 14.3 Ce que `difficile` ne fait jamais
@@ -1163,7 +1163,7 @@ Le schéma pose un garde-fou en amont : `validerScenario` refuse un `difficile` 
 | 10 | Défense de terrain proportionnelle aux PV de la cible | §5 |
 | 11 | Capture remise à zéro par le mouvement, pas par les dégâts | §6 |
 | 12 | Jauge : 100 points par barre, gains à l'attaque et à la défense | §7 |
-| 13 | Co-commandant : choix avant le coup d'envoi, changement entre deux matchs seulement | §7 |
+| 13 | Co-commandant : choix avant le lancement, changement entre deux missions seulement | §7 |
 | 14 | Fin aux points à la limite de journées, avec formule explicite | §9 |
 | 15 | Le brouillard cache les unités, jamais le terrain | §10 |
 | 16 | Contrat de mécanique : effets déclaratifs, pas de mise hors jeu, terrain logique par `modifTerrain` | §11 |
@@ -1183,7 +1183,7 @@ Le schéma pose un garde-fou en amont : `validerScenario` refuse un `difficile` 
 
 ## Catalogue 7 et difficultés locales — 9 septembre 2026
 
-La refonte Aube ajoute quatre rôles au catalogue (28 unités au total) : drone intercepteur, drone ravitailleur, veilleur méridien et bastion méridien. `UnitType.factionExclusive: 'atl'` exige le même code dans `Scenario.factionsParCamp` pour le camp concerné, en production comme en placement et en renfort. Les unités communes restent accessibles aux délégations. Les caractéristiques complètes sont dans `content/unites.json` ; les interactions des catalogues antérieurs ne changent pas. Les nouvelles combinaisons peuvent porter trois traits au maximum ; le drone intercepteur brouillable est explicitement armé et limité aux cibles aériennes.
+La refonte Aube ajoute quatre rôles au catalogue (28 unités au total) : drone intercepteur, drone ravitailleur, veilleur méridien et bastion méridien. `UnitType.factionExclusive: 'atl'` exige le même code dans `Scenario.factionsParCamp` pour le camp concerné, en production comme en placement et en renfort. Les unités communes restent accessibles à toutes les nations. Les caractéristiques complètes sont dans `content/unites.json` ; les interactions des catalogues antérieurs ne changent pas. Les nouvelles combinaisons peuvent porter trois traits au maximum ; le drone intercepteur brouillable est explicitement armé et limité aux cibles aériennes.
 
 Les budgets initiaux et revenus peuvent être individualisés par camp. `scenarioPourMode` applique normal ou difficile avant les conséquences du joueur ; aucun bonus de dégâts invisible n’est introduit. Les choix de campagne et de quêtes persistent ensemble, les sauvegardes et résultats des deux difficultés restent distincts. Les détails de production sont dans `doc/refonte/catalogue7.md` et `doc/refonte/modes.md`.
 

@@ -1,5 +1,7 @@
 # Le roster jouable — seize commandants, quatre secrets (12 septembre 2026)
 
+*Écrit avant la validation du lore v2 (26 septembre 2026) : le registre de guerre de `BRIEF.md` fait foi.*
+
 La demande du propriétaire : « on peut faire ça mais avec **16 commandants et peut-être 4 secrets** difficiles à débloquer ». Ce qui la précède : la campagne d'Advance Wars fait tourner une douzaine de commandants, les premières missions en imposent un, puis le choix s'ouvre, et le commandant change la façon de jouer **par son passif**, avant même la jauge. Aujourd'hui le joueur commande Ariane dans 20 scénarios sur 26, et ne choisit que dans trois missions — les bancs prêtés du 10 septembre.
 
 Ce document dit **qui est jouable, dans quel ordre ça s'ouvre, quels sont les quatre secrets et à quel prix**, et il nomme ce qui n'est pas exprimable aujourd'hui. Le canon reste `BRIEF.md` ; la doctrine des secrets est `doc/13-campagne.md` §7 (amendé le même jour, §7.4) ; le vocabulaire du prêt est `doc/01-bible.md` §4.6 ; les kits sont `content/commandants-capacites.json` révision 4, décrits en clair dans `pouvoirs-v4.md` §4 et §5.

@@ -367,6 +367,11 @@ const suites: Suite[] = [
       { titre: 'un `ou` à une seule branche', muter: (o) => { o['condition'] = { type: 'ou', conditions: [{ type: 'flag', cle: 'monde.cinquieme.contact' }] }; }, chemin: 'condition.conditions' },
       { titre: 'une confiance au-delà de trois', muter: (o) => { o['condition'] = { type: 'confiance', commandantCle: 'cmd_elsbeth_vonlanthen', min: 4 }; }, chemin: 'condition.min' },
       { titre: 'une confiance envers autre chose qu’un commandant', muter: (o) => { o['condition'] = { type: 'confiance', commandantCle: 'ch', min: 3 }; }, chemin: 'condition.commandantCle' },
+      // La lettre d'une fiche n'est pas une option enregistrée : `a` n'est pas une clé.
+      { titre: 'une décision lue par la lettre de sa fiche', muter: (o) => { o['condition'] = { type: 'decision', cle: 'opus1_br_04_decision', option: 'a' }; }, chemin: 'condition.option' },
+      { titre: 'une décision sans option', muter: (o) => { o['condition'] = { type: 'decision', cle: 'opus1_br_04_decision' }; }, chemin: 'condition.option' },
+      { titre: 'une décision au nom mal formé', muter: (o) => { o['condition'] = { type: 'decision', cle: 'opus1:br:04', option: 'partager_releves' }; }, chemin: 'condition.cle' },
+      { titre: 'une décision qui porte un champ de trop', muter: (o) => { o['condition'] = { type: 'decision', cle: 'opus1_br_04_decision', option: 'partager_releves', min: 1 }; }, chemin: 'condition.min' },
     ],
   },
   {

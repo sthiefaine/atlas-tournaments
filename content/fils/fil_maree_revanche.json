@@ -1,14 +1,14 @@
 {
   "cle": "fil_maree_revanche",
-  "version": 1,
+  "version": 2,
   "statut": "valide",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-05",
+  "majLe": "2026-09-27",
   "code": "fil_maree_revanche",
   "titre": "La marée revient",
   "accroche": "Maëlle Kerdraon a perdu chez elle et n'a pas dit un mot depuis. Elle vous suit d'étape en étape.",
-  "arc": "Battue sur son propre estran pendant la qualification française, Maëlle Kerdraon refuse le protêt, refuse l'interview et s'inscrit à toutes les étapes où le joueur est engagé. Elle ne cherche pas à nuire : elle cherche à comprendre comment on a lu sa marée avant elle. Quatre rencontres plus tard, elle a appris à jouer à contre-temps du terrain, et la cinquième se dispute sur une carte qu'elle a choisie exprès pour n'avantager personne. Selon la manière dont le joueur l'a traitée à la première rencontre, elle finit assistante déclarée sur sa feuille de match, ou rivale d'estime qui ne rejoindra jamais la Cinquième Manche.",
+  "arc": "Battue sur son propre estran pendant la campagne de France, Maëlle Kerdraon refuse le protêt, refuse le micro de la Régie et demande à être engagée sur tous les fronts où le joueur se bat. Elle ne cherche pas à nuire : elle cherche à comprendre comment on a lu sa marée avant elle. Quatre engagements plus tard, elle a appris à jouer à contre-temps du terrain, et le cinquième se livre sur un front qu'elle a choisi exprès pour n'avantager personne. Selon la manière dont le joueur l'a traitée au premier engagement, elle finit assistance déclarée à son Bulletin d'engagement, ou rivale d'estime qui ne rejoindra jamais la Cinquième Manche.",
   "paysCode": "fr",
   "acteMin": 1,
   "missions": [

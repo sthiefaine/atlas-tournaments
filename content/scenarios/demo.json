@@ -1,12 +1,12 @@
 {
   "cle": "demo",
-  "version": 2,
+  "version": 3,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-06",
+  "majLe": "2026-09-27",
   "code": "demo",
-  "nom": "Match d’exhibition",
+  "nom": "Jeu libre · Les deux ponts",
   "acte": 0,
   "paysCode": "fr",
   "carteCle": "carte_plaine_symetrique",
@@ -66,7 +66,7 @@
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Beau match. On remet ça quand tu veux.",
+      "texte": "Belle bataille. On remet ça quand tu veux.",
       "emotion": "joie"
     }
   ],

@@ -1,14 +1,14 @@
 # Atlas Tournament
 
-Un tactique au tour par tour dans l'esprit d'Advance Wars. Dans ce monde, les guerres ont été remplacées par des Jeux Tactiques : chaque pays a une équipe et un commandant, et tous les quatre ans un tournoi fait le tour de la planète. Vous êtes un jeune commandant, vous partez de France, et vos choix décident qui vous suit quand une faction d'Atlas tente de rallumer les vraies guerres : chacune des 24 nations devient alliée, rivale ou se retire de la Ronde. Celles que vous ralliez s'ouvrent comme pays de départ pour une Nouvelle Ronde.
+Un tactique au tour par tour dans l'esprit d'Advance Wars. Le monde est en guerre depuis quatorze ans pour l'énergie et les nouvelles technologies ; Atlas arbitre cette guerre et la borne par le Pacte du Terrain — fronts déclarés, armes déclarées, concessions inscrites au Registre. Vous êtes un jeune commandant, vous partez de France, et vos choix décident qui se bat à vos côtés quand la Cinquième Manche, une puissance sans nation qui ne rend rien de ce qu'elle prend, veut Aube — le programme de fusion — pour elle seule : chacune des 24 nations devient alliée, rivale, ou sort de la guerre. Celles que vous ralliez s'ouvrent comme pays de départ pour une Nouvelle Ronde.
 
 Web, TypeScript strict, Next.js 15. **Rendu 3D three.js sur WebGPU** (WebGL 2 en repli), moteur de règles déterministe sans dépendance, contenu produit par cinq routines Claude (quatre de contenu, une de traduction) et validé par un serveur qui ne fait confiance à rien.
 
-## Jouer les premiers matchs
+## Jouer la campagne
 
-Ouvrir **`/campagne`** : quatre entraînements guidés, puis une qualification avec le génie et un match sous les couleurs du Luxembourg. Le carnet sauvegarde la progression dans le navigateur. `/jeu` liste les parties libres (la démo et les cartes navales, depuis le 7 septembre 2026), et `/atelier` est le banc d'essai des rendus.
+Ouvrir **`/campagne`** : dix exercices au camp d'instruction avec Ariane et Tomas, tirés à charges à blanc ; deux épreuves de sortie d'école, le pacte du col puis une manœuvre sous les couleurs du Luxembourg ; puis le chapitre français de la saison nationale 1, douze missions dont la première, « Premier courant », est le premier engagement réel. Le carnet sauvegarde la progression dans le navigateur. `/jeu` liste les parties libres (la démo et les cartes navales, depuis le 7 septembre 2026), et `/atelier` est le banc d'essai des rendus.
 
-Quatre entraînements sur quatre cartes distinctes : se battre, prendre des villes, remettre des usines en service avec le génie, prendre le QG à marée basse. Le QG se prend en quarante points ; les bâtiments désaffectés se remettent en service ; le catalogue 3 ajoute drones, brouilleur et station radar pour le brouillard de guerre. Voir `doc/15-premiers-matchs.md` pour le périmètre exact et les versions. `npm run verifier:campagne` vérifie une solution et son rejeu pour chacune des six missions.
+Les quatre premiers exercices apprennent à se battre, à prendre des villes, à remettre des usines en service avec le génie et à prendre le QG ; les six suivants ajoutent la portée, le brouillard, l'escorte et les objectifs à tenir, jusqu'au choix de la première concession. Le QG se prend en quarante points ; les bâtiments désaffectés se remettent en service ; drones, brouilleur et station radar servent le brouillard de guerre. `doc/15-premiers-matchs.md` décrit les six premières missions telles qu'elles ont été livrées le 6 septembre 2026 ; le parcours entier est dans `content/campagne.json`, et `npm run verifier:campagne` vérifie une solution et son rejeu pour chacune de ses missions.
 
 ## Les documents
 

@@ -1151,6 +1151,12 @@ export interface Flag {
 export interface EtatFlags {
   booleens: Record<Cle, true>;
   compteurs: Record<Cle, number>;
+  /**
+   * Les décisions prises, **dans l'ordre où elles l'ont été**. Une même décision
+   * peut y paraître deux fois (une épreuve révisée repose sa question) : la
+   * dernière entrée d'un `choixCle` est l'option retenue, celle que lit une
+   * `Condition` de type `decision`.
+   */
   journal: {
     journee: number;
     scenarioCle: Cle;
@@ -1773,10 +1779,18 @@ export const CONFIANCE_MAX = 3;
 /** Un des quatre niveaux de confiance d'un général. */
 export type NiveauConfiance = 0 | 1 | 2 | 3;
 
-/** Types de condition composables d'un `Deblocage` (`BRIEF.md`). Liste fermée. */
+/**
+ * Types de condition composables d'un `Deblocage` (`BRIEF.md`). Liste fermée.
+ *
+ * `decision` est le onzième, tranché le 26 septembre 2026 par délégation du
+ * propriétaire (`doc/refonte/opus1-hors-serie.md` §5, `13-campagne.md` §8.2) :
+ * un hors-série s'ouvre sur l'option retenue d'une décision de la trame, et un
+ * type qui lit le journal vaut mieux que quarante-huit flags de pays qui le
+ * recopieraient.
+ */
 export const TYPES_CONDITION = [
   'flag', 'compteur', 'mode_fini', 'date', 'pays_visite', 'secret', 'relation',
-  'confiance', 'et', 'ou',
+  'confiance', 'decision', 'et', 'ou',
 ] as const;
 /** Type d'une condition de déblocage. */
 export type TypeCondition = typeof TYPES_CONDITION[number];
@@ -1787,6 +1801,12 @@ export const PROFONDEUR_CONDITION_MAX = 3;
 /**
  * Condition composable, évaluée **par le moteur ou le serveur, jamais par le rendu**
  * (`src/engine/deblocages.ts`). Aucune expression, aucun code : des données.
+ *
+ * `decision` lit le journal des décisions (`EtatFlags.journal`) : `cle` est le
+ * `choixCle` d'une décision — `opus1_fr_04_decision` pour la décision de fin de
+ * match de `opus1_fr_04` —, `option` l'identifiant **enregistré** de l'option
+ * (`partager_releves`), jamais la lettre `a`/`b` d'une fiche de conception. Seule
+ * la dernière entrée d'une décision compte : c'est elle qui est retenue.
  */
 export type Condition =
   | { type: 'flag'; cle: Cle }
@@ -1797,6 +1817,7 @@ export type Condition =
   | { type: 'secret'; cle: Cle }
   | { type: 'relation'; pays: CodePays[]; relation: RelationNation; combien: number }
   | { type: 'confiance'; commandantCle: Cle; min: NiveauConfiance }
+  | { type: 'decision'; cle: Cle; option: Cle }
   | { type: 'et'; conditions: Condition[] }
   | { type: 'ou'; conditions: Condition[] };
 

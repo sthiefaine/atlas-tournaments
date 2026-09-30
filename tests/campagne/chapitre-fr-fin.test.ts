@@ -134,7 +134,7 @@ test('le renfort d’une branche se pose sur la carte et la partie se joue', () 
   }
 });
 
-test('le choix de FR12 s’enregistre et se fige, sans rien changer tant que Le relais de Tomas n’existe pas', () => {
+test('le choix de FR12 s’enregistre et se fige, sans rien changer au chapitre français', () => {
   stockage();
   assert.equal(enregistrerDecision('opus1_fr_12', 1, 'verser_reserve', 'a'), false, 'pas de choix sans victoire');
   enregistrerVictoire('opus1_fr_12', 'a');
@@ -142,10 +142,11 @@ test('le choix de FR12 s’enregistre et se fige, sans rien changer tant que Le 
   assert.equal(enregistrerDecision('opus1_fr_12', 1, 'preparation_locale', 'a'), false, 'un choix fait ne se refait pas');
   const prises = Object.values(lireProgression('a').decisions ?? {});
   assert.deepEqual(prises.map((d) => [d.scenario, d.choix]), [['opus1_fr_12', 'verser_reserve']]);
-  for (const option of optionsDecision('opus1_fr_12')) assert.match(option.effet, /Le relais de Tomas \(mission à venir\)/);
+  // Son effet vit dans Le relais de Tomas (`chapitre-lu.test.ts`), et nulle part ici.
+  for (const option of optionsDecision('opus1_fr_12')) assert.match(option.effet, /Le relais de Tomas/);
   for (const code of [...CHAPITRE, 'opus1_fr_06', 'pacte_du_col']) {
     const s = scenario(code);
-    assert.deepEqual(appliquerConsequences(s, prises).scenario, s, `${code} ne lit pas encore ce choix`);
+    assert.deepEqual(appliquerConsequences(s, prises).scenario, s, `${code} ne lit pas ce choix`);
   }
 });
 
@@ -214,13 +215,19 @@ test('le parcours range le chapitre français dans l’ordre de ses fiches, et c
   const missions = (lire('content/campagne.json') as { missions: { scenarioCle: string; titre: string; biome: string; objectif: string; tutoriel: string[] }[] }).missions;
   const francaises = missions.map((m) => m.scenarioCle).filter((c) => c.startsWith('opus1_fr_'));
   assert.deepEqual(francaises, Array.from({ length: 12 }, (_, i) => `opus1_fr_${String(i + 1).padStart(2, '0')}`));
-  assert.deepEqual(missions.slice(-3).map((m) => m.scenarioCle), [...CHAPITRE]);
+  // Le chapitre ferme la France ; le Luxembourg le suit (`chapitre-lu.test.ts`).
+  const debut = missions.findIndex((m) => m.scenarioCle === CHAPITRE[0]);
+  assert.deepEqual(missions.slice(debut, debut + 3).map((m) => m.scenarioCle), [...CHAPITRE]);
   for (const code of CHAPITRE) {
     const m = missions.find((x) => x.scenarioCle === code)!;
     const s = scenario(code);
     assert.equal(m.titre, s.nom);
     assert.equal(m.biome, carte(s).biome);
-    assert.equal(s.version, 1);
+    // FR10 et FR12 portent une décision, enregistrée avec la version de leur
+    // épreuve : une version relevée la reposerait au joueur qui rejoue. FR11 n'en
+    // porte aucune, et passe en version 2 le 27 septembre (« une manche » devenue
+    // « une bataille », avec le lore v2).
+    assert.equal(s.version, code === 'opus1_fr_11' ? 2 : 1);
     assert.ok(m.tutoriel.length >= 3);
     const textes = [...s.dialogueOuverture, ...s.dialogueVictoire, ...s.dialogueDefaite, ...(s.scenesDialogue ?? []).flatMap((x) => x.repliques)].map((r) => r.texte);
     const rappels = textes.filter((t) => t.includes('Vous vous souvenez')).length;
@@ -252,7 +259,7 @@ test('FR11 : trois colonnes des Gris sans QG ni usine, que seule la mise hors je
   assert.ok(!/Lise Orven|\b(frère|sœur|père|fille|fils)\b/i.test(textes));
 });
 
-test('la carte de campagne pose chaque étape, les anciennes à leur place et FR07 à FR12 sans chevauchement', () => {
+test('la carte de campagne pose chaque étape, les anciennes à leur place et les suivantes, dès FR07, sans chevauchement', () => {
   const missions = (lire('content/campagne.json') as { missions: { scenarioCle: string }[] }).missions;
   assert.ok(POSITIONS_PARCOURS.length >= missions.length, 'chaque étape du parcours a sa position');
   // Les dix-huit d'avant, telles que `carte-parcours.tsx` les tenait : un

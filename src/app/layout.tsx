@@ -6,7 +6,7 @@ export const viewport: Viewport = { width: 'device-width', initialScale: 1, view
 
 export const metadata: Metadata = {
   title: 'Atlas Tournament',
-  description: 'Le tour du monde en une manche — tactique au tour par tour.',
+  description: 'Le tour d’un monde en guerre — tactique au tour par tour.',
 };
 
 /**
