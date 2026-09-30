@@ -30,7 +30,6 @@ import {
 import type { Biome, CleTerrain, Meteo, Saison } from '../../schemas/types';
 import { axePont, DIRECTIONS, terrainEn, type GrilleSol } from './grille';
 import { TERRAINS_EAU } from './terrains';
-import { FORMES } from '../replis';
 
 // ---------------------------------------------------------------------------
 // Le hasard de case
@@ -537,10 +536,6 @@ export function placerDecor(ctx: ContextePlacement): InstanceSprite[] {
         const instance: InstanceSprite = { entree, animation, cadre: 0, x: p.x, y: p.y };
         if (p.echelle !== 1) instance.echelle = p.echelle;
         if (vue < 1) instance.vue = vue;
-        if (dessin && p.genre === 'arbre') {
-          sortie.push({ entree: FORMES.ombre, animation: -1, cadre: 0,
-            x: p.x, y: p.y - 0.01, echelle: p.echelle * 1.4, opacite: 0.3, vue });
-        }
         sortie.push(instance);
       }
     }

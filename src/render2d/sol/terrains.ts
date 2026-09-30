@@ -75,9 +75,9 @@ const MELANGES: Readonly<Record<CleTerrain, Partial<Record<MatiereSol, number>>>
   // L'herbe haute est une herbe plus drue et plus sombre : ce sont ses touffes
   // qui la disent, la matière ne fait que la préparer.
   herbe_haute: { herbehaute: 0.85, herbe: 0.15 },
-  // Sous les arbres, de l'humus et des feuilles : un sol de forêt se lit avant
-  // même d'avoir vu un tronc.
-  foret: { sousbois: 0.46, herbe: 0.54 },
+  // Les arbres identifient la forêt. Le gazon reste continu sous leur sprite,
+  // sans assombrissement de toute la case qui ressemble à une ombre carrée.
+  foret: { herbe: 1 },
   // Le relief est porté par le sprite : pas de dalle rocheuse pleine case.
   montagne: { herbe: 0.72, terre: 0.18, roche: 0.1 },
   // La chaussée est tracée par-dessus ; la matière n'apporte que ses bas-côtés.

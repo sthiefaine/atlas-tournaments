@@ -38,7 +38,7 @@ import { COS_TANGAGE, PIXELS_PAR_CASE, SIN_TANGAGE } from '../contrat';
 import { EMPLACEMENTS_ARBRES, REPLI, TRANSITION_BROUILLARD } from './decor';
 import { COUCHES_DETAIL, REPETITIONS, rangCouche } from './details';
 import { BITS } from './grille';
-import { decalageOmbre, lumiereEcran } from './lumiere';
+import { lumiereEcran } from './lumiere';
 import { codeDe, MATIERES, NB_CODES } from './terrains';
 
 /** Un flottant GLSL : toujours un point décimal. */
@@ -84,7 +84,6 @@ const ACCENTS_MATIERE: Readonly<Record<(typeof MATIERES)[number], number>> = {
 };
 
 const L = lumiereEcran();
-const OMBRE = decalageOmbre(HAUT_FRONDAISON);
 
 /** Les noms des terrains dont le nuanceur a besoin, et leur code. */
 const CODES = {
@@ -128,7 +127,6 @@ const DEFINITIONS = [
   `#define PROFONDEUR_MELANGE ${f(REGLAGES_SOL.profondeurMelange)}`,
   `#define HAUT_FRONDAISON ${f(HAUT_FRONDAISON)}`,
   `const vec3 LUMIERE_ECRAN = ${v(L[0], L[1], L[2])};`,
-  `const vec2 OMBRE_ARBRE = ${v(OMBRE.x, OMBRE.y)};`,
   `const float REPETITIONS[NB_MATIERES] = float[NB_MATIERES](${MATIERES.map((m) => f(REPETITIONS[m])).join(', ')});`,
   `const float ACCENTS[NB_MATIERES] = float[NB_MATIERES](${MATIERES.map((m) => f(ACCENTS_MATIERE[m])).join(', ')});`,
   `const vec2 ARBRES[${EMPLACEMENTS_ARBRES.length}] = vec2[${EMPLACEMENTS_ARBRES.length}](${EMPLACEMENTS_ARBRES.map(([x, y]) => v(x, y)).join(', ')});`,
@@ -435,10 +433,6 @@ vec3 tablier(vec3 col, int bits, vec2 l, vec2 g, float aa, float grain) {
   float travers = eo ? l.y - 0.5 : l.x - 0.5;
   float le_long = eo ? g.x : g.y;
   float largeur = uVoieForme.x + 0.065;
-  float cote = eo ? -travers : travers;
-  float ombre = smoothstep(largeur - aa, largeur + aa, cote)
-    * (1.0 - smoothstep(largeur, largeur + 0.065, cote));
-  col *= 1.0 - 0.24 * ombre;
   float dans = 1.0 - smoothstep(largeur - aa, largeur + aa, abs(travers));
   if (dans <= 0.0) return col;
   float chaus = 1.0 - smoothstep(uVoieForme.x - aa, uVoieForme.x + aa, abs(travers));
@@ -457,8 +451,7 @@ vec3 tablier(vec3 col, int bits, vec2 l, vec2 g, float aa, float grain) {
 
 // ------------------------------------------------------------------ décor de repli
 
-// Un arbre : son ombre au sol (canal a : l'obscurcissement) ou sa frondaison
-// et son tronc (couleur non prémultipliée, canal a : couverture).
+// Un arbre : sa frondaison et son tronc, sans ombre portée ajoutée au sol.
 vec2 pieArbre(ivec2 c, int k, out float taille) {
   vec2 j = vec2(alea(c, 10 + k) - 0.5, alea(c, 20 + k) - 0.5) * vec2(0.07, 0.06);
   taille = 0.9 + 0.2 * alea(c, 30 + k);
@@ -471,18 +464,6 @@ bool arbrePresent(ivec2 c, int k) {
   if (k == 1 || k == 2 || k == 4) return true;
   if (k == 0) return nombre >= 4;
   return nombre >= 5;
-}
-
-float ombresArbres(ivec2 c, vec2 g) {
-  float o = 0.0;
-  for (int k = 0; k < 5; k++) {
-    if (!arbrePresent(c, k)) continue;
-    float taille;
-    vec2 pied = pieArbre(c, k, taille);
-    vec2 q = (g - pied - OMBRE_ARBRE * taille) / (vec2(0.17, 0.12) * taille);
-    o = max(o, (1.0 - smoothstep(0.55, 1.0, length(q))) * 0.36);
-  }
-  return o;
 }
 
 vec4 arbres(ivec2 c, vec2 P, float aaP, float grain) {
@@ -597,10 +578,6 @@ vec3 sol(ivec2 c, vec2 g, vec2 P, vec4 b0, float aaG, float aaP, vec2 dPx, vec2 
   }
   float relief;
   vec3 col = matieres(g, ch.a, ch.b, b0.r, relief);
-  // Une même litière relie les troncs de cases voisines. Le champ mélangé
-  // traverse les limites de cases, sans disque de terre sous chaque bouquet.
-  float litiere = smoothstep(0.1, 0.52, ch.b.z);
-  col = mix(col, mix(uCouleurs[18], uCouleurs[19], 0.62), litiere * 0.42);
 
   // La neige couvre d'abord les creux : c'est le relief qui la découpe.
   if (uClimat.x > 0.001) {
@@ -671,20 +648,9 @@ vec3 sol(ivec2 c, vec2 g, vec2 P, vec4 b0, float aaG, float aaP, vec2 dPx, vec2 
   col = mix(col, vec3(0.04, 0.07, 0.12), (1.0 - clamp(min(dl.x, dl.y) - 0.25, 0.0, 1.0)) * ${f(REGLAGES_SOL.grille)});
 
   // Le décor de repli de la case elle-même, faute d'images cuites.
-  if ((uRepli & REPLI_FORET) != 0) {
-    // Les ombres portées tombent vers le haut et vers la droite : celles de la
-    // case d'en dessous et de celle de gauche débordent sur celle-ci.
-    float o = ici.r == CODE_FORET ? ombresArbres(c, g) : 0.0;
-    for (int k = 0; k < 2; k++) {
-      ivec2 v = c + (k == 0 ? ivec2(0, 1) : ivec2(-1, 0));
-      ivec4 voisine = lireCase(uCases, v);
-      if (voisine.r == CODE_FORET && voisine.a >= 128 && dansCarte(v)) o = max(o, ombresArbres(v, g));
-    }
-    col *= 1.0 - o;
-    if (ici.r == CODE_FORET) {
-      vec4 a = arbres(c, P, aaP, b0.a);
-      col = mix(col, a.rgb, a.a);
-    }
+  if ((uRepli & REPLI_FORET) != 0 && ici.r == CODE_FORET) {
+    vec4 a = arbres(c, P, aaP, b0.a);
+    col = mix(col, a.rgb, a.a);
   }
   if ((uRepli & REPLI_MONTAGNE) != 0 && ici.r == CODE_MONTAGNE) {
     vec4 m = montagne(c, P, aaP, dPx, dPy);
