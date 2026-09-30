@@ -237,6 +237,7 @@ uniform sampler2D uMasque;
 uniform sampler2D uEmission;
 uniform float uPoidsEmission;
 uniform vec4 uVoile;
+uniform int uPeinture;
 in vec2 vUv;
 in vec4 vEquipe;
 in vec4 vTeinte;
@@ -245,7 +246,20 @@ out vec4 sortie;
 void main() {
   vec4 c = texture(uCouleur, vUv);
   float m = texture(uMasque, vUv).r * vEquipe.a;
-  vec3 rvb = c.rgb * mix(vec3(1.0), vEquipe.rgb, m) * vTeinte.rgb;
+  vec3 rvb = c.rgb * mix(vec3(1.0), vEquipe.rgb, m);
+  if (uPeinture != 0 && vEquipe.a > 0.5 && c.a > 0.001) {
+    // La source reste intacte. Seule sa peinture saturée change de camp :
+    // ni peaux, ni bois, ni aplats gris, ni traits sombres.
+    vec3 s = c.rgb / c.a;
+    float poids = uPeinture == 1
+      ? smoothstep(0.05, 0.18, s.b - s.r) * smoothstep(0.025, 0.13, s.b - s.g) * smoothstep(0.18, 0.38, s.b)
+      : smoothstep(0.15, 0.35, s.r - s.b) * smoothstep(0.07, 0.2, s.g - s.b) * smoothstep(0.5, 0.75, s.r);
+    float valeur = max(s.r, max(s.g, s.b));
+    float equipeMax = max(vEquipe.r, max(vEquipe.g, vEquipe.b));
+    vec3 peinture = vEquipe.rgb * valeur / max(0.65, equipeMax);
+    rvb = mix(rvb, peinture * c.a, poids);
+  }
+  rvb *= vTeinte.rgb;
   float voilee = step(vDivers.w, -0.5);
   rvb = mix(rvb, uVoile.rgb * c.a, uVoile.a * voilee);
   rvb = mix(rvb, vec3(c.a), vDivers.x);
@@ -350,6 +364,7 @@ export class LotSprites {
       gl.bindTexture(gl.TEXTURE_2D, g.textures.masque ?? this.noir);
       gl.activeTexture(gl.TEXTURE2);
       gl.bindTexture(gl.TEXTURE_2D, g.textures.emission ?? this.noir);
+      gl.uniform1i(this.programme.uniforme('uPeinture'), g.textures.peinture === 'cobalt' ? 1 : g.textures.peinture === 'ambre' ? 2 : 0);
       gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, g.nombre);
       appels += 1;
       instances += g.nombre;

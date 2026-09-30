@@ -35,6 +35,22 @@ La galerie privée `/admin/assets/dessins` propose catégories avec compteurs, r
 
 ## Fabrication des sprites de jeu
 
+### Première activation en poses fixes
+
+Le propriétaire demande pourquoi les dessins ne sont pas encore employés en jeu. Leur animation complète n’est plus une condition préalable à l’affichage : **59 poses fixes sont raccordées** au manifeste partagé. Cela couvre les 30 unités, les 13 bâtiments/états et 16 éléments de paysage (dix biomes, montagne, deux rochers côtiers, buisson, roseaux et touffe). Le plan distingue maintenant chaque entrée active des références restantes.
+
+`npm run sprites:integrer-dessins` (`scripts/sprites/integrer-dessins.ts`) lit le canal alpha, calcule une emprise, réduit une copie à sa taille de case, règle le pivot puis assemble des pages WebP sans perte avec marges de mipmap. Aucune source HD n’est modifiée. Six pages totalisent **597 194 octets (583,20 Kio)**. Les noms incluent une empreinte pour renouveler le cache ; les anciens PNG/WebP conservés ne sont pas nécessaires aux entrées remplacées. Les alias historiques QG FR/LU sont retirés du manifeste pour laisser paraître le nouveau QG.
+
+Les champs facultatifs `dessinStatique` et `pages[].peinture` prolongent le contrat. La peinture cobalt ou ambre est détectée au rendu et prend la couleur du camp, en gardant la luminance du dessin ; les parties neutres et l’alpha restent inchangés. Le carnet Canvas suit les mêmes calculs que WebGL. Cette sélection par couleur est une première solution : elle n’a pas la précision d’un masque peint à la main, et des détails de même teinte peuvent aussi changer de camp.
+
+Une seule pose `repos` est déclarée, sans inventer des images de marche, de tir ou de rotor. Le jeu continue de déplacer les unités et d’afficher ses projectiles, impacts et effets. Les duels emploient explicitement cette pose de trois quarts jusqu’à la production de vrais profils. Les entrées historiques sans `dessinStatique` gardent leur sélection de clips habituelle.
+
+Le placement prend les nouveaux arbres par biome et les nouvelles plantes par genre. L’hiver ou une chute de neige conserve les variantes hivernales historiques ; le pin du biome neige est déjà enneigé. Un changement de météo vers/depuis la neige reconstruit le placement. Le sol procédural et les flocons demeurent indépendants : ils continuent de couvrir la carte. Les nouveaux toits et ponts dessinés n’ont pas encore de calques d’accumulation. Les dessins de pont ne sont pas plaqués de travers sur les voies : ils restent dans la galerie en attendant leurs deux orientations et leurs raccords. Les études de sols et les portraits restent également hors des parties.
+
+Contrôles effectués : lecture complète du manifeste par le chargeur réel, fichiers et dimensions des pages, typage, inspection locale du rendu de Premier contact (infanterie, char, QG, couleurs des deux camps) et du plateau enneigé. Aucune suite de tests, aucun build ni mesure FPS sur téléphone. Rapport versionné : `activation-jeu.json`. Le relevé `verification.json` conserve l’état des références avant activation, avec son ancien SHA de manifeste.
+
+### Suite de la fabrication animée
+
 1. Fixer les trois silhouettes, leur palette et l’épaisseur du contour.
 2. Dessiner les vues de carte droite / haut / bas et la vue de profil du duel. La gauche peut être le miroir de la droite ; éviter signes ou éclairages asymétriques.
 3. Décliner les poses repos, déplacement, tir, touché et hors-jeu, et capture lorsque l’unité le permet. Conserver taille, point d’appui et équipement d’une image à l’autre ; ne pas simuler une animation en faisant simplement glisser l’image entière.

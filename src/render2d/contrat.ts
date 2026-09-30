@@ -243,6 +243,8 @@ export interface PageSprite {
   masque?: string;
   /** Lumières propres (fenêtres, feux), ajoutées la nuit ; facultatif. */
   emission?: string;
+  /** Dessin direct : peinture à recolorer dans le nuanceur, sans modifier la source. */
+  peinture?: 'cobalt' | 'ambre';
   largeur: number;
   hauteur: number;
 }
@@ -268,6 +270,8 @@ export interface EntreeSprite {
   /** Le fichier cuit et son empreinte : une source qui change se recuit. */
   /** Provenance informative : image source pour un dessin direct, jamais chargée par le rendu. */
   source: { fichier: string; sha256: string };
+  /** Pose de référence unique ; les effets du jeu restent animés, pas le dessin. */
+  dessinStatique?: boolean;
   pages: PageSprite[];
   animations: AnimationSprite[];
 }

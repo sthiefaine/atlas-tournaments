@@ -1,0 +1,132 @@
+{
+  "date": "2026-09-30T14:33:24.768Z",
+  "type": "poses_fixes",
+  "sourcesIntactes": true,
+  "aliasRetires": [
+    "batiment_qg_fr",
+    "batiment_qg_lu"
+  ],
+  "limites": [
+    "Vues de carte et de duel partagent la pose fixe.",
+    "Pas de cycle de marche ou de rotor dessiné.",
+    "Ponts et sols dessinés restent des références, raccords non préparés.",
+    "Les variantes hivernales historiques restent disponibles."
+  ],
+  "total": 59,
+  "octetsPages": 597194,
+  "pages": [
+    {
+      "groupe": "unites-cobalt",
+      "fichier": "unites-cobalt-0-80e0412857b9.webp",
+      "octets": 282036,
+      "largeur": 492,
+      "hauteur": 676,
+      "entrees": [
+        "unite_infanterie_base",
+        "unite_meca_base",
+        "unite_recon_base",
+        "unite_char_leger_base",
+        "unite_char_lourd_base",
+        "unite_artillerie_base",
+        "unite_roquettes_base",
+        "unite_antiair_base",
+        "unite_helico_base",
+        "unite_transport_base",
+        "unite_genie_base",
+        "unite_drone_base",
+        "unite_brouilleur_base",
+        "unite_char_moyen_base",
+        "unite_missiles_air_base",
+        "unite_missiles_sol_base",
+        "unite_chasseur_base",
+        "unite_bombardier_base",
+        "unite_transport_air_base",
+        "unite_barge_base",
+        "unite_porte_avions_base",
+        "unite_cuirasse_base",
+        "unite_sous_marin_base",
+        "unite_furtif_base",
+        "unite_drone_intercepteur_base",
+        "unite_drone_ravitailleur_base",
+        "unite_drone_marin_base"
+      ]
+    },
+    {
+      "groupe": "unites-ambre",
+      "fichier": "unites-ambre-0-75b231989d3d.webp",
+      "octets": 31688,
+      "largeur": 336,
+      "hauteur": 116,
+      "entrees": [
+        "unite_meridien_veilleur_base",
+        "unite_meridien_bastion_base",
+        "unite_meridien_automate_base"
+      ]
+    },
+    {
+      "groupe": "batiments-cobalt",
+      "fichier": "batiments-cobalt-0-1d854b363af9.webp",
+      "octets": 89068,
+      "largeur": 132,
+      "hauteur": 668,
+      "entrees": [
+        "batiment_ville_base",
+        "batiment_qg_base",
+        "batiment_usine_base",
+        "batiment_port_base",
+        "batiment_aeroport_base",
+        "batiment_radar_base"
+      ]
+    },
+    {
+      "groupe": "decor-naturel",
+      "fichier": "decor-naturel-0-c8f3d43c4726.webp",
+      "octets": 100852,
+      "largeur": 248,
+      "hauteur": 440,
+      "entrees": [
+        "biome_plaine_base",
+        "biome_foret_base",
+        "biome_montagne_base",
+        "biome_desert_base",
+        "biome_jungle_base",
+        "biome_neige_base",
+        "biome_volcanique_base",
+        "biome_cotier_base",
+        "biome_archipel_base",
+        "biome_marais_base",
+        "terrain_montagne",
+        "decor_rocher_cotier",
+        "decor_rocher_archipel",
+        "decor_buisson_base",
+        "decor_roseau_base",
+        "decor_touffe_base"
+      ]
+    },
+    {
+      "groupe": "batiments-ambre",
+      "fichier": "batiments-ambre-0-156f8f156e8f.webp",
+      "octets": 13616,
+      "largeur": 132,
+      "hauteur": 96,
+      "entrees": [
+        "batiment_superusine_base"
+      ]
+    },
+    {
+      "groupe": "batiments-naturel",
+      "fichier": "batiments-naturel-0-97671b043346.webp",
+      "octets": 79934,
+      "largeur": 132,
+      "hauteur": 644,
+      "entrees": [
+        "batiment_superusine_inerte",
+        "batiment_ville_desaffecte",
+        "batiment_usine_desaffecte",
+        "batiment_port_desaffecte",
+        "batiment_aeroport_desaffecte",
+        "batiment_radar_desaffecte"
+      ]
+    }
+  ]
+}

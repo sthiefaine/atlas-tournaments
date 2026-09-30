@@ -27,7 +27,7 @@ import {
   idDecor, type AnimationSprite, type EntreeSprite, type EssenceDecor, type InstanceSprite,
   type ManifesteSprites, type SaisonDecor, type VueSprite, VERSION_SPRITES,
 } from '../contrat';
-import type { Biome, CleTerrain, Saison } from '../../schemas/types';
+import type { Biome, CleTerrain, Meteo, Saison } from '../../schemas/types';
 import { axePont, DIRECTIONS, terrainEn, type GrilleSol } from './grille';
 import { TERRAINS_EAU } from './terrains';
 
@@ -252,6 +252,7 @@ export interface ContextePlacement {
   grille: GrilleSol;
   biome: Biome;
   saison: Saison;
+  meteo?: Meteo;
   manifeste: ManifesteSprites | null;
   /** `niveauxBrouillard` du contrat ; `null` : tout est vu. */
   brouillard: Uint8Array | null;
@@ -439,7 +440,9 @@ export function placesDeCase(g: GrilleSol, biome: Biome, x: number, y: number, r
  */
 export function placerDecor(ctx: ContextePlacement): InstanceSprite[] {
   const manifeste = manifesteLisible(ctx.manifeste);
-  const { grille: g, biome, saison, brouillard } = ctx;
+  const { grille: g, biome, brouillard } = ctx;
+  // Les nouveaux arbres verts ne doivent pas effacer les variantes de neige.
+  const saison = ctx.meteo === 'neige' ? 'hiver' : ctx.saison;
   if (!manifeste) return [];
 
   const arbres = arbresCuits(manifeste, biome, saison);
@@ -457,6 +460,15 @@ export function placerDecor(ctx: ContextePlacement): InstanceSprite[] {
   const entreeRocher = rocher ? manifeste.entrees[rocher] : undefined;
   const animRocher = entreeRocher ? animationDeVue(entreeRocher, 'fixe') : -1;
   const entreePont = manifeste.entrees[ID_PONT];
+  const dessinPour = (genre: GenreDecor): string | null => {
+    let id: string | null = null;
+    if (genre === 'arbre' && (saison !== 'hiver' || biome === 'neige')) id = `biome_${biome}_base`;
+    if (saison !== 'hiver') {
+      if (genre === 'buisson' || genre === 'touffe' || genre === 'roseau') id = `decor_${genre}_base`;
+      if (genre === 'montagne' && biome !== 'desert' && biome !== 'volcanique') id = 'terrain_montagne';
+    }
+    return id && manifeste.entrees[id]?.dessinStatique ? id : null;
+  };
 
   const sortie: InstanceSprite[] = [];
   for (let y = 0; y < g.hauteur; y += 1) {
@@ -466,7 +478,12 @@ export function placerDecor(ctx: ContextePlacement): InstanceSprite[] {
       for (const p of placesDeCase(g, biome, x, y, animRocher >= 0)) {
         let entree: string | null = null;
         let animation = 0;
-        if (p.genre === 'pont') {
+        const dessin = dessinPour(p.genre);
+        if (dessin) {
+          entree = dessin;
+          animation = animationDeVue(manifeste.entrees[dessin]!, 'fixe');
+          if (animation < 0) continue;
+        } else if (p.genre === 'pont') {
           if (!entreePont || !p.axe) continue;
           animation = animationDeVue(entreePont, vuePont(p.axe));
           if (animation < 0) continue;

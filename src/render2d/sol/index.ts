@@ -203,7 +203,7 @@ export function creerSolTerrain(
   const reduit = (): boolean => options.reduit || dernierReduit;
 
   function replacer(): void {
-    volumes = placerDecor({ grille, biome, saison, manifeste, brouillard });
+    volumes = placerDecor({ grille, biome, saison, meteo, manifeste, brouillard });
   }
   replacer();
 
@@ -284,6 +284,7 @@ export function creerSolTerrain(
           repliSale = true;
           replace = true;
         }
+        if ((meteo === 'neige') !== (amb.meteo === 'neige')) replace = true;
         meteo = amb.meteo;
         depart.set(courantes);
         cible.set(couleursSol(biome, saison, meteo));

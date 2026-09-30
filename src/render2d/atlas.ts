@@ -53,14 +53,16 @@ function cheminSur(v: unknown): v is string {
 
 function lirePage(brut: unknown): PageSprite | null {
   if (!estObjet(brut)) return null;
-  const { couleur, masque, emission, largeur, hauteur } = brut;
+  const { couleur, masque, emission, peinture, largeur, hauteur } = brut;
   if (!cheminSur(couleur) || !estNombre(largeur) || !estNombre(hauteur) || largeur <= 0 || hauteur <= 0) return null;
   if (masque !== undefined && !cheminSur(masque)) return null;
   if (emission !== undefined && !cheminSur(emission)) return null;
+  if (peinture !== undefined && peinture !== 'cobalt' && peinture !== 'ambre') return null;
   return {
     couleur, largeur, hauteur,
     ...(masque !== undefined ? { masque } : {}),
     ...(emission !== undefined ? { emission } : {}),
+    ...(peinture !== undefined ? { peinture } : {}),
   };
 }
 
@@ -92,9 +94,10 @@ function lireAnimation(brut: unknown, pages: readonly PageSprite[]): AnimationSp
 
 function lireEntree(cle: string, brut: unknown): EntreeSprite | null {
   if (!estObjet(brut)) return null;
-  const { id, famille, cle: cleJeu, variante, etat, source, pages, animations } = brut;
+  const { id, famille, cle: cleJeu, variante, etat, source, pages, animations, dessinStatique } = brut;
   if (id !== cle || !(FAMILLES_SPRITE as readonly unknown[]).includes(famille) || !estChaine(cleJeu)) return null;
   if (variante !== undefined && !estChaine(variante)) return null;
+  if (dessinStatique !== undefined && typeof dessinStatique !== 'boolean') return null;
   // Un état que le rendu ne connaît pas se montrerait à la place d'un autre : l'entrée est écartée.
   if (etat !== undefined && (famille !== 'batiment' || !(ETATS_BATIMENT as readonly unknown[]).includes(etat))) return null;
   if (!estObjet(source) || !estChaine(source['fichier']) || !estChaine(source['sha256'])) return null;
@@ -116,6 +119,7 @@ function lireEntree(cle: string, brut: unknown): EntreeSprite | null {
     ...(variante !== undefined ? { variante: variante as string } : {}),
     ...(etat !== undefined ? { etat: etat as EtatBatiment } : {}),
     source: { fichier: source['fichier'] as string, sha256: source['sha256'] as string },
+    ...(dessinStatique !== undefined ? { dessinStatique } : {}),
     pages: lues, animations: anims,
   };
 }
@@ -275,6 +279,7 @@ export interface TexturesPage {
   couleur: WebGLTexture;
   masque: WebGLTexture | null;
   emission: WebGLTexture | null;
+  peinture?: PageSprite['peinture'];
 }
 
 /** Une image prête à poser : ses textures, son rectangle, son pivot, sa densité. */
@@ -553,7 +558,7 @@ export class Atlas {
             px: c.px,
             py: c.py,
             echelle: PIXELS_PAR_CASE / m.pixelsParCase,
-            masque: textures.masque !== null,
+            masque: textures.masque !== null || textures.peinture !== undefined,
             emission: textures.emission !== null,
             repli: false,
           };
@@ -607,6 +612,7 @@ export class Atlas {
         couleur: creer(couleur, true),
         masque: masque ? creer(masque, false, 'rouge') : null,
         emission: emission ? creer(emission, true) : null,
+        ...(page.peinture ? { peinture: page.peinture } : {}),
       };
       const rgba = octetsTexture(page.largeur, page.hauteur);
       const octets = rgba * (textures.emission ? 2 : 1) + (textures.masque ? octetsTexture(page.largeur, page.hauteur, 1) : 0);

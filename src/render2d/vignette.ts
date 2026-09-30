@@ -55,6 +55,7 @@ import {
   type PageSprite,
 } from './contrat';
 import { couleurEquipeSeule, type Rvb } from './equipes';
+import { teindreDessin } from './peinture-dessin';
 import { creerPeintreRepli, fabriqueToileDocument, FORMES, identiteRepli, type FabriqueToile } from './replis';
 
 // ---------------------------------------------------------------------------
@@ -307,6 +308,7 @@ export const PLAFOND_PIXELS = 4_000_000;
 interface ImageExtraite extends ImagePivot {
   pixels: Uint8ClampedArray;
   masque: Uint8Array | null;
+  peinture?: PageSprite['peinture'];
 }
 
 /** Le rouge d'un tampon RGBA : la valeur d'un masque en niveaux de gris. */
@@ -418,7 +420,7 @@ export class Vignettes {
           const pixels = this.lire(couleur, c);
           if (!pixels) { manque = true; continue; }
           const m = masque ? this.lire(masque, c) : null;
-          this.garder(cleImage(page, c), { l: c.l, h: c.h, px: c.px, py: c.py, pixels, masque: m ? rouge(m) : null });
+          this.garder(cleImage(page, c), { l: c.l, h: c.h, px: c.px, py: c.py, pixels, masque: m ? rouge(m) : null, ...(page.peinture ? { peinture: page.peinture } : {}) });
         }
       } finally {
         // La page est relâchée dès ses images lues : c'est elle qui pèse.
@@ -488,7 +490,7 @@ export class Vignettes {
   /** La version teinte d'une image extraite : calculée une fois par couleur, gardée sous plafond. */
   private teinte(cle: string, ex: ImageExtraite, equipe: Rvb | null): ImagePrete | null {
     // Une image sans masque ne change pas de couleur : une seule version.
-    const cleTeinte = `${cle}|${ex.masque && equipe ? hexEquipe(equipe) : 'nu'}`;
+    const cleTeinte = `${cle}|${(ex.masque || ex.peinture) && equipe ? hexEquipe(equipe) : 'nu'}`;
     const memo = this.teintes.get(cleTeinte);
     if (memo) {
       this.teintes.delete(cleTeinte);
@@ -499,7 +501,7 @@ export class Vignettes {
       const t = this.deps.fabrique(ex.l, ex.h);
       if (!t) return null;
       const donnees = t.g.createImageData(ex.l, ex.h);
-      donnees.data.set(teindre(ex.pixels, ex.masque, equipe));
+      donnees.data.set(ex.peinture ? teindreDessin(ex.pixels, equipe, ex.peinture) : teindre(ex.pixels, ex.masque, equipe));
       t.g.putImageData(donnees, 0, 0);
       const pret: ImagePrete = {
         source: t.toile as CanvasImageSource, l: ex.l, h: ex.h, px: ex.px, py: ex.py, echelle: this.echelle, repli: false,

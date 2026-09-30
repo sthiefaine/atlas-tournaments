@@ -621,15 +621,17 @@ export type ClipsProfil = Readonly<Record<'repos' | 'tir' | 'touche' | 'hors_jeu
  * profil n'en rend aucun : une image de trois quarts, cuite pour la carte, n'a
  * rien à faire dans une vue de côté — c'est alors le repli, la silhouette du
  * HUD, qui est elle-même de profil. Un clip absent retombe sur un autre clip
- * de profil (`choisirAnimation`), jamais sur une autre vue.
+ * de profil (`choisirAnimation`), jamais sur une autre vue. Exception explicite :
+ * les dessins statiques affichent leur pose de carte jusqu'à leur vrai profil.
  */
 export function clipsProfil(e: EntreeSprite | null): ClipsProfil | null {
   if (!e) return null;
-  const premiere = e.animations.findIndex((a) => a.vue === 'profil');
+  const vue = e.dessinStatique ? 'droite' : 'profil';
+  const premiere = e.animations.findIndex((a) => a.vue === vue);
   if (premiere < 0) return null;
   const choisir = (clip: ClipSprite): AnimationChoisie => {
-    let i = choisirAnimation(e, 'profil', clip);
-    if (e.animations[i]?.vue !== 'profil') i = premiere;
+    let i = choisirAnimation(e, vue, clip);
+    if (e.animations[i]?.vue !== vue) i = premiere;
     const a = e.animations[i]!;
     return { index: i, cadres: a.cadres.length, ips: a.ips, boucle: a.boucle };
   };
