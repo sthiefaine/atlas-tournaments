@@ -1,0 +1,69 @@
+{
+  "date": "2026-09-30",
+  "outil": "image_gen natif",
+  "corrections": [
+    {
+      "id": "biome_plaine_base",
+      "prompt": "Edit the supplied exact tree sprite. Preserve the tree species, rocks, palette, ink outlines and illustrated cel-shading. FIX FRAMING: zoom out so the COMPLETE tree, top leaf and every branch, root and rock is visible with a generous clear transparent border on all four edges, at least 12 percent of image width. No part may touch or be cropped by the canvas. Restore any cut leaf tips naturally. Center the whole subject. Opaque artwork, true transparent background. Absolutely no glow, no halo, no environment, no words or symbols. Keep this same single tree design, do not add more trees.",
+      "reference": "assets/direction-artistique/collection-base-v1/biomes/biome_plaine_base.png",
+      "sourceInitiale": "exec-b64be80c-d203-4ae4-82e1-1185b294f22d.png",
+      "resultat": "exec-135e2f06-8761-4eba-8ae2-b3b043b4bceb.png",
+      "statut": "retenu"
+    },
+    {
+      "id": "biome_jungle_base",
+      "prompt": "Edit the supplied exact tree sprite. Preserve the tree species, rocks, palette, ink outlines and illustrated cel-shading. FIX FRAMING: zoom out so the COMPLETE tree, top leaf and every branch, root and rock is visible with a generous clear transparent border on all four edges, at least 12 percent of image width. No part may touch or be cropped by the canvas. Restore any cut leaf tips naturally. Center the whole subject. Opaque artwork, true transparent background. Absolutely no glow, no halo, no environment, no words or symbols. Keep this same single tree design, do not add more trees.",
+      "reference": "assets/direction-artistique/collection-base-v1/biomes/biome_jungle_base.png",
+      "sourceInitiale": "exec-1c9bb341-fdf7-4add-b07c-073988822f19.png",
+      "resultat": "exec-e117e033-64bd-468f-8a00-4e83909e2850.png",
+      "statut": "retenu"
+    },
+    {
+      "id": "biome_cotier_base",
+      "prompt": "Edit the supplied exact tree sprite. Preserve the tree species, rocks, palette, ink outlines and illustrated cel-shading. FIX FRAMING: zoom out so the COMPLETE tree, top leaf and every branch, root and rock is visible with a generous clear transparent border on all four edges, at least 12 percent of image width. No part may touch or be cropped by the canvas. Restore any cut leaf tips naturally. Center the whole subject. Opaque artwork, true transparent background. Absolutely no glow, no halo, no environment, no words or symbols. Keep this same single tree design, do not add more trees.",
+      "reference": "assets/direction-artistique/collection-base-v1/biomes/biome_cotier_base.png",
+      "sourceInitiale": "exec-324a0c45-fe19-4caa-9a98-349ee83993e5.png",
+      "resultat": "exec-1d1734e3-abc3-44bb-a5a5-cc0cd0ffe2c1.png",
+      "statut": "retenu"
+    },
+    {
+      "id": "terrain_mer",
+      "prompt": "Create one original isolated sea-water surface sample for a crisp illustrated 2D tactics game. A compact shallow diamond-shaped PATCH OF OPAQUE BLUE WATER viewed from 50 degrees above, clean graphic cel shading with 3 gentle short wave ribbons in lighter blue, dark navy clean boundary line. Match the precise outlined illustrated finish of the attached port drawing only. This is a FLAT WATER SURFACE, no depth sides, no cube, no island, no boat, no building, no rocks. The opaque water ends at its crisp slightly irregular closed edge. Keep the entire patch inside the canvas with 15 percent completely transparent empty margin on every side. TRUE RGBA TRANSPARENCY outside the patch. No gradients, no glows, no halos, no blue haze, no light aura, no shadow outside the boundary. No text or marks. Broad calm flat opaque blue areas with a few clean ivory-blue ripple highlights, not luminous. Concept sample for later tile assembly, not a scene.",
+      "reference": "assets/direction-artistique/collection-base-v1/batiments/batiment_port_base.png",
+      "sourceInitiale": "exec-970f2776-1688-4dea-9bfc-06140aae04a1.png",
+      "resultat": "exec-f8f1aa18-2c6a-4cc1-b3c1-e9892e71b2fd.png",
+      "statut": "retenu"
+    },
+    {
+      "id": "decor_buisson_base",
+      "prompt": "Draw a single small compact leafy bush for a 2D tactics game, isolated on TRUE TRANSPARENT background. Match only the clean inked illustrative style of the supplied forest reference. Three rounded overlapping clumps of green leaves over two short woody stems, opaque matte cel-shaded green shapes, crisp dark outlines, broad readable silhouettes. NO ENVIRONMENT. NO GLOW. NO HALO. NO AURA. NO GRADIENT BACKDROP. NO SHADOW. Absolutely no colored pixels outside the bush silhouette. The entire bush fits within the middle 70 percent of the canvas, leaving a completely transparent generous margin on every side. No ground patch, no other trees, no labels. One squat bush only, wider than tall, warm green highlights and darker cool-green shaded clusters.",
+      "reference": "assets/direction-artistique/collection-base-v1/decors/decor_foret_base.png",
+      "sourceInitiale": "exec-e138177f-091b-4431-8ead-cd1e65baa208.png",
+      "resultat": "exec-b8be8505-e53e-4015-9428-3d3a6684ea0f.png",
+      "statut": "retenu"
+    },
+    {
+      "id": "decor_muret_de_pierre_base",
+      "prompt": "Create an original small dry-stone wall sprite matching the clean illustrative finish of the attached stone bridge. ONE low straight wall segment, 3 courses of irregular broad beige limestone blocks, fitted dry-stone construction, a flat top of 3 slabs. Orthographic three-quarter view from above, long axis upper-left to lower-right. Opaque painted stone, firm dark ink outline, clean readable cel-shading. Both ends and the base visible. Wall alone centered, no bridge, no ground, no other elements. Generous transparent padding on every edge. TRUE TRANSPARENT RGBA BACKGROUND. Absolutely NO GLOW, NO HALO, NO SHADOW OUTSIDE THE WALL, no haze, no gradient background or colored fringe. Clean tight cutout of the solid wall silhouette. No words or symbols. This is a flat 2D game illustration, not a rendered scene.",
+      "reference": "assets/direction-artistique/collection-base-v1/ponts/terrain_pont.png",
+      "sourceInitiale": "exec-47785539-6bf5-41b8-8aa1-bb47b3cb1aea.png",
+      "resultat": "exec-babf6dd6-c882-4537-93b2-417b6d71ae44.png",
+      "statut": "retenu"
+    },
+    {
+      "id": "decor_buisson_base",
+      "prompt": "Remove the glowing green haze surrounding this bush. Keep ONLY the solid illustrated bush: its leaves, dark ink outline, and the two short brown woody stems. Make every pixel outside that exact solid silhouette fully transparent, including the green glow above and behind it and the brown glow below. Preserve the original bush artwork inside its outline without adding new light effects. This is a clean background-removal cutout, with a completely transparent background. No shadow, no aura, no backdrop.",
+      "reference": "exec-b8be8505-e53e-4015-9428-3d3a6684ea0f.png",
+      "resultat": "exec-1a850661-1dcc-48f1-89bc-ca8164a2a3a7.png",
+      "statut": "non_retenu",
+      "raison": "Essai de détourage supplémentaire ; le canal alpha du dessin précédent conserve déjà la transparence."
+    },
+    {
+      "id": "decor_buisson_base",
+      "prompt": "A single compact dwarf juniper shrub, a clean isolated 2D strategy game object illustration, three-quarter overhead view. Dense small pointed blue-green leaves arranged in five crisp angular rounded foliage clusters, two short visible brown branches at its foot. Squat silhouette much wider than tall. Hand inked dark navy contours and opaque flat cel shaded areas, limited palette of warm green, deep teal and muted sage green. Sharp contained cutout silhouette. Centered with ample clear space all around the subject. Transparent background. Commercial game sprite art, consistent precise readable form, no text.",
+      "resultat": "exec-cb591947-5da5-4b94-b858-2c238f5b1bcf.png",
+      "statut": "non_retenu",
+      "raison": "Essai de genévrier plus sombre, maintien du buisson arrondi pour la cohérence de la famille."
+    }
+  ]
+}

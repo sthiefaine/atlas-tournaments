@@ -10,6 +10,11 @@
 .bilan span { color: var(--admin-secondaire, #b8cadb); }
 .galerie .actualiser { background: transparent; border: 0; padding-inline: 0; }
 .galerie .actualiser:disabled { cursor: wait; color: var(--admin-secondaire, #b8cadb); }
+.groupes { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 0 22px; }
+.galerie .groupes button { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; border: 0; background: transparent; color: #c7d6e3; padding: 8px 12px; }
+.galerie .groupes button[aria-pressed='true'] { background: #315260; color: #f2f7f1; }
+.galerie .groupes button:hover { background: #274655; color: #f2f7f1; }
+.groupes span { font-size: .7rem; font-variant-numeric: tabular-nums; opacity: .8; }
 .filtres { display: flex; flex-wrap: wrap; align-items: end; gap: 16px; }
 .filtres label { display: grid; gap: 7px; flex: 1 1 180px; font-size: .76rem; font-weight: 650; color: var(--admin-secondaire, #b8cadb); }
 .filtres .recherche { flex: 2 1 240px; }
@@ -41,6 +46,7 @@
 .legende h3 { margin: 4px 0 6px; font-size: 1rem; font-weight: 720; line-height: 1.35; color: var(--admin-encre, #edf4fa); }
 .statut { color: var(--admin-secondaire, #b8cadb); font-size: .76rem; }
 .statut[data-present='true'] { color: #97d7c9; }
+.statut[data-reprise='true'] { color: #f3ce86; }
 .telecharger { display: inline-flex; align-items: center; gap: 10px; min-height: 38px; margin-top: 5px; color: var(--admin-accent, #76dfcc); font-size: .8rem; text-underline-offset: 4px; }
 .telecharger:hover { text-decoration: underline; }
 .message, .vide { color: var(--admin-secondaire, #b8cadb); padding-block: 22px; line-height: 1.65; }

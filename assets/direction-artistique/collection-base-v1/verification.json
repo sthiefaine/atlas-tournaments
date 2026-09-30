@@ -1,13 +1,29 @@
 {
-  "date": "2026-09-30T12:45:55.355Z",
-  "portee": "Lisibilité des fichiers PNG et canal alpha uniquement ; aucune validation artistique ou animation de jeu.",
-  "total": 37,
-  "poidsPNG": 45578919,
+  "date": "2026-09-30T14:07:26.280Z",
+  "portee": "Lecture des PNG, dimensions, empreintes et canal alpha uniquement ; aucune conformité moteur, raccord de tuiles ou approbation artistique automatique.",
+  "total": 98,
+  "poidsPNG": 115848008,
   "familles": {
     "unite": 30,
-    "batiment": 6,
-    "decor": 1
+    "batiment": 13,
+    "decor": 29,
+    "terrain": 16,
+    "portrait": 10
   },
+  "groupes": {
+    "unites": 30,
+    "batiments": 13,
+    "vegetation": 1,
+    "biomes": 10,
+    "ponts": 9,
+    "sols": 7,
+    "rochers": 10,
+    "vegetation_basse": 4,
+    "agriculture": 2,
+    "accessoires": 2,
+    "portraits": 10
+  },
+  "manifesteJeuSha256": "6fe23325d4ecc7ea99fddf5edc92197dba9a87dc5cb6b33e8a6f5f292b4e9bf2",
   "entrees": [
     {
       "id": "unite_infanterie_base",
@@ -19,6 +35,7 @@
       "alpha": true,
       "pixelsTransparents": 1119826,
       "pixelsOpaques": 719,
+      "pixelsAlpha250": 426604,
       "margesAlpha16": [
         243,
         27,
@@ -36,6 +53,7 @@
       "alpha": true,
       "pixelsTransparents": 1031133,
       "pixelsOpaques": 1724,
+      "pixelsAlpha250": 515435,
       "margesAlpha16": [
         206,
         61,
@@ -53,6 +71,7 @@
       "alpha": true,
       "pixelsTransparents": 935555,
       "pixelsOpaques": 943,
+      "pixelsAlpha250": 617159,
       "margesAlpha16": [
         64,
         142,
@@ -70,6 +89,7 @@
       "alpha": true,
       "pixelsTransparents": 905876,
       "pixelsOpaques": 765,
+      "pixelsAlpha250": 647409,
       "margesAlpha16": [
         65,
         174,
@@ -87,6 +107,7 @@
       "alpha": true,
       "pixelsTransparents": 726548,
       "pixelsOpaques": 914,
+      "pixelsAlpha250": 824781,
       "margesAlpha16": [
         11,
         125,
@@ -104,6 +125,7 @@
       "alpha": true,
       "pixelsTransparents": 847422,
       "pixelsOpaques": 1093,
+      "pixelsAlpha250": 700920,
       "margesAlpha16": [
         34,
         43,
@@ -121,6 +143,7 @@
       "alpha": true,
       "pixelsTransparents": 801135,
       "pixelsOpaques": 782,
+      "pixelsAlpha250": 745228,
       "margesAlpha16": [
         109,
         20,
@@ -138,6 +161,7 @@
       "alpha": true,
       "pixelsTransparents": 842917,
       "pixelsOpaques": 803,
+      "pixelsAlpha250": 699653,
       "margesAlpha16": [
         49,
         41,
@@ -155,6 +179,7 @@
       "alpha": true,
       "pixelsTransparents": 1174703,
       "pixelsOpaques": 1064,
+      "pixelsAlpha250": 344106,
       "margesAlpha16": [
         101,
         48,
@@ -172,6 +197,7 @@
       "alpha": true,
       "pixelsTransparents": 810898,
       "pixelsOpaques": 1107,
+      "pixelsAlpha250": 745259,
       "margesAlpha16": [
         64,
         92,
@@ -189,6 +215,7 @@
       "alpha": true,
       "pixelsTransparents": 1121727,
       "pixelsOpaques": 1103,
+      "pixelsAlpha250": 417343,
       "margesAlpha16": [
         307,
         31,
@@ -206,6 +233,7 @@
       "alpha": true,
       "pixelsTransparents": 1118372,
       "pixelsOpaques": 1522,
+      "pixelsAlpha250": 402396,
       "margesAlpha16": [
         27,
         61,
@@ -223,6 +251,7 @@
       "alpha": true,
       "pixelsTransparents": 965318,
       "pixelsOpaques": 1754,
+      "pixelsAlpha250": 576511,
       "margesAlpha16": [
         111,
         29,
@@ -240,6 +269,7 @@
       "alpha": true,
       "pixelsTransparents": 881489,
       "pixelsOpaques": 1251,
+      "pixelsAlpha250": 670745,
       "margesAlpha16": [
         28,
         178,
@@ -257,6 +287,7 @@
       "alpha": true,
       "pixelsTransparents": 908538,
       "pixelsOpaques": 1280,
+      "pixelsAlpha250": 625362,
       "margesAlpha16": [
         143,
         18,
@@ -274,6 +305,7 @@
       "alpha": true,
       "pixelsTransparents": 752845,
       "pixelsOpaques": 424,
+      "pixelsAlpha250": 787667,
       "margesAlpha16": [
         40,
         68,
@@ -291,6 +323,7 @@
       "alpha": true,
       "pixelsTransparents": 1092025,
       "pixelsOpaques": 972,
+      "pixelsAlpha250": 446902,
       "margesAlpha16": [
         17,
         25,
@@ -308,6 +341,7 @@
       "alpha": true,
       "pixelsTransparents": 894314,
       "pixelsOpaques": 1843,
+      "pixelsAlpha250": 630566,
       "margesAlpha16": [
         16,
         4,
@@ -325,6 +359,7 @@
       "alpha": true,
       "pixelsTransparents": 1036722,
       "pixelsOpaques": 1952,
+      "pixelsAlpha250": 483742,
       "margesAlpha16": [
         18,
         18,
@@ -342,6 +377,7 @@
       "alpha": true,
       "pixelsTransparents": 880777,
       "pixelsOpaques": 1080,
+      "pixelsAlpha250": 673721,
       "margesAlpha16": [
         31,
         108,
@@ -359,6 +395,7 @@
       "alpha": true,
       "pixelsTransparents": 831821,
       "pixelsOpaques": 1033,
+      "pixelsAlpha250": 720275,
       "margesAlpha16": [
         20,
         88,
@@ -376,6 +413,7 @@
       "alpha": true,
       "pixelsTransparents": 1050729,
       "pixelsOpaques": 898,
+      "pixelsAlpha250": 488868,
       "margesAlpha16": [
         30,
         104,
@@ -393,6 +431,7 @@
       "alpha": true,
       "pixelsTransparents": 1027753,
       "pixelsOpaques": 1354,
+      "pixelsAlpha250": 526279,
       "margesAlpha16": [
         14,
         108,
@@ -410,6 +449,7 @@
       "alpha": true,
       "pixelsTransparents": 892892,
       "pixelsOpaques": 1918,
+      "pixelsAlpha250": 655705,
       "margesAlpha16": [
         51,
         35,
@@ -420,18 +460,19 @@
     {
       "id": "unite_drone_intercepteur_base",
       "fichier": "unites/unite_drone_intercepteur_base.png",
-      "octets": 726648,
-      "sha256": "049a29c9de71180ca8ad537c0f1b41e846aabd72943aa163fd9d35fe022d4b35",
+      "octets": 826787,
+      "sha256": "558d3867ae1cfbe5d6ac8c626a99dc3c7b360da04e02d0830d1695ef3fe3c68b",
       "largeur": 1402,
       "hauteur": 1122,
       "alpha": true,
-      "pixelsTransparents": 1194971,
-      "pixelsOpaques": 1336,
+      "pixelsTransparents": 1133710,
+      "pixelsOpaques": 1983,
+      "pixelsAlpha250": 401822,
       "margesAlpha16": [
-        119,
-        58,
-        148,
-        133
+        54,
+        82,
+        24,
+        199
       ]
     },
     {
@@ -444,6 +485,7 @@
       "alpha": true,
       "pixelsTransparents": 1009623,
       "pixelsOpaques": 3014,
+      "pixelsAlpha250": 501899,
       "margesAlpha16": [
         28,
         22,
@@ -461,6 +503,7 @@
       "alpha": true,
       "pixelsTransparents": 982719,
       "pixelsOpaques": 1949,
+      "pixelsAlpha250": 528932,
       "margesAlpha16": [
         24,
         77,
@@ -478,6 +521,7 @@
       "alpha": true,
       "pixelsTransparents": 784124,
       "pixelsOpaques": 1163,
+      "pixelsAlpha250": 765103,
       "margesAlpha16": [
         60,
         148,
@@ -495,6 +539,7 @@
       "alpha": true,
       "pixelsTransparents": 1044121,
       "pixelsOpaques": 1230,
+      "pixelsAlpha250": 505369,
       "margesAlpha16": [
         54,
         166,
@@ -512,6 +557,7 @@
       "alpha": true,
       "pixelsTransparents": 993307,
       "pixelsOpaques": 1564,
+      "pixelsAlpha250": 543166,
       "margesAlpha16": [
         176,
         36,
@@ -529,6 +575,7 @@
       "alpha": true,
       "pixelsTransparents": 937883,
       "pixelsOpaques": 1137,
+      "pixelsAlpha250": 616346,
       "margesAlpha16": [
         159,
         107,
@@ -546,6 +593,7 @@
       "alpha": true,
       "pixelsTransparents": 834443,
       "pixelsOpaques": 1209,
+      "pixelsAlpha250": 721091,
       "margesAlpha16": [
         77,
         33,
@@ -563,6 +611,7 @@
       "alpha": true,
       "pixelsTransparents": 861722,
       "pixelsOpaques": 1304,
+      "pixelsAlpha250": 695878,
       "margesAlpha16": [
         58,
         131,
@@ -580,6 +629,7 @@
       "alpha": true,
       "pixelsTransparents": 944562,
       "pixelsOpaques": 1274,
+      "pixelsAlpha250": 606469,
       "margesAlpha16": [
         66,
         102,
@@ -597,6 +647,7 @@
       "alpha": true,
       "pixelsTransparents": 911846,
       "pixelsOpaques": 1387,
+      "pixelsAlpha250": 641514,
       "margesAlpha16": [
         89,
         145,
@@ -614,6 +665,7 @@
       "alpha": true,
       "pixelsTransparents": 890983,
       "pixelsOpaques": 1338,
+      "pixelsAlpha250": 666687,
       "margesAlpha16": [
         119,
         57,
@@ -631,11 +683,1110 @@
       "alpha": true,
       "pixelsTransparents": 782960,
       "pixelsOpaques": 749,
+      "pixelsAlpha250": 686617,
       "margesAlpha16": [
         57,
         12,
         54,
         29
+      ]
+    },
+    {
+      "id": "biome_plaine_base",
+      "fichier": "biomes/biome_plaine_base.png",
+      "octets": 1539158,
+      "sha256": "10346d565882a20daa33f62f6777fb921030e5a41b1add018d348df3c5804aca",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 860917,
+      "pixelsOpaques": 629,
+      "pixelsAlpha250": 641440,
+      "margesAlpha16": [
+        79,
+        68,
+        80,
+        65
+      ]
+    },
+    {
+      "id": "biome_foret_base",
+      "fichier": "biomes/biome_foret_base.png",
+      "octets": 1649418,
+      "sha256": "7b3ca1ded6dc48c624690acfc5f7044a21a05ebec16da711d64ecc38e5c326a9",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 862586,
+      "pixelsOpaques": 1025,
+      "pixelsAlpha250": 645971,
+      "margesAlpha16": [
+        82,
+        86,
+        53,
+        66
+      ]
+    },
+    {
+      "id": "biome_montagne_base",
+      "fichier": "biomes/biome_montagne_base.png",
+      "octets": 1579820,
+      "sha256": "2d9fb802961e9e8b8856ee1c1ca731b5e2444e65b5eeb7310bbf7ccf1259fa56",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 901323,
+      "pixelsOpaques": 481,
+      "pixelsAlpha250": 571367,
+      "margesAlpha16": [
+        146,
+        82,
+        39,
+        45
+      ]
+    },
+    {
+      "id": "biome_desert_base",
+      "fichier": "biomes/biome_desert_base.png",
+      "octets": 1562854,
+      "sha256": "15b842e0a1053d6023e772093385c4282ee0b6f4bbe26f5a365ae2b3fcc9c067",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 840857,
+      "pixelsOpaques": 731,
+      "pixelsAlpha250": 648528,
+      "margesAlpha16": [
+        108,
+        88,
+        48,
+        91
+      ]
+    },
+    {
+      "id": "biome_jungle_base",
+      "fichier": "biomes/biome_jungle_base.png",
+      "octets": 1776410,
+      "sha256": "671198b0a4f7df42c980c5cc552e24d50bf7e6cf960d0cc71a72ea7e55a15641",
+      "largeur": 1326,
+      "hauteur": 1187,
+      "alpha": true,
+      "pixelsTransparents": 779352,
+      "pixelsOpaques": 497,
+      "pixelsAlpha250": 710685,
+      "margesAlpha16": [
+        44,
+        55,
+        28,
+        27
+      ]
+    },
+    {
+      "id": "biome_neige_base",
+      "fichier": "biomes/biome_neige_base.png",
+      "octets": 1045765,
+      "sha256": "0ca465ee8b51ca80b3a39c03c9f5998b98fb3a25459c8f032a0d612ba35eb1be",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1088332,
+      "pixelsOpaques": 306,
+      "pixelsAlpha250": 428053,
+      "margesAlpha16": [
+        309,
+        25,
+        307,
+        13
+      ]
+    },
+    {
+      "id": "biome_volcanique_base",
+      "fichier": "biomes/biome_volcanique_base.png",
+      "octets": 1520421,
+      "sha256": "6a59c88eb5a39c2205c22c6d9445ab16fd36be82a308852658adf0b5f40d1d6d",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 825484,
+      "pixelsOpaques": 952,
+      "pixelsAlpha250": 720467,
+      "margesAlpha16": [
+        153,
+        66,
+        85,
+        74
+      ]
+    },
+    {
+      "id": "biome_cotier_base",
+      "fichier": "biomes/biome_cotier_base.png",
+      "octets": 1572077,
+      "sha256": "7149163b011639f723084772a46eb568ab3a7738bf4c3e703b9a3b862befdc9e",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 934854,
+      "pixelsOpaques": 523,
+      "pixelsAlpha250": 549174,
+      "margesAlpha16": [
+        136,
+        74,
+        84,
+        38
+      ]
+    },
+    {
+      "id": "biome_archipel_base",
+      "fichier": "biomes/biome_archipel_base.png",
+      "octets": 1332733,
+      "sha256": "98b179293733f590b00761b959df0b2e7c94486bdddc5c2cb5e2318292ac42c7",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 983580,
+      "pixelsOpaques": 1063,
+      "pixelsAlpha250": 503331,
+      "margesAlpha16": [
+        264,
+        15,
+        100,
+        30
+      ]
+    },
+    {
+      "id": "biome_marais_base",
+      "fichier": "biomes/biome_marais_base.png",
+      "octets": 1998054,
+      "sha256": "2e89e8ccad9b43b56db8a7150906db8577c54107861babc8604fa43463f2da8f",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 788448,
+      "pixelsOpaques": 894,
+      "pixelsAlpha250": 532796,
+      "margesAlpha16": [
+        97,
+        20,
+        96,
+        61
+      ]
+    },
+    {
+      "id": "terrain_pont",
+      "fichier": "ponts/terrain_pont.png",
+      "octets": 1110714,
+      "sha256": "a3621d7e89564262594b2f6273294708cd1f51a6d9a51185dffba4fafd73d6ec",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 985746,
+      "pixelsOpaques": 1375,
+      "pixelsAlpha250": 571763,
+      "margesAlpha16": [
+        64,
+        92,
+        51,
+        43
+      ]
+    },
+    {
+      "id": "pont_pierre_culee",
+      "fichier": "ponts/pont_pierre_culee.png",
+      "octets": 910257,
+      "sha256": "091db30020cfeb3f91c34f97a578d3cd25ba04c8be6071056bdb3572badda033",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1039249,
+      "pixelsOpaques": 834,
+      "pixelsAlpha250": 519236,
+      "margesAlpha16": [
+        89,
+        143,
+        140,
+        79
+      ]
+    },
+    {
+      "id": "pont_pierre_pile",
+      "fichier": "ponts/pont_pierre_pile.png",
+      "octets": 586938,
+      "sha256": "63e425578bbcb00e52d8af8de86138d6b49ab1d726c505faea227a1361353798",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1198366,
+      "pixelsOpaques": 995,
+      "pixelsAlpha250": 362837,
+      "margesAlpha16": [
+        324,
+        141,
+        285,
+        167
+      ]
+    },
+    {
+      "id": "pont_bois_travee",
+      "fichier": "ponts/pont_bois_travee.png",
+      "octets": 1178726,
+      "sha256": "467b3d25583daa950da2d9da439479bf3bcec33b7d4050baeb5bce1c7670b8cd",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 960735,
+      "pixelsOpaques": 1220,
+      "pixelsAlpha250": 590166,
+      "margesAlpha16": [
+        44,
+        68,
+        46,
+        82
+      ]
+    },
+    {
+      "id": "pont_bois_culee",
+      "fichier": "ponts/pont_bois_culee.png",
+      "octets": 915106,
+      "sha256": "5a7a1e1da75221df8cb7859dd56f46ed4988c66298e62eecc8f0bc7c411a5c80",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1051147,
+      "pixelsOpaques": 1104,
+      "pixelsAlpha250": 507351,
+      "margesAlpha16": [
+        93,
+        72,
+        127,
+        58
+      ]
+    },
+    {
+      "id": "pont_bois_pile",
+      "fichier": "ponts/pont_bois_pile.png",
+      "octets": 806701,
+      "sha256": "85a9fb3b39a203efbb2862e1bf6d3f4b58921c2e13a6a48eb4b9a938560516b8",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1087787,
+      "pixelsOpaques": 1217,
+      "pixelsAlpha250": 461338,
+      "margesAlpha16": [
+        229,
+        57,
+        214,
+        51
+      ]
+    },
+    {
+      "id": "pont_metal_travee",
+      "fichier": "ponts/pont_metal_travee.png",
+      "octets": 1229537,
+      "sha256": "10706a490cc00e1cc774916e40160071afc7bb1722d86a0273b0cd3133128fc0",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 954772,
+      "pixelsOpaques": 2429,
+      "pixelsAlpha250": 589578,
+      "margesAlpha16": [
+        35,
+        79,
+        48,
+        50
+      ]
+    },
+    {
+      "id": "pont_metal_culee",
+      "fichier": "ponts/pont_metal_culee.png",
+      "octets": 1084929,
+      "sha256": "92612582eba19f59399bf1828e1b9329acd5bae0fd2de0f0932a035c872ce81b",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1002468,
+      "pixelsOpaques": 1243,
+      "pixelsAlpha250": 553754,
+      "margesAlpha16": [
+        104,
+        79,
+        122,
+        45
+      ]
+    },
+    {
+      "id": "pont_metal_pile",
+      "fichier": "ponts/pont_metal_pile.png",
+      "octets": 1059802,
+      "sha256": "b63c151dac67538cd68cdb4bd5d8e7a12056ad891bf81c556c33e3005ca837fa",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 981940,
+      "pixelsOpaques": 709,
+      "pixelsAlpha250": 577485,
+      "margesAlpha16": [
+        213,
+        96,
+        201,
+        26
+      ]
+    },
+    {
+      "id": "terrain_plaine",
+      "fichier": "terrains/terrain_plaine.png",
+      "octets": 580467,
+      "sha256": "933a8c7a82194bb0d8f84400b37da00e1768bd896da2fe743bb2fb6274144249",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1360982,
+      "pixelsOpaques": 917,
+      "pixelsAlpha250": 109956,
+      "margesAlpha16": [
+        161,
+        223,
+        128,
+        196
+      ]
+    },
+    {
+      "id": "terrain_herbe_haute",
+      "fichier": "terrains/terrain_herbe_haute.png",
+      "octets": 1768897,
+      "sha256": "d1f1d378208fa4896af84d601cf5d1ebeebc3acf1a3b887a79a9695d934d21b4",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 821871,
+      "pixelsOpaques": 883,
+      "pixelsAlpha250": 622273,
+      "margesAlpha16": [
+        69,
+        16,
+        55,
+        21
+      ]
+    },
+    {
+      "id": "terrain_montagne",
+      "fichier": "terrains/terrain_montagne.png",
+      "octets": 1141635,
+      "sha256": "71a6ffcea68443c46ae95076ebc774888dcdad0d6143362e354a12a58536d4c4",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 950039,
+      "pixelsOpaques": 698,
+      "pixelsAlpha250": 607332,
+      "margesAlpha16": [
+        119,
+        86,
+        99,
+        73
+      ]
+    },
+    {
+      "id": "terrain_route",
+      "fichier": "terrains/terrain_route.png",
+      "octets": 971557,
+      "sha256": "cb4ba46ea1a786fdd29c03649f67268e93feff18526ef5309f57a3337bd8ca71",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1163333,
+      "pixelsOpaques": 813,
+      "pixelsAlpha250": 396319,
+      "margesAlpha16": [
+        50,
+        100,
+        57,
+        28
+      ]
+    },
+    {
+      "id": "terrain_plage",
+      "fichier": "terrains/terrain_plage.png",
+      "octets": 1089917,
+      "sha256": "62adc4397b0bdaeea1fa1a0a41ca159926902f336b96b115f943bc14ab909d72",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 852894,
+      "pixelsOpaques": 838,
+      "pixelsAlpha250": 702162,
+      "margesAlpha16": [
+        40,
+        152,
+        35,
+        87
+      ]
+    },
+    {
+      "id": "terrain_riviere",
+      "fichier": "terrains/terrain_riviere.png",
+      "octets": 741639,
+      "sha256": "7bf7b5235e0f9852bbf8c145f5e2a3bbd245830a209f42a3e2cc434309b597de",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1218447,
+      "pixelsOpaques": 562,
+      "pixelsAlpha250": 331326,
+      "margesAlpha16": [
+        48,
+        72,
+        47,
+        70
+      ]
+    },
+    {
+      "id": "terrain_mer",
+      "fichier": "terrains/terrain_mer.png",
+      "octets": 534078,
+      "sha256": "ed8f55e3a11c562fe6027ee37691e052e5cb64273a4d7f6a39974d1705485d8d",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1154832,
+      "pixelsOpaques": 878,
+      "pixelsAlpha250": 407703,
+      "margesAlpha16": [
+        125,
+        229,
+        125,
+        219
+      ]
+    },
+    {
+      "id": "decor_rocher_plaine",
+      "fichier": "decors/decor_rocher_plaine.png",
+      "octets": 787285,
+      "sha256": "301023f7dcc11edba25ef345727e74e51d2f634c9e43e8130c383463360a79d5",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1053239,
+      "pixelsOpaques": 911,
+      "pixelsAlpha250": 509539,
+      "margesAlpha16": [
+        214,
+        230,
+        174,
+        198
+      ]
+    },
+    {
+      "id": "decor_rocher_foret",
+      "fichier": "decors/decor_rocher_foret.png",
+      "octets": 1358050,
+      "sha256": "03f22e77b2fdd807794ca53c5c61598dc40a4821faaf6c12f96965dc9397f4ee",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 852476,
+      "pixelsOpaques": 468,
+      "pixelsAlpha250": 700064,
+      "margesAlpha16": [
+        131,
+        70,
+        136,
+        50
+      ]
+    },
+    {
+      "id": "decor_rocher_montagne",
+      "fichier": "decors/decor_rocher_montagne.png",
+      "octets": 981746,
+      "sha256": "836d3902d14eca9a2a96812e2e541632bf899fffac323e8c18d94cd65306001b",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1032810,
+      "pixelsOpaques": 914,
+      "pixelsAlpha250": 526473,
+      "margesAlpha16": [
+        185,
+        200,
+        177,
+        162
+      ]
+    },
+    {
+      "id": "decor_rocher_desert",
+      "fichier": "decors/decor_rocher_desert.png",
+      "octets": 801768,
+      "sha256": "fd19b145bc16fc56eff9c41bed0894d169195f39d6320bdcb6b8e15da3b54b57",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1014597,
+      "pixelsOpaques": 1194,
+      "pixelsAlpha250": 545405,
+      "margesAlpha16": [
+        187,
+        182,
+        122,
+        157
+      ]
+    },
+    {
+      "id": "decor_rocher_jungle",
+      "fichier": "decors/decor_rocher_jungle.png",
+      "octets": 1274660,
+      "sha256": "f3145d84546e60ca666a8ae81101a4386a150b2eac45aa073ecb10a86d6afefd",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 909753,
+      "pixelsOpaques": 535,
+      "pixelsAlpha250": 646419,
+      "margesAlpha16": [
+        247,
+        120,
+        173,
+        58
+      ]
+    },
+    {
+      "id": "decor_rocher_neige",
+      "fichier": "decors/decor_rocher_neige.png",
+      "octets": 671295,
+      "sha256": "b541a540b1a7fcfe194748435d6b6fc464faca68c7ac1de2736cca5d443980fa",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1028841,
+      "pixelsOpaques": 1283,
+      "pixelsAlpha250": 531796,
+      "margesAlpha16": [
+        127,
+        255,
+        102,
+        201
+      ]
+    },
+    {
+      "id": "decor_rocher_volcanique",
+      "fichier": "decors/decor_rocher_volcanique.png",
+      "octets": 753554,
+      "sha256": "274a6a6d757b0c112e19e0c93c30e3f76dad596eb3f6bfcaebcade16d4e777a2",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1123268,
+      "pixelsOpaques": 919,
+      "pixelsAlpha250": 439208,
+      "margesAlpha16": [
+        210,
+        247,
+        208,
+        203
+      ]
+    },
+    {
+      "id": "decor_rocher_cotier",
+      "fichier": "decors/decor_rocher_cotier.png",
+      "octets": 897494,
+      "sha256": "8d0213997d0263d888efe9f9c0b03b07577a58bd2ca7e3a430df58cd7068f381",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1061135,
+      "pixelsOpaques": 976,
+      "pixelsAlpha250": 501889,
+      "margesAlpha16": [
+        199,
+        219,
+        192,
+        174
+      ]
+    },
+    {
+      "id": "decor_rocher_archipel",
+      "fichier": "decors/decor_rocher_archipel.png",
+      "octets": 1050883,
+      "sha256": "d88841bb84390ddd1a9a502a2f86078026b3f852b34109e561ff22eb38af1396",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1020144,
+      "pixelsOpaques": 720,
+      "pixelsAlpha250": 531898,
+      "margesAlpha16": [
+        125,
+        186,
+        95,
+        159
+      ]
+    },
+    {
+      "id": "decor_rocher_marais",
+      "fichier": "decors/decor_rocher_marais.png",
+      "octets": 774435,
+      "sha256": "9aea42a2726387989397d6c0fd36905d566c04bb862409d3bbbcaf7b5c0c2b25",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1136478,
+      "pixelsOpaques": 806,
+      "pixelsAlpha250": 404589,
+      "margesAlpha16": [
+        118,
+        117,
+        79,
+        103
+      ]
+    },
+    {
+      "id": "decor_haie_vive_base",
+      "fichier": "decors/decor_haie_vive_base.png",
+      "octets": 1176340,
+      "sha256": "55b4a196a94e40019e9bd10eb95ecadf40006e0e2ed43357f306b7bc3f5c087d",
+      "largeur": 1682,
+      "hauteur": 935,
+      "alpha": true,
+      "pixelsTransparents": 1006992,
+      "pixelsOpaques": 185,
+      "pixelsAlpha250": 505877,
+      "margesAlpha16": [
+        67,
+        83,
+        41,
+        51
+      ]
+    },
+    {
+      "id": "decor_buisson_base",
+      "fichier": "decors/decor_buisson_base.png",
+      "octets": 1210446,
+      "sha256": "f6c88efee8c12bfbf32e930193ff17718d522caa00687510f295fecda31ecd53",
+      "largeur": 1536,
+      "hauteur": 1024,
+      "alpha": true,
+      "pixelsTransparents": 1222150,
+      "pixelsOpaques": 0,
+      "pixelsAlpha250": 333793,
+      "margesAlpha16": [
+        319,
+        241,
+        313,
+        209
+      ]
+    },
+    {
+      "id": "decor_roseau_base",
+      "fichier": "decors/decor_roseau_base.png",
+      "octets": 594078,
+      "sha256": "95fa0b3ec4e3913389738e0c28c1a15db157b9493a2562698de856d79050d1e1",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1307142,
+      "pixelsOpaques": 2142,
+      "pixelsAlpha250": 193425,
+      "margesAlpha16": [
+        203,
+        43,
+        185,
+        49
+      ]
+    },
+    {
+      "id": "decor_touffe_base",
+      "fichier": "decors/decor_touffe_base.png",
+      "octets": 908651,
+      "sha256": "bfcd3bbb4573e2bfdf959570e901ddbdc95aed182b0af93846c114b8e3102ca9",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1044401,
+      "pixelsOpaques": 1177,
+      "pixelsAlpha250": 467191,
+      "margesAlpha16": [
+        42,
+        39,
+        84,
+        74
+      ]
+    },
+    {
+      "id": "decor_champ_cereales_base",
+      "fichier": "decors/decor_champ_cereales_base.png",
+      "octets": 1332148,
+      "sha256": "c8c34ed8b70969dc567ec98dd043ca96e905a5782e77c198f1d3f57c0dde92ed",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1076238,
+      "pixelsOpaques": 345,
+      "pixelsAlpha250": 386627,
+      "margesAlpha16": [
+        190,
+        76,
+        155,
+        83
+      ]
+    },
+    {
+      "id": "decor_botte_paille_base",
+      "fichier": "decors/decor_botte_paille_base.png",
+      "octets": 874450,
+      "sha256": "d81beab525ecbe651f5702b77aa46b600d8cb58aa88b4a6ad1587b8f2a374e05",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1102390,
+      "pixelsOpaques": 403,
+      "pixelsAlpha250": 452711,
+      "margesAlpha16": [
+        248,
+        173,
+        247,
+        131
+      ]
+    },
+    {
+      "id": "decor_muret_de_pierre_base",
+      "fichier": "decors/decor_muret_de_pierre_base.png",
+      "octets": 608322,
+      "sha256": "635220f639aaa84dcde2f73aef44d1dff121fd971f1176580c1aa89474468bcc",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1238046,
+      "pixelsOpaques": 818,
+      "pixelsAlpha250": 324384,
+      "margesAlpha16": [
+        248,
+        209,
+        251,
+        152
+      ]
+    },
+    {
+      "id": "decor_ponton_de_bois_base",
+      "fichier": "decors/decor_ponton_de_bois_base.png",
+      "octets": 807273,
+      "sha256": "a04c700cdab60d0d71ca07aaa7921813f686ffbf723ba92f5407a1a1c3b8106a",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 1167312,
+      "pixelsOpaques": 1122,
+      "pixelsAlpha250": 390478,
+      "margesAlpha16": [
+        172,
+        125,
+        120,
+        108
+      ]
+    },
+    {
+      "id": "commandant_stratege_prudent",
+      "fichier": "portraits/commandant_stratege_prudent.png",
+      "octets": 1098232,
+      "sha256": "edd4ad097ae389d6a9e0f22840319fe4c18968c22c24667697a8c7b3316507f9",
+      "largeur": 1207,
+      "hauteur": 1303,
+      "alpha": true,
+      "pixelsTransparents": 842739,
+      "pixelsOpaques": 876,
+      "pixelsAlpha250": 713287,
+      "margesAlpha16": [
+        242,
+        15,
+        172,
+        0
+      ]
+    },
+    {
+      "id": "commandant_fonceuse",
+      "fichier": "portraits/commandant_fonceuse.png",
+      "octets": 1394745,
+      "sha256": "1d9a24f65d623ea443d0c675506c15930b8895180d243d4c96ceb20647f3bf5e",
+      "largeur": 1207,
+      "hauteur": 1303,
+      "alpha": true,
+      "pixelsTransparents": 770604,
+      "pixelsOpaques": 1198,
+      "pixelsAlpha250": 739441,
+      "margesAlpha16": [
+        71,
+        14,
+        45,
+        31
+      ]
+    },
+    {
+      "id": "commandant_veteran",
+      "fichier": "portraits/commandant_veteran.png",
+      "octets": 1357330,
+      "sha256": "e627ff5106c5c9b2223e1a2c936ebadd640f2e6fe28ad73b552bcc86f6674178",
+      "largeur": 1207,
+      "hauteur": 1303,
+      "alpha": true,
+      "pixelsTransparents": 778305,
+      "pixelsOpaques": 860,
+      "pixelsAlpha250": 777152,
+      "margesAlpha16": [
+        196,
+        5,
+        106,
+        0
+      ]
+    },
+    {
+      "id": "commandant_ingenieur",
+      "fichier": "portraits/commandant_ingenieur.png",
+      "octets": 1570722,
+      "sha256": "2bb73102d40760eba64c9db187cbbb161b85246cf285c06a8b16ba6ff20399f8",
+      "largeur": 1207,
+      "hauteur": 1303,
+      "alpha": true,
+      "pixelsTransparents": 649964,
+      "pixelsOpaques": 774,
+      "pixelsAlpha250": 878807,
+      "margesAlpha16": [
+        56,
+        8,
+        17,
+        9
+      ]
+    },
+    {
+      "id": "commandant_diplomate",
+      "fichier": "portraits/commandant_diplomate.png",
+      "octets": 1167782,
+      "sha256": "1466eee623c52fd75d62b100422e475a0cfaff340039a93ac76ec0dba6184b59",
+      "largeur": 1207,
+      "hauteur": 1303,
+      "alpha": true,
+      "pixelsTransparents": 832844,
+      "pixelsOpaques": 906,
+      "pixelsAlpha250": 712211,
+      "margesAlpha16": [
+        111,
+        8,
+        160,
+        0
+      ]
+    },
+    {
+      "id": "commandant_showman",
+      "fichier": "portraits/commandant_showman.png",
+      "octets": 1190465,
+      "sha256": "eee6af014330d03640b474a37ff90b2fced9e9983536721c2ef6d894f99cf067",
+      "largeur": 1207,
+      "hauteur": 1303,
+      "alpha": true,
+      "pixelsTransparents": 846279,
+      "pixelsOpaques": 1162,
+      "pixelsAlpha250": 694656,
+      "margesAlpha16": [
+        8,
+        13,
+        3,
+        0
+      ]
+    },
+    {
+      "id": "commandant_survivante",
+      "fichier": "portraits/commandant_survivante.png",
+      "octets": 1149381,
+      "sha256": "bf8dc766ba30bc672a2252a74ce20e614f0ef62fa138c46b13dbdb32b330d40a",
+      "largeur": 1207,
+      "hauteur": 1303,
+      "alpha": true,
+      "pixelsTransparents": 893903,
+      "pixelsOpaques": 923,
+      "pixelsAlpha250": 649244,
+      "margesAlpha16": [
+        201,
+        11,
+        232,
+        0
+      ]
+    },
+    {
+      "id": "commandant_meteorologue",
+      "fichier": "portraits/commandant_meteorologue.png",
+      "octets": 1399516,
+      "sha256": "750e7ff7a3c106959b8158b50f3f5ff985735d6b735867749ecef22ca92ed175",
+      "largeur": 1207,
+      "hauteur": 1303,
+      "alpha": true,
+      "pixelsTransparents": 746478,
+      "pixelsOpaques": 1292,
+      "pixelsAlpha250": 787446,
+      "margesAlpha16": [
+        161,
+        17,
+        51,
+        0
+      ]
+    },
+    {
+      "id": "commandant_prodige",
+      "fichier": "portraits/commandant_prodige.png",
+      "octets": 1091698,
+      "sha256": "a660ff174d013041730386ecb145f6f72bc37191347a63fd9c0bccd3fc489a4a",
+      "largeur": 1207,
+      "hauteur": 1303,
+      "alpha": true,
+      "pixelsTransparents": 828321,
+      "pixelsOpaques": 951,
+      "pixelsAlpha250": 722654,
+      "margesAlpha16": [
+        177,
+        2,
+        178,
+        0
+      ]
+    },
+    {
+      "id": "commandant_gardienne",
+      "fichier": "portraits/commandant_gardienne.png",
+      "octets": 1301604,
+      "sha256": "066b7bd2569d9ac2213b80f61cdfd0d84c4b95b6e3f471eaaca46d6ae127b1f0",
+      "largeur": 1207,
+      "hauteur": 1303,
+      "alpha": true,
+      "pixelsTransparents": 836348,
+      "pixelsOpaques": 878,
+      "pixelsAlpha250": 717136,
+      "margesAlpha16": [
+        228,
+        14,
+        169,
+        0
+      ]
+    },
+    {
+      "id": "batiment_superusine_base",
+      "fichier": "batiments/batiment_superusine_base.png",
+      "octets": 1426177,
+      "sha256": "82d5c095fe496ff12c8ce0884e2a8de609b1295dc6fb92b0e04799103ca66396",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 786470,
+      "pixelsOpaques": 1555,
+      "pixelsAlpha250": 769843,
+      "margesAlpha16": [
+        33,
+        130,
+        34,
+        115
+      ]
+    },
+    {
+      "id": "batiment_superusine_inerte",
+      "fichier": "batiments/batiment_superusine_inerte.png",
+      "octets": 1381727,
+      "sha256": "7a07f5c560d82a3fa8029debefd39b54235742a4b9ee6135a1d3d7df390cb25e",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 789216,
+      "pixelsOpaques": 882,
+      "pixelsAlpha250": 767041,
+      "margesAlpha16": [
+        32,
+        129,
+        32,
+        114
+      ]
+    },
+    {
+      "id": "batiment_ville_desaffecte",
+      "fichier": "batiments/batiment_ville_desaffecte.png",
+      "octets": 1419868,
+      "sha256": "d66ac3f2e1fafd6e6d46c6dc115df79fa1a2c7b755ac696fd8d5790466854a09",
+      "largeur": 1375,
+      "hauteur": 1144,
+      "alpha": true,
+      "pixelsTransparents": 875010,
+      "pixelsOpaques": 1277,
+      "pixelsAlpha250": 675580,
+      "margesAlpha16": [
+        134,
+        89,
+        114,
+        79
+      ]
+    },
+    {
+      "id": "batiment_usine_desaffecte",
+      "fichier": "batiments/batiment_usine_desaffecte.png",
+      "octets": 1346976,
+      "sha256": "758f0bfab84bd468d3c7f83b0a134a8df88e84fef2badb62a58a6d43401b7d0a",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 836514,
+      "pixelsOpaques": 1166,
+      "pixelsAlpha250": 720731,
+      "margesAlpha16": [
+        54,
+        126,
+        56,
+        110
+      ]
+    },
+    {
+      "id": "batiment_port_desaffecte",
+      "fichier": "batiments/batiment_port_desaffecte.png",
+      "octets": 1222248,
+      "sha256": "2e895595c129f9a21ace71133ee9f0b8d46d025920cfb0277c2fdad85f935307",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 928301,
+      "pixelsOpaques": 1607,
+      "pixelsAlpha250": 624853,
+      "margesAlpha16": [
+        63,
+        96,
+        46,
+        71
+      ]
+    },
+    {
+      "id": "batiment_aeroport_desaffecte",
+      "fichier": "batiments/batiment_aeroport_desaffecte.png",
+      "octets": 1238444,
+      "sha256": "e48f1cbf2fc5aec995c25399b9522d51e99e321f4888872fd2625a9da22ed5bf",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 907531,
+      "pixelsOpaques": 1208,
+      "pixelsAlpha250": 647338,
+      "margesAlpha16": [
+        88,
+        142,
+        75,
+        70
+      ]
+    },
+    {
+      "id": "batiment_radar_desaffecte",
+      "fichier": "batiments/batiment_radar_desaffecte.png",
+      "octets": 1261547,
+      "sha256": "0338e4b177449dc51e7ead54407415b09b00041b9493951850a28b3c233b656b",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "alpha": true,
+      "pixelsTransparents": 873697,
+      "pixelsOpaques": 1414,
+      "pixelsAlpha250": 683497,
+      "margesAlpha16": [
+        109,
+        54,
+        99,
+        65
       ]
     }
   ]

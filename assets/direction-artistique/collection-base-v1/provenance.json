@@ -155,7 +155,8 @@
     {
       "id": "unite_drone_intercepteur_base",
       "fichier": "unites/unite_drone_intercepteur_base.png",
-      "sortieNative": "exec-0759286e-7979-452e-8db8-e8cbdaee2581.png"
+      "sortieNative": "exec-aa88d75d-8581-4bc7-b414-7fae92d47e65.png",
+      "revision": 2
     },
     {
       "id": "unite_drone_ravitailleur_base",
@@ -171,6 +172,311 @@
       "id": "unite_drone_marin_base",
       "fichier": "unites/unite_drone_marin_base.png",
       "sortieNative": "exec-d49a9183-3a89-4256-aac4-614ba5cc8045.png"
+    },
+    {
+      "id": "biome_foret_base",
+      "fichier": "biomes/biome_foret_base.png",
+      "sortieNative": "exec-c221ea5e-9374-4b46-b62d-80849ba284e7.png"
+    },
+    {
+      "id": "biome_montagne_base",
+      "fichier": "biomes/biome_montagne_base.png",
+      "sortieNative": "exec-55da640a-e02a-4927-8d7d-6e4a83b6340e.png"
+    },
+    {
+      "id": "biome_desert_base",
+      "fichier": "biomes/biome_desert_base.png",
+      "sortieNative": "exec-5f3eb3af-8296-4ba1-a277-8684b363f5e6.png"
+    },
+    {
+      "id": "biome_neige_base",
+      "fichier": "biomes/biome_neige_base.png",
+      "sortieNative": "exec-a5bdb0f3-c77d-47b3-b631-ed80f74ad957.png"
+    },
+    {
+      "id": "biome_volcanique_base",
+      "fichier": "biomes/biome_volcanique_base.png",
+      "sortieNative": "exec-ec777a48-4728-4b45-91d1-b7e31e2a15c7.png"
+    },
+    {
+      "id": "biome_archipel_base",
+      "fichier": "biomes/biome_archipel_base.png",
+      "sortieNative": "exec-be816d44-075b-404f-9a56-1bd0a831958c.png"
+    },
+    {
+      "id": "biome_marais_base",
+      "fichier": "biomes/biome_marais_base.png",
+      "sortieNative": "exec-3b43f189-1622-499b-8bbd-2657093ead02.png"
+    },
+    {
+      "id": "terrain_pont",
+      "fichier": "ponts/terrain_pont.png",
+      "sortieNative": "exec-ae4c6a56-782d-428b-a03f-1c7aa7627f27.png"
+    },
+    {
+      "id": "pont_bois_travee",
+      "fichier": "ponts/pont_bois_travee.png",
+      "sortieNative": "exec-9623465e-39a2-44ae-b33e-5bd20a14f088.png"
+    },
+    {
+      "id": "pont_metal_travee",
+      "fichier": "ponts/pont_metal_travee.png",
+      "sortieNative": "exec-16b995e9-4b08-419d-8041-578a533ca4e5.png"
+    },
+    {
+      "id": "pont_pierre_culee",
+      "fichier": "ponts/pont_pierre_culee.png",
+      "sortieNative": "exec-ad117e2e-8ab1-479b-8831-ed98b22b0585.png"
+    },
+    {
+      "id": "pont_pierre_pile",
+      "fichier": "ponts/pont_pierre_pile.png",
+      "sortieNative": "exec-f18c6ec4-db80-4467-becc-a13465ee8c3f.png"
+    },
+    {
+      "id": "pont_bois_culee",
+      "fichier": "ponts/pont_bois_culee.png",
+      "sortieNative": "exec-013ad446-ad1d-4dc7-8718-40ab20d98f4f.png"
+    },
+    {
+      "id": "pont_bois_pile",
+      "fichier": "ponts/pont_bois_pile.png",
+      "sortieNative": "exec-8e38cbcc-8fef-4c36-b0d5-e0c0c24227ac.png"
+    },
+    {
+      "id": "pont_metal_culee",
+      "fichier": "ponts/pont_metal_culee.png",
+      "sortieNative": "exec-8bf3bdaf-3206-4d9a-b47b-28598146b7b6.png"
+    },
+    {
+      "id": "pont_metal_pile",
+      "fichier": "ponts/pont_metal_pile.png",
+      "sortieNative": "exec-279035a5-a0c7-4854-a0f6-585d0f0bed11.png"
+    },
+    {
+      "id": "terrain_plaine",
+      "fichier": "terrains/terrain_plaine.png",
+      "sortieNative": "exec-cc1d5385-8fa6-4912-b2fe-9758c1738f74.png"
+    },
+    {
+      "id": "terrain_herbe_haute",
+      "fichier": "terrains/terrain_herbe_haute.png",
+      "sortieNative": "exec-8688f067-ef72-499a-bd23-f213e28da99f.png"
+    },
+    {
+      "id": "terrain_montagne",
+      "fichier": "terrains/terrain_montagne.png",
+      "sortieNative": "exec-fcdab026-66ed-47ef-b75b-b851995432bf.png"
+    },
+    {
+      "id": "terrain_route",
+      "fichier": "terrains/terrain_route.png",
+      "sortieNative": "exec-90bfe5fe-2ce2-49ad-8a5f-1e2f1967df47.png"
+    },
+    {
+      "id": "terrain_plage",
+      "fichier": "terrains/terrain_plage.png",
+      "sortieNative": "exec-25ba44d0-cf50-4cb1-9ba4-f014fb096a4b.png"
+    },
+    {
+      "id": "terrain_riviere",
+      "fichier": "terrains/terrain_riviere.png",
+      "sortieNative": "exec-9b8c568e-02fa-4553-a89c-f6008d8b49f2.png"
+    },
+    {
+      "id": "decor_rocher_plaine",
+      "fichier": "decors/decor_rocher_plaine.png",
+      "sortieNative": "exec-dab520c2-1f4d-4b9f-b2f4-bae0cb69b864.png"
+    },
+    {
+      "id": "decor_rocher_foret",
+      "fichier": "decors/decor_rocher_foret.png",
+      "sortieNative": "exec-73ddeaec-7e5c-4257-836f-de84737dc9d7.png"
+    },
+    {
+      "id": "decor_rocher_montagne",
+      "fichier": "decors/decor_rocher_montagne.png",
+      "sortieNative": "exec-68d9f780-abf1-4184-8030-20430fc628fe.png"
+    },
+    {
+      "id": "decor_rocher_desert",
+      "fichier": "decors/decor_rocher_desert.png",
+      "sortieNative": "exec-c809f623-b3cc-402c-9e34-c6ea57bc81e5.png"
+    },
+    {
+      "id": "decor_rocher_jungle",
+      "fichier": "decors/decor_rocher_jungle.png",
+      "sortieNative": "exec-a36f6a90-05c0-4783-a3ca-e6dfeafcba8d.png"
+    },
+    {
+      "id": "decor_rocher_neige",
+      "fichier": "decors/decor_rocher_neige.png",
+      "sortieNative": "exec-092ec1bc-5397-4904-8e4e-c777b12266db.png"
+    },
+    {
+      "id": "decor_rocher_volcanique",
+      "fichier": "decors/decor_rocher_volcanique.png",
+      "sortieNative": "exec-0bf0820b-5d24-4d90-90c6-198e5cd713e4.png"
+    },
+    {
+      "id": "decor_rocher_cotier",
+      "fichier": "decors/decor_rocher_cotier.png",
+      "sortieNative": "exec-dcccce61-051e-487d-8195-fd1b8fd6ac72.png"
+    },
+    {
+      "id": "decor_rocher_archipel",
+      "fichier": "decors/decor_rocher_archipel.png",
+      "sortieNative": "exec-c28b33bf-2cbb-4743-b05c-fcc5aae52fec.png"
+    },
+    {
+      "id": "decor_rocher_marais",
+      "fichier": "decors/decor_rocher_marais.png",
+      "sortieNative": "exec-c6b06867-4122-46ca-aa15-19b8ad4250b9.png"
+    },
+    {
+      "id": "decor_haie_vive_base",
+      "fichier": "decors/decor_haie_vive_base.png",
+      "sortieNative": "exec-39450ee9-1641-4943-8ab0-a5a083341bb4.png"
+    },
+    {
+      "id": "decor_roseau_base",
+      "fichier": "decors/decor_roseau_base.png",
+      "sortieNative": "exec-bec09986-b875-4518-92b4-3bf32080be00.png"
+    },
+    {
+      "id": "decor_touffe_base",
+      "fichier": "decors/decor_touffe_base.png",
+      "sortieNative": "exec-af577118-07aa-48fb-a2d4-3e00be6c04b5.png"
+    },
+    {
+      "id": "decor_champ_cereales_base",
+      "fichier": "decors/decor_champ_cereales_base.png",
+      "sortieNative": "exec-4f6446ea-8892-4f02-b9a1-299493c8e855.png"
+    },
+    {
+      "id": "decor_botte_paille_base",
+      "fichier": "decors/decor_botte_paille_base.png",
+      "sortieNative": "exec-a4243058-3ab1-4533-8f87-9cbaecfb2dc3.png"
+    },
+    {
+      "id": "decor_ponton_de_bois_base",
+      "fichier": "decors/decor_ponton_de_bois_base.png",
+      "sortieNative": "exec-6464d288-ba5b-4f9a-9bd4-a6d0f780b9af.png"
+    },
+    {
+      "id": "batiment_superusine_base",
+      "fichier": "batiments/batiment_superusine_base.png",
+      "sortieNative": "exec-8b36dd33-9dc4-409c-88a0-efec37736e4a.png"
+    },
+    {
+      "id": "batiment_ville_desaffecte",
+      "fichier": "batiments/batiment_ville_desaffecte.png",
+      "sortieNative": "exec-e1d778bf-b5c9-485c-a36d-ff7e27c3263f.png"
+    },
+    {
+      "id": "batiment_usine_desaffecte",
+      "fichier": "batiments/batiment_usine_desaffecte.png",
+      "sortieNative": "exec-717067ca-7347-4db4-9e45-933390e106e9.png"
+    },
+    {
+      "id": "batiment_port_desaffecte",
+      "fichier": "batiments/batiment_port_desaffecte.png",
+      "sortieNative": "exec-e5ba948e-87ff-4e43-9490-e5289c860df1.png"
+    },
+    {
+      "id": "batiment_superusine_inerte",
+      "fichier": "batiments/batiment_superusine_inerte.png",
+      "sortieNative": "exec-442737cb-4e8d-499b-b320-5944a5b73f5d.png"
+    },
+    {
+      "id": "batiment_aeroport_desaffecte",
+      "fichier": "batiments/batiment_aeroport_desaffecte.png",
+      "sortieNative": "exec-2680e0dc-67ff-4ed3-b4d3-498e416d6a76.png"
+    },
+    {
+      "id": "batiment_radar_desaffecte",
+      "fichier": "batiments/batiment_radar_desaffecte.png",
+      "sortieNative": "exec-c60150bf-2362-4d3f-8c46-85234a32a4e0.png"
+    },
+    {
+      "id": "commandant_stratege_prudent",
+      "fichier": "portraits/commandant_stratege_prudent.png",
+      "sortieNative": "exec-d66fda1a-6eb3-444a-a262-22dd75d96909.png"
+    },
+    {
+      "id": "commandant_fonceuse",
+      "fichier": "portraits/commandant_fonceuse.png",
+      "sortieNative": "exec-53b17285-5daf-4bd9-8217-f0dd5dd499ef.png"
+    },
+    {
+      "id": "commandant_veteran",
+      "fichier": "portraits/commandant_veteran.png",
+      "sortieNative": "exec-fa645d24-b5e7-4a86-b116-da81ef2d81a0.png"
+    },
+    {
+      "id": "commandant_ingenieur",
+      "fichier": "portraits/commandant_ingenieur.png",
+      "sortieNative": "exec-7aa6ca8c-629e-48ef-b085-88aa5cbd8c8f.png"
+    },
+    {
+      "id": "commandant_diplomate",
+      "fichier": "portraits/commandant_diplomate.png",
+      "sortieNative": "exec-50cfb670-c4a6-461f-991f-2fd8fe46c0fa.png"
+    },
+    {
+      "id": "commandant_showman",
+      "fichier": "portraits/commandant_showman.png",
+      "sortieNative": "exec-3e58ccd6-9e87-439a-ba2a-b1d7df5ef481.png"
+    },
+    {
+      "id": "commandant_survivante",
+      "fichier": "portraits/commandant_survivante.png",
+      "sortieNative": "exec-6aca7b60-21f0-4903-bd63-0a7e8f502c4c.png"
+    },
+    {
+      "id": "commandant_meteorologue",
+      "fichier": "portraits/commandant_meteorologue.png",
+      "sortieNative": "exec-1a50ceda-e66a-4447-9fe7-e1350fcd0f85.png"
+    },
+    {
+      "id": "commandant_prodige",
+      "fichier": "portraits/commandant_prodige.png",
+      "sortieNative": "exec-38280201-42f8-41bd-943d-a65974a9b1c3.png"
+    },
+    {
+      "id": "commandant_gardienne",
+      "fichier": "portraits/commandant_gardienne.png",
+      "sortieNative": "exec-4b964158-788b-4493-b07b-3c589ea794e1.png"
+    },
+    {
+      "id": "biome_plaine_base",
+      "fichier": "biomes/biome_plaine_base.png",
+      "sortieNative": "exec-135e2f06-8761-4eba-8ae2-b3b043b4bceb.png"
+    },
+    {
+      "id": "biome_jungle_base",
+      "fichier": "biomes/biome_jungle_base.png",
+      "sortieNative": "exec-e117e033-64bd-468f-8a00-4e83909e2850.png"
+    },
+    {
+      "id": "biome_cotier_base",
+      "fichier": "biomes/biome_cotier_base.png",
+      "sortieNative": "exec-1d1734e3-abc3-44bb-a5a5-cc0cd0ffe2c1.png"
+    },
+    {
+      "id": "terrain_mer",
+      "fichier": "terrains/terrain_mer.png",
+      "sortieNative": "exec-f8f1aa18-2c6a-4cc1-b3c1-e9892e71b2fd.png"
+    },
+    {
+      "id": "decor_muret_de_pierre_base",
+      "fichier": "decors/decor_muret_de_pierre_base.png",
+      "sortieNative": "exec-babf6dd6-c882-4537-93b2-417b6d71ae44.png"
+    },
+    {
+      "id": "decor_buisson_base",
+      "fichier": "decors/decor_buisson_base.png",
+      "sortieNative": "exec-b8be8505-e53e-4015-9428-3d3a6684ea0f.png"
     }
   ]
 }

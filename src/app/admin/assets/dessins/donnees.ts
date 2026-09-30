@@ -7,13 +7,35 @@ const DOSSIER = path.resolve('assets/direction-artistique/collection-base-v1');
 const PLAN = path.join(DOSSIER, 'plan.json');
 const SIGNATURE_PNG = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
 const ID = /^[a-z0-9_]+$/;
-const FAMILLES: readonly string[] = ['unite', 'batiment', 'decor', 'terrain'];
+const FAMILLES: readonly string[] = ['unite', 'batiment', 'decor', 'terrain', 'portrait'];
 const DOMAINES: readonly string[] = ['terre', 'air', 'mer'];
+const GROUPES = new Map<string, string>([
+  ['unite', 'unites'], ['batiment', 'batiments'], ['sol', 'sols'], ['pont', 'ponts'], ['biome', 'biomes'],
+  ['rocher', 'rochers'], ['accessoire', 'accessoires'], ['portrait', 'portraits'], ['decor', 'decors'],
+]);
 
 type EntreePlan = Omit<DessinReference, 'disponible' | 'revision'> & { fichier: string };
 
 function objet(valeur: unknown): valeur is Record<string, unknown> {
   return typeof valeur === 'object' && valeur !== null && !Array.isArray(valeur);
+}
+
+/** Les métadonnées facultatives n'empêchent jamais la lecture d'une ancienne entrée. */
+function cleFacultative(valeur: unknown): string | null {
+  if (typeof valeur !== 'string' || !valeur.trim() || valeur.length > 80) return null;
+  const cle = valeur.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[\s-]+/g, '_');
+  return /^[a-z0-9_]+$/.test(cle) ? cle : null;
+}
+
+function groupeAncien(famille: FamilleDessin, cle: string): string {
+  if (famille === 'unite') return 'unites';
+  if (famille === 'batiment') return 'batiments';
+  if (famille === 'portrait') return 'portraits';
+  if (/(^|_)(pont|passerelle)(_|$)/.test(cle)) return 'ponts';
+  if (famille === 'terrain') return 'sols';
+  if (/(^|_)(foret|feuillu|conifere|arbre|palmier|buisson|roseau|touffe|herbe|vegetation)(_|$)/.test(cle)) return 'vegetation';
+  if (/(^|_)(rocher|roc)(_|$)/.test(cle)) return 'rochers';
+  return 'decors';
 }
 
 function dansDossier(racine: string, fichier: string): boolean {
@@ -41,9 +63,13 @@ async function lirePlan(): Promise<{ entrees: EntreePlan[]; ecartees: number }> 
       || typeof e.fichier !== 'string' || !cheminDuPlan(e.fichier)
       || typeof e.statut !== 'string') continue;
     ids.add(e.id);
+    const famille = e.famille as FamilleDessin;
+    const groupe = cleFacultative(e.groupe);
     entrees.push({
-      id: e.id, cle: e.cle, nom: e.nom, famille: e.famille as FamilleDessin,
+      id: e.id, cle: e.cle, nom: e.nom, famille,
       domaine: typeof e.domaine === 'string' && DOMAINES.includes(e.domaine) ? e.domaine as DomaineDessin : null,
+      groupe: groupe ? GROUPES.get(groupe) ?? groupe : groupeAncien(famille, e.cle),
+      biome: cleFacultative(e.biome),
       fichier: e.fichier, statut: e.statut,
     });
   }

@@ -1,11 +1,11 @@
 {
-  "version": 1,
+  "version": 2,
   "date": "2026-09-30",
-  "demande": "Refaire toutes les unités de base dans le style approuvé, bâtiments communs et proposition de forêt",
+  "demande": "Refaire le drone intercepteur, conserver les autres dessins approuvés et compléter les références communes, en commençant par les biomes et les ponts.",
   "format": "PNG transparent, dessin direct, sans GLB",
-  "livraison": "dessins de référence statiques ; vues directionnelles, masques et animations à produire séparément",
+  "livraison": "Dessins de référence statiques ; orientations, raccords de cases, masques et animations à produire séparément.",
   "activationJeu": false,
-  "total": 37,
+  "total": 98,
   "entrees": [
     {
       "id": "unite_infanterie_base",
@@ -15,7 +15,8 @@
       "domaine": "terre",
       "fichier": "unites/unite_infanterie_base.png",
       "statut": "pilote_reutilise",
-      "origine": "assets/direction-artistique/pilotes-sprites-v1/infanterie.png"
+      "origine": "assets/direction-artistique/pilotes-sprites-v1/infanterie.png",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_meca_base",
@@ -26,7 +27,8 @@
       "fichier": "unites/unite_meca_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_recon_base",
@@ -37,7 +39,8 @@
       "fichier": "unites/unite_recon_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_char_leger_base",
@@ -47,7 +50,8 @@
       "domaine": "terre",
       "fichier": "unites/unite_char_leger_base.png",
       "statut": "pilote_reutilise",
-      "origine": "assets/direction-artistique/pilotes-sprites-v1/char_leger.png"
+      "origine": "assets/direction-artistique/pilotes-sprites-v1/char_leger.png",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_char_lourd_base",
@@ -58,7 +62,8 @@
       "fichier": "unites/unite_char_lourd_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_artillerie_base",
@@ -69,7 +74,8 @@
       "fichier": "unites/unite_artillerie_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_roquettes_base",
@@ -80,7 +86,8 @@
       "fichier": "unites/unite_roquettes_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_antiair_base",
@@ -91,7 +98,8 @@
       "fichier": "unites/unite_antiair_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_helico_base",
@@ -101,7 +109,8 @@
       "domaine": "air",
       "fichier": "unites/unite_helico_base.png",
       "statut": "pilote_reutilise",
-      "origine": "assets/direction-artistique/pilotes-sprites-v1/helicoptere.png"
+      "origine": "assets/direction-artistique/pilotes-sprites-v1/helicoptere.png",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_transport_base",
@@ -112,7 +121,8 @@
       "fichier": "unites/unite_transport_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_genie_base",
@@ -123,7 +133,8 @@
       "fichier": "unites/unite_genie_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_drone_base",
@@ -134,7 +145,8 @@
       "fichier": "unites/unite_drone_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_brouilleur_base",
@@ -145,7 +157,8 @@
       "fichier": "unites/unite_brouilleur_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_char_moyen_base",
@@ -156,7 +169,8 @@
       "fichier": "unites/unite_char_moyen_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_missiles_air_base",
@@ -167,7 +181,8 @@
       "fichier": "unites/unite_missiles_air_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_missiles_sol_base",
@@ -178,7 +193,8 @@
       "fichier": "unites/unite_missiles_sol_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_chasseur_base",
@@ -189,7 +205,8 @@
       "fichier": "unites/unite_chasseur_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_bombardier_base",
@@ -200,7 +217,8 @@
       "fichier": "unites/unite_bombardier_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_transport_air_base",
@@ -211,7 +229,8 @@
       "fichier": "unites/unite_transport_air_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_barge_base",
@@ -222,7 +241,8 @@
       "fichier": "unites/unite_barge_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_porte_avions_base",
@@ -233,7 +253,8 @@
       "fichier": "unites/unite_porte_avions_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_cuirasse_base",
@@ -244,7 +265,8 @@
       "fichier": "unites/unite_cuirasse_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_sous_marin_base",
@@ -255,7 +277,8 @@
       "fichier": "unites/unite_sous_marin_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_furtif_base",
@@ -266,7 +289,8 @@
       "fichier": "unites/unite_furtif_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_drone_intercepteur_base",
@@ -277,7 +301,8 @@
       "fichier": "unites/unite_drone_intercepteur_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "nouveau_dessin_apres_demande_de_reprise"
     },
     {
       "id": "unite_drone_ravitailleur_base",
@@ -288,7 +313,8 @@
       "fichier": "unites/unite_drone_ravitailleur_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_meridien_veilleur_base",
@@ -299,7 +325,8 @@
       "fichier": "unites/unite_meridien_veilleur_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_meridien_bastion_base",
@@ -310,7 +337,8 @@
       "fichier": "unites/unite_meridien_bastion_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_drone_marin_base",
@@ -321,7 +349,8 @@
       "fichier": "unites/unite_drone_marin_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "unite_meridien_automate_base",
@@ -332,7 +361,8 @@
       "fichier": "unites/unite_meridien_automate_base.png",
       "statut": "dessin_produit",
       "origine": null,
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "batiment_ville_base",
@@ -341,7 +371,8 @@
       "famille": "batiment",
       "fichier": "batiments/batiment_ville_base.png",
       "statut": "dessin_produit",
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "batiment_qg_base",
@@ -350,7 +381,8 @@
       "famille": "batiment",
       "fichier": "batiments/batiment_qg_base.png",
       "statut": "dessin_produit",
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "batiment_usine_base",
@@ -359,7 +391,8 @@
       "famille": "batiment",
       "fichier": "batiments/batiment_usine_base.png",
       "statut": "dessin_produit",
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "batiment_port_base",
@@ -368,7 +401,8 @@
       "famille": "batiment",
       "fichier": "batiments/batiment_port_base.png",
       "statut": "dessin_produit",
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "batiment_aeroport_base",
@@ -377,7 +411,8 @@
       "famille": "batiment",
       "fichier": "batiments/batiment_aeroport_base.png",
       "statut": "dessin_produit",
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "batiment_radar_base",
@@ -386,7 +421,8 @@
       "famille": "batiment",
       "fichier": "batiments/batiment_radar_base.png",
       "statut": "dessin_produit",
-      "outil": "image_gen natif"
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30"
     },
     {
       "id": "decor_foret_base",
@@ -395,7 +431,644 @@
       "famille": "decor",
       "fichier": "decors/decor_foret_base.png",
       "statut": "dessin_produit",
+      "outil": "image_gen natif",
+      "avisUtilisateur": "approuve_2026-09-30",
+      "couvre": [
+        "terrain_foret"
+      ],
+      "groupe": "vegetation"
+    },
+    {
+      "id": "biome_plaine_base",
+      "cle": "plaine",
+      "nom": "Plaine — chêne de plein champ",
+      "famille": "decor",
+      "groupe": "biomes",
+      "fichier": "biomes/biome_plaine_base.png",
+      "biome": "plaine",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "biome_foret_base",
+      "cle": "foret",
+      "nom": "Forêt — sous-bois et grès moussu",
+      "famille": "decor",
+      "groupe": "biomes",
+      "fichier": "biomes/biome_foret_base.png",
+      "biome": "foret",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "biome_montagne_base",
+      "cle": "montagne",
+      "nom": "Montagne — pin accroché au calcaire",
+      "famille": "decor",
+      "groupe": "biomes",
+      "fichier": "biomes/biome_montagne_base.png",
+      "biome": "montagne",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "biome_desert_base",
+      "cle": "desert",
+      "nom": "Désert — grès érodé et acacia",
+      "famille": "decor",
+      "groupe": "biomes",
+      "fichier": "biomes/biome_desert_base.png",
+      "biome": "desert",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "biome_jungle_base",
+      "cle": "jungle",
+      "nom": "Jungle — arbre à contreforts",
+      "famille": "decor",
+      "groupe": "biomes",
+      "fichier": "biomes/biome_jungle_base.png",
+      "biome": "jungle",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "biome_neige_base",
+      "cle": "neige",
+      "nom": "Neiges — épicéa et bloc coiffé",
+      "famille": "decor",
+      "groupe": "biomes",
+      "fichier": "biomes/biome_neige_base.png",
+      "biome": "neige",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "biome_volcanique_base",
+      "cle": "volcanique",
+      "nom": "Terres volcaniques — basalte refroidi",
+      "famille": "decor",
+      "groupe": "biomes",
+      "fichier": "biomes/biome_volcanique_base.png",
+      "biome": "volcanique",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "biome_cotier_base",
+      "cle": "cotier",
+      "nom": "Littoral — pin maritime et granit",
+      "famille": "decor",
+      "groupe": "biomes",
+      "fichier": "biomes/biome_cotier_base.png",
+      "biome": "cotier",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "biome_archipel_base",
+      "cle": "archipel",
+      "nom": "Archipel — cocotier et calcaire corallien",
+      "famille": "decor",
+      "groupe": "biomes",
+      "fichier": "biomes/biome_archipel_base.png",
+      "biome": "archipel",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "biome_marais_base",
+      "cle": "marais",
+      "nom": "Marais — saule têtard et roseaux",
+      "famille": "decor",
+      "groupe": "biomes",
+      "fichier": "biomes/biome_marais_base.png",
+      "biome": "marais",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "terrain_pont",
+      "cle": "pont",
+      "nom": "Pont de pierre — travée centrale",
+      "famille": "terrain",
+      "groupe": "ponts",
+      "fichier": "ponts/terrain_pont.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "pont_pierre_culee",
+      "cle": "pierre_culee",
+      "nom": "Pont de pierre — culée",
+      "famille": "terrain",
+      "groupe": "ponts",
+      "fichier": "ponts/pont_pierre_culee.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "pont_pierre_pile",
+      "cle": "pierre_pile",
+      "nom": "Pont de pierre — pile",
+      "famille": "terrain",
+      "groupe": "ponts",
+      "fichier": "ponts/pont_pierre_pile.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "pont_bois_travee",
+      "cle": "bois_travee",
+      "nom": "Pont de bois — travée centrale",
+      "famille": "terrain",
+      "groupe": "ponts",
+      "fichier": "ponts/pont_bois_travee.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "pont_bois_culee",
+      "cle": "bois_culee",
+      "nom": "Pont de bois — culée",
+      "famille": "terrain",
+      "groupe": "ponts",
+      "fichier": "ponts/pont_bois_culee.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "pont_bois_pile",
+      "cle": "bois_pile",
+      "nom": "Pont de bois — chevalet de soutien",
+      "famille": "terrain",
+      "groupe": "ponts",
+      "fichier": "ponts/pont_bois_pile.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "pont_metal_travee",
+      "cle": "metal_travee",
+      "nom": "Pont métallique — travée centrale",
+      "famille": "terrain",
+      "groupe": "ponts",
+      "fichier": "ponts/pont_metal_travee.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "pont_metal_culee",
+      "cle": "metal_culee",
+      "nom": "Pont métallique — culée",
+      "famille": "terrain",
+      "groupe": "ponts",
+      "fichier": "ponts/pont_metal_culee.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "pont_metal_pile",
+      "cle": "metal_pile",
+      "nom": "Pont métallique — pile d’appui",
+      "famille": "terrain",
+      "groupe": "ponts",
+      "fichier": "ponts/pont_metal_pile.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "terrain_plaine",
+      "cle": "plaine",
+      "nom": "Plaine — étude de végétation basse",
+      "famille": "terrain",
+      "groupe": "sols",
+      "fichier": "terrains/terrain_plaine.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "terrain_herbe_haute",
+      "cle": "herbe_haute",
+      "nom": "Hautes herbes — couvert dense",
+      "famille": "terrain",
+      "groupe": "sols",
+      "fichier": "terrains/terrain_herbe_haute.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "terrain_montagne",
+      "cle": "montagne",
+      "nom": "Montagne — crête et passage rocheux",
+      "famille": "terrain",
+      "groupe": "sols",
+      "fichier": "terrains/terrain_montagne.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "terrain_route",
+      "cle": "route",
+      "nom": "Route — tronçon droit neutre",
+      "famille": "terrain",
+      "groupe": "sols",
+      "fichier": "terrains/terrain_route.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "terrain_plage",
+      "cle": "plage",
+      "nom": "Plage — sable sec et laisse humide",
+      "famille": "terrain",
+      "groupe": "sols",
+      "fichier": "terrains/terrain_plage.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "terrain_riviere",
+      "cle": "riviere",
+      "nom": "Rivière — chenal et berges",
+      "famille": "terrain",
+      "groupe": "sols",
+      "fichier": "terrains/terrain_riviere.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "terrain_mer",
+      "cle": "mer",
+      "nom": "Mer — mouvement de surface calme",
+      "famille": "terrain",
+      "groupe": "sols",
+      "fichier": "terrains/terrain_mer.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "decor_rocher_plaine",
+      "cle": "rocher_plaine",
+      "nom": "Rocher de plaine",
+      "famille": "decor",
+      "groupe": "rochers",
+      "fichier": "decors/decor_rocher_plaine.png",
+      "biome": "plaine",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "decor_rocher_foret",
+      "cle": "rocher_foret",
+      "nom": "Rocher forestier",
+      "famille": "decor",
+      "groupe": "rochers",
+      "fichier": "decors/decor_rocher_foret.png",
+      "biome": "foret",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "decor_rocher_montagne",
+      "cle": "rocher_montagne",
+      "nom": "Rocher de montagne",
+      "famille": "decor",
+      "groupe": "rochers",
+      "fichier": "decors/decor_rocher_montagne.png",
+      "biome": "montagne",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "decor_rocher_desert",
+      "cle": "rocher_desert",
+      "nom": "Rocher du désert",
+      "famille": "decor",
+      "groupe": "rochers",
+      "fichier": "decors/decor_rocher_desert.png",
+      "biome": "desert",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "decor_rocher_jungle",
+      "cle": "rocher_jungle",
+      "nom": "Rocher de jungle",
+      "famille": "decor",
+      "groupe": "rochers",
+      "fichier": "decors/decor_rocher_jungle.png",
+      "biome": "jungle",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "decor_rocher_neige",
+      "cle": "rocher_neige",
+      "nom": "Rocher enneigé",
+      "famille": "decor",
+      "groupe": "rochers",
+      "fichier": "decors/decor_rocher_neige.png",
+      "biome": "neige",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "decor_rocher_volcanique",
+      "cle": "rocher_volcanique",
+      "nom": "Rocher volcanique",
+      "famille": "decor",
+      "groupe": "rochers",
+      "fichier": "decors/decor_rocher_volcanique.png",
+      "biome": "volcanique",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "decor_rocher_cotier",
+      "cle": "rocher_cotier",
+      "nom": "Rocher côtier",
+      "famille": "decor",
+      "groupe": "rochers",
+      "fichier": "decors/decor_rocher_cotier.png",
+      "biome": "cotier",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "decor_rocher_archipel",
+      "cle": "rocher_archipel",
+      "nom": "Rocher d’archipel",
+      "famille": "decor",
+      "groupe": "rochers",
+      "fichier": "decors/decor_rocher_archipel.png",
+      "biome": "archipel",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "decor_rocher_marais",
+      "cle": "rocher_marais",
+      "nom": "Rocher de marais",
+      "famille": "decor",
+      "groupe": "rochers",
+      "fichier": "decors/decor_rocher_marais.png",
+      "biome": "marais",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "decor_haie_vive_base",
+      "cle": "haie_vive",
+      "nom": "Haie vive",
+      "famille": "decor",
+      "groupe": "vegetation_basse",
+      "fichier": "decors/decor_haie_vive_base.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "decor_buisson_base",
+      "cle": "buisson",
+      "nom": "Buisson commun",
+      "famille": "decor",
+      "groupe": "vegetation_basse",
+      "fichier": "decors/decor_buisson_base.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "decor_roseau_base",
+      "cle": "roseau",
+      "nom": "Touffe de roseaux",
+      "famille": "decor",
+      "groupe": "vegetation_basse",
+      "fichier": "decors/decor_roseau_base.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "decor_touffe_base",
+      "cle": "touffe",
+      "nom": "Touffe d’herbe haute",
+      "famille": "decor",
+      "groupe": "vegetation_basse",
+      "fichier": "decors/decor_touffe_base.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "decor_champ_cereales_base",
+      "cle": "champ_cereales",
+      "nom": "Champ de céréales",
+      "famille": "decor",
+      "groupe": "agriculture",
+      "fichier": "decors/decor_champ_cereales_base.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "decor_botte_paille_base",
+      "cle": "botte_paille",
+      "nom": "Botte de paille",
+      "famille": "decor",
+      "groupe": "agriculture",
+      "fichier": "decors/decor_botte_paille_base.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "decor_muret_de_pierre_base",
+      "cle": "muret_de_pierre",
+      "nom": "Muret de pierre sèche",
+      "famille": "decor",
+      "groupe": "accessoires",
+      "fichier": "decors/decor_muret_de_pierre_base.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "decor_ponton_de_bois_base",
+      "cle": "ponton_de_bois",
+      "nom": "Petit ponton de bois",
+      "famille": "decor",
+      "groupe": "accessoires",
+      "fichier": "decors/decor_ponton_de_bois_base.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "commandant_stratege_prudent",
+      "cle": "stratege_prudent",
+      "nom": "Le stratège prudent",
+      "famille": "portrait",
+      "groupe": "portraits",
+      "fichier": "portraits/commandant_stratege_prudent.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "commandant_fonceuse",
+      "cle": "fonceuse",
+      "nom": "La fonceuse",
+      "famille": "portrait",
+      "groupe": "portraits",
+      "fichier": "portraits/commandant_fonceuse.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "commandant_veteran",
+      "cle": "veteran",
+      "nom": "Le vétéran",
+      "famille": "portrait",
+      "groupe": "portraits",
+      "fichier": "portraits/commandant_veteran.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "commandant_ingenieur",
+      "cle": "ingenieur",
+      "nom": "L'ingénieur",
+      "famille": "portrait",
+      "groupe": "portraits",
+      "fichier": "portraits/commandant_ingenieur.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "commandant_diplomate",
+      "cle": "diplomate",
+      "nom": "La diplomate",
+      "famille": "portrait",
+      "groupe": "portraits",
+      "fichier": "portraits/commandant_diplomate.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "commandant_showman",
+      "cle": "showman",
+      "nom": "Le showman",
+      "famille": "portrait",
+      "groupe": "portraits",
+      "fichier": "portraits/commandant_showman.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "commandant_survivante",
+      "cle": "survivante",
+      "nom": "La survivante",
+      "famille": "portrait",
+      "groupe": "portraits",
+      "fichier": "portraits/commandant_survivante.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "commandant_meteorologue",
+      "cle": "meteorologue",
+      "nom": "La météorologue",
+      "famille": "portrait",
+      "groupe": "portraits",
+      "fichier": "portraits/commandant_meteorologue.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "commandant_prodige",
+      "cle": "prodige",
+      "nom": "Le prodige",
+      "famille": "portrait",
+      "groupe": "portraits",
+      "fichier": "portraits/commandant_prodige.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "commandant_gardienne",
+      "cle": "gardienne",
+      "nom": "La gardienne",
+      "famille": "portrait",
+      "groupe": "portraits",
+      "fichier": "portraits/commandant_gardienne.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "batiment_superusine_base",
+      "cle": "superusine",
+      "nom": "Superusine des Gris",
+      "famille": "batiment",
+      "groupe": "batiments",
+      "fichier": "batiments/batiment_superusine_base.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "batiment_superusine_inerte",
+      "cle": "superusine",
+      "nom": "Superusine inerte",
+      "famille": "batiment",
+      "groupe": "batiments",
+      "fichier": "batiments/batiment_superusine_inerte.png",
+      "statut": "dessin_produit",
+      "dependDe": "batiment_superusine_base",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "batiment_ville_desaffecte",
+      "cle": "ville",
+      "nom": "Ville désaffectée",
+      "famille": "batiment",
+      "groupe": "batiments",
+      "fichier": "batiments/batiment_ville_desaffecte.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "batiment_usine_desaffecte",
+      "cle": "usine",
+      "nom": "Usine désaffectée",
+      "famille": "batiment",
+      "groupe": "batiments",
+      "fichier": "batiments/batiment_usine_desaffecte.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "batiment_port_desaffecte",
+      "cle": "port",
+      "nom": "Port désaffecté",
+      "famille": "batiment",
+      "groupe": "batiments",
+      "fichier": "batiments/batiment_port_desaffecte.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "batiment_aeroport_desaffecte",
+      "cle": "aeroport",
+      "nom": "Aéroport désaffecté",
+      "famille": "batiment",
+      "groupe": "batiments",
+      "fichier": "batiments/batiment_aeroport_desaffecte.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif"
+    },
+    {
+      "id": "batiment_radar_desaffecte",
+      "cle": "radar",
+      "nom": "Station radar désaffectée",
+      "famille": "batiment",
+      "groupe": "batiments",
+      "fichier": "batiments/batiment_radar_desaffecte.png",
+      "statut": "dessin_produit",
       "outil": "image_gen natif"
     }
-  ]
+  ],
+  "perimetre": "Références communes : 30 unités, 13 bâtiments et états, 10 biomes, 9 éléments de pont, 7 études de terrain, 19 décors dont la forêt déjà dessinée et 10 portraits archétypes. Pas de variante nationale ou régionale supplémentaire."
 }

@@ -14,7 +14,24 @@ Les six déclinaisons France / Chine demandées ensuite sont sous `assets/direct
 
 Le propriétaire a approuvé les pilotes et leurs déclinaisons, puis demandé toutes les unités de base, les bâtiments et une proposition de forêt. `assets/direction-artistique/collection-base-v1/plan.json` liste 37 dessins : les 30 unités du catalogue (trois pilotes réutilisés et 27 créations), ville, QG, usine, port, aéroport, radar et forêt mixte. Les PNG transparents et les prompts exacts sont conservés dans ce dossier. Les unités communes reprennent le cobalt, le graphite et l’os ; les trois unités méridiennes utilisent l’argent, le graphite et l’ambre. Aucune nouvelle nation ou variante régionale n’est créée.
 
-La galerie privée `/admin/assets/dessins` propose recherche, familles, domaines terre/air/mer, fonds clair/sombre, formats 48/64/128 pixels et grand aperçu, ainsi que le téléchargement individuel. Le dossier est inclus dans l’image Docker. Les illustrations complètes restent hors du manifeste public du jeu : elles ne sont pas chargées dans les parties. Leurs proportions de case, leurs orientations et leurs silhouettes à petite taille devront être finalisées avec les animations. L’approbation des pilotes ne vaut pas approbation automatique des 34 dessins suivants.
+Le propriétaire a ensuite approuvé le reste de cette collection à l’exception du drone intercepteur (« le drone intercepteur est à refaire, le reste est bien »). Celui-ci est redessiné avec un fuselage court, une grande voilure, une queue à deux branches et un propulseur arrière ; la précédente silhouette trop proche d’un missile est remplacée dans la collection.
+
+## Biomes, ponts et extension commune
+
+La demande de poursuivre par les biomes et les ponts porte le plan à **98 dessins présents**, dont 61 ajouts :
+
+- Dix accents de biome : plaine, forêt, montagne, désert, jungle, neige, volcanique, côtier, archipel et marais.
+- Neuf modules de pont : travée, culée et pile pour les familles pierre, bois et métal.
+- Sept études de terrain : plaine, herbe haute, montagne, route, plage, rivière et mer.
+- Dix rochers de biome et huit accessoires : haie, buisson, roseaux, touffe, céréales, paille, muret et ponton.
+- Sept états de bâtiments : superusine active et inerte, ville/usine/port/aéroport/radar désaffectés.
+- Dix portraits d’archétypes génériques existants ; aucune nouvelle identité de héros, révélation ou modification de campagne.
+
+Les 36 dessins approuvés restent identiques. Les nouveaux dessins et la reprise de l’intercepteur n’héritent pas automatiquement de cette approbation. La plaine est une étude de végétation, pas un remplacement du terrain procédural préféré par le propriétaire. Les ponts forment des propositions de pièces : leurs raccords exacts sur la grille ne sont pas encore vérifiés. Les portraits coupés en bas sont cadrés en buste ; aucun décor ni sommet d’arbre livré ne touche le bord selon le relevé alpha.
+
+Les prompts exacts sont conservés par famille dans `prompts-terrains.json`, `prompts-decors.json`, `prompts-batiments-speciaux.json` et `prompts-portraits.json`. `corrections-environnement.json` conserve les reprises de cadrage et de détourage, leurs sorties natives et les essais écartés. `provenance.json` associe chaque création au PNG retenu. `verification.json` relève les dimensions, les empreintes, les marges et le canal alpha des 98 PNG, soit 115 848 008 octets (110,48 Mio) de références HD. Ce poids concerne la bibliothèque de fabrication, pas un téléchargement ajouté aux parties. Des halos RGB visibles dans certains aperçus de génération se trouvent hors de la silhouette avec un alpha nul ; le canal alpha est conservé.
+
+La galerie privée `/admin/assets/dessins` propose catégories avec compteurs, recherche, familles, domaines terre/air/mer, filtre de biome, fonds clair/sombre, formats 48/64/128 pixels et grand aperçu, ainsi que le téléchargement individuel. Le dossier est inclus dans l’image Docker. Le typage et la lecture des PNG sont contrôlés ; aucune suite de tests ni build n’est lancée. Les illustrations complètes restent hors du manifeste public du jeu : elles ne sont pas chargées dans les parties. Leurs proportions de case, leurs orientations et leurs silhouettes à petite taille devront être finalisées avec les animations. Le manifeste des atlas en jeu est inchangé (`6fe23325d4ecc7ea99fddf5edc92197dba9a87dc5cb6b33e8a6f5f292b4e9bf2`).
 
 ## Fabrication des sprites de jeu
 

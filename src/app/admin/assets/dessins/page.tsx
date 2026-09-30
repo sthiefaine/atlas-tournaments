@@ -18,7 +18,7 @@ export default async function Dessins() {
     <header className={styles.entete}>
       <p className={styles.surtitre}>Direction artistique · Collection de base</p>
       <h2 className="admin-titre">Dessins de référence</h2>
-      <p className={styles.introduction}>Les nouveaux dessins des unités, bâtiments et décors, au fil de leur production. Comparez leur silhouette sur fond clair ou sombre et ouvrez chaque PNG pour l’examiner.</p>
+      <p className={styles.introduction}>Retrouvez les unités, les bâtiments et les environnements par catégorie et par biome. Comparez les dessins de 48 px à leur taille d’origine, sur fond clair ou sombre.</p>
       <p className={styles.precision}>Dessins statiques de référence. Vues directionnelles et animations non livrées ; les sprites actuellement en jeu restent accessibles dans la bibliothèque.</p>
     </header>
     {collection.erreur ? <p role="alert" className={styles.message}>{collection.erreur}</p> : <>
