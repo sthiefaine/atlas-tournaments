@@ -491,15 +491,14 @@ export function placerDecor(ctx: ContextePlacement): InstanceSprite[] {
             && (!brouillard || (brouillard[vy * g.largeur + vx] ?? 255) >= 128) ? 1 : 0;
         };
         const n = voisine(0, -1), e = voisine(1, 0), s = voisine(0, 1), o = voisine(-1, 0);
-        const lie = n + e + s + o > 0;
         // Un bosquet est déjà un groupe d'arbres. L'ancien semis individuel
         // dupliquait cinq fois la même cime et produisait une couronne de buissons.
         const nombre = bosquet ? 1 : 2;
         for (let i = 0; i < nombre; i += 1) {
           places.push({ genre: 'arbre',
-            x: x + (bosquet ? 0.5 + (e - o) * 0.1 : i === 0 ? 0.29 : 0.73) + (aleaCase(x, y, 210 + i) - 0.5) * 0.06,
-            y: y + (bosquet ? 0.8 + (s - n) * 0.06 : i === 0 ? 0.49 : 0.79) + (aleaCase(x, y, 220 + i) - 0.5) * 0.06,
-            echelle: (bosquet ? lie ? 1.4 : 1.13 : 0.92) + aleaCase(x, y, 230 + i) * 0.09, tirage: aleaCase(x, y, 240 + i), choix: 0 });
+            x: x + (bosquet ? 0.5 + (e - o) * 0.045 : i === 0 ? 0.29 : 0.73) + (aleaCase(x, y, 210 + i) - 0.5) * 0.06,
+            y: y + (bosquet ? 0.7 + (s - n) * 0.035 : i === 0 ? 0.49 : 0.79) + (aleaCase(x, y, 220 + i) - 0.5) * 0.06,
+            echelle: (bosquet ? 0.83 : 0.84) + aleaCase(x, y, 230 + i) * 0.1, tirage: aleaCase(x, y, 240 + i), choix: 0 });
         }
       }
       for (const p of places) {

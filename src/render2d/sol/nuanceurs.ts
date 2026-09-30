@@ -59,8 +59,6 @@ export const HAUT_FRONDAISON = 0.3;
 export const REGLAGES_SOL = {
   /** Demi-largeur du chenal d'une rivière, en cases. */
   demiChenal: 0.3,
-  /** Demi-largeur du tablier d'un pont, en cases. */
-  demiTablier: 0.32,
   /** Amplitude de la déformation des lisières, en cases. */
   deformation: 0.28,
   /** Ondulation de la rive, en cases. */
@@ -122,7 +120,6 @@ const DEFINITIONS = [
   `#define REPLI_HERBE_HAUTE ${REPLI.HERBE_HAUTE}`,
   `#define TRANSITION_BROUILLARD ${f(TRANSITION_BROUILLARD)}`,
   `#define DEMI_CHENAL ${f(REGLAGES_SOL.demiChenal)}`,
-  `#define DEMI_TABLIER ${f(REGLAGES_SOL.demiTablier)}`,
   `#define DEFORMATION ${f(REGLAGES_SOL.deformation)}`,
   `#define VAGUE_RIVE ${f(REGLAGES_SOL.vagueRive)}`,
   `#define BANDE_MOUILLEE ${f(REGLAGES_SOL.bandeMouillee)}`,
@@ -334,23 +331,7 @@ vec3 matieres(vec2 g, vec4 pa, vec4 pb, float variation, out float relief) {
   }
   float inv = 1.0 / max(total, 1e-4);
   relief = h * inv;
-  return col * inv * (0.98 + 0.04 * variation);
-}
-
-// Quelques traits dessinés au sol remplacent le grain photographique. Le
-// semis suit le monde, reste stable au zoom et ne se cale pas sur chaque case.
-float brinsDessines(vec2 g, float aa) {
-  vec2 p = g * 3.0;
-  ivec2 cellule = ivec2(floor(p));
-  if (alea(cellule, 421) > 0.42) return 0.0;
-  vec2 centre = vec2(0.35) + vec2(alea(cellule, 422), alea(cellule, 423)) * 0.3;
-  vec2 q = fract(p) - centre;
-  float taille = 0.75 + alea(cellule, 424) * 0.4;
-  q /= taille;
-  float d = min(segment(q, vec2(-0.02, 0.08), vec2(-0.12, -0.035)),
-                segment(q, vec2(-0.02, 0.08), vec2(0.025, -0.075)));
-  d = min(d, segment(q, vec2(0.07, 0.085), vec2(0.15, -0.015)));
-  return 1.0 - smoothstep(0.011, 0.021 + aa * 3.0 / taille, d);
+  return col * inv * (0.92 + 0.16 * variation);
 }
 
 // ------------------------------------------------------------------ voies
@@ -447,26 +428,30 @@ vec3 accesBatiment(vec3 col, int bits, vec2 l, float aa) {
   return mix(col, terre, chemin * 0.9);
 }
 
+// Le pont prolonge la chaussée au même niveau, avec la même largeur et le
+// même marquage. Deux garde-corps fins suffisent à rendre la traversée lisible.
 vec3 tablier(vec3 col, int bits, vec2 l, vec2 g, float aa, float grain) {
   bool eo = (bits & BIT_AXE_EO) != 0;
   float travers = eo ? l.y - 0.5 : l.x - 0.5;
   float le_long = eo ? g.x : g.y;
-  // L'ombre du tablier sur l'eau : la lumière vient de l'avant-gauche, elle
-  // tombe à droite d'un pont nord-sud, au nord d'un pont est-ouest.
+  float largeur = uVoieForme.x + 0.065;
   float cote = eo ? -travers : travers;
-  float ombre = step(DEMI_TABLIER, cote) * (1.0 - smoothstep(DEMI_TABLIER, DEMI_TABLIER + 0.1, cote));
-  col *= 1.0 - 0.38 * ombre;
-  float dans = 1.0 - smoothstep(DEMI_TABLIER - aa, DEMI_TABLIER + aa, abs(travers));
+  float ombre = smoothstep(largeur - aa, largeur + aa, cote)
+    * (1.0 - smoothstep(largeur, largeur + 0.065, cote));
+  col *= 1.0 - 0.24 * ombre;
+  float dans = 1.0 - smoothstep(largeur - aa, largeur + aa, abs(travers));
   if (dans <= 0.0) return col;
-  float w = fract(le_long * 10.0);
-  float joint = 1.0 - smoothstep(0.0, 0.08, min(w, 1.0 - w));
-  vec3 cp = uVoie[4] * (0.92 + 0.12 * grain - 0.18 * joint);
   float chaus = 1.0 - smoothstep(uVoieForme.x - aa, uVoieForme.x + aa, abs(travers));
-  cp = mix(cp, couleurChaussee(g, le_long, travers, false), chaus * 0.9);
-  float bord = DEMI_TABLIER - abs(travers);
-  cp = mix(cp, min(uVoie[4] * 1.25, vec3(1.0)), (1.0 - smoothstep(0.03, 0.045, bord)) * 0.8);
-  cp *= 1.0 - 0.3 * (1.0 - smoothstep(0.0, 0.012, bord));
-  cp = mix(cp, uNeigeCouleurs[1], uClimat.x * 0.35);
+  float joint = 1.0 - smoothstep(0.006, 0.014 + aa, abs(fract(le_long * 2.0) - 0.5));
+  vec3 rail = uVoie[4] * (1.22 + 0.04 * grain - 0.15 * joint);
+  float bord = largeur - abs(travers);
+  // Un dessus clair et une face intérieure sombre donnent une petite
+  // épaisseur au garde-corps sans décaler le tablier au-dessus de la route.
+  float sommet = smoothstep(0.006, 0.016 + aa, bord)
+    * (1.0 - smoothstep(0.038, 0.052 + aa, bord));
+  rail *= 0.68 + 0.32 * sommet;
+  rail = mix(rail, uNeigeCouleurs[1], uClimat.x * 0.65);
+  vec3 cp = mix(rail, couleurChaussee(g, le_long, travers, false), chaus);
   return mix(col, cp, dans);
 }
 
@@ -616,8 +601,6 @@ vec3 sol(ivec2 c, vec2 g, vec2 P, vec4 b0, float aaG, float aaP, vec2 dPx, vec2 
   // traverse les limites de cases, sans disque de terre sous chaque bouquet.
   float litiere = smoothstep(0.1, 0.52, ch.b.z);
   col = mix(col, mix(uCouleurs[18], uCouleurs[19], 0.62), litiere * 0.42);
-  float herbe = smoothstep(0.55, 0.85, ch.a.x);
-  if (herbe > 0.0) col *= 1.0 - brinsDessines(g, aaG) * herbe * 0.18;
 
   // La neige couvre d'abord les creux : c'est le relief qui la découpe.
   if (uClimat.x > 0.001) {

@@ -1,0 +1,55 @@
+{
+  "date": "2026-09-30",
+  "outil": "image_gen",
+  "intention": "Vue frontale des bâtiments, feuillages lisses et moins denses ; sources originales conservées.",
+  "prompts": [
+    {
+      "id": "batiment_ville_base",
+      "ref": "batiments/batiment_ville_base.png",
+      "prompt": "Create a polished hand-painted 2D tactics map sprite, smooth anti-aliased shapes, clear detail at 100 pixels tall, NOT pixel art, NOT photorealism, NOT low-poly. Orthographic elevated FRONT view with absolutely ZERO yaw: all horizontal architecture edges parallel to screen horizontal, vertical edges vertical, depth runs straight upward on screen. Transparent background, no ground tile, no platform, no diamond, no frame, no typography, no logos. Soft daylight from upper left. Match the clean outlined blue-and-cream game style of the reference, but correct its diagonal camera. Draw a compact town consisting of TWO distinct small cream masonry houses, one two-storey home on the left and a smaller home to the right, blue gabled rooftops visible from above, dark grey window glass, chimney, modest doorsteps only. Front facades face straight down the screen, roof ridge horizontal, eaves horizontal. No ground, no flag or pole, no base. No decorative clutter. The two houses form ONE compact readable town sprite with an open gap between them. Fine roof seams, clean windows, broad surfaces. IMPORTANT: do not retain the reference isometric yaw.",
+      "sortie": "carte/batiment_ville_base.png"
+    },
+    {
+      "id": "decor_foret_automne",
+      "ref": "decors/decor_foret_automne.png",
+      "prompt": "Redraw the reference as a clean SMOOTH hand-painted 2D tactics map sprite of just TWO small deciduous trees, one ochre yellow and one warm orange-red, asymmetric but compact grouping. Much less dense, small tree on right. Broad rounded canopy masses, just 7-10 gently modeled leaf clusters per tree, with a few carefully chosen leaf accents; NO thousands of tiny leaves, NO pixel-art speckling, NO sharp busy edges. Elegant solid tree trunks visible below foliage, a few fine forks. Orthographic slightly elevated front view, clean fine charcoal contour, soft upper-left sunlight. Readable at 90 pixels. No green bush skirt, no roots carpet, no grass, no ground, no rocks, no diamond base, no shadow slab, no text. True transparent background. Smooth anti-aliasing with detailed branches and broad velvety colored leaf shapes. Not blurred, not plastic, not low-poly. Smaller and more restrained than reference.",
+      "sortie": "carte/decor_foret_automne.png"
+    },
+    {
+      "id": "decor_foret_base",
+      "ref": "decors/decor_foret_automne.png",
+      "prompt": "Create a companion SUMMER version of this woodland reference, re-designed as a clean SMOOTH hand-painted 2D tactics map sprite of just TWO small deciduous trees, one deep fresh green and one soft light green, asymmetric compact grouping, small tree on right. Broad rounded canopy masses, just 7-10 gently modeled leaf clusters per tree, with a few carefully chosen leaf accents; NO thousands of tiny leaves, NO pixel-art speckling, NO sharp busy edges. Elegant solid tree trunks visible below foliage, a few fine forks. Orthographic slightly elevated front view, clean fine charcoal contour, soft upper-left sunlight. Readable at 90 pixels. No bush skirt, no roots carpet, no grass, no ground, no rocks, no diamond base, no shadow slab, no text. True transparent background. Smooth anti-aliasing with detailed branches and broad velvety colored leaf shapes. Not blurred, not plastic, not low-poly. Smaller and more restrained than reference.",
+      "sortie": "carte/decor_foret_base.png"
+    },
+    {
+      "id": "batiment_usine_base",
+      "ref": "batiments/batiment_usine_base.png",
+      "prompt": "Redraw this building as a polished hand-painted 2D tactics MAP sprite with smooth anti-aliased edges and clean charcoal outlines. Orthographic elevated FRONT view, absolutely ZERO horizontal yaw. Front facade faces down screen, its eaves and every horizontal edge run EXACTLY horizontally. Depth edges run straight upward on screen, not diagonally. Roof tops visible from elevated camera. NOT isometric, NOT 3/4, NOT pixel art. Cream stone walls, cobalt-blue painted roof panels, dark grey windows. Compact figurine proportions, readable at 120 pixels. Transparent background, no outer ground square or platform, no flag, no logo, no text, no lettering or numbers. Soft upper-left daylight. Preserve identity and selected construction details from reference but COMPLETELY REPLACE its diagonal perspective. Center isolated subject. Industrial workshop with three clear sawtooth roof ridges running HORIZONTALLY, large charcoal garage door in the straight front facade and smaller personnel door, two roof vents. Roofs recede vertically up screen in rows. No diagonal wall side planes visible. No apron or paved tile.",
+      "sortie": "carte/batiment_usine_base.png"
+    },
+    {
+      "id": "batiment_radar_base",
+      "ref": "batiments/batiment_radar_base.png",
+      "prompt": "Redraw this building as a polished hand-painted 2D tactics MAP sprite with smooth anti-aliased edges and clean charcoal outlines. Orthographic elevated FRONT view, absolutely ZERO horizontal yaw. Front facade faces down screen, its eaves and every horizontal edge run EXACTLY horizontally. Depth edges run straight upward on screen, not diagonally. Roof tops visible from elevated camera. NOT isometric, NOT 3/4, NOT pixel art. Cream stone walls, cobalt-blue painted roof panels, dark grey windows. Compact figurine proportions, readable at 120 pixels. Transparent background, no outer ground square or platform, no flag, no logo, no text, no lettering or numbers. Soft upper-left daylight. Preserve identity and selected construction details from reference but COMPLETELY REPLACE its diagonal perspective. Center isolated subject. Radar station: small flat-roof square cream maintenance cabin, huge pale ivory concave radar dish centered on a chunky blue mount on its roof, a small receiver stem, no antenna spikes. Blue trim. Dish tilted up enough to expose its concave surface but cabin precisely front-on. Cabin has narrow door and side vent on its front. No ground plane.",
+      "sortie": "carte/batiment_radar_base.png"
+    },
+    {
+      "id": "batiment_aeroport_base",
+      "ref": "batiments/batiment_aeroport_base.png",
+      "prompt": "Redraw this building as a polished hand-painted 2D tactics MAP sprite with smooth anti-aliased edges and clean charcoal outlines. Orthographic elevated FRONT view, absolutely ZERO horizontal yaw. Front facade faces down screen, its eaves and every horizontal edge run EXACTLY horizontally. Depth edges run straight upward on screen, not diagonally. Roof tops visible from elevated camera. NOT isometric, NOT 3/4, NOT pixel art. Cream stone walls, cobalt-blue painted roof panels, dark grey windows. Compact figurine proportions, readable at 120 pixels. Transparent background, no outer ground square or platform, no flag, no logo, no text, no lettering or numbers. Soft upper-left daylight. Preserve identity and selected construction details from reference but COMPLETELY REPLACE its diagonal perspective. Center isolated subject. Airfield building: one squat arched blue hangar at left with large dark opening facing directly front, compact control tower at right with blue canopy and dark continuous glass band. Small attached front apron only, rectangular in screen, no runway stripe or large pavement tile. Entire silhouette aligns to square map grid, all facade edges horizontal, no visible side walls. The hangar curved roof is visible above opening.",
+      "sortie": "carte/batiment_aeroport_base.png"
+    },
+    {
+      "id": "batiment_port_base",
+      "ref": "batiments/batiment_port_base.png",
+      "prompt": "Redraw this building as a polished hand-painted 2D tactics MAP sprite with smooth anti-aliased edges and clean charcoal outlines. Orthographic elevated FRONT view, absolutely ZERO horizontal yaw. Front facade faces down screen, its eaves and every horizontal edge run EXACTLY horizontally. Depth edges run straight upward on screen, not diagonally. Roof tops visible from elevated camera. NOT isometric, NOT 3/4, NOT pixel art. Cream stone walls, cobalt-blue painted roof panels, dark grey windows. Compact figurine proportions, readable at 120 pixels. Transparent background, no outer ground square or platform, no flag, no logo, no text, no lettering or numbers. Soft upper-left daylight. Preserve identity and selected construction details from reference but COMPLETELY REPLACE its diagonal perspective. Center isolated subject. Small harbour: blue gabled-roof dock warehouse at rear center with front-facing dark opening, small simple blue gantry crane on left. Short U-shaped pale stone quay frame around a small opening for water at bottom center. The quay's front/back edges horizontal, its receding edges vertical on screen: RECTANGLE, never a diamond. No painted water inside opening: transparent gap so game's water shows through. No full ground square outside the functional narrow quay.",
+      "sortie": "carte/batiment_port_base.png"
+    },
+    {
+      "id": "decor_foret_automne_2",
+      "ref": "carte/decor_foret_automne.png",
+      "prompt": "Create a companion woodland MAP sprite in exactly this smooth painted style, true transparent background. JUST TWO SMALL TREES: a short broad rusty-orange deciduous tree on the left and a short compact dark green fir to the right, uneven heights. Broad smooth canopy masses, only a handful of leaf details, soft smooth anti-aliased edges; fine trunks visible. Fir has 4 large soft rounded bough tiers, no needles noise. Elevated orthographic front view. No ground, no bushes, no roots carpet, no grass tile, no base, no text. Modest simple pair of small trees, airy gap between trunks. Fine charcoal outlines and soft upper-left light. Avoid pixel art or stippled texture. Readable at 80 pixels.",
+      "sortie": "carte/decor_foret_automne_2.png"
+    }
+  ]
+}

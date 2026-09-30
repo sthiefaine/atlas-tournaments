@@ -1,19 +1,28 @@
 {
-  "date": "2026-09-30T17:31:41.740Z",
+  "date": "2026-09-30T21:19:04.617Z",
   "type": "poses_fixes",
   "sourcesIntactes": true,
   "aliasRetires": [
     "batiment_qg_fr",
     "batiment_qg_lu"
   ],
+  "referencesSeulement": [
+    "terrain_pont",
+    "batiment_ville_desaffecte",
+    "batiment_usine_desaffecte",
+    "batiment_port_desaffecte",
+    "batiment_aeroport_desaffecte",
+    "batiment_radar_desaffecte"
+  ],
   "limites": [
     "Vues de carte et de duel partagent la pose fixe.",
     "Pas de cycle de marche ou de rotor dessiné.",
-    "Pont commun raccordé sur deux axes ; les autres ponts et sols dessinés restent des références.",
+    "Pont tracé par le sol avec la même chaussée que les routes ; ses dessins restent des références.",
+    "États désaffectés : base frontale ternie sans pavillon.",
     "Les variantes hivernales historiques restent disponibles."
   ],
-  "total": 63,
-  "octetsPages": 745258,
+  "total": 57,
+  "octetsPages": 618832,
   "pages": [
     {
       "groupe": "unites-cobalt",
@@ -65,10 +74,10 @@
     },
     {
       "groupe": "batiments-cobalt",
-      "fichier": "batiments-cobalt-0-3c8faba75004.webp",
-      "octets": 99218,
+      "fichier": "batiments-cobalt-0-707dbe7009e7.webp",
+      "octets": 90070,
       "largeur": 144,
-      "hauteur": 708,
+      "hauteur": 656,
       "entrees": [
         "batiment_ville_base",
         "batiment_qg_base",
@@ -80,10 +89,10 @@
     },
     {
       "groupe": "decor-naturel",
-      "fichier": "decor-naturel-0-afcd08e60e39.webp",
-      "octets": 239444,
-      "largeur": 252,
-      "hauteur": 992,
+      "fichier": "decor-naturel-0-54cdd6973de0.webp",
+      "octets": 199132,
+      "largeur": 240,
+      "hauteur": 816,
       "entrees": [
         "decor_foret_base",
         "biome_plaine_base",
@@ -96,8 +105,6 @@
         "biome_cotier_base",
         "biome_archipel_base",
         "biome_marais_base",
-        "terrain_pont",
-        "terrain_pont",
         "terrain_montagne",
         "decor_rocher_cotier",
         "decor_rocher_archipel",
@@ -120,17 +127,12 @@
     },
     {
       "groupe": "batiments-naturel",
-      "fichier": "batiments-naturel-0-982f2714d602.webp",
-      "octets": 91888,
+      "fichier": "batiments-naturel-0-1e1f0b6b36b7.webp",
+      "octets": 14922,
       "largeur": 144,
-      "hauteur": 692,
+      "hauteur": 104,
       "entrees": [
-        "batiment_superusine_inerte",
-        "batiment_ville_desaffecte",
-        "batiment_usine_desaffecte",
-        "batiment_port_desaffecte",
-        "batiment_aeroport_desaffecte",
-        "batiment_radar_desaffecte"
+        "batiment_superusine_inerte"
       ]
     }
   ]

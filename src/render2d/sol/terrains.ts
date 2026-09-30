@@ -77,8 +77,9 @@ const MELANGES: Readonly<Record<CleTerrain, Partial<Record<MatiereSol, number>>>
   herbe_haute: { herbehaute: 0.85, herbe: 0.15 },
   // Sous les arbres, de l'humus et des feuilles : un sol de forêt se lit avant
   // même d'avoir vu un tronc.
-  foret: { sousbois: 0.68, herbe: 0.32 },
-  montagne: { roche: 0.82, terre: 0.1, herbe: 0.08 },
+  foret: { sousbois: 0.46, herbe: 0.54 },
+  // Le relief est porté par le sprite : pas de dalle rocheuse pleine case.
+  montagne: { herbe: 0.72, terre: 0.18, roche: 0.1 },
   // La chaussée est tracée par-dessus ; la matière n'apporte que ses bas-côtés.
   route: { herbe: 0.6, terre: 0.4 },
   plage: { sable: 1 },

@@ -1,5 +1,9 @@
 # Sprites dessinés directement
 
+### Raccords du paysage et bâtiments frontaux
+
+**30 septembre 2026 — reprise des raccords du paysage.** La plaine retrouve des variations de turf à trois échelles ; les brins en V répétés sont retirés. Le pont est désormais tracé par le sol avec la même largeur de chaussée et le même marquage que la route, entouré de garde-corps fins ; les PNG de pont restent des références, sans instance superposée en jeu. Trois nouveaux bosquets de deux arbres remplacent les groupes denses en saison tempérée, à une échelle de 0,83–0,93 sans agrandissement près des voisins. Le dessous des montagnes reste herbeux, sans plaque de roche carrée. Ville, usine, aéroport, port et radar sont redessinés de face comme le QG ; désaffectés : même base ternie, sans pavillon. Les deux images de superusine, les unités hors char léger/recon et les variantes hivernales restent à harmoniser. Huit PNG natifs sous `collection-base-v1/carte/`, originaux conservés et prompts dans `raccords-carte.json`. L'atlas courant compte 57 entrées dessinées sur 6 pages (618,832 octets). Aucun changement de règles ni approbation artistique automatique. Contrôles de cette reprise : concordance SHA des huit sources avec le manifeste, typage et compilation de production réussis ; inspection locale des Quatre villes, de la carte d’exhibition et du catalogue. Aucune suite de tests lancée.
+
 Décision du propriétaire, 30 septembre 2026 : supprimer les GLB et fabriquer uniquement des sprites. La chaîne de figurines Blender et de cuisson est arrêtée. Le rendu WebGL 2 existant reste en place.
 
 ## Première livraison : trois propositions

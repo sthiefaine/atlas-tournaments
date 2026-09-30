@@ -301,11 +301,17 @@ const PEINTRES: Readonly<Record<Exclude<CoucheDetail, 'eau' | 'bruit'>, Peintre>
     const k = t - 1;
     for (let y = 0, i = 0; y < t; y += 1) {
       const l16 = ligne(y, 13, k, t);
+      const l64 = ligne(y, 91, k, t);
+      const l128 = ligne(y, 5, k, t);
       const l64b = ligne(y, 200, k, t);
       for (let x = 0; x < t; x += 1, i += 1) {
         const base = b.b8[i]!;
-        w.relief[i] = 0.45 + 0.1 * base;
-        w.clarte[i] = 0.5 + 0.16 * lisser(0.35, 0.65, base);
+        const detail = b.b64[l64 + ((x + 37) & k)]!;
+        const fin = b.b128[l128 + ((x + 11) & k)]!;
+        // Nuances continues de turf, à trois échelles : aucune touffe en V
+        // répétée. Le petit grain reste subordonné aux grandes variations.
+        w.relief[i] = 0.5 * base + 0.3 * detail + 0.1 * fin;
+        w.clarte[i] = 0.36 + 0.38 * base + 0.18 * (detail - 0.5) + 0.05 * (fin - 0.5);
         const fA = b.vA.f1[i]!;
         const idA = b.vA.id[i]!;
         let accent: number;

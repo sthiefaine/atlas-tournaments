@@ -153,7 +153,7 @@ export interface ApparenceVoie {
 const BITUME: ApparenceVoie = {
   sombre: '#4a5056', clair: '#686e72', accotement: '#968d76',
   largeurAccotement: 0.07, opaciteAccotement: 0.55, accotementPlein: false,
-  demiLargeur: 0.2, frange: 0.012, motif: 'tirets', couleurMotif: '#d6d0b2',
+  demiLargeur: 0.23, frange: 0.004, motif: 'tirets', couleurMotif: '#d6d0b2',
   grain: 0.18, pont: '#8f8d86',
 };
 

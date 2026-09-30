@@ -3,7 +3,7 @@
   "date": "2026-09-30",
   "demande": "Refaire le drone intercepteur, conserver les autres dessins approuvés et compléter les références communes, en commençant par les biomes et les ponts.",
   "format": "PNG transparent, dessin direct, sans GLB",
-  "livraison": "100 références et deux vues du pont commun ; 63 entrées activées. Premier contact : char et reconnaissance en profil plongeant, QG de face, raccords du décor selon les voisins.",
+  "livraison": "100 références ; bâtiments communs de face, trois bosquets lissés et plus petits, plaine nuancée, pont tracé avec la route. Sources originales conservées.",
   "activationJeu": "partielle_poses_fixes",
   "total": 100,
   "entrees": [
@@ -402,11 +402,12 @@
       "cle": "ville",
       "nom": "Ville",
       "famille": "batiment",
-      "fichier": "batiments/batiment_ville_base.png",
-      "statut": "dessin_produit",
+      "fichier": "carte/batiment_ville_base.png",
+      "statut": "raccords_carte_repris",
       "outil": "image_gen natif",
-      "avisUtilisateur": "approuve_2026-09-30",
-      "activationJeu": "pose_fixe"
+      "avisUtilisateur": "a_revoir_apres_reprise",
+      "activationJeu": "pose_fixe",
+      "referenceOriginale": "batiments/batiment_ville_base.png"
     },
     {
       "id": "batiment_qg_base",
@@ -426,59 +427,64 @@
       "cle": "usine",
       "nom": "Usine",
       "famille": "batiment",
-      "fichier": "batiments/batiment_usine_base.png",
-      "statut": "dessin_produit",
+      "fichier": "carte/batiment_usine_base.png",
+      "statut": "raccords_carte_repris",
       "outil": "image_gen natif",
-      "avisUtilisateur": "approuve_2026-09-30",
-      "activationJeu": "pose_fixe"
+      "avisUtilisateur": "a_revoir_apres_reprise",
+      "activationJeu": "pose_fixe",
+      "referenceOriginale": "batiments/batiment_usine_base.png"
     },
     {
       "id": "batiment_port_base",
       "cle": "port",
       "nom": "Port",
       "famille": "batiment",
-      "fichier": "batiments/batiment_port_base.png",
-      "statut": "dessin_produit",
+      "fichier": "carte/batiment_port_base.png",
+      "statut": "raccords_carte_repris",
       "outil": "image_gen natif",
-      "avisUtilisateur": "approuve_2026-09-30",
-      "activationJeu": "pose_fixe"
+      "avisUtilisateur": "a_revoir_apres_reprise",
+      "activationJeu": "pose_fixe",
+      "referenceOriginale": "batiments/batiment_port_base.png"
     },
     {
       "id": "batiment_aeroport_base",
       "cle": "aeroport",
       "nom": "Aéroport",
       "famille": "batiment",
-      "fichier": "batiments/batiment_aeroport_base.png",
-      "statut": "dessin_produit",
+      "fichier": "carte/batiment_aeroport_base.png",
+      "statut": "raccords_carte_repris",
       "outil": "image_gen natif",
-      "avisUtilisateur": "approuve_2026-09-30",
-      "activationJeu": "pose_fixe"
+      "avisUtilisateur": "a_revoir_apres_reprise",
+      "activationJeu": "pose_fixe",
+      "referenceOriginale": "batiments/batiment_aeroport_base.png"
     },
     {
       "id": "batiment_radar_base",
       "cle": "radar",
       "nom": "Station radar",
       "famille": "batiment",
-      "fichier": "batiments/batiment_radar_base.png",
-      "statut": "dessin_produit",
+      "fichier": "carte/batiment_radar_base.png",
+      "statut": "raccords_carte_repris",
       "outil": "image_gen natif",
-      "avisUtilisateur": "approuve_2026-09-30",
-      "activationJeu": "pose_fixe"
+      "avisUtilisateur": "a_revoir_apres_reprise",
+      "activationJeu": "pose_fixe",
+      "referenceOriginale": "batiments/batiment_radar_base.png"
     },
     {
       "id": "decor_foret_base",
       "cle": "foret",
       "nom": "Forêt mixte",
       "famille": "decor",
-      "fichier": "decors/decor_foret_base.png",
-      "statut": "dessin_produit",
+      "fichier": "carte/decor_foret_base.png",
+      "statut": "raccords_carte_repris",
       "outil": "image_gen natif",
-      "avisUtilisateur": "approuve_2026-09-30",
+      "avisUtilisateur": "a_revoir_apres_reprise",
       "couvre": [
         "terrain_foret"
       ],
       "groupe": "vegetation",
-      "activationJeu": "pose_fixe"
+      "activationJeu": "pose_fixe",
+      "referenceOriginale": "decors/decor_foret_base.png"
     },
     {
       "id": "biome_plaine_base",
@@ -609,7 +615,7 @@
       "fichier": "ponts/terrain_pont.png",
       "statut": "dessin_produit",
       "outil": "image_gen natif",
-      "activationJeu": "pose_fixe"
+      "activationJeu": "reference_pont_trace_par_sol"
     },
     {
       "id": "pont_pierre_culee",
@@ -1126,7 +1132,7 @@
       "fichier": "batiments/batiment_ville_desaffecte.png",
       "statut": "dessin_produit",
       "outil": "image_gen natif",
-      "activationJeu": "pose_fixe"
+      "activationJeu": "reference_etat_terni_base"
     },
     {
       "id": "batiment_usine_desaffecte",
@@ -1137,7 +1143,7 @@
       "fichier": "batiments/batiment_usine_desaffecte.png",
       "statut": "dessin_produit",
       "outil": "image_gen natif",
-      "activationJeu": "pose_fixe"
+      "activationJeu": "reference_etat_terni_base"
     },
     {
       "id": "batiment_port_desaffecte",
@@ -1148,7 +1154,7 @@
       "fichier": "batiments/batiment_port_desaffecte.png",
       "statut": "dessin_produit",
       "outil": "image_gen natif",
-      "activationJeu": "pose_fixe"
+      "activationJeu": "reference_etat_terni_base"
     },
     {
       "id": "batiment_aeroport_desaffecte",
@@ -1159,7 +1165,7 @@
       "fichier": "batiments/batiment_aeroport_desaffecte.png",
       "statut": "dessin_produit",
       "outil": "image_gen natif",
-      "activationJeu": "pose_fixe"
+      "activationJeu": "reference_etat_terni_base"
     },
     {
       "id": "batiment_radar_desaffecte",
@@ -1170,7 +1176,7 @@
       "fichier": "batiments/batiment_radar_desaffecte.png",
       "statut": "dessin_produit",
       "outil": "image_gen natif",
-      "activationJeu": "pose_fixe"
+      "activationJeu": "reference_etat_terni_base"
     },
     {
       "id": "decor_foret_automne",
@@ -1178,11 +1184,13 @@
       "nom": "Bosquet d’automne",
       "famille": "decor",
       "groupe": "decors",
-      "fichier": "decors/decor_foret_automne.png",
-      "statut": "dessin_produit",
+      "fichier": "carte/decor_foret_automne.png",
+      "statut": "raccords_carte_repris",
       "outil": "image_gen natif",
       "activationJeu": "pose_fixe",
-      "provenance": "composition-jeu.json"
+      "provenance": "composition-jeu.json",
+      "referenceOriginale": "decors/decor_foret_automne.png",
+      "avisUtilisateur": "a_revoir_apres_reprise"
     },
     {
       "id": "decor_foret_automne_2",
@@ -1190,11 +1198,13 @@
       "nom": "Bosquet de bouleaux et hêtres",
       "famille": "decor",
       "groupe": "decors",
-      "fichier": "decors/decor_foret_automne_2.png",
-      "statut": "dessin_produit",
+      "fichier": "carte/decor_foret_automne_2.png",
+      "statut": "raccords_carte_repris",
       "outil": "image_gen natif",
       "activationJeu": "pose_fixe",
-      "provenance": "composition-variante.json"
+      "provenance": "composition-variante.json",
+      "referenceOriginale": "decors/decor_foret_automne_2.png",
+      "avisUtilisateur": "a_revoir_apres_reprise"
     }
   ],
   "perimetre": "Références communes : 30 unités, 13 bâtiments et états, 10 biomes, 9 éléments de pont, 7 études de terrain, 19 décors dont la forêt déjà dessinée et 10 portraits archétypes. Pas de variante nationale ou régionale supplémentaire.",
