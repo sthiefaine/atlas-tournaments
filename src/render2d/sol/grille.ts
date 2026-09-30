@@ -240,6 +240,8 @@ export const BITS = {
   AXE_EO: 16,
   /** La case porte une voie : une route, ou le tablier d'un pont. */
   VOIE: 32,
+  /** Accès étroit d'un bâtiment aux routes voisines, sans dalle de fond. */
+  ACCES: 64,
 } as const;
 
 /** Les quatre premiers bits d'une liaison. */
@@ -249,6 +251,15 @@ export function bitsDe(l: Liaisons): number {
 
 /** L'octet de voie d'une case (canal G). */
 export function octetVoie(g: GrilleSol, x: number, y: number): number {
+  if (TERRAINS_BATIS.has(terrainEn(g, x, y))) {
+    const bras = DIRECTIONS.map(([dx, dy], d) => {
+      if (!dedans(g, x + dx, y + dy)) return false;
+      const t = terrainEn(g, x + dx, y + dy);
+      return t === 'route' || (t === 'pont' && dansAxe(axePont(g, x + dx, y + dy), d));
+    });
+    const bits = bitsDe([bras[0]!, bras[1]!, bras[2]!, bras[3]!]);
+    return bits ? bits | BITS.ACCES : 0;
+  }
   const piece = pieceVoie(g, x, y);
   if (!piece) return 0;
   const axe = terrainEn(g, x, y) === 'pont' && axePont(g, x, y) === 'eo' ? BITS.AXE_EO : 0;

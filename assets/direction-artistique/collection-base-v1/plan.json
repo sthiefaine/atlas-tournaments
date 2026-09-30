@@ -3,7 +3,7 @@
   "date": "2026-09-30",
   "demande": "Refaire le drone intercepteur, conserver les autres dessins approuvés et compléter les références communes, en commençant par les biomes et les ponts.",
   "format": "PNG transparent, dessin direct, sans GLB",
-  "livraison": "100 références et deux vues raccordables du pont commun ; 63 entrées du manifeste activées. Les bosquets remplacent les couronnes de petits arbres.",
+  "livraison": "100 références et deux vues du pont commun ; 63 entrées activées. Premier contact : char et reconnaissance en profil plongeant, QG de face, raccords du décor selon les voisins.",
   "activationJeu": "partielle_poses_fixes",
   "total": 100,
   "entrees": [
@@ -38,12 +38,13 @@
       "nom": "Recon",
       "famille": "unite",
       "domaine": "terre",
-      "fichier": "unites/unite_recon_base.png",
-      "statut": "dessin_produit",
+      "fichier": "carte/unite_recon_base.png",
+      "statut": "perspective_carte_reprise",
       "origine": null,
       "outil": "image_gen natif",
-      "avisUtilisateur": "approuve_2026-09-30",
-      "activationJeu": "pose_fixe"
+      "avisUtilisateur": "a_revoir_apres_reprise_perspective",
+      "activationJeu": "pose_fixe",
+      "referenceTroisQuarts": "unites/unite_recon_base.png"
     },
     {
       "id": "unite_char_leger_base",
@@ -51,11 +52,13 @@
       "nom": "Char léger",
       "famille": "unite",
       "domaine": "terre",
-      "fichier": "unites/unite_char_leger_base.png",
-      "statut": "pilote_reutilise",
-      "origine": "assets/direction-artistique/pilotes-sprites-v1/char_leger.png",
-      "avisUtilisateur": "approuve_2026-09-30",
-      "activationJeu": "pose_fixe"
+      "fichier": "carte/unite_char_leger_base.png",
+      "statut": "perspective_carte_reprise",
+      "origine": null,
+      "avisUtilisateur": "a_revoir_apres_reprise_perspective",
+      "activationJeu": "pose_fixe",
+      "referenceTroisQuarts": "unites/unite_char_leger_base.png",
+      "outil": "image_gen natif"
     },
     {
       "id": "unite_char_lourd_base",
@@ -410,11 +413,13 @@
       "cle": "qg",
       "nom": "QG",
       "famille": "batiment",
-      "fichier": "batiments/batiment_qg_base.png",
-      "statut": "dessin_produit",
+      "fichier": "carte/batiment_qg_base.png",
+      "statut": "perspective_carte_reprise",
       "outil": "image_gen natif",
-      "avisUtilisateur": "approuve_2026-09-30",
-      "activationJeu": "pose_fixe"
+      "avisUtilisateur": "a_revoir_apres_reprise_perspective",
+      "activationJeu": "pose_fixe",
+      "referenceTroisQuarts": "batiments/batiment_qg_base.png",
+      "origine": null
     },
     {
       "id": "batiment_usine_base",

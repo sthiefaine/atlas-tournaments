@@ -35,6 +35,16 @@ La galerie privée `/admin/assets/dessins` propose catégories avec compteurs, r
 
 ## Fabrication des sprites de jeu
 
+### Perspective de carte et raccords — Premier contact
+
+Le retour du propriétaire vise la cohérence du plateau, pas la quantité de détail dans une image isolée. La correction conserve les dessins trois-quarts comme références et crée trois vues de carte natives (`carte/`) : char léger et reconnaissance en vue latérale plongeante à axe horizontal, QG à façade frontale alignée sur la grille. Le plan pointe vers ces nouveaux fichiers ; les prompts exacts et leurs références sont dans `perspective-carte.json`. Production par image_gen, sans GLB ni déformation du dessin à l'exécution.
+
+La règle de perspective pour la suite : caméra orthographique, hauteur de vue constante, véhicule parallèle à sa voie ; les bâtiments suivent les axes de la grille. Une vue de vitrine en diagonale ne vaut pas vue de carte. Les unités et bâtiments autres que ces trois références conservent encore leur perspective précédente. Les poses restent fixes, également reprises dans le duel en attendant des profils dédiés.
+
+Les bosquets tempérés reliés par un côté se rapprochent et recouvrent leur joint. Les groupes isolés gardent une emprise plus petite ; le brouillard exclut les voisins inconnus du calcul. La litière du sol traverse les limites entre cases boisées. Le bit graphique `ACCES` trace un passage étroit entre un bâtiment et les routes ou ponts qui arrivent réellement face à lui : la route mène au seuil, sans restaurer le carré de pierre. Les accès suivent la neige ; aucun terrain logique, déplacement, défense ou coût n'est modifié.
+
+Le manifeste conserve 63 entrées dessinées et six pages, pour 745 258 octets. Les trois références haute définition restent dans la fabrication. Typage et inspection locale de Premier contact effectués, sans suite de tests ; cela ne vaut pas approbation du propriétaire.
+
 ### Sol continu sous les bâtiments et cohérence des biomes
 
 Le fond transparent du PNG QG était déjà correct ; le carré de pierre venait de `MELANGES.qg` et du forçage des cours dans le nuanceur. Les bâtiments terrestres reprennent maintenant la matière de plaine du biome et ses transitions, sans dalle ajoutée. Le port garde son quai qui dessine la limite terre/mer. Les murs, marches et ouvrages présents dans les dessins restent intacts.

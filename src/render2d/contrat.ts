@@ -101,11 +101,13 @@ export function taillePlan(largeur: number, hauteur: number): { largeur: number;
 // ---------------------------------------------------------------------------
 
 /**
- * Les vues cuites. Une unité se cuit dans trois : `droite` (de trois quarts,
+ * Les vues historiques cuites. Une unité se cuit dans trois : `droite` (de trois quarts,
  * tournée vers la droite de l'écran), `bas` (vers le joueur) et `haut` (de
  * dos). La gauche est `droite` **retournée** par le rendu. Un bâtiment ou un
  * décor se cuit en `fixe` ; un pont en `fixe` et `travers`. `profil` est la
  * vue de l'écran de combat, au tangage `TANGAGE_PROFIL`, tournée vers la droite.
+ * Les dessins de carte reprennent ces clés ; les nouvelles vues `droite`
+ * suivent l'axe horizontal de la grille, sans le lacet des anciens modèles.
  */
 export const VUES = ['droite', 'bas', 'haut', 'fixe', 'travers', 'profil'] as const;
 export type VueSprite = typeof VUES[number];

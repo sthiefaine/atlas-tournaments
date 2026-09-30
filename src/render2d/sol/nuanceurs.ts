@@ -108,6 +108,7 @@ const DEFINITIONS = [
   `#define NB_MATIERES ${MATIERES.length}`,
   ...Object.entries(CODES).map(([nom, code]) => `#define ${nom} ${code}`),
   `#define BIT_VOIE ${BITS.VOIE}`,
+  `#define BIT_ACCES ${BITS.ACCES}`,
   `#define BIT_AXE_EO ${BITS.AXE_EO}`,
   `#define COUCHE_NEIGE ${f(rangCouche('neige'))}`,
   `#define COUCHE_EAU ${f(rangCouche('eau'))}`,
@@ -427,6 +428,25 @@ vec3 chaussee(vec3 col, int bits, vec2 l, vec2 g, float aa, float frange) {
   return col;
 }
 
+// Un accès suit uniquement les routes réellement raccordées. Il rejoint le
+// seuil au sud du bâtiment ; le sprite masque la portion passant sous ses murs.
+vec3 accesBatiment(vec3 col, int bits, vec2 l, float aa) {
+  vec2 seuil = vec2(0.5, 0.73);
+  float d = 9.0;
+  for (int k = 0; k < 4; k++) {
+    if ((bits & (1 << k)) == 0) continue;
+    vec2 coude = k == 1 || k == 3 ? vec2(0.5, 0.5) : seuil;
+    d = min(d, segment(l, BOUTS[k], coude));
+    if (k == 1 || k == 3) d = min(d, segment(l, coude, seuil));
+  }
+  float bord = 1.0 - smoothstep(0.085, 0.105 + aa, d);
+  float chemin = 1.0 - smoothstep(0.062 - aa, 0.072 + aa, d);
+  vec3 terre = mix(uCouleurs[3], uCouleurs[4], 0.75);
+  terre = mix(terre, uNeigeCouleurs[1], uClimat.x * 0.9);
+  col = mix(col, terre * 0.88, bord * 0.55);
+  return mix(col, terre, chemin * 0.9);
+}
+
 vec3 tablier(vec3 col, int bits, vec2 l, vec2 g, float aa, float grain) {
   bool eo = (bits & BIT_AXE_EO) != 0;
   float travers = eo ? l.y - 0.5 : l.x - 0.5;
@@ -592,6 +612,10 @@ vec3 sol(ivec2 c, vec2 g, vec2 P, vec4 b0, float aaG, float aaP, vec2 dPx, vec2 
   }
   float relief;
   vec3 col = matieres(g, ch.a, ch.b, b0.r, relief);
+  // Une même litière relie les troncs de cases voisines. Le champ mélangé
+  // traverse les limites de cases, sans disque de terre sous chaque bouquet.
+  float litiere = smoothstep(0.1, 0.52, ch.b.z);
+  col = mix(col, mix(uCouleurs[18], uCouleurs[19], 0.62), litiere * 0.42);
   float herbe = smoothstep(0.55, 0.85, ch.a.x);
   if (herbe > 0.0) col *= 1.0 - brinsDessines(g, aaG) * herbe * 0.18;
 
@@ -649,6 +673,7 @@ vec3 sol(ivec2 c, vec2 g, vec2 P, vec4 b0, float aaG, float aaP, vec2 dPx, vec2 
   }
 
   // Les voies : la chaussée d'une route, le tablier d'un pont.
+  if ((ici.g & BIT_ACCES) != 0) col = accesBatiment(col, ici.g, l, aaG);
   if ((ici.g & BIT_VOIE) != 0) {
     if (ici.r == CODE_PONT) {
       if (uPontCuit == 0) col = tablier(col, ici.g, l, g, aaG, b0.a);

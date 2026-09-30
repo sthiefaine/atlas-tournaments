@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-30T16:15:06.294Z",
+  "date": "2026-09-30T17:31:41.740Z",
   "type": "poses_fixes",
   "sourcesIntactes": true,
   "aliasRetires": [
@@ -13,14 +13,14 @@
     "Les variantes hivernales historiques restent disponibles."
   ],
   "total": 63,
-  "octetsPages": 749980,
+  "octetsPages": 745258,
   "pages": [
     {
       "groupe": "unites-cobalt",
-      "fichier": "unites-cobalt-0-7f24f9cc75e4.webp",
-      "octets": 272206,
+      "fichier": "unites-cobalt-0-e1483c50b199.webp",
+      "octets": 271168,
       "largeur": 480,
-      "hauteur": 656,
+      "hauteur": 648,
       "entrees": [
         "unite_infanterie_base",
         "unite_meca_base",
@@ -65,10 +65,10 @@
     },
     {
       "groupe": "batiments-cobalt",
-      "fichier": "batiments-cobalt-0-621f93cfbafe.webp",
-      "octets": 102902,
+      "fichier": "batiments-cobalt-0-3c8faba75004.webp",
+      "octets": 99218,
       "largeur": 144,
-      "hauteur": 716,
+      "hauteur": 708,
       "entrees": [
         "batiment_ville_base",
         "batiment_qg_base",

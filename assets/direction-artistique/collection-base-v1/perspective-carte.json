@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-30",
+  "outil": "image_gen natif",
+  "intention": "Aligner les sprites de Premier contact sur les axes de la carte ; originaux trois-quarts conservés.",
+  "images": [
+    {
+      "id": "unite_char_leger_base",
+      "fichier": "carte/unite_char_leger_base.png",
+      "reference": "unites/unite_char_leger_base.png",
+      "prompt": "Use case: precise-object-edit. Input image is the exact vehicle design to preserve; change only its camera view for a square-grid tactics MAP SPRITE. Keep this cobalt-blue small tracked tank, compact turret, short gun, five chunky road wheels, ivory rear stowage, graphite tracks, same clean illustrated linework. CRITICAL CAMERA: orthographic ELEVATED SIDE VIEW, looking down at 50 degrees from the SOUTH, vehicle points exactly EAST, right on the image. Its long track baseline and barrel are EXACTLY HORIZONTAL. We see broad roof surfaces and the near side track; we do NOT see the front grille as a broad face. No yaw into the image, no diagonal orientation, no isometric corner, no perspective convergence. All left-to-right edges are horizontal, ground-depth edges vertical. Turret gun points due right parallel to screen, no diagonal gun. Wider than tall silhouette about 1.8 to 1. Clean detailed cel-painted tactics sprite, restrained highlights and dark contour, few large readable panels at 90px rather than micro-rivets. Match reference cobalt and ivory, top-left light. Single complete vehicle centered with transparent padding. Truly transparent background, no ground, no platform, no ambient cast shadow, no text or emblems. This is a production game sprite, not a presentation render."
+    },
+    {
+      "id": "unite_recon_base",
+      "fichier": "carte/unite_recon_base.png",
+      "reference": "unites/unite_recon_base.png",
+      "prompt": "Use case: precise-object-edit. Preserve the referenced compact blue four-wheel reconnaissance scout buggy design, cabin, chunky tyres, round roof sensor and ivory rear luggage. Redraw it as an ORTHOGRAPHIC ELEVATED SIDE-VIEW MAP SPRITE for a square-grid tactics game. Camera at 50 degrees above the ground looking from due SOUTH; vehicle front points exactly EAST/right, longitudinal axis perfectly horizontal. Wheel axle centers on the near side are horizontally aligned. Roof and hood tops clearly visible. No diagonal orientation into viewer, no isometric corner, no perspective convergence, no broad front grille facing camera. Fore-and-aft silhouette strictly runs left-to-right. Front is at right; rear at left. Clean illustrated cel-painted style matching the reference, cobalt blue broad body panels, graphite tyres, cream accents, controlled dark contour, upper-left diffuse light, readable big shapes at 85px. Wider-than-tall silhouette around 1.7:1. Single whole vehicle with empty transparent padding. Genuine transparent background, no scenery, no road, no platform, no ground shadow, no labels, no real insignia."
+    },
+    {
+      "id": "batiment_qg_base",
+      "fichier": "carte/batiment_qg_base.png",
+      "reference": "batiments/batiment_qg_base.png",
+      "prompt": "Use case: precise-object-edit. Input image is the exact blue-roof headquarters design to preserve. Change its viewpoint to a square-grid tactics MAP SPRITE: ORTHOGRAPHIC FRONT ELEVATION WITH ROOF VISIBLE, camera 50 degrees above ground looking due north, ZERO YAW. The central main entrance faces directly toward the bottom of screen, perfectly centered. Symmetric side wings stretch left and right. All facade lintels, roof front edges, step edges and foundation baselines are PERFECTLY HORIZONTAL. Uprights vertical. Depth edges extend vertically up the image, no diamond, no isometric corner, no diagonal frontage, no converging perspective. Keep blue stepped roof, cream walls, graphite bands, small roof antennae, blue dark glass, large central tower and two low wings. Ground level only doorway steps and walls; NO slab, NO square terrain tile, NO pavement, NO surrounding base or grass. Entire background transparent right to the walls. Refined clean cel-painted strategy-game art matching reference, large clear shapes, moderate contour, soft upper-left light, no baked external ground shadow. Whole building centered with transparent padding. No flags, text, symbols or characters. This is one playable building sprite, not a diorama."
+    }
+  ]
+}
