@@ -469,7 +469,7 @@ export function decorDeCase(ctx: ContexteDecor): DecorCase {
   else if (t === 'pont') sol = lire3(s, DISPOSITION.voie + 12);
   else if (t === 'route') sol = mel(lire3(s, DISPOSITION.voie), lire3(s, DISPOSITION.voie + 3), 0.5);
   else {
-    const poids = poidsDe(t);
+    const poids = poidsDe(t, biome);
     const c: [number, number, number] = [0, 0, 0];
     MATIERES.forEach((m, i) => {
       const w = poids[i] ?? 0;
@@ -479,8 +479,9 @@ export function decorDeCase(ctx: ContexteDecor): DecorCase {
       c[1] += w * couleur[1];
       c[2] += w * couleur[2];
     });
-    // La neige couvre ce qui est à terre, bien moins une cour qu'on déneige.
-    sol = mel(c, neigeClaire, neige * (BATIS.has(t) ? 0.35 : 0.85));
+    // Les bâtiments détourés laissent voir le sol du biome, enneigé comme
+    // le reste de la carte ; seul le quai du port reste déneigé.
+    sol = mel(c, neigeClaire, neige * (t === 'port' ? 0.35 : 0.85));
   }
 
   // Le lointain : ce qu'on voit derrière, au-dessus de l'horizon.
@@ -489,7 +490,7 @@ export function decorDeCase(ctx: ContexteDecor): DecorCase {
   else if (t === 'plage') lointain = mel(eauProfonde, eauClaire, 0.5);
   else if (t === 'montagne') lointain = mel(mel(matiere(s, 'roche'), neigeClaire, neige * 0.6), ciel, 0.28);
   else if (t === 'foret') lointain = mel(lire3(s, DISPOSITION.feuillage), ciel, 0.2);
-  else if (BATIS.has(t)) lointain = mel(matiere(s, 'pave'), ciel, 0.3);
+  else if (BATIS.has(t)) lointain = mel(sol, ciel, 0.3);
   else if (t === 'riviere' || t === 'pont') lointain = mel(mel(matiere(s, 'herbe'), neigeClaire, neige * 0.85), ciel, 0.35);
   else lointain = mel(sol, ciel, 0.35);
 

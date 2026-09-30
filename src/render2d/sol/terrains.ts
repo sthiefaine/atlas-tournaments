@@ -9,7 +9,7 @@
  * commise quatre fois sur les listes de bâtiments (`CLAUDE.md`, catalogue 5).
  */
 
-import type { CleTerrain } from '../../schemas/types';
+import type { Biome, CleTerrain } from '../../schemas/types';
 
 /**
  * L'ordre des codes. Il n'a rien de canonique — c'est une clé de texture — mais
@@ -87,17 +87,31 @@ const MELANGES: Readonly<Record<CleTerrain, Partial<Record<MatiereSol, number>>>
   pont: { galets: 0.12, sable: 0.13, terre: 0.3, herbe: 0.45 },
   // Le fond marin : il ne se voit que par les hauts-fonds.
   mer: { sable: 0.8, galets: 0.2 },
-  ville: { pave: 0.9, terre: 0.1 },
-  usine: { pave: 0.9, terre: 0.1 },
-  aeroport: { pave: 0.95, terre: 0.05 },
-  qg: { pave: 0.9, terre: 0.1 },
-  radar: { pave: 0.85, terre: 0.15 },
+  // Les bâtiments sont des sprites détourés : aucun socle carré ajouté par
+  // le terrain. Leur sol reste celui de la plaine du biome (et reçoit la neige).
+  ville: { herbe: 1 },
+  usine: { herbe: 1 },
+  aeroport: { herbe: 1 },
+  qg: { herbe: 1 },
+  radar: { herbe: 1 },
+  // Le quai du port forme réellement la limite entre terre et mer.
   port: { pave: 1 },
 };
 
 /** Les huit poids d'un terrain, dans l'ordre de `MATIERES`, normalisés. */
-export function poidsDe(t: CleTerrain): number[] {
-  const m = MELANGES[t] ?? MELANGES.plaine;
+export function poidsDe(t: CleTerrain, biome: Biome = 'plaine'): number[] {
+  const m = { ...(MELANGES[t] ?? MELANGES.plaine) };
+  // La case tactique « plaine » garde ses règles, mais le désert est du sable
+  // et le volcan de la cendre. Le même fond traverse les silhouettes bâties.
+  const herbe = m.herbe ?? 0;
+  if (biome === 'desert') {
+    m.sable = (m.sable ?? 0) + herbe;
+    m.herbe = 0;
+  } else if (biome === 'volcanique') {
+    m.roche = (m.roche ?? 0) + herbe * 0.65;
+    m.terre = (m.terre ?? 0) + herbe * 0.35;
+    m.herbe = 0;
+  }
   const poids = MATIERES.map((cle) => m[cle] ?? 0);
   const somme = poids.reduce((a, b) => a + b, 0) || 1;
   return poids.map((p) => p / somme);
@@ -107,11 +121,11 @@ export function poidsDe(t: CleTerrain): number[] {
  * Les deux tableaux d'uniformes `uPoidsA` et `uPoidsB` : quatre poids par
  * code, `NB_CODES` codes chacun. Les codes sans terrain valent la plaine.
  */
-export function tablesPoids(): { a: Float32Array; b: Float32Array } {
+export function tablesPoids(biome: Biome = 'plaine'): { a: Float32Array; b: Float32Array } {
   const a = new Float32Array(NB_CODES * 4);
   const b = new Float32Array(NB_CODES * 4);
   for (let code = 0; code < NB_CODES; code += 1) {
-    const p = poidsDe(terrainDuCode(code));
+    const p = poidsDe(terrainDuCode(code), biome);
     for (let k = 0; k < 4; k += 1) {
       a[code * 4 + k] = p[k] ?? 0;
       b[code * 4 + k] = p[k + 4] ?? 0;

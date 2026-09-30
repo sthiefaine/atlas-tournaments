@@ -27,28 +27,28 @@ type Paire = readonly [sombre: Hex, clair: Hex];
 
 /** Les matières d'un biome, et les teintes par défaut. */
 const DEFAUT: Readonly<Record<MatiereSol | 'neige', Paire>> = {
-  herbe: ['#6e934e', '#a2b879'],
+  herbe: ['#74a54d', '#a0c665'],
   terre: ['#8a7152', '#b19c76'],
   roche: ['#747e89', '#b8bdc0'],
   sable: ['#d6c08f', '#eed9a8'],
   galets: ['#7c8086', '#c3c1ba'],
   pave: ['#8d8a84', '#c4bfb4'],
-  sousbois: ['#3c4a2c', '#6e6c46'],
+  sousbois: ['#4c6535', '#7c8e4c'],
   herbehaute: ['#557a3f', '#93ad64'],
   neige: ['#c9d8ea', '#fbfdff'],
 };
 
 /**
- * Les palettes de biome. Herbe, terre, roche et sable sont celles du rendu 3D
- * (`render3d/textures.ts`, `PALETTES`) : les deux peaux montrent le même pays.
+ * Une même écriture illustrée pour tous les biomes : verts francs, sable
+ * chaud, roche froide ; l'ambiance saisonnière module ensuite ces familles.
  */
 const PALETTES: Readonly<Record<Biome, Partial<Record<MatiereSol, Paire>>>> = {
-  plaine: { herbe: ['#6e934e', '#a2b879'], terre: ['#987d58', '#b19c76'] },
+  plaine: { herbe: ['#74a54d', '#a0c665'], terre: ['#9b8158', '#baa06d'] },
   foret: {
-    herbe: ['#426d48', '#7d995b'], terre: ['#6d6145', '#a18b63'],
-    sousbois: ['#34432a', '#5f6440'], herbehaute: ['#3f6b40', '#7d9a58'],
+    herbe: ['#558a48', '#8eb864'], terre: ['#796c48', '#a18b63'],
+    sousbois: ['#395c32', '#6d8548'], herbehaute: ['#467c41', '#89aa59'],
   },
-  montagne: { herbe: ['#78835d', '#acb38b'], roche: ['#747e89', '#b8bdc0'], galets: ['#7a8088', '#bfc2c2'] },
+  montagne: { herbe: ['#74965a', '#a7ba7a'], roche: ['#747e89', '#b8bdc0'], galets: ['#7a8088', '#bfc2c2'] },
   desert: {
     herbe: ['#bb995b', '#dcc38c'], terre: ['#ac764c', '#d5a270'], roche: ['#9b6a51', '#c29474'],
     sable: ['#d9af70', '#f1d59b'], herbehaute: ['#a88f55', '#d0bb82'], sousbois: ['#8d7446', '#b39a68'],
@@ -66,7 +66,7 @@ const PALETTES: Readonly<Record<Biome, Partial<Record<MatiereSol, Paire>>>> = {
     herbe: ['#666c54', '#8b8964'], terre: ['#574d48', '#827064'], roche: ['#494d56', '#7b7e88'],
     sable: ['#787574', '#a49b8c'], galets: ['#3c3d42', '#6d6c70'], sousbois: ['#3f3f33', '#5f5e48'],
   },
-  cotier: { herbe: ['#789563', '#afba84'], roche: ['#8e9392', '#b9b7a9'], sable: ['#d8c49c', '#f0e0b9'] },
+  cotier: { herbe: ['#7aab59', '#adc97b'], roche: ['#8e9392', '#b9b7a9'], sable: ['#d8c49c', '#f0e0b9'] },
   archipel: { herbe: ['#4e9466', '#9ab978'], sable: ['#ddd2b1', '#f4e9cb'] },
   marais: {
     herbe: ['#627a4e', '#96a16b'], terre: ['#686341', '#90865d'], roche: ['#758077', '#a1aa96'],
@@ -113,7 +113,7 @@ const TEINTE_DE: Readonly<Record<MatiereSol | 'neige', keyof PaletteTerrain>> = 
 
 /** L'eau d'un biome : le large, et les hauts-fonds (les teintes de rive de la 3D). */
 const EAUX: Readonly<Record<Biome, readonly [profonde: Hex, claire: Hex]>> = {
-  plaine: ['#2a6ea8', '#91b9ad'],
+  plaine: ['#2f79b8', '#7ebed0'],
   foret: ['#285f86', '#86ae9e'],
   montagne: ['#2d6a94', '#9cc3c4'],
   desert: ['#2a7ab0', '#8fd0c8'],
@@ -154,7 +154,7 @@ const BITUME: ApparenceVoie = {
   sombre: '#4a5056', clair: '#686e72', accotement: '#968d76',
   largeurAccotement: 0.07, opaciteAccotement: 0.55, accotementPlein: false,
   demiLargeur: 0.2, frange: 0.012, motif: 'tirets', couleurMotif: '#d6d0b2',
-  grain: 0.55, pont: '#8f8d86',
+  grain: 0.18, pont: '#8f8d86',
 };
 
 const SENTIER: ApparenceVoie = {

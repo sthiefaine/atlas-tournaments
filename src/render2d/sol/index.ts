@@ -185,7 +185,7 @@ export function creerSolTerrain(
   gl.uniform1i(u.uCases, 0);
   gl.uniform1i(u.uCasesAvant, 1);
   gl.uniform1i(u.uDetails, 2);
-  const poids = tablesPoids();
+  const poids = tablesPoids(biome);
   gl.uniform4fv(u.uPoidsA, poids.a);
   gl.uniform4fv(u.uPoidsB, poids.b);
   const voie = formeVoie(biome);

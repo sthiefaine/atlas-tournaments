@@ -268,8 +268,8 @@ const MOTIFS: Readonly<Record<Biome, MotifsBiome>> = {
 
 /** Force du relief de chaque couche, pour la lumière cuite : la roche accroche, la neige glisse. */
 const FORCE_RELIEF: Readonly<Record<CoucheDetail, number>> = {
-  herbe: 1.4, terre: 1.6, roche: 2.6, sable: 1.2, galets: 2.2, pave: 1.0,
-  sousbois: 1.4, herbehaute: 1.2, neige: 0.9, eau: 0, bruit: 0,
+  herbe: 0.2, terre: 0.55, roche: 1.2, sable: 0.45, galets: 1.0, pave: 0.45,
+  sousbois: 0.35, herbehaute: 0.5, neige: 0.3, eau: 0, bruit: 0,
 };
 
 /** Les tableaux de travail d'une couche, alloués une fois par synthèse. */
@@ -300,16 +300,12 @@ const PEINTRES: Readonly<Record<Exclude<CoucheDetail, 'eau' | 'bruit'>, Peintre>
     const t = b.taille;
     const k = t - 1;
     for (let y = 0, i = 0; y < t; y += 1) {
-      const l64 = ligne(y, 91, k, t);
-      const l128 = ligne(y, 5, k, t);
       const l16 = ligne(y, 13, k, t);
       const l64b = ligne(y, 200, k, t);
       for (let x = 0; x < t; x += 1, i += 1) {
         const base = b.b8[i]!;
-        const detail = b.b64[l64 + ((x + 37) & k)]!;
-        const fin = b.b128[l128 + ((x + 11) & k)]!;
-        w.relief[i] = 0.5 * base + 0.35 * detail + 0.15 * fin;
-        w.clarte[i] = 0.46 + 0.23 * base + 0.14 * (detail - 0.5) + 0.06 * (fin - 0.5);
+        w.relief[i] = 0.45 + 0.1 * base;
+        w.clarte[i] = 0.5 + 0.16 * lisser(0.35, 0.65, base);
         const fA = b.vA.f1[i]!;
         const idA = b.vA.id[i]!;
         let accent: number;

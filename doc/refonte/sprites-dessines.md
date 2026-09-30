@@ -35,6 +35,12 @@ La galerie privée `/admin/assets/dessins` propose catégories avec compteurs, r
 
 ## Fabrication des sprites de jeu
 
+### Sol continu sous les bâtiments et cohérence des biomes
+
+Le fond transparent du PNG QG était déjà correct ; le carré de pierre venait de `MELANGES.qg` et du forçage des cours dans le nuanceur. Les bâtiments terrestres reprennent maintenant la matière de plaine du biome et ses transitions, sans dalle ajoutée. Le port garde son quai qui dessine la limite terre/mer. Les murs, marches et ouvrages présents dans les dessins restent intacts.
+
+Le terrain adopte un traitement illustré commun : variations de lumière et relief de grain réduits, verts plus francs, quelques traits de brins au sol. Ces traits sont déterministes en coordonnées du monde et anti-crénelés au zoom. `poidsDe` et `tablesPoids` reçoivent le biome : l'herbe de base devient sable au désert ou roche/cendre au volcan. Le duel lit la même table ; aucun faux dallage ni cour déneigée n'est rajouté autour d'un QG. La neige couvre toujours le sol. Ce choix est purement graphique, sans changer la grille tactique ni ses règles. Aucun nouvel atlas ni fichier image chargé en partie.
+
 ### Composition de la carte — reprise après retour du propriétaire
 
 Le premier raccordement plaçait trois à cinq exemplaires du même arbre dessiné sur les anciens emplacements de figurines. Le résultat était une couronne de petits buissons, sans rapport avec l’échelle des unités. Le placement utilise désormais un bosquet par case tempérée et deux arbres plus grands pour les autres biomes. Deux dessins d’automne alternent selon un hachage stable de la case ; hauteurs et positions varient légèrement, les canopées voisines se rejoignent. Les variantes hivernales restent sur leur chemin existant. Le brouillard cache toujours les décors des cases non découvertes.

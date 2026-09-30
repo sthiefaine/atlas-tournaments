@@ -333,7 +333,23 @@ vec3 matieres(vec2 g, vec4 pa, vec4 pb, float variation, out float relief) {
   }
   float inv = 1.0 / max(total, 1e-4);
   relief = h * inv;
-  return col * inv * (0.93 + 0.14 * variation);
+  return col * inv * (0.98 + 0.04 * variation);
+}
+
+// Quelques traits dessinés au sol remplacent le grain photographique. Le
+// semis suit le monde, reste stable au zoom et ne se cale pas sur chaque case.
+float brinsDessines(vec2 g, float aa) {
+  vec2 p = g * 3.0;
+  ivec2 cellule = ivec2(floor(p));
+  if (alea(cellule, 421) > 0.42) return 0.0;
+  vec2 centre = vec2(0.35) + vec2(alea(cellule, 422), alea(cellule, 423)) * 0.3;
+  vec2 q = fract(p) - centre;
+  float taille = 0.75 + alea(cellule, 424) * 0.4;
+  q /= taille;
+  float d = min(segment(q, vec2(-0.02, 0.08), vec2(-0.12, -0.035)),
+                segment(q, vec2(-0.02, 0.08), vec2(0.025, -0.075)));
+  d = min(d, segment(q, vec2(0.07, 0.085), vec2(0.15, -0.015)));
+  return 1.0 - smoothstep(0.011, 0.021 + aa * 3.0 / taille, d);
 }
 
 // ------------------------------------------------------------------ voies
@@ -566,9 +582,9 @@ vec3 sol(ivec2 c, vec2 g, vec2 P, vec4 b0, float aaG, float aaP, vec2 dPx, vec2 
   }
   ivec4 ici = lireCase(uCases, c);
   vec2 l = g - vec2(c);
-  // Une case bâtie est une cour propre d'un bord à l'autre ; ses voisines
-  // gardent leur lisière douce.
-  if (ici.r >= CODE_VILLE) {
+  // Seul le quai impose un revêtement rectangulaire. Les autres bâtiments
+  // laissent le terrain continu visible autour de leur silhouette détourée.
+  if (ici.r == CODE_PORT) {
     float bord = min(min(l.x, 1.0 - l.x), min(l.y, 1.0 - l.y));
     float f = smoothstep(0.0, 0.08, bord);
     ch.a = mix(ch.a, uPoidsA[ici.r], f);
@@ -576,6 +592,8 @@ vec3 sol(ivec2 c, vec2 g, vec2 P, vec4 b0, float aaG, float aaP, vec2 dPx, vec2 
   }
   float relief;
   vec3 col = matieres(g, ch.a, ch.b, b0.r, relief);
+  float herbe = smoothstep(0.55, 0.85, ch.a.x);
+  if (herbe > 0.0) col *= 1.0 - brinsDessines(g, aaG) * herbe * 0.18;
 
   // La neige couvre d'abord les creux : c'est le relief qui la découpe.
   if (uClimat.x > 0.001) {
