@@ -1,0 +1,57 @@
+.page { max-width: 1500px; margin-inline: auto; }
+.retour { display: inline-block; color: var(--admin-accent, #76dfcc); font-size: .85rem; margin-bottom: 28px; text-underline-offset: 4px; }
+.entete { max-width: 850px; margin-bottom: 30px; }
+.surtitre { color: var(--admin-secondaire, #b8cadb); font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+.introduction { color: var(--admin-encre, #edf4fa); font-size: .95rem; line-height: 1.65; margin: 12px 0; }
+.precision { color: var(--admin-secondaire, #b8cadb); font-size: .82rem; line-height: 1.65; }
+.bilan { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+.bilan p { font-size: .95rem; }
+.bilan strong { font-size: 1.5rem; margin-right: 4px; }
+.bilan span { color: var(--admin-secondaire, #b8cadb); }
+.galerie .actualiser { background: transparent; border: 0; padding-inline: 0; }
+.galerie .actualiser:disabled { cursor: wait; color: var(--admin-secondaire, #b8cadb); }
+.filtres { display: flex; flex-wrap: wrap; align-items: end; gap: 16px; }
+.filtres label { display: grid; gap: 7px; flex: 1 1 180px; font-size: .76rem; font-weight: 650; color: var(--admin-secondaire, #b8cadb); }
+.filtres .recherche { flex: 2 1 240px; }
+.filtres :is(input, select) { width: 100%; min-height: 44px; margin: 0; color: var(--admin-encre, #edf4fa); background: #172638; border: 1px solid #4a637b; border-radius: 7px; padding: 10px 12px; font: inherit; font-size: .9rem; }
+.filtres input::placeholder { color: #aebfd0; }
+.filtres select:disabled { color: #8196a9; border-color: #344759; cursor: not-allowed; }
+.options { display: flex; flex-wrap: wrap; align-items: end; gap: 18px 28px; margin: 22px 0 26px; }
+.options fieldset { border: 0; padding: 0; min-width: 0; }
+.options legend { color: var(--admin-secondaire, #b8cadb); font-size: .76rem; margin-bottom: 6px; }
+.choix { display: flex; gap: 3px; background: #172638; padding: 3px; border-radius: 8px; }
+.galerie .choix button { min-height: 38px; padding: 6px 13px; border: 0; border-radius: 5px; background: transparent; color: #c7d6e3; }
+.galerie .choix button[aria-pressed='true'] { background: #dce8ed; color: #142334; }
+.galerie .choix button:hover { background: #30455a; color: #f4f8fc; }
+.galerie .choix button[aria-pressed='true']:hover { background: #edf5f8; color: #142334; }
+.compteur { margin-left: auto; padding-block: 9px; font-size: .78rem; color: var(--admin-secondaire, #b8cadb); }
+.grille { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(235px, 1fr)); gap: 30px 22px; padding: 0; margin: 0; }
+.carte { min-width: 0; }
+.apercu { height: 250px; display: flex; align-items: center; justify-content: center; border-radius: 10px; overflow: hidden; background: #e6e8de; color: #3e4b40; }
+.galerie[data-fond='sombre'] .apercu { background: #101a27; color: #bdcddd; }
+.imageLien { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 14px; }
+.imageLien img { display: block; width: 100%; height: 100%; max-width: 320px; max-height: 222px; object-fit: contain; }
+.galerie[data-taille='48'] .imageLien img { width: 48px; height: 48px; }
+.galerie[data-taille='64'] .imageLien img { width: 64px; height: 64px; }
+.galerie[data-taille='128'] .imageLien img { width: 128px; height: 128px; }
+.attente { display: grid; justify-items: center; gap: 10px; padding: 20px; text-align: center; font-size: .8rem; }
+.marqueAttente { font-size: 1.8rem; opacity: .65; }
+.legende { padding: 14px 2px 0; }
+.famille { font-size: .69rem; letter-spacing: .04em; text-transform: uppercase; color: var(--admin-secondaire, #b8cadb); }
+.legende h3 { margin: 4px 0 6px; font-size: 1rem; font-weight: 720; line-height: 1.35; color: var(--admin-encre, #edf4fa); }
+.statut { color: var(--admin-secondaire, #b8cadb); font-size: .76rem; }
+.statut[data-present='true'] { color: #97d7c9; }
+.telecharger { display: inline-flex; align-items: center; gap: 10px; min-height: 38px; margin-top: 5px; color: var(--admin-accent, #76dfcc); font-size: .8rem; text-underline-offset: 4px; }
+.telecharger:hover { text-decoration: underline; }
+.message, .vide { color: var(--admin-secondaire, #b8cadb); padding-block: 22px; line-height: 1.65; }
+.vide button { margin-top: 12px; }
+.page :is(a, button, input, select):focus-visible { outline: 3px solid #76dfcc; outline-offset: 4px; }
+@media (max-width: 540px) {
+  .bilan { align-items: start; }
+  .bilan span { display: block; margin-top: 4px; }
+  .grille { grid-template-columns: minmax(0, 1fr); }
+  .compteur { flex-basis: 100%; margin-left: 0; padding: 0; }
+  .options { gap: 14px 18px; }
+  .apercu { height: 270px; }
+  .imageLien img { max-height: 242px; }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "unite_porte_avions_base",
+  "essais": [
+    {
+      "type": "detourage_non_retenu",
+      "prompt": "Edit this exact aircraft carrier illustration. Preserve the ship design, silhouette, blue graphite and ivory palette, crisp ink outlines, viewpoint and proportions. Remove ALL background: the black backdrop, blue halo, glow, haze and cast shadow must disappear completely. Deliver the isolated opaque ship only on true fully transparent RGBA background. Clean tight alpha around the hull and every antenna; transparent through every open gap. Do not add water, a pedestal, text, symbols or a replacement background. Leave a clear transparent margin on every edge. This is a cutout for a 2D tactics game.",
+      "source": "exec-7c0eb73f-d2b4-48a5-8dae-66c5ecad3d0b.png"
+    },
+    {
+      "type": "nouveau_dessin_retenu",
+      "prompt": "Draw a single compact aircraft carrier sprite in the same graphic style as the attached tank image: precise dark outline, cobalt blue upper hull, graphite deck, ivory runway guides, simple clean matte cel-shaded planes. Brand new illustration of a fictional ship, no real military branding. Orthographic three-quarter above view, bow points bottom-right. Wide clear flat flight deck, small tall offset island on the far side, one chunky radar and short antenna, simple hull paneling, two small defense turrets. Ship occupies 80 percent of the frame with generous clear margins. The ONLY content is the ship. TRUE TRANSPARENT BACKGROUND. Absolutely NO GLOW, NO HALO, NO LIGHT AURA, NO colored fringe, NO environment, NO water, NO sea foam, NO shadow outside the shape, NO gradient background. Solid crisp cutout edges, transparent empty pixels all around. No text, numbers, flag, symbols, letters, aircraft or persons. Match the tank reference drawing finish only; do not copy tank components.",
+      "reference": "assets/direction-artistique/pilotes-sprites-v1/char_leger.png",
+      "sortie": "exec-be453bbb-9370-4800-b584-5b782d297fbb.png"
+    }
+  ]
+}

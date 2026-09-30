@@ -20,9 +20,10 @@ export default async function Assets({ searchParams }: {
   return <main>
     <h2 className="admin-titre">Bibliothèque de sprites</h2>
     <p className="admin-intro">Les images actuellement disponibles dans le jeu. Ouvrez un sprite pour regarder ses vues, ses animations et ses couleurs.</p>
-    <section className="mb-6 rounded-lg border border-current/20 p-4" aria-labelledby="pilotes-sprites">
-      <h3 id="pilotes-sprites" className="mb-2 font-semibold">Trois pilotes en préparation</h3>
-      <p>Infanterie, hélicoptère et char : une nouvelle direction artistique en sprites directs est en préparation. Les vues et animations des trois pilotes restent à finaliser avant toute généralisation ; les images actuelles restent en place.</p>
+    <section className="mb-6 rounded-lg bg-current/5 p-4" aria-labelledby="dessins-sprites">
+      <h3 id="dessins-sprites" className="mb-2 font-semibold">La nouvelle collection se dessine</h3>
+      <p className="mb-3">Unités, bâtiments et décors : consultez les dessins de référence au fil de leur production. Ces images statiques préparent les prochaines vues et animations du jeu.</p>
+      <Link className="admin-action admin-action-primaire" href="/admin/assets/dessins">Voir les dessins de référence →</Link>
     </section>
     <div className="admin-actions"><Link className="admin-action" href="/atelier/unites">Ouvrir la vitrine</Link><Link className="admin-action" href="/atelier">Voir le plateau</Link></div>
     {bibliotheque.erreur ? <p role="alert" className="admin-intro">{bibliotheque.erreur}</p> : <>

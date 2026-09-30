@@ -10,17 +10,23 @@ Le contrôle artistique doit se faire aussi à la taille d’une case (48, 64 et
 
 Les six déclinaisons France / Chine demandées ensuite sont sous `assets/direction-artistique/variantes-fr-cn-v1/`, avec leur jeu de prompts et les références utilisées. France : bleu, écru et détails rouges discrets ; Chine : vermillon, graphite et sable. Ce sont des propositions d’équipement fictif, sans drapeaux ni insignes réels. La Chine n’a pas de fiche dans le roster actuel : ces dessins ne modifient pas le roster ni la campagne.
 
-## Fabrication après le choix de style
+## Collection commune
+
+Le propriétaire a approuvé les pilotes et leurs déclinaisons, puis demandé toutes les unités de base, les bâtiments et une proposition de forêt. `assets/direction-artistique/collection-base-v1/plan.json` liste 37 dessins : les 30 unités du catalogue (trois pilotes réutilisés et 27 créations), ville, QG, usine, port, aéroport, radar et forêt mixte. Les PNG transparents et les prompts exacts sont conservés dans ce dossier. Les unités communes reprennent le cobalt, le graphite et l’os ; les trois unités méridiennes utilisent l’argent, le graphite et l’ambre. Aucune nouvelle nation ou variante régionale n’est créée.
+
+La galerie privée `/admin/assets/dessins` propose recherche, familles, domaines terre/air/mer, fonds clair/sombre, formats 48/64/128 pixels et grand aperçu, ainsi que le téléchargement individuel. Le dossier est inclus dans l’image Docker. Les illustrations complètes restent hors du manifeste public du jeu : elles ne sont pas chargées dans les parties. Leurs proportions de case, leurs orientations et leurs silhouettes à petite taille devront être finalisées avec les animations. L’approbation des pilotes ne vaut pas approbation automatique des 34 dessins suivants.
+
+## Fabrication des sprites de jeu
 
 1. Fixer les trois silhouettes, leur palette et l’épaisseur du contour.
 2. Dessiner les vues de carte droite / haut / bas et la vue de profil du duel. La gauche peut être le miroir de la droite ; éviter signes ou éclairages asymétriques.
 3. Décliner les poses repos, déplacement, tir, touché et hors-jeu, et capture lorsque l’unité le permet. Conserver taille, point d’appui et équipement d’une image à l’autre ; ne pas simuler une animation en faisant simplement glisser l’image entière.
 4. Préparer les masques d’équipe séparés, les pivots et les durées, puis assembler des atlas PNG/WebP au contrat du moteur. Les portraits, bâtiments et décors suivent leur propre famille dans ce même manifeste.
-5. Contrôler la transparence, les cadres, les pivots, les dimensions, les boucles et le poids ; regarder les images dans la vitrine, puis dans une partie. Finaliser les trois pilotes avant de généraliser au catalogue.
+5. Contrôler la transparence, les cadres, les pivots, les dimensions, les boucles et le poids ; regarder les images dans la vitrine, puis dans une partie. Finaliser la livraison animée des trois pilotes avant de généraliser ce travail au catalogue dessiné.
 
 La source de provenance du manifeste peut être un PNG et son SHA-256. Le rendu ne charge jamais `source.fichier` : seules les pages d’images, masques et émissions sont chargées. Les images doivent respecter la projection fixe à 50° et la densité de référence de 128 pixels par case (`src/render2d/contrat.ts`).
 
-Les prompts sont conservés tels qu’envoyés : leur vocabulaire de tournoi provient du brief local antérieur à la synchronisation du lore v2. Les dessins ne portent ni texte ni insigne ; les prochains prompts doivent suivre le canon du 26 septembre (guerre sans gore, armement fictif), sans rétablir la doctrine du marquage.
+Les prompts des premiers pilotes sont conservés tels qu’envoyés : leur vocabulaire de tournoi provient du brief local antérieur à la synchronisation du lore v2. Ceux de la collection commune suivent le canon du 26 septembre (guerre sans gore, armement fictif), sans rétablir la doctrine du marquage.
 
 ## Retrait du parcours 3D
 

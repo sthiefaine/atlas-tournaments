@@ -1,0 +1,176 @@
+{
+  "outil": "image_gen natif",
+  "date": "2026-09-30",
+  "creations": [
+    {
+      "id": "batiment_ville_base",
+      "fichier": "batiments/batiment_ville_base.png",
+      "sortieNative": "exec-e764e9c5-2604-4ecd-adb1-eca052800812.png"
+    },
+    {
+      "id": "batiment_qg_base",
+      "fichier": "batiments/batiment_qg_base.png",
+      "sortieNative": "exec-0a620f0c-4ac9-48aa-8497-a4800d252692.png"
+    },
+    {
+      "id": "decor_foret_base",
+      "fichier": "decors/decor_foret_base.png",
+      "sortieNative": "exec-1944fbd7-665f-4ffc-8d48-4f2b248da1a8.png"
+    },
+    {
+      "id": "unite_meca_base",
+      "fichier": "unites/unite_meca_base.png",
+      "sortieNative": "exec-42d975c4-2d49-458c-b2af-abee5dfc8b6d.png"
+    },
+    {
+      "id": "unite_recon_base",
+      "fichier": "unites/unite_recon_base.png",
+      "sortieNative": "exec-3a4a950c-044f-4609-b8a9-5b9b10c22677.png"
+    },
+    {
+      "id": "unite_char_lourd_base",
+      "fichier": "unites/unite_char_lourd_base.png",
+      "sortieNative": "exec-c1f54968-5d4e-47f9-a4dd-2f322275c7a5.png"
+    },
+    {
+      "id": "unite_artillerie_base",
+      "fichier": "unites/unite_artillerie_base.png",
+      "sortieNative": "exec-4a36c430-891f-4fae-9419-bb92fffafc80.png"
+    },
+    {
+      "id": "unite_roquettes_base",
+      "fichier": "unites/unite_roquettes_base.png",
+      "sortieNative": "exec-27dfdcd0-6c02-460d-86a2-41e2da87ea1a.png"
+    },
+    {
+      "id": "unite_antiair_base",
+      "fichier": "unites/unite_antiair_base.png",
+      "sortieNative": "exec-2315ee5c-0586-4eb3-b735-c9a73dd06619.png"
+    },
+    {
+      "id": "unite_transport_base",
+      "fichier": "unites/unite_transport_base.png",
+      "sortieNative": "exec-79fa018a-cab7-4c66-b856-a8b774319802.png"
+    },
+    {
+      "id": "unite_genie_base",
+      "fichier": "unites/unite_genie_base.png",
+      "sortieNative": "exec-73d29899-e725-4e0b-86ad-4dbd32ad24c7.png"
+    },
+    {
+      "id": "unite_brouilleur_base",
+      "fichier": "unites/unite_brouilleur_base.png",
+      "sortieNative": "exec-730399ed-b381-470f-b9d7-80d4960fda12.png"
+    },
+    {
+      "id": "unite_char_moyen_base",
+      "fichier": "unites/unite_char_moyen_base.png",
+      "sortieNative": "exec-7efa95df-7ad4-4cea-bc38-6fdc541727c9.png"
+    },
+    {
+      "id": "unite_missiles_air_base",
+      "fichier": "unites/unite_missiles_air_base.png",
+      "sortieNative": "exec-a6097061-8359-4bdd-8b2a-dc10b49d871d.png"
+    },
+    {
+      "id": "unite_missiles_sol_base",
+      "fichier": "unites/unite_missiles_sol_base.png",
+      "sortieNative": "exec-4a9bfba0-1e7c-4934-91ea-9466cbc83f26.png"
+    },
+    {
+      "id": "unite_meridien_bastion_base",
+      "fichier": "unites/unite_meridien_bastion_base.png",
+      "sortieNative": "exec-f936ea8b-6dbf-4ba5-8e40-3c115acd1aa7.png"
+    },
+    {
+      "id": "unite_meridien_automate_base",
+      "fichier": "unites/unite_meridien_automate_base.png",
+      "sortieNative": "exec-5e4cb19f-27f4-44e6-9e4d-5f23b4bc52a5.png"
+    },
+    {
+      "id": "batiment_usine_base",
+      "fichier": "batiments/batiment_usine_base.png",
+      "sortieNative": "exec-6d5c0e00-7279-48e5-8a34-e39454bbb91e.png"
+    },
+    {
+      "id": "batiment_port_base",
+      "fichier": "batiments/batiment_port_base.png",
+      "sortieNative": "exec-25bd1aea-4981-4b11-8f16-484ef3ac4328.png"
+    },
+    {
+      "id": "batiment_aeroport_base",
+      "fichier": "batiments/batiment_aeroport_base.png",
+      "sortieNative": "exec-ac41f863-cdaa-473f-8ccf-c67825d6997e.png"
+    },
+    {
+      "id": "batiment_radar_base",
+      "fichier": "batiments/batiment_radar_base.png",
+      "sortieNative": "exec-724c972f-346b-4e4c-9f3c-48e6b047bfcd.png"
+    },
+    {
+      "id": "unite_drone_base",
+      "fichier": "unites/unite_drone_base.png",
+      "sortieNative": "exec-a4020c39-7186-4fad-a2d5-5d797422eabd.png"
+    },
+    {
+      "id": "unite_chasseur_base",
+      "fichier": "unites/unite_chasseur_base.png",
+      "sortieNative": "exec-5c9ae772-ea7e-4068-a9eb-41fb596bc870.png"
+    },
+    {
+      "id": "unite_bombardier_base",
+      "fichier": "unites/unite_bombardier_base.png",
+      "sortieNative": "exec-39dfb16b-8bdc-46d4-9a57-7ad377249eaa.png"
+    },
+    {
+      "id": "unite_transport_air_base",
+      "fichier": "unites/unite_transport_air_base.png",
+      "sortieNative": "exec-c8bc225b-283b-4b6e-9b14-c469d92de49c.png"
+    },
+    {
+      "id": "unite_barge_base",
+      "fichier": "unites/unite_barge_base.png",
+      "sortieNative": "exec-1344a765-8f6d-4465-9bb6-6ffc670d8f67.png"
+    },
+    {
+      "id": "unite_porte_avions_base",
+      "fichier": "unites/unite_porte_avions_base.png",
+      "sortieNative": "exec-be453bbb-9370-4800-b584-5b782d297fbb.png"
+    },
+    {
+      "id": "unite_cuirasse_base",
+      "fichier": "unites/unite_cuirasse_base.png",
+      "sortieNative": "exec-26888868-745c-4644-8d9d-fa47e0c0479f.png"
+    },
+    {
+      "id": "unite_sous_marin_base",
+      "fichier": "unites/unite_sous_marin_base.png",
+      "sortieNative": "exec-b4823dab-1907-4c11-acd1-71fd188a2e2f.png"
+    },
+    {
+      "id": "unite_furtif_base",
+      "fichier": "unites/unite_furtif_base.png",
+      "sortieNative": "exec-2b78629c-f73e-48ea-a403-661947231c74.png"
+    },
+    {
+      "id": "unite_drone_intercepteur_base",
+      "fichier": "unites/unite_drone_intercepteur_base.png",
+      "sortieNative": "exec-0759286e-7979-452e-8db8-e8cbdaee2581.png"
+    },
+    {
+      "id": "unite_drone_ravitailleur_base",
+      "fichier": "unites/unite_drone_ravitailleur_base.png",
+      "sortieNative": "exec-6202d3e0-46ef-4d00-94b0-cf3c76e0fee8.png"
+    },
+    {
+      "id": "unite_meridien_veilleur_base",
+      "fichier": "unites/unite_meridien_veilleur_base.png",
+      "sortieNative": "exec-5745baeb-521c-4110-bf59-ce3001dc293e.png"
+    },
+    {
+      "id": "unite_drone_marin_base",
+      "fichier": "unites/unite_drone_marin_base.png",
+      "sortieNative": "exec-d49a9183-3a89-4256-aac4-614ba5cc8045.png"
+    }
+  ]
+}

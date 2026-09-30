@@ -46,6 +46,7 @@ COPY --from=build /app/scripts ./scripts
 COPY --from=build /app/drizzle ./drizzle
 COPY --from=build /app/content ./content
 COPY --from=build /app/assets/production ./assets/production
+COPY --from=build /app/assets/direction-artistique/collection-base-v1 ./assets/direction-artistique/collection-base-v1
 
 EXPOSE 3000
 
