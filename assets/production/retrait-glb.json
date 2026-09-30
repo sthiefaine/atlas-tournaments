@@ -1,0 +1,31 @@
+{
+  "date": "2026-09-30",
+  "decision": "sprites dessinés directement; retrait des GLB versionnés",
+  "fichiers": 1980,
+  "liensSymboliques": 1014,
+  "octetsFichiersReguliers": 416897136,
+  "parDossier": {
+    "assets/livraisons": 930,
+    "assets/sources-sprites": 60,
+    "public/assets/candidats": 931,
+    "public/assets/donnees": 1022,
+    "public/assets/modeles": 46,
+    "scripts/sprites": 5
+  },
+  "historiqueGit": "conservé",
+  "uploadsDistants": "non modifiés",
+  "spritesActuels": "conservés",
+  "manifesteSha256": "6fe23325d4ecc7ea99fddf5edc92197dba9a87dc5cb6b33e8a6f5f292b4e9bf2",
+  "pilotes": "propositions non activées",
+  "testsAncienneChaineArchives": [
+    "assets/sources-hd.legacy.ts",
+    "assets/plaine.legacy.ts",
+    "assets/production-kits.legacy.ts",
+    "assets/artillerie.legacy.ts",
+    "assets/activation-premier-contact.legacy.ts",
+    "assets/antiair.legacy.ts",
+    "assets/barge-livree.legacy.ts",
+    "decor-sprites/sources.legacy.ts",
+    "sprites/catalogue.legacy.ts"
+  ]
+}

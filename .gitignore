@@ -55,3 +55,7 @@ doc/refonte/atlas-lore.html
 
 # Sources HD privées, conservées hors du dépôt git
 /assets/sources/
+
+# 30 septembre 2026 : production exclusivement en sprites directs.
+*.glb
+*.gltf

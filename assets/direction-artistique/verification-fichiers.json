@@ -1,0 +1,74 @@
+{
+  "date": "2026-09-30",
+  "entrees": 102,
+  "pages": 102,
+  "fichiersImages": 148,
+  "manifesteSha256": "6fe23325d4ecc7ea99fddf5edc92197dba9a87dc5cb6b33e8a6f5f292b4e9bf2",
+  "propositions": [
+    {
+      "fichier": "assets/direction-artistique/pilotes-sprites-v1/char_leger.png",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "octets": 1406188,
+      "transparent": true
+    },
+    {
+      "fichier": "assets/direction-artistique/pilotes-sprites-v1/helicoptere.png",
+      "largeur": 1402,
+      "hauteur": 1122,
+      "octets": 864053,
+      "transparent": true
+    },
+    {
+      "fichier": "assets/direction-artistique/pilotes-sprites-v1/infanterie.png",
+      "largeur": 1207,
+      "hauteur": 1303,
+      "octets": 795687,
+      "transparent": true
+    },
+    {
+      "fichier": "assets/direction-artistique/variantes-fr-cn-v1/char_leger_cn.png",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "octets": 1321878,
+      "transparent": true
+    },
+    {
+      "fichier": "assets/direction-artistique/variantes-fr-cn-v1/char_leger_fr.png",
+      "largeur": 1374,
+      "hauteur": 1145,
+      "octets": 1364689,
+      "transparent": true
+    },
+    {
+      "fichier": "assets/direction-artistique/variantes-fr-cn-v1/helicoptere_cn.png",
+      "largeur": 1402,
+      "hauteur": 1122,
+      "octets": 885416,
+      "transparent": true
+    },
+    {
+      "fichier": "assets/direction-artistique/variantes-fr-cn-v1/helicoptere_fr.png",
+      "largeur": 1403,
+      "hauteur": 1121,
+      "octets": 913685,
+      "transparent": true
+    },
+    {
+      "fichier": "assets/direction-artistique/variantes-fr-cn-v1/infanterie_cn.png",
+      "largeur": 1207,
+      "hauteur": 1303,
+      "octets": 867586,
+      "transparent": true
+    },
+    {
+      "fichier": "assets/direction-artistique/variantes-fr-cn-v1/infanterie_fr.png",
+      "largeur": 1208,
+      "hauteur": 1302,
+      "octets": 936964,
+      "transparent": true
+    }
+  ],
+  "testsExecutes": false,
+  "buildExecute": false
+}

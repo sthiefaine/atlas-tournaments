@@ -1,5 +1,7 @@
 # Les figurines — mode d'emploi d'un agent d'unité ou de bâtiment
 
+**Archive depuis le 30 septembre 2026.** Le propriétaire a arrêté la fabrication 3D et demandé la suppression des GLB. Ne plus lancer cette file ni ces commandes ; les scripts et rapports restent historiques. Produire désormais des sprites dessinés directement, après validation des trois pilotes (`doc/refonte/sprites-dessines.md`).
+
 Le socle commun des trente unités refaites de zéro (23 septembre 2026), et des
 bâtiments depuis le 24 septembre. Un agent d'unité **n'écrit qu'un fichier** :
 `unites/<cle>.py` ; un agent de bâtiment, `batiments/<cle>.py` (voir « Les

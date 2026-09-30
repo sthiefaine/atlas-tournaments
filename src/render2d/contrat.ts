@@ -2,13 +2,11 @@
  * Le contrat de la peau 2D — décision du propriétaire du 23 septembre 2026
  * (`BRIEF.md`, « Sprites précalculés » ; `doc/18-rendu-sprites.md`).
  *
- * Le jeu ne dessine plus de 3D en temps réel : il **photographie** ses modèles
- * GLB une fois, hors ligne (Blender, `scripts/sprites/`), et compose ces images
- * à l'écran en WebGL 2 (`src/render2d/`). Ce fichier est la seule chose que la
- * cuisson et le rendu partagent : la projection qui les tient ensemble, le
- * format du manifeste, et ce qu'une couche dessine. Tout le reste est libre de
- * chaque côté, et c'est voulu : la cuisson peut changer d'outil, le rendu de
- * technique, sans que l'autre le sache.
+ * Le jeu compose des sprites en WebGL 2. Depuis le 30 septembre 2026,
+ * les nouvelles sources sont des dessins directs ; les atlas existants,
+ * autrefois cuits depuis des GLB, restent compatibles. Ce contrat définit
+ * la projection, les images, les pivots, les masques et les clips sans
+ * imposer un outil de fabrication.
  *
  * Pur : ni DOM, ni horloge, ni WebGL — les scripts de cuisson l'importent sous
  * Node, et les tests le vérifient sans navigateur. **Il ne fait que s'étendre** :
@@ -251,7 +249,7 @@ export interface PageSprite {
 
 /** Une entrée : un modèle photographié, toutes ses vues et tous ses clips. */
 export interface EntreeSprite {
-  /** L'identifiant : celui du GLB source (`unite_char_leger_base`), ou `idDecor(…)`. */
+  /** Identifiant stable du sprite (`unite_char_leger_base`), ou `idDecor(…)`. */
   id: string;
   famille: FamilleSprite;
   /** La clé de jeu : `CleUnite` d'une unité, `CleTerrain` d'un bâtiment ou d'un terrain, l'essence d'un décor. */
@@ -268,6 +266,7 @@ export interface EntreeSprite {
    */
   etat?: EtatBatiment;
   /** Le fichier cuit et son empreinte : une source qui change se recuit. */
+  /** Provenance informative : image source pour un dessin direct, jamais chargée par le rendu. */
   source: { fichier: string; sha256: string };
   pages: PageSprite[];
   animations: AnimationSprite[];

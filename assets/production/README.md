@@ -1,5 +1,7 @@
 # Production des assets
 
+**Archive depuis le 30 septembre 2026.** Le propriétaire a arrêté la fabrication 3D et demandé la suppression des GLB. Ne plus lancer cette file ni ces commandes ; les scripts et rapports restent historiques. Produire désormais des sprites dessinés directement, après validation des trois pilotes (`doc/refonte/sprites-dessines.md`).
+
 ## File de modèles un par un — 16 septembre 2026
 
 `plan-modeles-3d.json` est le plan de travail séquentiel demandé par le propriétaire : 65 modèles communs (30 unités, 6 bâtiments, 9 terrains, 10 décors sans variante nationale et 10 archétypes de commandants). Les déclinaisons nationales sont hors de ce lot ; les régionales restent suspendues. La plaine conserve son rendu procédural par décision antérieure.

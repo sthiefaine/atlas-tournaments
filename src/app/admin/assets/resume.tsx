@@ -1,31 +1,15 @@
 import Link from 'next/link';
+import { Bloc, Ligne } from '../ui';
+import { chargerBibliothequeSprites } from './sprites';
 
-import { bilanPriorites } from '@/assets/index';
-
-import { Bloc, Etat, Ligne } from '../ui';
-
-import { chargerCatalogueAssets } from './donnees';
-import { receptionsAssets } from '@/serveur/reception-assets';
-
-/**
- * La ligne « assets » du tableau de bord. Elle vient du canon, pas de la base,
- * donc elle s'affiche aussi quand la base manque : c'est le seul compteur du
- * tableau qui ne dépende de rien d'autre que du dépôt.
- */
-export function ResumeAssets() {
-  const { specs } = chargerCatalogueAssets();
-  const p = bilanPriorites(specs);
-  const etats = [...receptionsAssets(specs).values()];
-  const presents = etats.filter((r) => r.etat !== 'a_produire').length;
-  const approuves = etats.filter((r) => r.etat === 'approuve' || r.etat === 'integre').length;
-  return (
-    <Bloc titre="Assets 3D" aide="Les spécifications commandées au générateur externe, composées depuis le canon.">
-      <Ligne>
-        <Link href="/admin/assets" className="w-44 font-mono text-xs underline-offset-4 hover:underline">assets/specs</Link>
-        <span>{specs.length} spécifications</span>
-        <span className="text-xs admin-secondaire">{p[1]} en priorité 1 · {p[2]} en priorité 2 · {p[3]} en priorité 3</span>
-        <span className="ml-auto"><Etat valeur={`${presents} lot(s) présents · ${approuves} approuvé(s)`} /></span>
-      </Ligne>
-    </Bloc>
-  );
+/** Le tableau de bord compte les images du manifeste effectivement utilisé par le jeu. */
+export async function ResumeAssets() {
+  const { sprites, erreur } = await chargerBibliothequeSprites();
+  return <Bloc titre="Sprites" aide="Infanterie, hélicoptère et char : les dessins de référence sont prêts, les vues et animations restent à finaliser.">
+    <Ligne>
+      <Link href="/admin/assets" className="w-44 text-xs underline-offset-4 hover:underline">Bibliothèque de sprites</Link>
+      <span>{erreur ?? `${sprites.length} images actuelles disponibles`}</span>
+      <Link href="/atelier/unites" className="ml-auto text-xs underline-offset-4 hover:underline">Ouvrir la vitrine →</Link>
+    </Ligne>
+  </Bloc>;
 }

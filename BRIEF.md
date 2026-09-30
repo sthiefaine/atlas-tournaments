@@ -1,5 +1,11 @@
 # Atlas Tournament — brief canon (décisions prises avec Thief, 4 septembre 2026)
 
+## Sprites dessinés directement — décision du 30 septembre 2026
+
+« Les GLB on les supprime et on fait que des sprites. » La production ne passe plus par un modèle 3D ni par Blender. Cette décision remplace la fabrication en figurines du 23 septembre et la conservation des GLB comme sources. Les atlas déjà en jeu restent en place pendant la refonte ; le moteur WebGL 2, la caméra fixe, les règles et les animations actuelles ne changent pas.
+
+La nouvelle direction se travaille sur trois dessins originaux : **infanterie, hélicoptère, char léger**. Le propriétaire veut les valider avant de refaire toutes les unités. Les premières propositions sont conservées hors des fichiers publics : aucun concept n’est automatiquement une animation ou un sprite livré. Contours maîtrisés, volumes lisibles et détails structurants, contrôle à 48/64/128 pixels ; détails dans le dessin, aucun passage image-vers-3D. La charte et les commandes 3D ci-dessous sont historiques. Contrat et prochaines étapes : `doc/refonte/sprites-dessines.md`.
+
 ## La charte des figurines — décision du 23 septembre 2026 (soir)
 
 « Il n'y a pas de cohésion graphique, et c'est moche » ; « on voit encore les triangles des modèles ratés, il faut refaire de zéro, un agent sur chaque unité ». Le propriétaire a délégué la décision à un panel de cinq personas (un joueur d'Advance Wars, un ado, une joueuse, une designeuse graphique, un artiste technique des sprites précalculés). Leur charte, dans `doc/refonte/charte-figurines.md`, **remplace ce que la direction artistique ci-dessous disait des matières et des couleurs des modèles** :

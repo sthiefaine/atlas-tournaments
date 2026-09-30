@@ -1,6 +1,6 @@
 import VitrineClient from './vitrine-client';
 
-export const metadata = { title: 'Images cuites · Atlas' };
+export const metadata = { title: 'Sprites · Atlas' };
 
 /**
  * La vitrine des images cuites : chaque entrée du manifeste, toutes ses vues et

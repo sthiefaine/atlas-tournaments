@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "date": "2026-09-30",
+  "outil": "image_gen natif",
+  "statut": "propositions visuelles, non activées en jeu",
+  "variantes": [
+    {
+      "id": "infanterie_fr",
+      "nation": "France",
+      "unit": "infanterie",
+      "prompt": "À partir de l’image de référence jointe, créer une variante nationale du MÊME sprite tactique original Atlas Tournament. Garder la qualité de dessin 2D, les contours fins graphite, les aplats d'ombre francs, les proportions, le cadrage entier et l'orientation de la référence. Un seul sujet isolé sur fond réellement transparent. Même famille artistique, pas de rendu photoréaliste, pas de socle ni d'ombre extérieure. Matériel de tournoi fictif entretenu, lanceurs de marqueurs. Aucun texte, numéro, logo, drapeau, insigne réel, sang ou tir. Les détails nationaux concernent l'équipement et les volumes; ne pas ajouter des clichés décoratifs culturels. Détails lisibles à petite taille.\nVersion de l'équipe française: bleu mat #2f5fd0, bleu sombre #1b3a86, dessus #8fb2f2, graphite, toile écrue. Quelques petites attaches rouge sourd #c8324a, jamais de drapeau ni de bande tricolore. Équipement soigné, panneaux sobres, angles adoucis, sangles bien rangées.\nConserver un adulte au visage brun chaud expressif. Casque compact bleu à couverture textile avec bande de maintien écrue discrète, petit écouteur latéral, gilet court graphite à poches écrues organisées, veste bleue aux coudes renforcés, genouillères. Lanceur compact original à crosse ajourée et garde-main court, deux mains cohérentes. Même posture et proportions que référence; visage, bras, arme, jambes bien séparés.",
+      "reference": "assets/direction-artistique/pilotes-sprites-v1/infanterie.png"
+    },
+    {
+      "id": "helicoptere_fr",
+      "nation": "France",
+      "unit": "helicoptere",
+      "prompt": "À partir de l’image de référence jointe, créer une variante nationale du MÊME sprite tactique original Atlas Tournament. Garder la qualité de dessin 2D, les contours fins graphite, les aplats d'ombre francs, les proportions, le cadrage entier et l'orientation de la référence. Un seul sujet isolé sur fond réellement transparent. Même famille artistique, pas de rendu photoréaliste, pas de socle ni d'ombre extérieure. Matériel de tournoi fictif entretenu, lanceurs de marqueurs. Aucun texte, numéro, logo, drapeau, insigne réel, sang ou tir. Les détails nationaux concernent l'équipement et les volumes; ne pas ajouter des clichés décoratifs culturels. Détails lisibles à petite taille.\nVersion de l'équipe française: bleu mat #2f5fd0, bleu sombre #1b3a86, dessus #8fb2f2, graphite, toile écrue. Quelques petites attaches rouge sourd #c8324a, jamais de drapeau ni de bande tricolore. Équipement soigné, panneaux sobres, angles adoucis, sangles bien rangées.\nMême hélicoptère léger élancé à deux pales et deux patins. Remodeler légèrement le nez en bulbe court arrondi, cockpit à encadrement clair étroit, capot moteur discret à double prise d'air, petits paniers cylindriques latéraux. Fuselage majoritairement bleu mat, capot arrière écru compact, attaches rouge sourd limitées. Même orientation que référence, pales entières, détails mécaniques attachés.",
+      "reference": "assets/direction-artistique/pilotes-sprites-v1/helicoptere.png"
+    },
+    {
+      "id": "char_leger_fr",
+      "nation": "France",
+      "unit": "char_leger",
+      "prompt": "À partir de l’image de référence jointe, créer une variante nationale du MÊME sprite tactique original Atlas Tournament. Garder la qualité de dessin 2D, les contours fins graphite, les aplats d'ombre francs, les proportions, le cadrage entier et l'orientation de la référence. Un seul sujet isolé sur fond réellement transparent. Même famille artistique, pas de rendu photoréaliste, pas de socle ni d'ombre extérieure. Matériel de tournoi fictif entretenu, lanceurs de marqueurs. Aucun texte, numéro, logo, drapeau, insigne réel, sang ou tir. Les détails nationaux concernent l'équipement et les volumes; ne pas ajouter des clichés décoratifs culturels. Détails lisibles à petite taille.\nVersion de l'équipe française: bleu mat #2f5fd0, bleu sombre #1b3a86, dessus #8fb2f2, graphite, toile écrue. Quelques petites attaches rouge sourd #c8324a, jamais de drapeau ni de bande tricolore. Équipement soigné, panneaux sobres, angles adoucis, sangles bien rangées.\nMême classe de char léger compact. Tourelle légèrement plus arrondie avec toit plat et trappon décentré; glacis bas lisse, courts rangements en toile écrue sanglés à l'arrière. Chenilles graphite à galets bleus, canon marqueur court épais, deux optiques avant carrées encastrées. Deux petites attaches rouges arrière, pas de motifs sur tout le véhicule. Conserver compacité et silhouette de char léger.",
+      "reference": "assets/direction-artistique/pilotes-sprites-v1/char_leger.png"
+    },
+    {
+      "id": "infanterie_cn",
+      "nation": "Chine",
+      "unit": "infanterie",
+      "prompt": "À partir de l’image de référence jointe, créer une variante nationale du MÊME sprite tactique original Atlas Tournament. Garder la qualité de dessin 2D, les contours fins graphite, les aplats d'ombre francs, les proportions, le cadrage entier et l'orientation de la référence. Un seul sujet isolé sur fond réellement transparent. Même famille artistique, pas de rendu photoréaliste, pas de socle ni d'ombre extérieure. Matériel de tournoi fictif entretenu, lanceurs de marqueurs. Aucun texte, numéro, logo, drapeau, insigne réel, sang ou tir. Les détails nationaux concernent l'équipement et les volumes; ne pas ajouter des clichés décoratifs culturels. Détails lisibles à petite taille.\nVersion de l'équipe chinoise fictive: peinture vermillon mate #c9463c, ombre bordeaux #7f3436, dessus corail #ee7860; graphite #29353a et petits accessoires sable #e5ce90. Design industriel moderne, panneaux anguleux, équipements compacts modulaires. Ni étoiles, ni emblèmes, ni drapeaux, ni caractères écrits.\nUne femme adulte chinoise, visage naturel découvert et concentré, proportions semblables à l'infanterie de référence, cheveux noirs courts sous un casque compact vermillon à petite visière relevée et écouteur intégré. Veste vermillon, gilet modulaire graphite compact à deux poches sable, épaulières textiles petites carrées, pantalon et bottes graphite. Lanceur marqueur compact de forme bullpup fictive, mains cohérentes, posture identique à la référence. Ne pas masquer le visage ou caricaturer les traits.",
+      "reference": "assets/direction-artistique/pilotes-sprites-v1/infanterie.png"
+    },
+    {
+      "id": "helicoptere_cn",
+      "nation": "Chine",
+      "unit": "helicoptere",
+      "prompt": "À partir de l’image de référence jointe, créer une variante nationale du MÊME sprite tactique original Atlas Tournament. Garder la qualité de dessin 2D, les contours fins graphite, les aplats d'ombre francs, les proportions, le cadrage entier et l'orientation de la référence. Un seul sujet isolé sur fond réellement transparent. Même famille artistique, pas de rendu photoréaliste, pas de socle ni d'ombre extérieure. Matériel de tournoi fictif entretenu, lanceurs de marqueurs. Aucun texte, numéro, logo, drapeau, insigne réel, sang ou tir. Les détails nationaux concernent l'équipement et les volumes; ne pas ajouter des clichés décoratifs culturels. Détails lisibles à petite taille.\nVersion de l'équipe chinoise fictive: peinture vermillon mate #c9463c, ombre bordeaux #7f3436, dessus corail #ee7860; graphite #29353a et petits accessoires sable #e5ce90. Design industriel moderne, panneaux anguleux, équipements compacts modulaires. Ni étoiles, ni emblèmes, ni drapeaux, ni caractères écrits.\nMême classe d'hélicoptère léger, même taille et angle de vue que la référence. Cockpit un peu plus anguleux à deux vitrages bleu gris foncé, nez en coin compact, double carénage moteur bas, poutre de queue longue, rotor principal à DEUX pales entières opposées graphite à extrémités sable; patins et rotor anticouple lisibles. Paniers latéraux en petits boîtiers rectangulaires à ouvertures circulaires sombres. Vermillon dominant avec mécanique graphite. Pas d'armure massive, garder l'agilité.",
+      "reference": "assets/direction-artistique/pilotes-sprites-v1/helicoptere.png"
+    },
+    {
+      "id": "char_leger_cn",
+      "nation": "Chine",
+      "unit": "char_leger",
+      "prompt": "À partir de l’image de référence jointe, créer une variante nationale du MÊME sprite tactique original Atlas Tournament. Garder la qualité de dessin 2D, les contours fins graphite, les aplats d'ombre francs, les proportions, le cadrage entier et l'orientation de la référence. Un seul sujet isolé sur fond réellement transparent. Même famille artistique, pas de rendu photoréaliste, pas de socle ni d'ombre extérieure. Matériel de tournoi fictif entretenu, lanceurs de marqueurs. Aucun texte, numéro, logo, drapeau, insigne réel, sang ou tir. Les détails nationaux concernent l'équipement et les volumes; ne pas ajouter des clichés décoratifs culturels. Détails lisibles à petite taille.\nVersion de l'équipe chinoise fictive: peinture vermillon mate #c9463c, ombre bordeaux #7f3436, dessus corail #ee7860; graphite #29353a et petits accessoires sable #e5ce90. Design industriel moderne, panneaux anguleux, équipements compacts modulaires. Ni étoiles, ni emblèmes, ni drapeaux, ni caractères écrits.\nMême classe de char léger compact à chenilles, même taille et même vue que la référence. Tourelle basse en coin à pans inclinés, glacis biseauté à panneaux emboîtés, deux petits boîtiers rectangulaires sable intégrés à l'arrière. Chenilles graphite et galets partiellement protégés par une jupe courte découpée, pas de jupe qui cache tout. Canon marqueur court épais, deux phares horizontaux encastrés. Vermillon mat dominant, graphite aux raccords. Aucun surarmement et aucun emblème.",
+      "reference": "assets/direction-artistique/pilotes-sprites-v1/char_leger.png"
+    }
+  ]
+}

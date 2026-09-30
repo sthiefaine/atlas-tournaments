@@ -1,5 +1,7 @@
 # 18 — Le rendu en sprites précalculés
 
+**Mise à jour du 30 septembre 2026 : les nouveaux sprites sont dessinés directement.** Aucun GLB n’est requis par le moteur. Les chapitres de cuisson ci-dessous décrivent la fabrication historique des atlas conservés ; leurs commandes npm sont retirées. La projection, les vues, pivots, masques et clips du contrat `src/render2d/contrat.ts` restent en vigueur. `source.fichier` / `source.sha256` sont une provenance informative, jamais un fichier 3D à charger ; pour une création directe, ils désignent son image source. Voir `refonte/sprites-dessines.md`.
+
 Décision du propriétaire du 23 septembre 2026 (`BRIEF.md`, « Sprites précalculés »). Ce document est **propriétaire du rendu du jeu** ; `doc/10-rendu-3d.md` n'est plus que celui des modèles (matières, silhouettes, gabarits), source des images — la 3D temps réel a été retirée le même jour (`afc34691`), et `?rendu=3d` n'est plus lu. Le contrat exécutable est `src/render2d/contrat.ts` : quand ce document et lui divergent, c'est le contrat qui a raison, et ce document qui se corrige.
 
 ## 1. Pourquoi

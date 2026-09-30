@@ -230,7 +230,12 @@ export default function VitrineImages(): React.ReactElement {
     let vivant = true;
     void lireManifesteDuJeu().then((m) => {
       if (!vivant) return;
-      if (m.etat === 'lu') reserve.poserManifeste(m.manifeste);
+      if (m.etat === 'lu') {
+        reserve.poserManifeste(m.manifeste);
+        const id = new URLSearchParams(window.location.search).get('id');
+        const selection = id ? m.manifeste.entrees[id] : undefined;
+        if (selection) { setFamille(selection.famille); setChoix(selection.id); }
+      }
       setManifeste(m);
     });
     return () => {
@@ -280,13 +285,13 @@ export default function VitrineImages(): React.ReactElement {
   const etatManifeste = manifeste.etat === 'lecture' ? 'Lecture du manifeste…'
     : manifeste.etat === 'absent' ? 'Aucun manifeste : le jeu se joue tout en replis, et la vitrine les montre.'
       : manifeste.etat === 'refuse' ? `Manifeste refusé par le jeu : ${manifeste.motif}. Tout se joue en replis.`
-        : `Manifeste lu : ${Object.keys(manifeste.manifeste.entrees).length} entrées cuites${manifeste.ecartees.length > 0 ? ` — écartées par le jeu : ${manifeste.ecartees.join(', ')}` : ''}.`;
+        : `Manifeste lu : ${Object.keys(manifeste.manifeste.entrees).length} sprites${manifeste.ecartees.length > 0 ? ` — écartées par le jeu : ${manifeste.ecartees.join(', ')}` : ''}.`;
 
   return <main className={styles.vitrine} data-vitrine="cuite" data-manifeste={manifeste.etat}>
     <header className={styles.barre}>
       <div className={styles.titre}>
-        <nav aria-label="Fil d’Ariane" className={styles.ariane}><Link href="/">Atlas</Link><span aria-hidden="true">/</span><Link href="/atelier">Banc d’essai</Link><span aria-hidden="true">/</span><span>Images cuites</span></nav>
-        <h1>Vitrine des images cuites</h1>
+        <nav aria-label="Fil d’Ariane" className={styles.ariane}><Link href="/">Atlas</Link><span aria-hidden="true">/</span><Link href="/atelier">Banc d’essai</Link><span aria-hidden="true">/</span><span>Sprites</span></nav>
+        <h1>Vitrine des sprites</h1>
       </div>
       <Link href="/atelier" className={styles.lien}>← Le banc</Link>
     </header>
@@ -336,10 +341,10 @@ export default function VitrineImages(): React.ReactElement {
       <strong>{piece.id}</strong>
       {entree ? <>
         <span>{entree.famille} · {entree.cle}{entree.variante ? ` · ${entree.variante}` : ''}</span>
-        <span>source {entree.source.fichier} · {entree.source.sha256.slice(0, 12)}</span>
+        <span>provenance {entree.source.sha256.slice(0, 12)}</span>
         <span>{entree.pages.map((p) => `${p.largeur}×${p.hauteur}${p.masque ? ' + masque' : ''}${p.emission ? ' + émission' : ''}`).join(' · ')}</span>
         <span>{entree.animations.length} animations · {entree.animations.reduce((n, a) => n + a.cadres.length, 0)} images</span>
-      </> : <span>Aucune image cuite : le jeu pose ce repli à sa place, peint par le code.</span>}
+      </> : <span>Aucun sprite disponible : le jeu pose ce repli à sa place, peint par le code.</span>}
     </section> : null}
 
     {outils && piece ? <section className={styles.planche} data-fond={fond} aria-label="Les images de l’entrée">

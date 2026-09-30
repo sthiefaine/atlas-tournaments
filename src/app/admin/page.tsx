@@ -13,7 +13,7 @@ import { BaseAbsente, Bloc, Etat, Ligne, Message, Vide } from './ui';
 export const dynamic = 'force-dynamic';
 function AccesCreation() {
   const acces: { href: string; nom: string; aide: string; signe: NomSigne }[] = [
-    { href: '/admin/assets', nom: 'Modèles 3D', aide: 'Choisir un asset, copier son prompt ou remplacer son GLB.', signe: 'cube' },
+    { href: '/admin/assets', nom: 'Sprites', aide: 'Regarder les images actuelles et suivre les trois pilotes à valider.', signe: 'cube' },
     { href: '/admin/cartes', nom: 'Missions', aide: 'Ouvrir une carte et travailler ses objectifs.', signe: 'carte' },
     { href: '/admin/personnages', nom: 'Personnages', aide: 'Histoires, pouvoirs et scènes de campagne.', signe: 'commandants' },
   ];
