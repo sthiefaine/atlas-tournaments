@@ -64,7 +64,7 @@ export const REGLAGES_SOL = {
   /** Amplitude de la déformation des lisières, en cases. */
   deformation: 0.28,
   /** Ondulation de la rive, en cases. */
-  vagueRive: 0.08,
+  vagueRive: 0.14,
   /** Largeur du sable mouillé au bord de l'eau, en cases. */
   bandeMouillee: 0.08,
   /** Pente du champ de mer à la rive : ce qui le rend comparable à une distance. */
@@ -74,7 +74,7 @@ export const REGLAGES_SOL = {
   /** La profondeur du mélange : plus elle est faible, plus la lisière est franche. */
   profondeurMelange: 0.12,
   /** Opacité de la grille au sol. */
-  grille: 0.1,
+  grille: 0.055,
 } as const;
 
 /**
@@ -82,7 +82,7 @@ export const REGLAGES_SOL = {
  * joints pèsent sur sa couleur.
  */
 const ACCENTS_MATIERE: Readonly<Record<(typeof MATIERES)[number], number>> = {
-  herbe: 0.6, terre: 0.7, roche: 0.6, sable: 0.5, galets: 0.85, pave: 0.7, sousbois: 0.8, herbehaute: 0.5,
+  herbe: 0.28, terre: 0.7, roche: 0.6, sable: 0.5, galets: 0.85, pave: 0.7, sousbois: 0.48, herbehaute: 0.5,
 };
 
 const L = lumiereEcran();
@@ -294,7 +294,10 @@ Champs lireChamps(sampler2D t, vec2 gw, vec2 g, ivec2 c, bool brume) {
   ch.a *= inv;
   ch.b *= inv;
   ch.mer *= inv;
-  ch.chenal = chenal(ici, g - vec2(c));
+  // Une légère sinuosité continue entre les cases garde les rivières
+  // naturelles sans déplacer leur lit hors de la case tactique.
+  vec2 rive = vec2(sin(g.y * 1.65 + 0.4), sin(g.x * 1.8)) * 0.065;
+  ch.chenal = chenal(ici, g - vec2(c) + rive);
   return ch;
 }
 
@@ -621,6 +624,8 @@ vec3 sol(ivec2 c, vec2 g, vec2 P, vec4 b0, float aaG, float aaP, vec2 dPx, vec2 
       float vague = sin(-sdf * 38.0 - uTemps * 1.6 + b0.b * 6.0);
       float bande = 1.0 - smoothstep(0.02, 0.14, -sdf);
       float ecume = clamp(max(bord * 0.85, smoothstep(0.55, 0.95, vague) * bande * 0.7) * uClimat.w, 0.0, 1.0);
+      // Pas de liseré blanc de ressac sur toute la longueur d'une rivière.
+      ecume *= ch.chenal < sdfMer ? 0.22 : 1.0;
       col = mix(col, mix(ce, uEau[3], ecume), eau);
     }
   }

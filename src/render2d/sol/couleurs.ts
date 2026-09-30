@@ -94,7 +94,7 @@ const ACCENTS: Readonly<Record<MatiereSol, Hex>> = {
 const ACCENTS_SAISON: Readonly<Record<Saison, Partial<Record<MatiereSol, Hex>>>> = {
   printemps: { herbe: '#efe6a0', sousbois: '#7f8f4a', herbehaute: '#d9d58c' },
   ete: { herbe: '#c9b86a', sousbois: '#6b5a36', herbehaute: '#cdbf7a' },
-  automne: { herbe: '#c4782e', sousbois: '#b8642a', herbehaute: '#c99a4a' },
+  automne: { herbe: '#b59659', sousbois: '#ad8447', herbehaute: '#b69b58' },
   hiver: { herbe: '#e6edf3', sousbois: '#9aa3a0', herbehaute: '#d8dccf' },
 };
 

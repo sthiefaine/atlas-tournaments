@@ -5,7 +5,7 @@ import path from 'node:path';
 import sharp from 'sharp';
 import { emballer } from './emballage';
 import { lireManifeste } from '../../src/render2d/atlas';
-import type { EntreeSprite, ManifesteSprites, PageSprite } from '../../src/render2d/contrat';
+import type { EntreeSprite, ManifesteSprites, PageSprite, VueSprite } from '../../src/render2d/contrat';
 
 async function main(): Promise<void> {
   const ROOT = 'assets/direction-artistique/collection-base-v1';
@@ -17,10 +17,13 @@ async function main(): Promise<void> {
   const manifeste = JSON.parse(await readFile(MANIFESTE, 'utf8')) as ManifesteSprites;
   const sha = (b: Buffer): string => createHash('sha256').update(b).digest('hex');
   const groupes = new Map<string, Image[]>();
-  type Image = { id: string; entree: EntreeSprite; pixels: Buffer; l: number; h: number; px: number; py: number; peinture?: PageSprite['peinture'] };
-  const retenus = new Set(['decor_buisson_base', 'decor_touffe_base', 'decor_roseau_base', 'decor_rocher_cotier', 'decor_rocher_archipel', 'terrain_montagne']);
+  type Image = { id: string; entree: EntreeSprite; vue: VueSprite; pixels: Buffer; l: number; h: number; px: number; py: number; peinture?: PageSprite['peinture'] };
+  const retenus = new Set(['decor_foret_base', 'decor_foret_automne', 'decor_foret_automne_2', 'terrain_pont', 'decor_buisson_base', 'decor_touffe_base', 'decor_roseau_base', 'decor_rocher_cotier', 'decor_rocher_archipel', 'terrain_montagne']);
+  const sources = plan.entrees.flatMap(e => e.id === 'terrain_pont'
+    ? [{ ...e, fichier: 'ponts/terrain_pont_eo.png', vue: 'travers' as const }, { ...e, fichier: 'ponts/terrain_pont_ns.png', vue: 'fixe' as const }]
+    : [{ ...e, vue: (e.famille === 'unite' ? 'droite' : 'fixe') as VueSprite }]);
 
-  for (const e of plan.entrees) {
+  for (const e of sources) {
     if (e.famille !== 'unite' && e.famille !== 'batiment' && e.groupe !== 'biomes' && !retenus.has(e.id)) continue;
     const original = await readFile(path.join(ROOT, e.fichier));
     const { data, info } = await sharp(original).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
@@ -33,26 +36,32 @@ async function main(): Promise<void> {
     x0 = Math.max(0, x0 - 2); y0 = Math.max(0, y0 - 2);
     x1 = Math.min(info.width - 1, x1 + 2); y1 = Math.min(info.height - 1, y1 + 2);
     const marcheur = ['infanterie', 'meca', 'genie', 'meridien_automate'].includes(e.cle);
-    const max = e.famille === 'unite' ? [marcheur ? 82 : 104, marcheur ? 100 : 82]
-      : e.famille === 'batiment' ? [116, e.cle === 'qg' ? 150 : 126]
-      : e.groupe === 'biomes' ? [66, 98]
+    const bosquet = e.id.startsWith('decor_foret_');
+    const pont = e.id === 'terrain_pont';
+    const max = e.famille === 'unite' ? [marcheur ? 60 : 104, marcheur ? 76 : 82]
+      : e.famille === 'batiment' ? [126, e.cle === 'qg' ? 158 : 136]
+      : bosquet ? [120, 125]
+      : pont ? e.vue === 'travers' ? [132, 92] : [94, 102]
+      : e.groupe === 'biomes' ? [88, 108]
       : e.id === 'terrain_montagne' ? [110, 94]
       : e.id.includes('rocher') ? [48, 40]
       : e.id.includes('roseau') ? [30, 44] : [38, 32];
     const ratio = Math.min(max[0]! / (x1 - x0 + 1), max[1]! / (y1 - y0 + 1));
-    const l = Math.max(1, Math.round((x1 - x0 + 1) * ratio));
-    const h = Math.max(1, Math.round((y1 - y0 + 1) * ratio));
-    // Réduction et rangement seulement : ni retouche artistique, ni masque peint.
+    const l = pont ? max[0]! : Math.max(1, Math.round((x1 - x0 + 1) * ratio));
+    const h = pont ? max[1]! : Math.max(1, Math.round((y1 - y0 + 1) * ratio));
+    // Les ponts sont recadrés sur la travée centrale, chaussée ouverte aux
+    // deux extrémités ; les blocs de pierre ne sont pas étirés. Sources intactes.
     const pixels = await sharp(original).extract({ left: x0, top: y0, width: x1 - x0 + 1, height: y1 - y0 + 1 })
-      .resize(l, h).png().toBuffer();
+      .resize(l, h, { fit: 'cover' }).png().toBuffer();
     const etat = e.id.endsWith('_desaffecte') ? 'desaffecte' : e.id.endsWith('_inerte') ? 'inerte' : undefined;
     const peinture = e.famille === 'unite' || (e.famille === 'batiment' && !etat)
       ? e.id.includes('meridien') || e.id.includes('superusine') ? 'ambre' : 'cobalt' : undefined;
     const groupe = `${e.famille === 'unite' ? 'unites' : e.famille === 'batiment' ? 'batiments' : 'decor'}-${peinture ?? 'naturel'}`;
     // Le pivot garde la silhouette au centre de sa case et les aéronefs au-dessus.
-    const py = e.famille === 'batiment' ? h - 24 : e.famille === 'unite'
-      ? e.domaine === 'air' ? h * 0.5 + 26 : h - (marcheur ? 7 : 18)
-      : h - (e.id === 'terrain_montagne' ? 17 : e.groupe === 'biomes' ? 6 : 5);
+    const py = pont ? h * (e.vue === 'travers' ? 0.45 : 0.5)
+      : e.famille === 'batiment' ? h - 24 : e.famille === 'unite'
+      ? e.domaine === 'air' ? h * 0.5 + 26 : h - (marcheur ? 5 : 18)
+      : h - (bosquet ? 12 : e.id === 'terrain_montagne' ? 17 : e.groupe === 'biomes' ? 6 : 5);
     const entree: EntreeSprite = {
       id: e.id, famille: e.famille === 'unite' || e.famille === 'batiment' ? e.famille : 'decor',
       cle: etat ? e.id.replace(/^batiment_/, '').replace(/_(desaffecte|inerte)$/, '') : e.cle,
@@ -61,7 +70,7 @@ async function main(): Promise<void> {
       dessinStatique: true, pages: [], animations: [],
     };
     const images = groupes.get(groupe) ?? [];
-    images.push({ id: e.id, entree, pixels, l, h, px: l / 2, py, ...(peinture ? { peinture } : {}) });
+    images.push({ id: e.id, entree, vue: e.vue, pixels, l, h, px: l / 2, py, ...(peinture ? { peinture } : {}) });
     groupes.set(groupe, images);
   }
 
@@ -85,12 +94,15 @@ async function main(): Promise<void> {
       pages.push({ couleur: `assets/sprites/dessins/${fichier}`, largeur: page.largeur, hauteur: page.hauteur, ...(peinture ? { peinture } : {}) });
       rapport.push({ groupe, fichier, octets: octets.length, ...page, entrees: images.filter((_, i) => placement.placements[i]!.page === p).map(i => i.id) });
     }
+    const initialisees = new Set<string>();
     images.forEach((im, i) => {
       const p = placement.placements[i]!;
-      im.entree.pages = pages;
-      im.entree.animations = [{ vue: im.entree.famille === 'unite' ? 'droite' : 'fixe', clip: 'repos', boucle: true, ips: 1,
-        cadres: [{ page: p.page, x: p.x + 8, y: p.y + 8, l: im.l, h: im.h, px: im.px, py: im.py }] }];
-      manifeste.entrees[im.id] = im.entree;
+      if (!initialisees.has(im.id)) {
+        manifeste.entrees[im.id] = { ...im.entree, pages, animations: [] };
+        initialisees.add(im.id);
+      }
+      manifeste.entrees[im.id]!.animations.push({ vue: im.vue, clip: 'repos', boucle: true, ips: 1,
+        cadres: [{ page: p.page, x: p.x + 8, y: p.y + 8, l: im.l, h: im.h, px: im.px, py: im.py }] });
     });
   }
   // Ces anciennes variantes cuites masqueraient le nouveau QG commun en partie.
@@ -100,8 +112,8 @@ async function main(): Promise<void> {
   if (!lecture.ok || lecture.ecartees.length) throw new Error(`Manifeste refusé : ${JSON.stringify(lecture.ok ? lecture.ecartees : lecture.motif)}`);
   await writeFile(MANIFESTE, JSON.stringify(manifeste) + '\n');
   const activation = { date: new Date().toISOString(), type: 'poses_fixes', sourcesIntactes: true, aliasRetires,
-    limites: ['Vues de carte et de duel partagent la pose fixe.', 'Pas de cycle de marche ou de rotor dessiné.', 'Ponts et sols dessinés restent des références, raccords non préparés.', 'Les variantes hivernales historiques restent disponibles.'],
-    total: [...groupes.values()].reduce((n, g) => n + g.length, 0),
+    limites: ['Vues de carte et de duel partagent la pose fixe.', 'Pas de cycle de marche ou de rotor dessiné.', 'Pont commun raccordé sur deux axes ; les autres ponts et sols dessinés restent des références.', 'Les variantes hivernales historiques restent disponibles.'],
+    total: new Set([...groupes.values()].flat().map(i => i.id)).size,
     octetsPages: rapport.reduce((n, p) => n + p.octets, 0), pages: rapport };
   await writeFile(`${ROOT}/activation-jeu.json`, JSON.stringify(activation, null, 2) + '\n');
   console.log(JSON.stringify(activation, null, 2));

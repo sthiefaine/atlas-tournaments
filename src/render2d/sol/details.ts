@@ -309,7 +309,7 @@ const PEINTRES: Readonly<Record<Exclude<CoucheDetail, 'eau' | 'bruit'>, Peintre>
         const detail = b.b64[l64 + ((x + 37) & k)]!;
         const fin = b.b128[l128 + ((x + 11) & k)]!;
         w.relief[i] = 0.5 * base + 0.35 * detail + 0.15 * fin;
-        w.clarte[i] = 0.3 + 0.55 * base + 0.25 * (detail - 0.5) + 0.15 * (fin - 0.5);
+        w.clarte[i] = 0.46 + 0.23 * base + 0.14 * (detail - 0.5) + 0.06 * (fin - 0.5);
         const fA = b.vA.f1[i]!;
         const idA = b.vA.id[i]!;
         let accent: number;
@@ -318,7 +318,7 @@ const PEINTRES: Readonly<Record<Exclude<CoucheDetail, 'eau' | 'bruit'>, Peintre>
         } else if (saison === 'ete') {
           accent = lisser(0.6, 0.8, b.b16[l16 + ((x + 71) & k)]!) * 0.8;
         } else if (saison === 'automne') {
-          accent = Math.max(idA < 0.45 ? 1 - lisser(0.07, 0.15, fA) : 0, lisser(0.66, 0.82, b.b16[l16 + ((x + 71) & k)]!) * 0.6);
+          accent = idA < 0.12 ? 1 - lisser(0.04, 0.095, fA) : 0;
         } else {
           accent = lisser(0.62, 0.82, b.b64[l64b + ((x + 5) & k)]!) * 0.75;
         }

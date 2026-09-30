@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-30T14:33:24.768Z",
+  "date": "2026-09-30T16:15:06.294Z",
   "type": "poses_fixes",
   "sourcesIntactes": true,
   "aliasRetires": [
@@ -9,18 +9,18 @@
   "limites": [
     "Vues de carte et de duel partagent la pose fixe.",
     "Pas de cycle de marche ou de rotor dessiné.",
-    "Ponts et sols dessinés restent des références, raccords non préparés.",
+    "Pont commun raccordé sur deux axes ; les autres ponts et sols dessinés restent des références.",
     "Les variantes hivernales historiques restent disponibles."
   ],
-  "total": 59,
-  "octetsPages": 597194,
+  "total": 63,
+  "octetsPages": 749980,
   "pages": [
     {
       "groupe": "unites-cobalt",
-      "fichier": "unites-cobalt-0-80e0412857b9.webp",
-      "octets": 282036,
-      "largeur": 492,
-      "hauteur": 676,
+      "fichier": "unites-cobalt-0-7f24f9cc75e4.webp",
+      "octets": 272206,
+      "largeur": 480,
+      "hauteur": 656,
       "entrees": [
         "unite_infanterie_base",
         "unite_meca_base",
@@ -53,10 +53,10 @@
     },
     {
       "groupe": "unites-ambre",
-      "fichier": "unites-ambre-0-75b231989d3d.webp",
-      "octets": 31688,
-      "largeur": 336,
-      "hauteur": 116,
+      "fichier": "unites-ambre-0-3079c5caba4a.webp",
+      "octets": 27874,
+      "largeur": 316,
+      "hauteur": 96,
       "entrees": [
         "unite_meridien_veilleur_base",
         "unite_meridien_bastion_base",
@@ -65,10 +65,10 @@
     },
     {
       "groupe": "batiments-cobalt",
-      "fichier": "batiments-cobalt-0-1d854b363af9.webp",
-      "octets": 89068,
-      "largeur": 132,
-      "hauteur": 668,
+      "fichier": "batiments-cobalt-0-621f93cfbafe.webp",
+      "octets": 102902,
+      "largeur": 144,
+      "hauteur": 716,
       "entrees": [
         "batiment_ville_base",
         "batiment_qg_base",
@@ -80,11 +80,12 @@
     },
     {
       "groupe": "decor-naturel",
-      "fichier": "decor-naturel-0-c8f3d43c4726.webp",
-      "octets": 100852,
-      "largeur": 248,
-      "hauteur": 440,
+      "fichier": "decor-naturel-0-afcd08e60e39.webp",
+      "octets": 239444,
+      "largeur": 252,
+      "hauteur": 992,
       "entrees": [
+        "decor_foret_base",
         "biome_plaine_base",
         "biome_foret_base",
         "biome_montagne_base",
@@ -95,30 +96,34 @@
         "biome_cotier_base",
         "biome_archipel_base",
         "biome_marais_base",
+        "terrain_pont",
+        "terrain_pont",
         "terrain_montagne",
         "decor_rocher_cotier",
         "decor_rocher_archipel",
         "decor_buisson_base",
         "decor_roseau_base",
-        "decor_touffe_base"
+        "decor_touffe_base",
+        "decor_foret_automne",
+        "decor_foret_automne_2"
       ]
     },
     {
       "groupe": "batiments-ambre",
-      "fichier": "batiments-ambre-0-156f8f156e8f.webp",
-      "octets": 13616,
-      "largeur": 132,
-      "hauteur": 96,
+      "fichier": "batiments-ambre-0-7b718773f494.webp",
+      "octets": 15666,
+      "largeur": 144,
+      "hauteur": 104,
       "entrees": [
         "batiment_superusine_base"
       ]
     },
     {
       "groupe": "batiments-naturel",
-      "fichier": "batiments-naturel-0-97671b043346.webp",
-      "octets": 79934,
-      "largeur": 132,
-      "hauteur": 644,
+      "fichier": "batiments-naturel-0-982f2714d602.webp",
+      "octets": 91888,
+      "largeur": 144,
+      "hauteur": 692,
       "entrees": [
         "batiment_superusine_inerte",
         "batiment_ville_desaffecte",

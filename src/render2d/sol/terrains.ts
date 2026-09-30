@@ -77,14 +77,14 @@ const MELANGES: Readonly<Record<CleTerrain, Partial<Record<MatiereSol, number>>>
   herbe_haute: { herbehaute: 0.85, herbe: 0.15 },
   // Sous les arbres, de l'humus et des feuilles : un sol de forêt se lit avant
   // même d'avoir vu un tronc.
-  foret: { sousbois: 0.85, herbe: 0.15 },
+  foret: { sousbois: 0.68, herbe: 0.32 },
   montagne: { roche: 0.82, terre: 0.1, herbe: 0.08 },
   // La chaussée est tracée par-dessus ; la matière n'apporte que ses bas-côtés.
   route: { herbe: 0.6, terre: 0.4 },
   plage: { sable: 1 },
   // Le lit de la rivière, que l'on voit sur ses berges et au travers de l'eau.
-  riviere: { galets: 0.55, sable: 0.3, terre: 0.15 },
-  pont: { galets: 0.5, sable: 0.3, terre: 0.2 },
+  riviere: { galets: 0.12, sable: 0.13, terre: 0.3, herbe: 0.45 },
+  pont: { galets: 0.12, sable: 0.13, terre: 0.3, herbe: 0.45 },
   // Le fond marin : il ne se voit que par les hauts-fonds.
   mer: { sable: 0.8, galets: 0.2 },
   ville: { pave: 0.9, terre: 0.1 },

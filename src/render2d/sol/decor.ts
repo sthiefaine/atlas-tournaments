@@ -30,6 +30,7 @@ import {
 import type { Biome, CleTerrain, Meteo, Saison } from '../../schemas/types';
 import { axePont, DIRECTIONS, terrainEn, type GrilleSol } from './grille';
 import { TERRAINS_EAU } from './terrains';
+import { FORMES } from '../replis';
 
 // ---------------------------------------------------------------------------
 // Le hasard de case
@@ -463,6 +464,9 @@ export function placerDecor(ctx: ContextePlacement): InstanceSprite[] {
   const dessinPour = (genre: GenreDecor): string | null => {
     let id: string | null = null;
     if (genre === 'arbre' && (saison !== 'hiver' || biome === 'neige')) id = `biome_${biome}_base`;
+    if (genre === 'arbre' && saison !== 'hiver' && ['plaine', 'foret', 'cotier'].includes(biome)) {
+      id = saison === 'automne' ? 'decor_foret_automne' : 'decor_foret_base';
+    }
     if (saison !== 'hiver') {
       if (genre === 'buisson' || genre === 'touffe' || genre === 'roseau') id = `decor_${genre}_base`;
       if (genre === 'montagne' && biome !== 'desert' && biome !== 'volcanique') id = 'terrain_montagne';
@@ -475,10 +479,28 @@ export function placerDecor(ctx: ContextePlacement): InstanceSprite[] {
     for (let x = 0; x < g.largeur; x += 1) {
       // Une case cachée ne rend rien : pas même une silhouette noire.
       if (brouillard && (brouillard[y * g.largeur + x] ?? 255) < 128) continue;
-      for (const p of placesDeCase(g, biome, x, y, animRocher >= 0)) {
+      let places = placesDeCase(g, biome, x, y, animRocher >= 0);
+      const dessinArbre = dessinPour('arbre');
+      if (terrainEn(g, x, y) === 'foret' && dessinArbre) {
+        places = places.filter(p => p.genre !== 'arbre');
+        const bosquet = dessinArbre.startsWith('decor_foret_');
+        // Un bosquet est déjà un groupe d'arbres. L'ancien semis individuel
+        // dupliquait cinq fois la même cime et produisait une couronne de buissons.
+        const nombre = bosquet ? 1 : 2;
+        for (let i = 0; i < nombre; i += 1) {
+          places.push({ genre: 'arbre',
+            x: x + (bosquet ? 0.5 : i === 0 ? 0.29 : 0.73) + (aleaCase(x, y, 210 + i) - 0.5) * 0.12,
+            y: y + (bosquet ? 0.72 : i === 0 ? 0.49 : 0.79) + (aleaCase(x, y, 220 + i) - 0.5) * 0.14,
+            echelle: (bosquet ? 1.06 : 0.92) + aleaCase(x, y, 230 + i) * 0.17, tirage: aleaCase(x, y, 240 + i), choix: 0 });
+        }
+      }
+      for (const p of places) {
         let entree: string | null = null;
         let animation = 0;
-        const dessin = dessinPour(p.genre);
+        let dessin = dessinPour(p.genre);
+        if (dessin === 'decor_foret_automne' && p.tirage > 0.48 && manifeste.entrees.decor_foret_automne_2?.dessinStatique) {
+          dessin = 'decor_foret_automne_2';
+        }
         if (dessin) {
           entree = dessin;
           animation = animationDeVue(manifeste.entrees[dessin]!, 'fixe');
@@ -508,6 +530,10 @@ export function placerDecor(ctx: ContextePlacement): InstanceSprite[] {
         const instance: InstanceSprite = { entree, animation, cadre: 0, x: p.x, y: p.y };
         if (p.echelle !== 1) instance.echelle = p.echelle;
         if (vue < 1) instance.vue = vue;
+        if (dessin && p.genre === 'arbre') {
+          sortie.push({ entree: FORMES.ombre, animation: -1, cadre: 0,
+            x: p.x, y: p.y - 0.01, echelle: p.echelle * 1.4, opacite: 0.3, vue });
+        }
         sortie.push(instance);
       }
     }

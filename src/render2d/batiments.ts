@@ -87,8 +87,8 @@ export function poseDrapeauCase(
  * « le plus grand drapeau » du jeu, et le QG est déjà le plus haut bâtiment.
  * Les autres gardent la taille des formes (`HAUTEUR_MAT`, `TAILLE_DRAPEAU`).
  */
-export const ECHELLE_MAT_QG = 1.25;
-export const ECHELLE_DRAPEAU_QG = 1.4;
+export const ECHELLE_MAT_QG = 1.05;
+export const ECHELLE_DRAPEAU_QG = 1.1;
 
 /**
  * La hauteur du bas du drapeau sur le mât, en cases, pour un niveau de 0 à 1 ;

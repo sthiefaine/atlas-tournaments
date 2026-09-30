@@ -35,6 +35,16 @@ La galerie privée `/admin/assets/dessins` propose catégories avec compteurs, r
 
 ## Fabrication des sprites de jeu
 
+### Composition de la carte — reprise après retour du propriétaire
+
+Le premier raccordement plaçait trois à cinq exemplaires du même arbre dessiné sur les anciens emplacements de figurines. Le résultat était une couronne de petits buissons, sans rapport avec l’échelle des unités. Le placement utilise désormais un bosquet par case tempérée et deux arbres plus grands pour les autres biomes. Deux dessins d’automne alternent selon un hachage stable de la case ; hauteurs et positions varient légèrement, les canopées voisines se rejoignent. Les variantes hivernales restent sur leur chemin existant. Le brouillard cache toujours les décors des cases non découvertes.
+
+Les marcheurs mesurent au plus 60 × 76 pixels, les véhicules 104 × 82, les bâtiments jusqu’à 126 pixels de large. Les ombres d’unités sont renforcées et une ombre de contact accompagne les nouveaux bosquets. L’herbe procédurale reste en place, avec moins de taches orange ; les berges mêlent terre, herbe et quelques galets. La rivière reçoit une sinuosité continue, contenue dans ses cases, et moins d’écume sur les rives. La grille est plus discrète.
+
+Le pont commun remplace le rectangle vert historique : deux sources natives `terrain_pont_eo.png` / `terrain_pont_ns.png`, vues `travers` / `fixe` du même identifiant `terrain_pont`. Leur emprise et leur pivot alignent la chaussée sur les routes. Les sources restent intactes, leurs copies sont adaptées à la projection du plateau lors de l’emballage. Les autres propositions de pont restent des références.
+
+La collection compte 100 références, plus les deux orientations de remplacement du pont. **63 entrées, six pages, 749 980 octets** sont actives. Prompts natifs exacts et provenance : `composition-jeu.json` / `composition-variante.json`. Premier contact a été regardé en situation à deux zooms ; cela ne vaut pas approbation du propriétaire ni mesure de performance sur téléphone. Pas de suite de tests lancée.
+
 ### Première activation en poses fixes
 
 Le propriétaire demande pourquoi les dessins ne sont pas encore employés en jeu. Leur animation complète n’est plus une condition préalable à l’affichage : **59 poses fixes sont raccordées** au manifeste partagé. Cela couvre les 30 unités, les 13 bâtiments/états et 16 éléments de paysage (dix biomes, montagne, deux rochers côtiers, buisson, roseaux et touffe). Le plan distingue maintenant chaque entrée active des références restantes.

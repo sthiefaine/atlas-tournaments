@@ -3,9 +3,9 @@
   "date": "2026-09-30",
   "demande": "Refaire le drone intercepteur, conserver les autres dessins approuvés et compléter les références communes, en commençant par les biomes et les ponts.",
   "format": "PNG transparent, dessin direct, sans GLB",
-  "livraison": "98 dessins de référence ; 59 poses fixes raccordées au manifeste du jeu. Animations et orientations dédiées, ponts raccordables, sols et portraits restent à intégrer.",
+  "livraison": "100 références et deux vues raccordables du pont commun ; 63 entrées du manifeste activées. Les bosquets remplacent les couronnes de petits arbres.",
   "activationJeu": "partielle_poses_fixes",
-  "total": 98,
+  "total": 100,
   "entrees": [
     {
       "id": "unite_infanterie_base",
@@ -473,7 +473,7 @@
         "terrain_foret"
       ],
       "groupe": "vegetation",
-      "activationJeu": "reference_seulement"
+      "activationJeu": "pose_fixe"
     },
     {
       "id": "biome_plaine_base",
@@ -604,7 +604,7 @@
       "fichier": "ponts/terrain_pont.png",
       "statut": "dessin_produit",
       "outil": "image_gen natif",
-      "activationJeu": "reference_seulement"
+      "activationJeu": "pose_fixe"
     },
     {
       "id": "pont_pierre_culee",
@@ -1166,8 +1166,32 @@
       "statut": "dessin_produit",
       "outil": "image_gen natif",
       "activationJeu": "pose_fixe"
+    },
+    {
+      "id": "decor_foret_automne",
+      "cle": "foret",
+      "nom": "Bosquet d’automne",
+      "famille": "decor",
+      "groupe": "decors",
+      "fichier": "decors/decor_foret_automne.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif",
+      "activationJeu": "pose_fixe",
+      "provenance": "composition-jeu.json"
+    },
+    {
+      "id": "decor_foret_automne_2",
+      "cle": "foret",
+      "nom": "Bosquet de bouleaux et hêtres",
+      "famille": "decor",
+      "groupe": "decors",
+      "fichier": "decors/decor_foret_automne_2.png",
+      "statut": "dessin_produit",
+      "outil": "image_gen natif",
+      "activationJeu": "pose_fixe",
+      "provenance": "composition-variante.json"
     }
   ],
   "perimetre": "Références communes : 30 unités, 13 bâtiments et états, 10 biomes, 9 éléments de pont, 7 études de terrain, 19 décors dont la forêt déjà dessinée et 10 portraits archétypes. Pas de variante nationale ou régionale supplémentaire.",
-  "activesEnJeu": 59
+  "activesEnJeu": 63
 }

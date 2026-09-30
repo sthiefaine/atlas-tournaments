@@ -155,7 +155,7 @@ export const ECLAIRAGE_CUISSON = {
  * le serait l'ombre de la lumière principale — qui vient du joueur : droit
  * derrière l'unité, vers le haut de l'écran —, en fraction de case.
  */
-export const OMBRE_UNITE = { largeur: 0.62, hauteur: 0.3, decalageX: 0, decalageY: -0.06, opacite: 0.34 } as const;
+export const OMBRE_UNITE = { largeur: 0.62, hauteur: 0.3, decalageX: 0, decalageY: -0.04, opacite: 0.48 } as const;
 
 /**
  * Ce qu'un rendu pose sous un **navire**, à la place de l'ombre : une écume
